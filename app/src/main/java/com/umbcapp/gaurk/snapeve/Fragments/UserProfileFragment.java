@@ -9,6 +9,8 @@ import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.umbcapp.gaurk.snapeve.R;
+
 public class UserProfileFragment extends Fragment {
 
     public UserProfileFragment() {
@@ -19,12 +21,11 @@ public class UserProfileFragment extends Fragment {
         super.onCreate(savedInstanceState);
     }
 
-    @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-        return super.onCreateView(inflater, container, savedInstanceState);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View rootView = inflater.inflate(R.layout.userprofile, container, false);
 
-
+        return rootView;
     }
 
     @Override

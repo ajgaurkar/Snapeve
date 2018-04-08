@@ -13,7 +13,7 @@
 
     <android.support.v7.widget.CardView
         android:layout_width="match_parent"
-        android:layout_height="200dp"
+        android:layout_height="250dp"
         android:elevation="10dp"
         card_view:cardCornerRadius="8dp"
         card_view:cardUseCompatPadding="true">
@@ -25,13 +25,13 @@
             <ImageView
                 android:id="@+id/cardimgview"
                 android:layout_width="match_parent"
-                android:layout_height="200dp" />
+                android:layout_height="250dp" />
 
-            <TextView
-                android:id="@+id/textetx"
-                android:layout_width="match_parent"
-                android:layout_height="30dp"
-                android:text="" />
+            <!--<TextView-->
+            <!--android:id="@+id/textetx"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="30dp"-->
+            <!--android:text="" />-->
 
             <View
                 android:id="@+id/dash_list_item_vert_seprtr"
@@ -109,14 +109,16 @@
 
 
                     <ImageView
+                        android:id="@+id/list_item_verify_iv"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_below="@+id/card_bottom_seperator2"
                         android:layout_weight="8"
                         android:padding="3dp"
-                        android:src="@drawable/approve_light_grey_48" />
+                        android:src="@drawable/approve_blue_48" />
 
                     <TextView
+                        android:id="@+id/list_item_verify_tv"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="17"
@@ -125,6 +127,7 @@
                         android:textSize="12sp" />
 
                     <ImageView
+                        android:id="@+id/list_item_comment_iv"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_below="@+id/card_bottom_seperator2"
@@ -133,6 +136,7 @@
                         android:src="@drawable/comments_48_light_grey" />
 
                     <TextView
+                        android:id="@+id/list_item_comment_tv"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="23"
@@ -141,6 +145,7 @@
                         android:textSize="12sp" />
 
                     <ImageView
+                        android:id="@+id/list_item_deny_iv"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_below="@+id/card_bottom_seperator2"
@@ -149,6 +154,7 @@
                         android:src="@drawable/deny_light_grey_48" />
 
                     <TextView
+                        android:id="@+id/list_item_deny_tv"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="15"
@@ -157,19 +163,21 @@
                         android:textSize="12sp" />
 
                     <ImageView
+                        android:id="@+id/list_item_spam_iv"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_below="@+id/card_bottom_seperator2"
                         android:layout_weight="8"
                         android:padding="3dp"
-                        android:src="@drawable/approve_light_grey_48" />
+                        android:src="@drawable/spam_orange_48" />
 
                     <TextView
+                        android:id="@+id/list_item_spam_tv"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="13"
                         android:gravity="center_vertical"
-                        android:text="Verify"
+                        android:text="Spam"
                         android:textSize="12sp" />
 
                 </LinearLayout>

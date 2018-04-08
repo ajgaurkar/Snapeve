@@ -3,9 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/container"
-    android:background="#EEEEEE"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/colorMainBg"
     tools:context=".MainActivity">
 
 
@@ -36,12 +36,12 @@
         app:menu="@menu/navigation" />
 
     <android.support.design.widget.FloatingActionButton
+        android:id="@+id/main_img_pick_fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/dashboard_main_frame_layout"
         android:layout_alignParentEnd="true"
         android:layout_margin="16dp"
-        android:id="@+id/main_img_pick_fab"
         android:src="@drawable/add_img_white_48"
         app:backgroundTint="@color/colorPrimaryDark" />
 

@@ -12,11 +12,8 @@ import android.widget.Toast;
 import com.squareup.picasso.Picasso;
 import com.umbcapp.gaurk.snapeve.Controllers.Event_dash_list_obj;
 import com.umbcapp.gaurk.snapeve.Listview_communicator;
-import com.umbcapp.gaurk.snapeve.MainActivity;
 import com.umbcapp.gaurk.snapeve.R;
 
-import java.text.ParseException;
-import java.util.ArrayList;
 import java.util.List;
 
 public class Dash_Event_ListAdapter extends BaseAdapter {
@@ -56,14 +53,22 @@ public class Dash_Event_ListAdapter extends BaseAdapter {
             viewHolder = new ViewHolder();
             view = this.inflater.inflate(R.layout.dash_list_view_item, parent, false);
 
-            viewHolder.calendarTitleTextView = (TextView) view.findViewById(R.id.textetx);
-            viewHolder.imageview = (ImageView) view.findViewById(R.id.cardimgview);
+            viewHolder.main_card_imageview = (ImageView) view.findViewById(R.id.cardimgview);
+
+            viewHolder.list_item_verify_iv = (ImageView) view.findViewById(R.id.list_item_verify_iv);
+            viewHolder.list_item_deny_iv = (ImageView) view.findViewById(R.id.list_item_deny_iv);
+            viewHolder.list_item_comment_iv = (ImageView) view.findViewById(R.id.list_item_comment_iv);
+            viewHolder.list_item_spam_iv = (ImageView) view.findViewById(R.id.list_item_spam_iv);
+            viewHolder.list_item_verify_tv = (TextView) view.findViewById(R.id.list_item_verify_tv);
+            viewHolder.list_item_deny_tv = (TextView) view.findViewById(R.id.list_item_deny_tv);
+            viewHolder.list_item_comment_tv = (TextView) view.findViewById(R.id.list_item_comment_tv);
+            viewHolder.list_item_spam_tv = (TextView) view.findViewById(R.id.list_item_spam_tv);
 
             view.setTag(viewHolder);
 
 //            Listview_communicator communicator;
-//            communicator = ((Listview_communicator)context).listview_element();
-//            communicator.listview_element();
+//            communicator = ((Listview_communicator)context).main_event_listview_element_clicked();
+//            communicator.main_event_listview_element_clicked();
 //
 
 
@@ -81,34 +86,109 @@ public class Dash_Event_ListAdapter extends BaseAdapter {
 
 
         Picasso.get().load(event_dash_list_obj.getTitle())
-                .fit().centerCrop().into(viewHolder.imageview);
+                .fit().centerCrop().into(viewHolder.main_card_imageview);
 
 
-        viewHolder.calendarTitleTextView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                System.out.print("position 1 " + position);
-                Toast.makeText(context, "1 " + position, Toast.LENGTH_SHORT).show();
 
-                ((Listview_communicator) context).listview_element(position, 1);
-            }
-        });
-        viewHolder.imageview.setOnClickListener(new View.OnClickListener() {
+        viewHolder.main_card_imageview.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 System.out.print("position 2 " + position);
                 Toast.makeText(context, "2 " + position, Toast.LENGTH_SHORT).show();
 
-                ((Listview_communicator) context).listview_element(position, 2);
+                ((Listview_communicator) context).main_event_listview_element_clicked(position, 0);
             }
         });
+
+        viewHolder.list_item_verify_iv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                System.out.print("position 2 " + position);
+                Toast.makeText(context, "2 " + position, Toast.LENGTH_SHORT).show();
+
+                ((Listview_communicator) context).main_event_listview_element_clicked(position, 1);
+            }
+        });
+        viewHolder.list_item_verify_tv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                System.out.print("position 2 " + position);
+                Toast.makeText(context, "2 " + position, Toast.LENGTH_SHORT).show();
+
+                ((Listview_communicator) context).main_event_listview_element_clicked(position, 1);
+            }
+        });
+        viewHolder.list_item_deny_iv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                System.out.print("position 2 " + position);
+                Toast.makeText(context, "2 " + position, Toast.LENGTH_SHORT).show();
+
+                ((Listview_communicator) context).main_event_listview_element_clicked(position, 2);
+            }
+        });
+        viewHolder.list_item_deny_tv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                System.out.print("position 2 " + position);
+                Toast.makeText(context, "2 " + position, Toast.LENGTH_SHORT).show();
+
+                ((Listview_communicator) context).main_event_listview_element_clicked(position, 2);
+            }
+        });
+        viewHolder.list_item_comment_iv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                System.out.print("position 2 " + position);
+                Toast.makeText(context, "2 " + position, Toast.LENGTH_SHORT).show();
+
+                ((Listview_communicator) context).main_event_listview_element_clicked(position, 3);
+            }
+        });
+        viewHolder.list_item_comment_tv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                System.out.print("position 2 " + position);
+                Toast.makeText(context, "2 " + position, Toast.LENGTH_SHORT).show();
+
+                ((Listview_communicator) context).main_event_listview_element_clicked(position, 3);
+            }
+        });
+        viewHolder.list_item_spam_iv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                System.out.print("position 2 " + position);
+                Toast.makeText(context, "2 " + position, Toast.LENGTH_SHORT).show();
+
+                ((Listview_communicator) context).main_event_listview_element_clicked(position, 4);
+            }
+        });
+        viewHolder.list_item_spam_tv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                System.out.print("position 2 " + position);
+                Toast.makeText(context, "2 " + position, Toast.LENGTH_SHORT).show();
+
+
+                ((Listview_communicator) context).main_event_listview_element_clicked(position, 4);
+            }
+        });
+
 
         return view;
     }
 
     public class ViewHolder {
-        private TextView calendarTitleTextView;
 
-        public ImageView imageview;
+        private ImageView main_card_imageview;
+
+        private ImageView list_item_verify_iv;
+        private ImageView list_item_deny_iv;
+        private ImageView list_item_comment_iv;
+        private ImageView list_item_spam_iv;
+        private TextView list_item_verify_tv;
+        private TextView list_item_deny_tv;
+        private TextView list_item_comment_tv;
+        private TextView list_item_spam_tv;
     }
 }
