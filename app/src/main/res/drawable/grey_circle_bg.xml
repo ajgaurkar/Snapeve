@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="oval"
+    android:thickness="0dp">
+    <!--for the shade of view in round-->
+    <stroke
+        android:width="1dp"
+        android:color="#ffffff" />
+    <!--<corners-->
+        <!--android:bottomLeftRadius="0dp"-->
+        <!--android:bottomRightRadius="0dp"-->
+        <!--android:topLeftRadius="5dp"-->
+        <!--android:topRightRadius="5dp" />-->
+    <gradient
+        android:angle="270"
+        android:endColor="#bdbdbd"
+        android:startColor="#bdbdbd"
+        android:type="linear" />
+    <!--7532789b-->
+</shape>

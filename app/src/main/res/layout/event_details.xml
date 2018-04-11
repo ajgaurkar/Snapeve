@@ -1,6 +1,223 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:weightSum="100">
 
-</android.support.constraint.ConstraintLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="40"
+        android:background="@color/colorMainBg">
+
+        <ImageView
+            android:id="@+id/event_detail_event_image_image_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            android:src="@drawable/my_pic" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignTop="@+id/event_detail_profile_pic_image_view"
+            android:layout_marginTop="-10dp"
+            android:background="#e6ffffff" />
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/event_detail_profile_pic_image_view"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_alignTop="@+id/event_detail_user_name_text_view"
+            android:layout_marginEnd="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginStart="10dp"
+            android:src="@drawable/my_pic"
+            app:civ_border_color="@color/colorPrimaryDark"
+            app:civ_border_width="1dp" />
+
+        <TextView
+            android:id="@+id/event_detail_user_name_text_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/event_detail_user_comment_text_view"
+            android:layout_marginEnd="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_toEndOf="@+id/event_detail_profile_pic_image_view"
+            android:text="Jhony Ive"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/event_detail_user_post_dt_time_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/event_detail_user_name_text_view"
+            android:layout_alignParentEnd="true"
+            android:layout_alignTop="@+id/event_detail_user_name_text_view"
+            android:layout_marginEnd="10dp"
+            android:layout_marginRight="10dp"
+            android:text="07 hrs ago"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/event_detail_user_comment_text_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginEnd="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_toEndOf="@+id/event_detail_profile_pic_image_view"
+            android:maxLines="4"
+            android:minLines="2"
+            android:text="Donut party at UMBC" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#cbcbcb"
+            android:layout_alignParentBottom="true"/>
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="10"
+        android:orientation="horizontal"
+        android:weightSum="60">
+
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="20">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_above="@+id/event_detail_approved_count_text_view"
+                android:layout_margin="5dp"
+                android:src="@drawable/approve_light_grey_48" />
+
+            <TextView
+                android:id="@+id/event_detail_approved_count_text_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:gravity="center"
+                android:padding="2dp"
+                android:text="16 Approved" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="20">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_above="@+id/event_detail_dislike_count_text_view"
+                android:layout_margin="5dp"
+                android:src="@drawable/deny_light_grey_48" />
+
+            <TextView
+                android:id="@+id/event_detail_dislike_count_text_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:gravity="center"
+                android:padding="2dp"
+                android:text="16 Approved" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="20">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_above="@+id/event_detail_spam_count_text_view"
+                android:layout_margin="5dp"
+                android:src="@drawable/spam_light_grey_48" />
+
+            <TextView
+                android:id="@+id/event_detail_spam_count_text_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:gravity="center"
+                android:padding="2dp"
+                android:text="16 Approved" />
+        </RelativeLayout>
+
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="55">
+
+        <!--<de.hdodenhof.circleimageview.CircleImageView-->
+        <!--android:id="@+id/event_detail_profile_pic_image_view"-->
+        <!--android:layout_width="30dp"-->
+        <!--android:layout_height="30dp"-->
+        <!--android:layout_margin="10dp"-->
+        <!--android:src="@drawable/my_pic"-->
+        <!--app:civ_border_color="@color/colorPrimaryDark"-->
+        <!--app:civ_border_width="1dp" />-->
+
+        <!--<TextView-->
+        <!--android:id="@+id/event_detail_user_name_text_view"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_alignTop="@+id/event_detail_profile_pic_image_view"-->
+        <!--android:layout_marginEnd="10dp"-->
+        <!--android:layout_marginRight="10dp"-->
+        <!--android:layout_toEndOf="@+id/event_detail_profile_pic_image_view"-->
+        <!--android:text="Jhony Ive"-->
+        <!--android:textStyle="bold" />-->
+
+        <!--<TextView-->
+        <!--android:id="@+id/event_detail_user_post_dt_time_text_view"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_alignParentEnd="true"-->
+        <!--android:layout_alignTop="@+id/event_detail_profile_pic_image_view"-->
+        <!--android:layout_marginEnd="10dp"-->
+        <!--android:layout_marginRight="10dp"-->
+        <!--android:text="Jun 5, 07:30 PM"-->
+        <!--android:textSize="12sp" />-->
+
+        <!--<TextView-->
+        <!--android:id="@+id/event_detail_user_comment_text_view"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_below="@+id/event_detail_user_name_text_view"-->
+        <!--android:layout_marginEnd="10dp"-->
+        <!--android:layout_marginRight="10dp"-->
+        <!--android:layout_toEndOf="@+id/event_detail_profile_pic_image_view"-->
+        <!--android:maxLines="4"-->
+        <!--android:minLines="2"-->
+        <!--android:text="Donut party at UMBC" />-->
+
+        <ListView
+            android:id="@+id/event_detail_comments_list_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:dividerHeight="0dp"
+            android:divider="#00ffffff"
+            android:layout_marginEnd="16dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginStart="16dp" />
+    </RelativeLayout>
+
+
+</LinearLayout>
