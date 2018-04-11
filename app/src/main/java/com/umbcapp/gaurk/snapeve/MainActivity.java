@@ -14,16 +14,29 @@ import android.view.View;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.google.common.util.concurrent.FutureCallback;
+import com.google.common.util.concurrent.Futures;
+import com.google.common.util.concurrent.ListenableFuture;
+import com.google.common.util.concurrent.SettableFuture;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.microsoft.windowsazure.mobileservices.MobileServiceClient;
+import com.microsoft.windowsazure.mobileservices.http.OkHttpClientFactory;
 import com.umbcapp.gaurk.snapeve.Adapters.Dash_Event_ListAdapter;
 import com.umbcapp.gaurk.snapeve.Controllers.Event_dash_list_obj;
 import com.umbcapp.gaurk.snapeve.Fragments.MapsFragment;
 import com.umbcapp.gaurk.snapeve.Fragments.UserProfileFragment;
 
+import java.net.MalformedURLException;
 import java.util.ArrayList;
+import java.util.concurrent.TimeUnit;
+
+import com.squareup.okhttp.OkHttpClient;
 
 public class MainActivity extends AppCompatActivity implements Listview_communicator {
 
-
+    public static MobileServiceClient mClient;
+    private JsonObject jsonObjectLoginParameters;
     private UserProfileFragment userProfileFragment;
     private MapsFragment mapsFragment;
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
@@ -32,7 +45,6 @@ public class MainActivity extends AppCompatActivity implements Listview_communic
         FragmentManager fragmentManager = getFragmentManager();
         FragmentTransaction fragmentTransaction1;
 //        FragmentTransaction fragmentTransaction2;
-
 
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -98,6 +110,27 @@ public class MainActivity extends AppCompatActivity implements Listview_communic
         userProfileFragment = new UserProfileFragment();
         mapsFragment = new MapsFragment();
 
+        // Mobile Service URL and key
+        try {
+            mClient = new MobileServiceClient(
+                    "https://azure-test-app.azurewebsites.net",
+                    this);
+
+            // Extend timeout from default of 10s to 20s
+            mClient.setAndroidHttpClientFactory(new OkHttpClientFactory() {
+                @Override
+                public OkHttpClient createOkHttpClient() {
+                    OkHttpClient client = new OkHttpClient();
+                    client.setReadTimeout(20, TimeUnit.SECONDS);
+                    client.setWriteTimeout(20, TimeUnit.SECONDS);
+                    return client;
+                }
+            });
+
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+
 
 //        Dash_Event_ListAdapter dash_event_listAdapter = new Dash_Event_ListAdapter(event_main_list, this, width * 90 / 100);
         Dash_Event_ListAdapter dash_event_listAdapter = new Dash_Event_ListAdapter(this, event_main_list);
@@ -117,7 +150,34 @@ public class MainActivity extends AppCompatActivity implements Listview_communic
             }
         });
 
+        executeLoginApi();
+
     }
+
+    private void executeLoginApi() {
+        jsonObjectLoginParameters = new JsonObject();
+        jsonObjectLoginParameters.addProperty("studentId", "check123");
+
+        final SettableFuture<JsonElement> resultFuture = SettableFuture.create();
+        ListenableFuture<JsonElement> serviceFilterFuture = mClient.invokeApi("Login_api", jsonObjectLoginParameters);
+
+        Futures.addCallback(serviceFilterFuture, new FutureCallback<JsonElement>() {
+            @Override
+            public void onFailure(Throwable exception) {
+                resultFuture.setException(exception);
+                System.out.println(" executeLoginApi exception    " + exception);
+
+            }
+
+            @Override
+            public void onSuccess(JsonElement response) {
+                resultFuture.set(response);
+                System.out.println(" executeLoginApi success response    " + response);
+
+            }
+        });
+    }
+
 
     public void testlistevents() {
         System.out.print("testlistevents");

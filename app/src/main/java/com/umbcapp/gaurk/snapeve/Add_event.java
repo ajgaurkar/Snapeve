@@ -43,7 +43,6 @@ public class Add_event extends AppCompatActivity {
         setContentView(R.layout.add_event);
         initiate_permission_check();
 
-
         camera_gallery_selector_img_rel_layout = (RelativeLayout) findViewById(R.id.camera_gallery_selector_img_rel_layout);
         selected_posting_image_view = (ImageView) findViewById(R.id.selected_posting_image_view);
         cameraOpenImageView = (ImageView) findViewById(R.id.camera_gallery_selector_camera_img_view);
