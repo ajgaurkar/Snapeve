@@ -25,6 +25,8 @@ import com.microsoft.windowsazure.mobileservices.http.OkHttpClientFactory;
 import com.umbcapp.gaurk.snapeve.Adapters.Dash_Event_ListAdapter;
 import com.umbcapp.gaurk.snapeve.Controllers.Event_dash_list_obj;
 import com.umbcapp.gaurk.snapeve.Fragments.MapsFragment;
+import com.umbcapp.gaurk.snapeve.Fragments.NotificationFragment;
+import com.umbcapp.gaurk.snapeve.Fragments.SettingsFragment;
 import com.umbcapp.gaurk.snapeve.Fragments.UserProfileFragment;
 
 import java.net.MalformedURLException;
@@ -38,7 +40,9 @@ public class MainActivity extends AppCompatActivity implements Listview_communic
     public static MobileServiceClient mClient;
     private JsonObject jsonObjectLoginParameters;
     private UserProfileFragment userProfileFragment;
+    private SettingsFragment settingsFragment;
     private MapsFragment mapsFragment;
+    private NotificationFragment notificationFragment;
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
 
@@ -54,6 +58,8 @@ public class MainActivity extends AppCompatActivity implements Listview_communic
                     fragmentTransaction1 = fragmentManager.beginTransaction();
                     fragmentTransaction1.remove(mapsFragment);
                     fragmentTransaction1.remove(userProfileFragment);
+                    fragmentTransaction1.remove(settingsFragment);
+                    fragmentTransaction1.remove(notificationFragment);
                     fragmentTransaction1.commit();
 
                     System.out.print("home");
@@ -78,9 +84,25 @@ public class MainActivity extends AppCompatActivity implements Listview_communic
 
                     System.out.print("navigation_user");
                     Toast.makeText(getApplicationContext(), "toast", Toast.LENGTH_SHORT).show();
+                    return true;
+
+                case R.id.navigation_notification:
+//                    startActivity(new Intent(getApplicationContext(), UserProfileActivity.class));
+
+                    fragmentTransaction1 = fragmentManager.beginTransaction();
+                    fragmentTransaction1.replace(R.id.dashboard_main_frame_layout, notificationFragment);
+                    fragmentTransaction1.commit();
+
+                    System.out.print("notificationFragment");
+                    Toast.makeText(getApplicationContext(), "toast", Toast.LENGTH_SHORT).show();
+                    return true;
+
                 case R.id.navigation_settings:
 //                    startActivity(new Intent(getApplicationContext(), MapsActivityFragment.class));
                     System.out.print("notification");
+                    fragmentTransaction1 = fragmentManager.beginTransaction();
+                    fragmentTransaction1.replace(R.id.dashboard_main_frame_layout, settingsFragment);
+                    fragmentTransaction1.commit();
                     Toast.makeText(getApplicationContext(), "toast", Toast.LENGTH_SHORT).show();
                     return true;
             }
@@ -108,7 +130,9 @@ public class MainActivity extends AppCompatActivity implements Listview_communic
         event_main_list.add(new Event_dash_list_obj("https://news.umbc.edu/wp-content/uploads/2018/01/Fall-Campus17-6588-1920x768.jpg"));
 
         userProfileFragment = new UserProfileFragment();
+        settingsFragment = new SettingsFragment();
         mapsFragment = new MapsFragment();
+        notificationFragment = new NotificationFragment();
 
         // Mobile Service URL and key
         try {
