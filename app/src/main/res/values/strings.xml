@@ -20,4 +20,6 @@
         completions."
     </string>
     <string name="title_activity_maps_fragment">Map</string>
+    <string name="me_fragment_title">You</string>
+    <string name="grp_fragment_title">Group</string>
 </resources>

@@ -2,11 +2,10 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/container"
-    android:background="@color/colorMainBg"
+    android:id="@+id/profile_relative_layout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
+    android:layout_height="match_parent"
+    android:background="@color/colorMainBg">
 
     <RelativeLayout
         android:id="@+id/home_layout"
@@ -15,6 +14,12 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentStart="true"
         android:layout_marginBottom="2dp">
+
+        <View
+            android:id="@+id/vertical_divider_user_profile"
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:layout_centerHorizontal="true" />
 
         <View
             android:id="@+id/view"
@@ -28,16 +33,75 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_above="@id/view"
+            android:layout_alignBottom="@+id/profile_progress_bar"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
-            android:background="#e38282" />
+            android:background="#e38282"
+            android:paddingBottom="10dp" />
+
+        <LinearLayout
+            android:id="@+id/profile_layout_user_switch_lin_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal"
+            android:weightSum="100">
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="25" />
+
+            <TextView
+                android:id="@+id/profile_switch_you_textview"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="25"
+                android:background="@drawable/text_selection_left_seleted"
+                android:gravity="center"
+                android:padding="5dp"
+                android:text="You"
+                android:textColor="#fff"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/profile_switch_grp_textview"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="25"
+                android:background="@drawable/text_selection_right_unseleted"
+                android:gravity="center"
+                android:padding="5dp"
+                android:text="Group"
+                android:textColor="#fff"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="25" />
+
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/leaderboard_imageview"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignTop="@+id/profile_layout_user_switch_lin_layout"
+            android:layout_marginEnd="16dp"
+            android:background="@drawable/white_circle_bg"
+            android:padding="6dp"
+            android:src="@drawable/leaderboard_96" />
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/profile_pic_image_view"
             android:layout_width="100dp"
             android:layout_height="100dp"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="30dp"
+            android:layout_below="@+id/profile_layout_user_switch_lin_layout"
+            android:layout_margin="20dp"
             android:src="@drawable/my_pic"
             app:civ_border_color="@color/colorPrimaryDark"
             app:civ_border_width="3dp" />
@@ -46,8 +110,8 @@
             android:id="@+id/user_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/profile_pic_image_view"
-            android:layout_centerHorizontal="true"
+            android:layout_alignTop="@+id/profile_pic_image_view"
+            android:layout_toEndOf="@+id/profile_pic_image_view"
             android:padding="5dp"
             android:text="Horacio Pagani"
             android:textColor="#fff"
@@ -59,7 +123,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/user_name"
-            android:layout_centerHorizontal="true"
+            android:layout_toEndOf="@+id/profile_pic_image_view"
             android:padding="5dp"
             android:text="Contributor : Level 5"
             android:textColor="#fff"
@@ -69,7 +133,7 @@
             android:id="@+id/profile_progress_bar"
             android:layout_width="match_parent"
             android:layout_height="30dp"
-            android:layout_below="@+id/user_status"
+            android:layout_below="@+id/profile_pic_image_view"
             android:layout_marginEnd="30dp"
             android:layout_marginLeft="30dp"
             android:layout_marginRight="30dp"
@@ -85,17 +149,15 @@
             app:rcSecondaryProgress="5"
             app:rcSecondaryProgressColor="#ebf7ff" />
 
-
-        <Button
-            android:id="@+id/goto_maps_button"
+        <ListView
+            android:id="@+id/user_profile_contribution_list_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_alignParentBottom="true"
-            android:layout_below="@+id/view"
-            android:layout_centerHorizontal="true"
-            android:background="#00ffffff"
-            android:text="Maps" />
+            android:layout_below="@+id/header_bg"
+            android:divider="#00ffffff"
+            android:dividerHeight="0dp" />
 
     </RelativeLayout>
+
 
 </RelativeLayout>
