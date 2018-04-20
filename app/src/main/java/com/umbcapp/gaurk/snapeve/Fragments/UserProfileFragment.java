@@ -23,6 +23,7 @@ import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.SettableFuture;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.squareup.picasso.Picasso;
 import com.umbcapp.gaurk.snapeve.Adapters.UserContributionAdapter;
 import com.umbcapp.gaurk.snapeve.Controllers.CommentsListItem;
 import com.umbcapp.gaurk.snapeve.EventDetails;
@@ -46,6 +47,8 @@ public class UserProfileFragment extends Fragment {
     private ListView user_profile_contribution_list_view;
     private UserContributionAdapter userContributionAdapter;
     private ImageView leaderboard_imageview;
+    private ImageView profile_pic_image_view;
+    private TextView leaderboard_text_view;
 
     public UserProfileFragment() {
     }
@@ -90,14 +93,27 @@ public class UserProfileFragment extends Fragment {
         profile_relative_layout = (RelativeLayout) rootView.findViewById(R.id.profile_relative_layout);
         user_profile_contribution_list_view = (ListView) rootView.findViewById(R.id.user_profile_contribution_list_view);
         leaderboard_imageview = (ImageView) rootView.findViewById(R.id.leaderboard_imageview);
-
+        leaderboard_text_view = (TextView) rootView.findViewById(R.id.leaderboard_text_view);
+        profile_pic_image_view = (ImageView) rootView.findViewById(R.id.profile_pic_image_view);
+        Picasso.get().load("https://www.goldenglobes.com/sites/default/files/styles/portrait_medium/public/gallery_images/17-tomcruiseag.jpg?itok=qNj0cQGV&c=c9a73b7bdf609d72214d226ab9ea015e")
+                .fit().centerCrop().into(profile_pic_image_view);
 
         loadContributionList(0);
 
         user_profile_contribution_list_view.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                startActivity(new Intent(getActivity(), EventDetails.class));
+
+
+                CommentsListItem selectedCommentsListItem = contributionList.get(position);
+                Intent eventDetailIntent = new Intent(getActivity(), EventDetails.class);
+                eventDetailIntent.putExtra("user_id", selectedCommentsListItem.getUser_id());
+                eventDetailIntent.putExtra("user_name", selectedCommentsListItem.getUser_name());
+                eventDetailIntent.putExtra("img_url", selectedCommentsListItem.getImage_url());
+                eventDetailIntent.putExtra("comm_time", selectedCommentsListItem.getComment_time());
+                eventDetailIntent.putExtra("user_comment", selectedCommentsListItem.getUser_comment());
+                startActivity(eventDetailIntent);
+
             }
         });
 
@@ -108,7 +124,17 @@ public class UserProfileFragment extends Fragment {
             }
         });
 
-        leaderboard_imageview.setOnClickListener(new View.OnClickListener() {
+//        leaderboard_imageview.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Intent mIntent = new Intent(getActivity(), Leaderboard.class);
+//                Bundle mBundle = new Bundle();
+//                mBundle.putInt("Profile_type", user_type_selection_status);
+//                mIntent.putExtras(mBundle);
+//                startActivity(mIntent);
+//            }
+//        });
+        leaderboard_text_view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent mIntent = new Intent(getActivity(), Leaderboard.class);
@@ -125,6 +151,8 @@ public class UserProfileFragment extends Fragment {
                 user_profile_btn.setBackground(getResources().getDrawable(R.drawable.text_selection_left_seleted));
                 grp_profile_btn.setBackground(getResources().getDrawable(R.drawable.text_selection_right_unseleted));
                 user_type_selection_status = 0;
+                Picasso.get().load("https://www.goldenglobes.com/sites/default/files/styles/portrait_medium/public/gallery_images/17-tomcruiseag.jpg?itok=qNj0cQGV&c=c9a73b7bdf609d72214d226ab9ea015e")
+                        .fit().centerCrop().into(profile_pic_image_view);
                 loadContributionList(user_type_selection_status);
             }
         });
@@ -135,6 +163,8 @@ public class UserProfileFragment extends Fragment {
                 grp_profile_btn.setBackground(getResources().getDrawable(R.drawable.text_selection_right_seleted));
                 user_profile_btn.setBackground(getResources().getDrawable(R.drawable.text_selection_left_unseleted));
                 user_type_selection_status = 1;
+                Picasso.get().load("https://thumbs.dreamstime.com/b/group-friends-having-fun-beach-summer-holidays-vacation-happy-people-concept-34394694.jpg")
+                        .fit().centerCrop().into(profile_pic_image_view);
                 loadContributionList(user_type_selection_status);
             }
         });
@@ -146,13 +176,13 @@ public class UserProfileFragment extends Fragment {
 
         if (user_type_selection_status == 0) {
             contributionList = new ArrayList<>();
-            contributionList.add(new CommentsListItem("u1", "Jhon Paul", "speaking to a a packed crowd at Sanders Theatre, a nobel laureate discussing her most recent scientific discovery, or the Harvard senior talent show, there’s always something happening at Harvard.", "Jan 05", "https://ais2017.umbc.edu/files/2017/09/umbc.jpg"));
-            contributionList.add(new CommentsListItem("u1", "Jhon Paul", "Good", "Jan 05", "https://ais2017.umbc.edu/files/2017/09/umbc.jpg"));
-            contributionList.add(new CommentsListItem("u1", "Jhon Paul", "Good", "Jan 05", "https://ais2017.umbc.edu/files/2017/09/umbc.jpg"));
-            contributionList.add(new CommentsListItem("u1", "Jhon Paul", "Whether you have meditated for a long time or have never meditated, come join us for this time of practice together. Come to relax, quiet your mind, learn how to experience less suffering and stress, explore Buddhist philosophy and psychology, just talk about what it means to live from compassion and awareness -- or come because you are curious. This group meets on Tuesdays from 5 - 6 p.m. in in Chapin Chapel, and is led by Mark Hart, Buddhist Advisor.", "Jan 05", "https://ais2017.umbc.edu/files/2017/09/umbc.jpg"));
-            contributionList.add(new CommentsListItem("u1", "Jhon Paul", "Good", "Jan 05", "https://ais2017.umbc.edu/files/2017/09/umbc.jpg"));
-            contributionList.add(new CommentsListItem("u1", "Jhon Paul", "Good", "Jan 05", "https://ais2017.umbc.edu/files/2017/09/umbc.jpg"));
-            contributionList.add(new CommentsListItem("u1", "Jhon Paul", "Good", "Jan 05", "https://ais2017.umbc.edu/files/2017/09/umbc.jpg"));
+            contributionList.add(new CommentsListItem("u1", "Jhon Paul", "speaking to a a packed crowd at Sanders Theatre, a nobel laureate discussing her most recent scientific discovery, or the Harvard senior talent show, there’s always something happening at Harvard.", "Jan 05", "https://www.goldenglobes.com/sites/default/files/styles/portrait_medium/public/gallery_images/17-tomcruiseag.jpg?itok=qNj0cQGV&c=c9a73b7bdf609d72214d226ab9ea015e"));
+            contributionList.add(new CommentsListItem("u1", "Jhon Paul", "Good", "Jan 05", "https://www.goldenglobes.com/sites/default/files/styles/portrait_medium/public/gallery_images/17-tomcruiseag.jpg?itok=qNj0cQGV&c=c9a73b7bdf609d72214d226ab9ea015e"));
+            contributionList.add(new CommentsListItem("u1", "Jhon Paul", "Good", "Jan 05", "https://www.goldenglobes.com/sites/default/files/styles/portrait_medium/public/gallery_images/17-tomcruiseag.jpg?itok=qNj0cQGV&c=c9a73b7bdf609d72214d226ab9ea015e"));
+            contributionList.add(new CommentsListItem("u1", "Jhon Paul", "Whether you have meditated for a long time or have never meditated, come join us for this time of practice together. Come to relax, quiet your mind, learn how to experience less suffering and stress, explore Buddhist philosophy and psychology, just talk about what it means to live from compassion and awareness -- or come because you are curious. This group meets on Tuesdays from 5 - 6 p.m. in in Chapin Chapel, and is led by Mark Hart, Buddhist Advisor.", "Jan 05", "https://www.goldenglobes.com/sites/default/files/styles/portrait_medium/public/gallery_images/17-tomcruiseag.jpg?itok=qNj0cQGV&c=c9a73b7bdf609d72214d226ab9ea015e"));
+            contributionList.add(new CommentsListItem("u1", "Jhon Paul", "Good", "Jan 05", "https://www.goldenglobes.com/sites/default/files/styles/portrait_medium/public/gallery_images/17-tomcruiseag.jpg?itok=qNj0cQGV&c=c9a73b7bdf609d72214d226ab9ea015e"));
+            contributionList.add(new CommentsListItem("u1", "Jhon Paul", "Good", "Jan 05", "https://www.goldenglobes.com/sites/default/files/styles/portrait_medium/public/gallery_images/17-tomcruiseag.jpg?itok=qNj0cQGV&c=c9a73b7bdf609d72214d226ab9ea015e"));
+            contributionList.add(new CommentsListItem("u1", "Jhon Paul", "Good", "Jan 05", "https://www.goldenglobes.com/sites/default/files/styles/portrait_medium/public/gallery_images/17-tomcruiseag.jpg?itok=qNj0cQGV&c=c9a73b7bdf609d72214d226ab9ea015e"));
             userContributionAdapter = new UserContributionAdapter(getActivity(), contributionList);
 
             user_profile_contribution_list_view.setAdapter(userContributionAdapter);

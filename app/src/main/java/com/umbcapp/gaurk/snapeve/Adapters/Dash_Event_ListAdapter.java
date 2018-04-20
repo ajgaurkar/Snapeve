@@ -27,7 +27,6 @@ public class Dash_Event_ListAdapter extends BaseAdapter {
         this.event_dash_list = event_dash_list;
         this.context = context;
         this.inflater = LayoutInflater.from(context);
-
     }
 
     @Override
@@ -64,31 +63,20 @@ public class Dash_Event_ListAdapter extends BaseAdapter {
             viewHolder.list_item_comment_tv = (TextView) view.findViewById(R.id.list_item_comment_tv);
             viewHolder.list_item_spam_tv = (TextView) view.findViewById(R.id.list_item_spam_tv);
 
+            viewHolder.list_item_user_name = (TextView) view.findViewById(R.id.list_item_username);
+            viewHolder.list_item_event_title = (TextView) view.findViewById(R.id.list_item_user_description);
+
             view.setTag(viewHolder);
 
-//            Listview_communicator communicator;
-//            communicator = ((Listview_communicator)context).main_event_listview_element_clicked();
-//            communicator.main_event_listview_element_clicked();
-//
-
-
         } else {
-
             viewHolder = (ViewHolder) view.getTag();
-
         }
 
         Event_dash_list_obj event_dash_list_obj = event_dash_list.get(position);
 
-
-        //setting type face dynamically. Issues in setting through XML
-//        viewHolder.calendarTitleTextView.setText(event_dash_list_obj.getTitle());
-
-
-        Picasso.get().load(event_dash_list_obj.getTitle())
-                .fit().centerCrop().into(viewHolder.main_card_imageview);
-
-
+        Picasso.get().load(event_dash_list_obj.getImage_url()).fit().centerCrop().into(viewHolder.main_card_imageview);
+        viewHolder.list_item_event_title.setText(event_dash_list_obj.getUser_comment());
+        viewHolder.list_item_user_name.setText(event_dash_list_obj.getUser_name());
 
         viewHolder.main_card_imageview.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -190,5 +178,7 @@ public class Dash_Event_ListAdapter extends BaseAdapter {
         private TextView list_item_deny_tv;
         private TextView list_item_comment_tv;
         private TextView list_item_spam_tv;
+        private TextView list_item_event_title;
+        private TextView list_item_user_name;
     }
 }

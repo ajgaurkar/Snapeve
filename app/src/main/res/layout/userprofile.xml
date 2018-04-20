@@ -33,9 +33,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_above="@id/view"
-            android:layout_alignBottom="@+id/profile_progress_bar"
+            android:layout_alignBottom="@+id/leaderboard_text_view"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
+            android:layout_marginBottom="-10dp"
             android:background="#e38282"
             android:paddingBottom="10dp" />
 
@@ -94,14 +95,15 @@
             android:layout_marginEnd="16dp"
             android:background="@drawable/white_circle_bg"
             android:padding="6dp"
-            android:src="@drawable/leaderboard_96" />
+            android:src="@drawable/leaderboard_96"
+            android:visibility="invisible" />
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/profile_pic_image_view"
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:layout_below="@+id/profile_layout_user_switch_lin_layout"
-            android:layout_margin="20dp"
+            android:layout_margin="16dp"
             android:src="@drawable/my_pic"
             app:civ_border_color="@color/colorPrimaryDark"
             app:civ_border_width="3dp" />
@@ -129,16 +131,48 @@
             android:textColor="#fff"
             android:textStyle="bold" />
 
+        <TextView
+            android:id="@+id/leaderboard_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_below="@+id/profile_progress_bar"
+            android:layout_marginBottom="20dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/righ_side_btn_grey_bg"
+            android:paddingBottom="5dp"
+            android:paddingEnd="10dp"
+            android:paddingLeft="10dp"
+            android:paddingStart="15dp"
+            android:paddingTop="5dp"
+            android:text="Ranking"
+            android:textColor="#fff"
+            android:textSize="15sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/leaderboard_text_view"
+            android:layout_alignStart="@+id/profile_pic_image_view"
+            android:layout_alignTop="@+id/leaderboard_text_view"
+            android:padding="5dp"
+            android:singleLine="true"
+            android:text="17 Events posted"
+            android:textColor="#fff"
+            android:gravity="center_vertical"
+            android:textStyle="bold" />
+
         <com.akexorcist.roundcornerprogressbar.RoundCornerProgressBar
             android:id="@+id/profile_progress_bar"
             android:layout_width="match_parent"
             android:layout_height="30dp"
-            android:layout_below="@+id/profile_pic_image_view"
+            android:layout_below="@+id/user_status"
             android:layout_marginEnd="30dp"
-            android:layout_marginLeft="30dp"
             android:layout_marginRight="30dp"
-            android:layout_marginStart="30dp"
+            android:layout_marginStart="-5dp"
             android:layout_marginTop="10dp"
+            android:layout_toEndOf="@+id/profile_pic_image_view"
             app:rcBackgroundColor="#00ffffff"
             app:rcBackgroundPadding="10dp"
             app:rcMax="10"
@@ -154,6 +188,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_below="@+id/header_bg"
+            android:layout_marginTop="10dp"
             android:divider="#00ffffff"
             android:dividerHeight="0dp" />
 

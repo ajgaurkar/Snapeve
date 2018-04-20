@@ -14,15 +14,22 @@ import android.view.View;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+
 import com.google.common.util.concurrent.FutureCallback;
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.SettableFuture;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.microsoft.windowsazure.mobileservices.MobileServiceClient;
 import com.microsoft.windowsazure.mobileservices.http.OkHttpClientFactory;
 import com.umbcapp.gaurk.snapeve.Adapters.Dash_Event_ListAdapter;
+import com.umbcapp.gaurk.snapeve.Controllers.CommentsListItem;
 import com.umbcapp.gaurk.snapeve.Controllers.Event_dash_list_obj;
 import com.umbcapp.gaurk.snapeve.Fragments.MapsFragment;
 import com.umbcapp.gaurk.snapeve.Fragments.NotificationFragment;
@@ -34,6 +41,10 @@ import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
 import com.squareup.okhttp.OkHttpClient;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class MainActivity extends AppCompatActivity implements Listview_communicator {
 
@@ -112,22 +123,18 @@ public class MainActivity extends AppCompatActivity implements Listview_communic
     private ListView main_event_list_view;
     private ArrayList<Event_dash_list_obj> event_main_list;
     private FloatingActionButton main_img_pick_fab;
+    private Dash_Event_ListAdapter dash_event_listAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        event_main_list = new ArrayList<Event_dash_list_obj>();
+
         main_event_list_view = (ListView) findViewById(R.id.dashboard_event_listview);
         main_img_pick_fab = (FloatingActionButton) findViewById(R.id.main_img_pick_fab);
 
-        event_main_list = new ArrayList<Event_dash_list_obj>();
-        event_main_list.add(new Event_dash_list_obj("http://www.stonybrook.edu/commcms/undergraduate-colleges/_images/field-day_0.jpg"));
-        event_main_list.add(new Event_dash_list_obj("http://www.amarsound.com/images/school_college_events/1.jpg"));
-        event_main_list.add(new Event_dash_list_obj("https://www.csee.umbc.edu/wp-content/uploads/2018/02/hackumbc_slider-1000x450.png"));
-        event_main_list.add(new Event_dash_list_obj("https://news.umbc.edu/wp-content/uploads/2016/03/Campus_Entrance_sign-2828-1-e1458838962758-1920x768.jpg"));
-        event_main_list.add(new Event_dash_list_obj("https://ais2017.umbc.edu/files/2017/09/umbc.jpg"));
-        event_main_list.add(new Event_dash_list_obj("https://news.umbc.edu/wp-content/uploads/2018/01/Fall-Campus17-6588-1920x768.jpg"));
 
         userProfileFragment = new UserProfileFragment();
         settingsFragment = new SettingsFragment();
@@ -155,11 +162,6 @@ public class MainActivity extends AppCompatActivity implements Listview_communic
             e.printStackTrace();
         }
 
-
-//        Dash_Event_ListAdapter dash_event_listAdapter = new Dash_Event_ListAdapter(event_main_list, this, width * 90 / 100);
-        Dash_Event_ListAdapter dash_event_listAdapter = new Dash_Event_ListAdapter(this, event_main_list);
-        main_event_list_view.setAdapter(dash_event_listAdapter);
-
 //        startActivity(new Intent(getApplicationContext(), LoginActivity.class));
 
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
@@ -183,7 +185,8 @@ public class MainActivity extends AppCompatActivity implements Listview_communic
         jsonObjectLoginParameters.addProperty("studentId", "check123");
 
         final SettableFuture<JsonElement> resultFuture = SettableFuture.create();
-        ListenableFuture<JsonElement> serviceFilterFuture = mClient.invokeApi("Login_api", jsonObjectLoginParameters);
+//        ListenableFuture<JsonElement> serviceFilterFuture = mClient.invokeApi("Login_api", jsonObjectLoginParameters);
+        ListenableFuture<JsonElement> serviceFilterFuture = mClient.invokeApi("get_event_feeds_api", jsonObjectLoginParameters);
 
         Futures.addCallback(serviceFilterFuture, new FutureCallback<JsonElement>() {
             @Override
@@ -198,14 +201,55 @@ public class MainActivity extends AppCompatActivity implements Listview_communic
                 resultFuture.set(response);
                 System.out.println(" executeLoginApi success response    " + response);
 
+                poupulateList(response);
+
             }
         });
     }
 
+    private void poupulateList(JsonElement response) {
 
-    public void testlistevents() {
-        System.out.print("testlistevents");
+        event_main_list = new ArrayList<Event_dash_list_obj>();
+
+        System.out.println(" IN PARSE JASON");
+
+        JsonArray feedsJsonArray = response.getAsJsonArray();
+
+        for (int j = 0; j < feedsJsonArray.size(); j++) {
+            JsonObject feeds_list_object = feedsJsonArray.get(j).getAsJsonObject();
+            System.out.println(" feeds_list_object  " + feeds_list_object);
+
+            String feed_description = feeds_list_object.get("description").toString();
+            String feed_img_url = feeds_list_object.get("img_url").toString();
+            String feed_user_id = feeds_list_object.get("initializer_id").toString();
+            System.out.println(" feed_description " + feed_description);
+            System.out.println(" feed_img_url " + feed_img_url);
+
+
+            //Remove " from start and end from every string
+            feed_description = feed_description.substring(1, feed_description.length() - 1);
+            feed_user_id = feed_user_id.substring(1, feed_user_id.length() - 1);
+            feed_img_url = feed_img_url.substring(1, feed_img_url.length() - 1);
+
+//                    try {
+//                        Date date = format.parse(timestamp);
+//                        System.out.println(date);
+//
+//                        new_date = newDateFormat.format(date);
+//
+//                    } catch (ParseException e) {
+//                        e.printStackTrace();
+//                    }
+
+            event_main_list.add(0, new Event_dash_list_obj(feed_user_id, "Name_x", feed_description, "10 hrs ago", feed_img_url));
+
+
+        }
+        System.out.println(" event_main_list " + event_main_list.size());
+        dash_event_listAdapter = new Dash_Event_ListAdapter(this, event_main_list);
+        main_event_list_view.setAdapter(dash_event_listAdapter);
     }
+
 
     @Override
     public void main_event_listview_element_clicked(int position, int click_code) {
@@ -218,8 +262,7 @@ public class MainActivity extends AppCompatActivity implements Listview_communic
 
             case 0:
                 Log.d("click_code ", +position + " " + click_code);
-
-                startActivity(new Intent(getApplicationContext(), EventDetails.class));
+                openEventDetails(position);
                 break;
             case 1:
                 Log.d("click_code ", +position + " " + click_code);
@@ -239,6 +282,20 @@ public class MainActivity extends AppCompatActivity implements Listview_communic
 
         }
 
+
+    }
+
+    private void openEventDetails(int position) {
+
+
+        Event_dash_list_obj selectedEvent_dash_list_obj = event_main_list.get(position);
+        Intent eventDetailIntent = new Intent(getApplicationContext(), EventDetails.class);
+        eventDetailIntent.putExtra("user_id", selectedEvent_dash_list_obj.getUser_id());
+        eventDetailIntent.putExtra("user_name", selectedEvent_dash_list_obj.getUser_name());
+        eventDetailIntent.putExtra("img_url", selectedEvent_dash_list_obj.getImage_url());
+        eventDetailIntent.putExtra("comm_time", selectedEvent_dash_list_obj.getComment_time());
+        eventDetailIntent.putExtra("user_comment", selectedEvent_dash_list_obj.getUser_comment());
+        startActivity(eventDetailIntent);
 
     }
 }

@@ -331,6 +331,7 @@ public class Add_event extends AppCompatActivity {
         jsonObjectPostEventParameters.addProperty("description", postDescription);
         jsonObjectPostEventParameters.addProperty("all_day", all_day_status);
         jsonObjectPostEventParameters.addProperty("location_name", "Breezway");
+        jsonObjectPostEventParameters.addProperty("img_url", "https://umbc.och101.com/shared/images/backgrounds/UMBC.jpg");
 
         return true;
 

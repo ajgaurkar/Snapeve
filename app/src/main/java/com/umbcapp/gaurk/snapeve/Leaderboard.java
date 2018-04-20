@@ -3,6 +3,7 @@ package com.umbcapp.gaurk.snapeve;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 
 import com.umbcapp.gaurk.snapeve.R;
 
@@ -19,12 +20,15 @@ public class Leaderboard extends AppCompatActivity {
 
         if (user_type == 0) {
             System.out.print("USER");
+            Log.d("USER", "USER");
+
         }
         if (user_type == 1) {
             System.out.print("GROUP");
+            Log.d("GROUP", "GROUP");
 
         }
-        System.out.print(user_type);
+        Log.d("user_type : ", user_type+"");
 
 
     }
