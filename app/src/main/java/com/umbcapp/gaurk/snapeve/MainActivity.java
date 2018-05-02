@@ -11,6 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -124,6 +125,7 @@ public class MainActivity extends AppCompatActivity implements Listview_communic
     private ArrayList<Event_dash_list_obj> event_main_list;
     private FloatingActionButton main_img_pick_fab;
     private Dash_Event_ListAdapter dash_event_listAdapter;
+    private Button refreshBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -134,6 +136,7 @@ public class MainActivity extends AppCompatActivity implements Listview_communic
 
         main_event_list_view = (ListView) findViewById(R.id.dashboard_event_listview);
         main_img_pick_fab = (FloatingActionButton) findViewById(R.id.main_img_pick_fab);
+        refreshBtn = (Button) findViewById(R.id.button2);
 
 
         userProfileFragment = new UserProfileFragment();
@@ -177,6 +180,13 @@ public class MainActivity extends AppCompatActivity implements Listview_communic
         });
 
         executeLoginApi();
+
+        refreshBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                executeLoginApi();
+            }
+        });
 
     }
 

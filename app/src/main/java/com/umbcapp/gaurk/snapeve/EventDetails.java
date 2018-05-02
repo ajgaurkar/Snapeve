@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
@@ -22,6 +23,12 @@ import com.umbcapp.gaurk.snapeve.Controllers.AttendiesListItem;
 import com.umbcapp.gaurk.snapeve.Controllers.CommentsListItem;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.ListIterator;
+import java.util.Map;
 
 public class EventDetails extends AppCompatActivity implements Listview_communicator {
 
@@ -161,8 +168,7 @@ public class EventDetails extends AppCompatActivity implements Listview_communic
         attendiesClubbedArrayList.addAll(attendiesAttendingArrayList);
         attendiesClubbedArrayList.addAll(attendiesNotAttendingRequestedArrayList);
         attendiesClubbedArrayList.addAll(attendiesNotAttendingArrayList);
-
-        //attendiesAdapter = new AttendiesAdapter(getApplicationContext(), attendiesClubbedArrayList, attendies_type_selection_status);
+         //attendiesAdapter = new AttendiesAdapter(getApplicationContext(), attendiesClubbedArrayList, attendies_type_selection_status);
         //getApplicationContext not working for listview item click listener Interface, Hence EventDetails.this
         attendiesAdapter = new AttendiesAdapter(EventDetails.this, attendiesClubbedArrayList, attendies_type_selection_status);
 
@@ -174,6 +180,8 @@ public class EventDetails extends AppCompatActivity implements Listview_communic
         if (attendies_type_selection_status == 1) {
             attendies_dialog_layout_attendies_count_textview.setText(attendiesClubbedArrayList.size() + " others attending");
         }
+
+
     }
 
     @Override

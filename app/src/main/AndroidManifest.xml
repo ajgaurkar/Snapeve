@@ -56,6 +56,7 @@
         <activity android:name=".Add_event" />
         <activity android:name=".EventDetails" />
         <activity android:name=".Leaderboard" />
+        <activity android:name=".DropPinMapsActivity" />
     </application>
 
 </manifest>

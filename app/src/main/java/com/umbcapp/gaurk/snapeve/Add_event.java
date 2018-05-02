@@ -4,20 +4,26 @@ import android.Manifest;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
+import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
 
@@ -29,10 +35,12 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
-public class Add_event extends AppCompatActivity {
+public class Add_event extends AppCompatActivity implements LocationListener {
     private static final int CAMERA_REQUEST = 1888; // field
     private ImageView selected_posting_image_view;
 
@@ -64,6 +72,11 @@ public class Add_event extends AppCompatActivity {
     private int event_type_radio_value;
     private int location_type_radio_value;
     private int PICK_IMAGE = 1;
+    private int PICK_LOCATION = 3;
+    private ImageView galleryOpenImageView;
+    LocationManager locationManager;
+    private TextView add_event_card_3_textview;
+    private Spinner add_event_card_3_spinner;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -75,15 +88,17 @@ public class Add_event extends AppCompatActivity {
         camera_gallery_selector_img_rel_layout = (RelativeLayout) findViewById(R.id.camera_gallery_selector_img_rel_layout);
         selected_posting_image_view = (ImageView) findViewById(R.id.selected_posting_image_view);
         cameraOpenImageView = (ImageView) findViewById(R.id.camera_gallery_selector_camera_img_view);
+        galleryOpenImageView = (ImageView) findViewById(R.id.camera_gallery_selector_gallery_img_view);
         similar_posts_cardview_skip_text_view = (TextView) findViewById(R.id.similar_posts_cardview_skip_text_view);
         selected_posting_image_view = (ImageView) findViewById(R.id.selected_posting_image_view);
         select_image_trash_can_image_view = (ImageView) findViewById(R.id.select_image_trash_can_image_view);
+        add_event_card_3_spinner = (Spinner) findViewById(R.id.add_event_card_3_spinner);
         select_image_trash_can_image_view.setVisibility(View.GONE);
-
 
         all_day_switch = (Switch) findViewById(R.id.all_day_switch);
         post_event_description_text_view = (EditText) findViewById(R.id.post_event_description_text_view);
         post_event_time_dt_text_view = (TextView) findViewById(R.id.post_event_time_dt_text_view);
+        add_event_card_3_textview = (TextView) findViewById(R.id.add_event_card_3_textview);
         post_scope_radio_grp = (RadioGroup) findViewById(R.id.post_scope_radio_grp);
         post_location_radio_grp = (RadioGroup) findViewById(R.id.post_location_radio_grp);
         post_event_type_radio_grp = (RadioGroup) findViewById(R.id.post_event_type_radio_grp);
@@ -97,7 +112,12 @@ public class Add_event extends AppCompatActivity {
         similar_button_cardview = (CardView) findViewById(R.id.similar_button_cardview);
         add_event_card_5_rel_layout = (RelativeLayout) findViewById(R.id.add_event_card_5_rel_layout);
 
+        add_event_card_3_spinner.setVisibility(View.INVISIBLE);
+        add_event_card_3_textview.setVisibility(View.VISIBLE);
+        getCurrentLocation();
+
         similar_posts_list_cardview.setVisibility(View.GONE);
+        fillLocationSpinner();
 
         all_day_switch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -115,13 +135,15 @@ public class Add_event extends AppCompatActivity {
         cameraOpenImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                System.out.println("cameraOpenImageView");
                 takePicture();
             }
         });
-        selected_posting_image_view.setOnClickListener(new View.OnClickListener() {
+        galleryOpenImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 selcectFromGallery();
+                System.out.println("galleryOpenImageView");
             }
         });
         select_image_trash_can_image_view.setOnClickListener(new View.OnClickListener() {
@@ -170,6 +192,131 @@ public class Add_event extends AppCompatActivity {
 
             }
         });
+
+        post_event_type_radio_grp.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+
+                System.out.println("checkedId : " + checkedId);
+
+                switch (checkedId) {
+                    case R.id.post_event_type_event_radio:
+                        System.out.println("Event");
+                        break;
+                    case R.id.post_event_type_incident_radio:
+                        System.out.println("Incident");
+
+                        break;
+
+                }
+            }
+        });
+        post_location_radio_grp.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+
+                System.out.println("checkedId : " + checkedId);
+
+                switch (checkedId) {
+
+                    case R.id.post_location_current_radio:
+                        System.out.println("Current");
+                        add_event_card_3_spinner.setVisibility(View.INVISIBLE);
+                        add_event_card_3_textview.setVisibility(View.VISIBLE);
+                        getCurrentLocation();
+                        break;
+                    case R.id.post_location_picklist_radio:
+                        System.out.println("Picklist");
+                        add_event_card_3_spinner.setVisibility(View.VISIBLE);
+                        add_event_card_3_textview.setVisibility(View.INVISIBLE);
+
+                        break;
+                    case R.id.post_location_pin_radio:
+                        System.out.println("Pin");
+                        startActivityForResult(new Intent(getApplicationContext(), DropPinMapsActivity.class), PICK_LOCATION);
+                        add_event_card_3_spinner.setVisibility(View.INVISIBLE);
+                        add_event_card_3_textview.setVisibility(View.VISIBLE);
+                        break;
+
+                }
+            }
+        });
+        post_scope_radio_grp.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+
+                System.out.println("checkedId : " + checkedId);
+
+                switch (checkedId) {
+
+                    case R.id.post_scope_public_radio:
+                        System.out.println("Public");
+
+                        break;
+                    case R.id.post_scope_anonymous_radio:
+                        System.out.println("Anonymous");
+
+                        break;
+                    case R.id.post_scope_grponly_radio:
+                        System.out.println("Grp only");
+
+                        break;
+
+                }
+            }
+        });
+
+    }
+
+    private void fillLocationSpinner() {
+
+        // Spinner Drop down elements
+        List<String> categories = new ArrayList<String>();
+        categories.add("Breez way");
+        categories.add("UMBC Commons");
+        categories.add("Administration garage");
+        categories.add("Bookstore");
+        categories.add("Commons street");
+        categories.add("Flat Tuesdays");
+        categories.add("Gameroom");
+
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, categories);
+        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        add_event_card_3_spinner.setAdapter(dataAdapter);
+    }
+
+    private void getCurrentLocation() {
+        try {
+            locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 5, this);
+        } catch (SecurityException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+        System.out.println("location :" + location);
+        add_event_card_3_textview.setText("Current Location: " + location.getLatitude() + ", " + location.getLongitude());
+
+    }
+
+    @Override
+    public void onProviderDisabled(String provider) {
+        System.out.println("onProviderDisabled ");
+
+        add_event_card_3_textview.setText("Please Enable GPS and Internet");
+
+    }
+
+    @Override
+    public void onStatusChanged(String provider, int status, Bundle extras) {
+
+    }
+
+    @Override
+    public void onProviderEnabled(String provider) {
+
     }
 
     private void selcectFromGallery() {
@@ -190,6 +337,11 @@ public class Add_event extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == PICK_IMAGE && resultCode == Activity.RESULT_OK) {
 
+        }
+        if (requestCode == PICK_LOCATION) {
+            System.out.print("PICK_LOCATION");
+            System.out.print("LAT : " + data.getStringExtra("Lat"));
+            System.out.print("LNG : " + data.getStringExtra("Lng"));
         }
         if (requestCode == CAMERA_REQUEST && resultCode == Activity.RESULT_OK) {
             Bitmap picture = (Bitmap) data.getExtras().get("data");//this is your bitmap image and now you can do whatever you want with this

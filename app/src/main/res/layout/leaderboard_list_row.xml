@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="10dp">
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/leaderboard_list_item_dp_imageview"
+        android:layout_width="30dp"
+        android:layout_height="30dp" />
+
+    <TextView
+        android:id="@+id/leaderboard_list_item_name_textview"
+        android:layout_width="match_parent"
+        android:singleLine="true"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/leaderboard_list_item_dp_imageview"
+        android:layout_toEndOf="@+id/leaderboard_list_item_dp_imageview" />
+
+    <com.akexorcist.roundcornerprogressbar.RoundCornerProgressBar
+        android:id="@+id/leaderboard_list_item_rank_progress_bar"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:layout_below="@+id/leaderboard_list_item_dp_imageview"
+        android:layout_toEndOf="@+id/leaderboard_list_item_dp_imageview"
+        app:rcBackgroundColor="#00ffffff"
+        app:rcBackgroundPadding="10dp"
+        app:rcMax="10"
+        app:rcProgress="10"
+        app:rcProgressColor="#7cffffff"
+        app:rcRadius="10dp"
+        app:rcReverse="false"
+        app:rcSecondaryProgress="5"
+        app:rcSecondaryProgressColor="#ebf7ff" />
+</RelativeLayout>
