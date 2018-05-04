@@ -26,6 +26,13 @@ public class CreateGroupAdapter extends BaseAdapter {
     String entryDate = null;
     int attendies_type = 0;
 
+    /*
+    STATUS 0 = Already joined
+    STATUS 1 = Pending approval
+    STATUS 2 = Request Sent
+    STATUS 3 = Not a member
+    */
+
     public CreateGroupAdapter(Context context, List<CreateGroupListItem> comments_list) {
 
         this.create_grp_List = comments_list;
@@ -77,6 +84,27 @@ public class CreateGroupAdapter extends BaseAdapter {
                 .fit().centerCrop().into(viewHolder.create_grp_list_item_user_pic_img_view);
         viewHolder.create_grp_list_item_user_name_text_view.setText(selectedCreateGroupListItem.getUserName());
         viewHolder.create_grp_list_item_user_email_text_view.setText(selectedCreateGroupListItem.getUserEmail());
+
+        switch (selectedCreateGroupListItem.getUserReqStatus()) {
+            /*STATUS 0 = Already joined
+            STATUS 1 = Pending approval
+            STATUS 2 = Request Sent
+            STATUS 3 = Not a member*/
+
+            case 0:
+                viewHolder.create_grp_list_item_request_status_text_view.setText("Remove");
+                break;
+            case 1:
+                viewHolder.create_grp_list_item_request_status_text_view.setText("Approve");
+                break;
+            case 2:
+                viewHolder.create_grp_list_item_request_status_text_view.setText("Request sent");
+                break;
+            case 3:
+                viewHolder.create_grp_list_item_request_status_text_view.setText("Send request");
+                break;
+
+        }
 
         viewHolder.create_grp_list_item_request_status_text_view.setOnClickListener(new View.OnClickListener() {
             @Override

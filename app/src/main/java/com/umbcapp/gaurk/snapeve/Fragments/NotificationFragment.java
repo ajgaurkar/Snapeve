@@ -32,8 +32,6 @@ public class NotificationFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        startActivity(new Intent(getActivity(),CreateGruoups.class));
-
     }
 
     private void fetch_group_details() {

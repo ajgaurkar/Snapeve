@@ -26,6 +26,7 @@ import com.google.gson.JsonObject;
 import com.squareup.picasso.Picasso;
 import com.umbcapp.gaurk.snapeve.Adapters.UserContributionAdapter;
 import com.umbcapp.gaurk.snapeve.Controllers.CommentsListItem;
+import com.umbcapp.gaurk.snapeve.CreateGruoups;
 import com.umbcapp.gaurk.snapeve.EventDetails;
 import com.umbcapp.gaurk.snapeve.Leaderboard;
 import com.umbcapp.gaurk.snapeve.MainActivity;
@@ -49,6 +50,7 @@ public class UserProfileFragment extends Fragment {
     private ImageView leaderboard_imageview;
     private ImageView profile_pic_image_view;
     private TextView leaderboard_text_view;
+    private ImageView user_profile_settings_imageview;
 
     public UserProfileFragment() {
 
@@ -93,9 +95,9 @@ public class UserProfileFragment extends Fragment {
         user_profile_list_view = (ListView) rootView.findViewById(R.id.user_profile_contribution_list_view);
         profile_relative_layout = (RelativeLayout) rootView.findViewById(R.id.profile_relative_layout);
         user_profile_contribution_list_view = (ListView) rootView.findViewById(R.id.user_profile_contribution_list_view);
-        leaderboard_imageview = (ImageView) rootView.findViewById(R.id.leaderboard_imageview);
         leaderboard_text_view = (TextView) rootView.findViewById(R.id.leaderboard_text_view);
         profile_pic_image_view = (ImageView) rootView.findViewById(R.id.profile_pic_image_view);
+        user_profile_settings_imageview = (ImageView) rootView.findViewById(R.id.user_profile_settings_imageview);
         Picasso.get().load("https://www.goldenglobes.com/sites/default/files/styles/portrait_medium/public/gallery_images/17-tomcruiseag.jpg?itok=qNj0cQGV&c=c9a73b7bdf609d72214d226ab9ea015e")
                 .fit().centerCrop().into(profile_pic_image_view);
 
@@ -125,16 +127,13 @@ public class UserProfileFragment extends Fragment {
             }
         });
 
-//        leaderboard_imageview.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Intent mIntent = new Intent(getActivity(), Leaderboard.class);
-//                Bundle mBundle = new Bundle();
-//                mBundle.putInt("Profile_type", user_type_selection_status);
-//                mIntent.putExtras(mBundle);
-//                startActivity(mIntent);
-//            }
-//        });
+        user_profile_settings_imageview.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getActivity(), CreateGruoups.class));
+            }
+        });
+
         leaderboard_text_view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

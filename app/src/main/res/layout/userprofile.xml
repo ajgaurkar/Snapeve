@@ -37,7 +37,7 @@
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
             android:layout_marginBottom="-10dp"
-            android:background="#e38282"
+            android:background="@color/colorPrimary"
             android:paddingBottom="10dp" />
 
         <LinearLayout
@@ -87,16 +87,14 @@
         </LinearLayout>
 
         <ImageView
-            android:id="@+id/leaderboard_imageview"
+            android:id="@+id/user_profile_settings_imageview"
             android:layout_width="40dp"
             android:layout_height="40dp"
+            android:layout_alignBottom="@+id/profile_layout_user_switch_lin_layout"
             android:layout_alignParentEnd="true"
             android:layout_alignTop="@+id/profile_layout_user_switch_lin_layout"
             android:layout_marginEnd="16dp"
-            android:background="@drawable/white_circle_bg"
-            android:padding="6dp"
-            android:src="@drawable/leaderboard_96"
-            android:visibility="invisible" />
+            android:src="@drawable/settings_white_48" />
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/profile_pic_image_view"
@@ -156,11 +154,11 @@
             android:layout_alignBottom="@+id/leaderboard_text_view"
             android:layout_alignStart="@+id/profile_pic_image_view"
             android:layout_alignTop="@+id/leaderboard_text_view"
+            android:gravity="center_vertical"
             android:padding="5dp"
             android:singleLine="true"
             android:text="17 Events posted"
             android:textColor="#fff"
-            android:gravity="center_vertical"
             android:textStyle="bold" />
 
         <com.akexorcist.roundcornerprogressbar.RoundCornerProgressBar

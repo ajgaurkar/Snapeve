@@ -42,7 +42,6 @@ public class ApprovalPendingFragment extends Fragment implements Listview_commun
         appr_pending_frag_listview = (ListView) rootView.findViewById(R.id.appr_pending_frag_listview);
 
         groupList.add(new CreateGroupListItem("Pranav Rana", "GU1", 1, "user_1@gmail.com", "https://www.bnl.gov/today/body_pics/2017/06/stephanhruszkewycz-355px.jpg"));
-        groupList.add(new CreateGroupListItem("Neha reddy", "GU1", 1, "user_1@gmail.com", "http://www.medicine20congress.com/ocs/public/profiles/3141.jpg"));
         groupList.add(new CreateGroupListItem("Rushabh mehta", "GU1", 1, "user_1@gmail.com", "https://cdn.earthdata.nasa.gov/conduit/upload/6072/Glenn_headshot_resize.jpg"));
 
         createGroupAdapter = new CreateGroupAdapter(getActivity(), groupList);

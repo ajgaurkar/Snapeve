@@ -44,11 +44,11 @@ public class RequestPendingFragment extends Fragment implements Listview_communi
 
         add_mem_frag_listview = (ListView) rootView.findViewById(R.id.req_pending_frag_listview);
 
-        groupList.add(new CreateGroupListItem("Ajinkya Gaurkar", "GU1", 1, "user_1@gmail.com", "http://keenthemes.com/preview/metronic/theme/assets/pages/media/profile/profile_user.jpg"));
-        groupList.add(new CreateGroupListItem("Siddhrth Ptro", "GU1", 1, "user_1@gmail.com", "http://www.dast.biz/wp-content/uploads/2016/11/John_Doe.jpg"));
-        groupList.add(new CreateGroupListItem("Pranav rana", "GU1", 1, "user_1@gmail.com", "https://www.bnl.gov/today/body_pics/2017/06/stephanhruszkewycz-355px.jpg"));
-        groupList.add(new CreateGroupListItem("Neha reddy", "GU1", 1, "user_1@gmail.com", "http://www.medicine20congress.com/ocs/public/profiles/3141.jpg"));
-        groupList.add(new CreateGroupListItem("Rushabh mehta", "GU1", 1, "user_1@gmail.com", "https://cdn.earthdata.nasa.gov/conduit/upload/6072/Glenn_headshot_resize.jpg"));
+        groupList.add(new CreateGroupListItem("Ajinkya Gaurkar", "GU1", 2, "user_1@gmail.com", "http://keenthemes.com/preview/metronic/theme/assets/pages/media/profile/profile_user.jpg"));
+        groupList.add(new CreateGroupListItem("Siddhrth Ptro", "GU1", 2, "user_1@gmail.com", "http://www.dast.biz/wp-content/uploads/2016/11/John_Doe.jpg"));
+        groupList.add(new CreateGroupListItem("Pranav rana", "GU1", 2, "user_1@gmail.com", "https://www.bnl.gov/today/body_pics/2017/06/stephanhruszkewycz-355px.jpg"));
+        groupList.add(new CreateGroupListItem("Neha reddy", "GU1", 2, "user_1@gmail.com", "http://www.medicine20congress.com/ocs/public/profiles/3141.jpg"));
+        groupList.add(new CreateGroupListItem("Rushabh mehta", "GU1", 2, "user_1@gmail.com", "https://cdn.earthdata.nasa.gov/conduit/upload/6072/Glenn_headshot_resize.jpg"));
 
         createGroupAdapter = new CreateGroupAdapter(getActivity(), groupList);
         add_mem_frag_listview.setAdapter(createGroupAdapter);

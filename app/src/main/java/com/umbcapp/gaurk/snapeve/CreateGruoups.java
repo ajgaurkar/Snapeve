@@ -9,10 +9,13 @@ import android.support.annotation.Nullable;
 import android.view.View;
 import android.widget.RelativeLayout;
 
+import com.squareup.picasso.Picasso;
 import com.umbcapp.gaurk.snapeve.Fragments.Add_mem_fragment;
 import com.umbcapp.gaurk.snapeve.Fragments.ApprovalPendingFragment;
 import com.umbcapp.gaurk.snapeve.Fragments.Mem_joined_fragment;
 import com.umbcapp.gaurk.snapeve.Fragments.RequestPendingFragment;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class CreateGruoups extends Activity {
     private RelativeLayout add_mem_layout;
@@ -30,6 +33,7 @@ public class CreateGruoups extends Activity {
     Mem_joined_fragment mem_joined_fragment;
     RequestPendingFragment req_pending_fragment;
     ApprovalPendingFragment approval_pending_fragment;
+    private CircleImageView create_group_profile_pic_image_view;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -49,11 +53,19 @@ public class CreateGruoups extends Activity {
         req_pend_layout = (RelativeLayout) findViewById(R.id.add_mem_req_sent_layout);
         appr_pend_layout = (RelativeLayout) findViewById(R.id.add_mem_pending_appr_layout);
 
+        create_group_profile_pic_image_view = (CircleImageView) findViewById(R.id.create_group_profile_pic_image_view);
+
         create_group_cardview_bottom_view = (View) findViewById(R.id.create_group_cardview_bottom_view);
         create_group_cardview_req_pending_bottom_view = (View) findViewById(R.id.create_group_cardview_req_pending_bottom_view);
         create_group_cardview_req_sent_bottom_view = (View) findViewById(R.id.create_group_cardview_req_sent_bottom_view);
         create_group_cardview_add_mem_bottom_view = (View) findViewById(R.id.create_group_cardview_add_mem_bottom_view);
 
+        Picasso.get().load("https://thumbs.dreamstime.com/b/group-friends-having-fun-beach-summer-holidays-vacation-happy-people-concept-34394694.jpg")
+                .fit().centerCrop().into(create_group_profile_pic_image_view);
+
+        fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.create_group_list_layout, mem_joined_fragment);
+        fragmentTransaction.commit();
 
         add_mem_layout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -63,7 +75,6 @@ public class CreateGruoups extends Activity {
                 create_group_cardview_req_pending_bottom_view.setVisibility(View.INVISIBLE);
                 create_group_cardview_req_sent_bottom_view.setVisibility(View.INVISIBLE);
                 create_group_cardview_add_mem_bottom_view.setVisibility(View.VISIBLE);
-
 
 
                 fragmentTransaction = fragmentManager.beginTransaction();
