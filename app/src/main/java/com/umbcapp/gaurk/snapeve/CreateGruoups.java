@@ -39,6 +39,11 @@ public class CreateGruoups extends Activity {
 
         fragmentManager = getFragmentManager();
 
+        add_mem_fragment = new Add_mem_fragment();
+        mem_joined_fragment = new Mem_joined_fragment();
+        req_pending_fragment = new RequestPendingFragment();
+        approval_pending_fragment = new ApprovalPendingFragment();
+
         add_mem_layout = (RelativeLayout) findViewById(R.id.add_mem_add_mem_layout);
         mem_joined_layout = (RelativeLayout) findViewById(R.id.add_mem_joined_mem_layout);
         req_pend_layout = (RelativeLayout) findViewById(R.id.add_mem_req_sent_layout);
