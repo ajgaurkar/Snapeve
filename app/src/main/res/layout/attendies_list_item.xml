@@ -34,20 +34,6 @@
             android:textSize="14sp"
             android:textStyle="bold" />
 
-        <!--<ImageView-->
-        <!--android:id="@+id/attendies_list_item_request_status_img_view"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_above="@+id/attendies_list_item_request_status_text_view"-->
-        <!--android:layout_alignBottom="@+id/attendies_list_item_user_attending_status_text_view"-->
-        <!--android:layout_alignParentEnd="true"-->
-        <!--android:layout_alignStart="@+id/attendies_list_item_request_status_text_view"-->
-        <!--android:layout_alignTop="@+id/attendies_list_item_user_name_text_view"-->
-        <!--android:padding="4dp"-->
-        <!--android:layout_marginEnd="-10dp"-->
-        <!--android:singleLine="true"-->
-        <!--android:src="@drawable/walking_48" />-->
-
         <TextView
             android:id="@+id/attendies_list_item_request_status_text_view"
             android:layout_width="wrap_content"
