@@ -47,11 +47,16 @@ public class Leaderboard extends AppCompatActivity {
 //        Log.d("user_type : ", user_type + "");
 //
 
-        leaderBoardList.add(new LeaderboardListItem("LU1", "Aj", 31, "Grp UMBC", "https://www.goldenglobes.com/sites/default/files/styles/portrait_medium/public/gallery_images/17-tomcruiseag.jpg?itok=qNj0cQGV&c=c9a73b7bdf609d72214d226ab9ea015e"));
+        leaderBoardList.add(new LeaderboardListItem("LU5", "Sri", 99, "Grp UMBC", "https://www.goldenglobes.com/sites/default/files/styles/portrait_medium/public/gallery_images/17-tomcruiseag.jpg?itok=qNj0cQGV&c=c9a73b7bdf609d72214d226ab9ea015e"));
+        leaderBoardList.add(new LeaderboardListItem("LU8", "Sri", 73, "Grp UMBC", "https://www.goldenglobes.com/sites/default/files/styles/portrait_medium/public/gallery_images/17-tomcruiseag.jpg?itok=qNj0cQGV&c=c9a73b7bdf609d72214d226ab9ea015e"));
+        leaderBoardList.add(new LeaderboardListItem("LU6", "Sri", 66, "Grp UMBC", "https://www.goldenglobes.com/sites/default/files/styles/portrait_medium/public/gallery_images/17-tomcruiseag.jpg?itok=qNj0cQGV&c=c9a73b7bdf609d72214d226ab9ea015e"));
         leaderBoardList.add(new LeaderboardListItem("LU2", "Neha", 56, "Grp UMBC", "https://www.goldenglobes.com/sites/default/files/styles/portrait_medium/public/gallery_images/17-tomcruiseag.jpg?itok=qNj0cQGV&c=c9a73b7bdf609d72214d226ab9ea015e"));
+        leaderBoardList.add(new LeaderboardListItem("LU9", "Sri", 52, "Grp UMBC", "https://www.goldenglobes.com/sites/default/files/styles/portrait_medium/public/gallery_images/17-tomcruiseag.jpg?itok=qNj0cQGV&c=c9a73b7bdf609d72214d226ab9ea015e"));
+        leaderBoardList.add(new LeaderboardListItem("LU10", "Bala", 45, "Grp UMBC", "https://www.goldenglobes.com/sites/default/files/styles/portrait_medium/public/gallery_images/17-tomcruiseag.jpg?itok=qNj0cQGV&c=c9a73b7bdf609d72214d226ab9ea015e"));
+        leaderBoardList.add(new LeaderboardListItem("LU4", "Sri", 44, "Grp UMBC", "https://www.goldenglobes.com/sites/default/files/styles/portrait_medium/public/gallery_images/17-tomcruiseag.jpg?itok=qNj0cQGV&c=c9a73b7bdf609d72214d226ab9ea015e"));
+        leaderBoardList.add(new LeaderboardListItem("LU1", "Aj", 31, "Grp UMBC", "https://www.goldenglobes.com/sites/default/files/styles/portrait_medium/public/gallery_images/17-tomcruiseag.jpg?itok=qNj0cQGV&c=c9a73b7bdf609d72214d226ab9ea015e"));
         leaderBoardList.add(new LeaderboardListItem("LU3", "Sid", 18, "Grp UMBC", "https://www.goldenglobes.com/sites/default/files/styles/portrait_medium/public/gallery_images/17-tomcruiseag.jpg?itok=qNj0cQGV&c=c9a73b7bdf609d72214d226ab9ea015e"));
-        leaderBoardList.add(new LeaderboardListItem("LU4", "Sri", 99, "Grp UMBC", "https://www.goldenglobes.com/sites/default/files/styles/portrait_medium/public/gallery_images/17-tomcruiseag.jpg?itok=qNj0cQGV&c=c9a73b7bdf609d72214d226ab9ea015e"));
-        leaderBoardList.add(new LeaderboardListItem("LU1", "Bala", 45, "Grp UMBC", "https://www.goldenglobes.com/sites/default/files/styles/portrait_medium/public/gallery_images/17-tomcruiseag.jpg?itok=qNj0cQGV&c=c9a73b7bdf609d72214d226ab9ea015e"));
+        leaderBoardList.add(new LeaderboardListItem("LU7", "Sri", 15, "Grp UMBC", "https://www.goldenglobes.com/sites/default/files/styles/portrait_medium/public/gallery_images/17-tomcruiseag.jpg?itok=qNj0cQGV&c=c9a73b7bdf609d72214d226ab9ea015e"));
         System.out.println("xxx leaderBoardList "+leaderBoardList.size());
 
         leaderBoardAdapter = new LeaderBoardAdapter(leaderBoardList, maxRank);

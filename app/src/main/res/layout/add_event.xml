@@ -137,63 +137,75 @@
         android:elevation="10dp"
         card_view:cardUseCompatPadding="true">
 
-        <RadioGroup
-            android:id="@+id/post_scope_radio_grp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:padding="5dp"
-            android:weightSum="101"
-            card_view:cardCornerRadius="3dp">
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
 
-            <RadioButton
-                android:id="@+id/post_scope_public_radio"
-                android:layout_width="0dp"
+            <TextView
+                android:id="@+id/visibility_label_textview"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="33"
-                android:checked="true"
-                android:text="Public" />
+                android:layout_marginBottom="-5dp"
+                android:padding="5dp"
+                android:text="Visibility" />
 
-            <View
-                android:layout_width="1dp"
-                android:layout_height="match_parent"
-                android:layout_marginBottom="5dp"
-                android:layout_marginTop="5dp"
-                android:background="#cecece" />
-
-            <!--<View-->
-            <!--android:layout_width="0dp"-->
-            <!--android:layout_height="match_parent"-->
-            <!--android:layout_weight="10" />-->
-
-            <RadioButton
-                android:id="@+id/post_scope_grponly_radio"
-                android:layout_width="0dp"
+            <RadioGroup
+                android:id="@+id/post_scope_radio_grp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="33"
-                android:text="Group only" />
+                android:layout_below="@+id/visibility_label_textview"
+                android:orientation="horizontal"
+                android:padding="5dp"
+                android:weightSum="101">
 
-            <View
-                android:layout_width="1dp"
-                android:layout_height="match_parent"
-                android:layout_marginBottom="5dp"
-                android:layout_marginTop="5dp"
-                android:background="#cecece" />
+                <RadioButton
+                    android:id="@+id/post_scope_public_radio"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="33"
+                    android:checked="true"
+                    android:text="Public" />
 
-            <!--<View-->
-            <!--android:layout_width="0dp"-->
-            <!--android:layout_height="match_parent"-->
-            <!--android:layout_weight="10" />-->
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginTop="5dp"
+                    android:background="#cecece" />
 
-            <RadioButton
-                android:id="@+id/post_scope_anonymous_radio"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="33"
-                android:text="Anonymous" />
+                <!--<View-->
+                <!--android:layout_width="0dp"-->
+                <!--android:layout_height="match_parent"-->
+                <!--android:layout_weight="10" />-->
 
-        </RadioGroup>
+                <RadioButton
+                    android:id="@+id/post_scope_grponly_radio"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="33"
+                    android:text="Group only" />
 
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginTop="5dp"
+                    android:background="#cecece" />
+
+                <!--<View-->
+                <!--android:layout_width="0dp"-->
+                <!--android:layout_height="match_parent"-->
+                <!--android:layout_weight="10" />-->
+
+                <RadioButton
+                    android:id="@+id/post_scope_anonymous_radio"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="33"
+                    android:text="Anonymous" />
+
+            </RadioGroup>
+        </RelativeLayout>
     </android.support.v7.widget.CardView>
 
     <android.support.v7.widget.CardView
@@ -213,10 +225,19 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
+            <TextView
+                android:id="@+id/location_label_textview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="-5dp"
+                android:padding="5dp"
+                android:text="Select Location" />
+
             <RadioGroup
                 android:id="@+id/post_location_radio_grp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_below="@+id/location_label_textview"
                 android:orientation="horizontal"
                 android:padding="5dp"
                 android:weightSum="101">
@@ -275,18 +296,21 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/post_location_radio_grp"
-                android:layout_margin="10dp"
+                android:layout_marginBottom="5dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginStart="10dp"
                 android:padding="2dp"
-                android:text="79.521572851,88.52743275" />
+                android:text="Current location: -,-" />
 
             <Spinner
                 android:id="@+id/add_event_card_3_spinner"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/post_location_radio_grp"
-                android:layout_margin="10dp"
-                android:padding="2dp"
-                android:text="79.521572851,88.52743275" />
+                android:layout_marginBottom="5dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginStart="10dp"/>
+
         </RelativeLayout>
 
     </android.support.v7.widget.CardView>
@@ -305,42 +329,57 @@
         card_view:cardCornerRadius="3dp"
         card_view:cardUseCompatPadding="true">
 
-        <RadioGroup
-            android:id="@+id/post_event_type_radio_grp"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:padding="5dp"
-            android:weightSum="101">
+            android:layout_height="wrap_content">
 
-            <RadioButton
-                android:id="@+id/post_event_type_event_radio"
-                android:layout_width="wrap_content"
+            <TextView
+                android:id="@+id/posttype_label_textview"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="27"
-                android:checked="true"
-                android:text="Event" />
+                android:layout_marginBottom="-5dp"
+                android:padding="5dp"
+                android:text="Post type" />
 
-            <View
-                android:layout_width="1dp"
-                android:layout_height="match_parent"
-                android:layout_marginBottom="5dp"
-                android:layout_marginTop="5dp"
-                android:background="#cecece" />
-
-            <View
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="10" />
-
-            <RadioButton
-                android:id="@+id/post_event_type_incident_radio"
-                android:layout_width="0dp"
+            <RadioGroup
+                android:id="@+id/post_event_type_radio_grp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="35"
-                android:text="Incident" />
+                android:layout_below="@+id/posttype_label_textview"
+                android:orientation="horizontal"
+                android:padding="5dp"
+                android:weightSum="101">
 
-        </RadioGroup>
+                <RadioButton
+                    android:id="@+id/post_event_type_event_radio"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="27"
+                    android:checked="true"
+                    android:text="Event" />
+
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginTop="5dp"
+                    android:background="#cecece" />
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="10" />
+
+                <RadioButton
+                    android:id="@+id/post_event_type_incident_radio"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="35"
+                    android:text="Incident" />
+
+            </RadioGroup>
+
+        </RelativeLayout>
     </android.support.v7.widget.CardView>
 
     <RelativeLayout

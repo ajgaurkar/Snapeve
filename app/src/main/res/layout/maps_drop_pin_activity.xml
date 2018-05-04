@@ -41,10 +41,19 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
 
+            <ProgressBar
+                android:id="@+id/selected_latlong_progressbar"
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/selected_latlong"
+                android:layout_alignTop="@+id/selected_latlong"
+                android:padding="5dp" />
+
             <TextView
                 android:id="@+id/selected_latlong"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_toEndOf="@+id/selected_latlong_progressbar"
                 android:gravity="center"
                 android:padding="10dp"
                 android:singleLine="true"

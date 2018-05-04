@@ -62,10 +62,11 @@ public class MapsFragment extends Fragment {
 
                 // For dropping a marker at a point on the Map
                 LatLng sydney = new LatLng(39.255613039, -76.710975076);
-                googleMap.addMarker(new MarkerOptions().position(sydney).title("Marker Title").snippet("Marker Description"));
+//                googleMap.addMarker(new MarkerOptions().position(sydney).title("Marker Title").snippet("Marker Description"));
                 // For zooming automatically to the location of the marker
                 CameraPosition cameraPosition = new CameraPosition.Builder().target(sydney).zoom(15.5f).build();
-                googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+                googleMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+
             }
         });
 

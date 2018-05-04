@@ -34,11 +34,14 @@ import com.google.common.util.concurrent.SettableFuture;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.Random;
 
 public class Add_event extends AppCompatActivity implements LocationListener {
     private static final int CAMERA_REQUEST = 1888; // field
@@ -68,6 +71,7 @@ public class Add_event extends AppCompatActivity implements LocationListener {
     private String postDescriptionTimeDt;
     private TextView post_event_time_dt_text_view;
     private boolean all_day_status;
+    private String eventLocation="NULL";
     private int post_scope_radio_value;
     private int event_type_radio_value;
     private int location_type_radio_value;
@@ -76,7 +80,12 @@ public class Add_event extends AppCompatActivity implements LocationListener {
     private ImageView galleryOpenImageView;
     LocationManager locationManager;
     private TextView add_event_card_3_textview;
-    private Spinner add_event_card_3_spinner;
+    private Spinner pick_location_card_3_spinner;
+    double selectedLat = 0.0;
+    double selectedLng = 0.0;
+    double currentLat = 0.0;
+    double currentLng = 0.0;
+    private DecimalFormat decimalFormat;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -85,6 +94,9 @@ public class Add_event extends AppCompatActivity implements LocationListener {
         setContentView(R.layout.add_event);
         initiate_permission_check();
 
+        decimalFormat = new DecimalFormat("#.#######");
+        decimalFormat.setRoundingMode(RoundingMode.CEILING);
+
         camera_gallery_selector_img_rel_layout = (RelativeLayout) findViewById(R.id.camera_gallery_selector_img_rel_layout);
         selected_posting_image_view = (ImageView) findViewById(R.id.selected_posting_image_view);
         cameraOpenImageView = (ImageView) findViewById(R.id.camera_gallery_selector_camera_img_view);
@@ -92,7 +104,7 @@ public class Add_event extends AppCompatActivity implements LocationListener {
         similar_posts_cardview_skip_text_view = (TextView) findViewById(R.id.similar_posts_cardview_skip_text_view);
         selected_posting_image_view = (ImageView) findViewById(R.id.selected_posting_image_view);
         select_image_trash_can_image_view = (ImageView) findViewById(R.id.select_image_trash_can_image_view);
-        add_event_card_3_spinner = (Spinner) findViewById(R.id.add_event_card_3_spinner);
+        pick_location_card_3_spinner = (Spinner) findViewById(R.id.add_event_card_3_spinner);
         select_image_trash_can_image_view.setVisibility(View.GONE);
 
         all_day_switch = (Switch) findViewById(R.id.all_day_switch);
@@ -112,7 +124,7 @@ public class Add_event extends AppCompatActivity implements LocationListener {
         similar_button_cardview = (CardView) findViewById(R.id.similar_button_cardview);
         add_event_card_5_rel_layout = (RelativeLayout) findViewById(R.id.add_event_card_5_rel_layout);
 
-        add_event_card_3_spinner.setVisibility(View.INVISIBLE);
+        pick_location_card_3_spinner.setVisibility(View.INVISIBLE);
         add_event_card_3_textview.setVisibility(View.VISIBLE);
         getCurrentLocation();
 
@@ -221,20 +233,20 @@ public class Add_event extends AppCompatActivity implements LocationListener {
 
                     case R.id.post_location_current_radio:
                         System.out.println("Current");
-                        add_event_card_3_spinner.setVisibility(View.INVISIBLE);
+                        pick_location_card_3_spinner.setVisibility(View.INVISIBLE);
                         add_event_card_3_textview.setVisibility(View.VISIBLE);
                         getCurrentLocation();
                         break;
                     case R.id.post_location_picklist_radio:
                         System.out.println("Picklist");
-                        add_event_card_3_spinner.setVisibility(View.VISIBLE);
+                        pick_location_card_3_spinner.setVisibility(View.VISIBLE);
                         add_event_card_3_textview.setVisibility(View.INVISIBLE);
 
                         break;
                     case R.id.post_location_pin_radio:
                         System.out.println("Pin");
                         startActivityForResult(new Intent(getApplicationContext(), DropPinMapsActivity.class), PICK_LOCATION);
-                        add_event_card_3_spinner.setVisibility(View.INVISIBLE);
+                        pick_location_card_3_spinner.setVisibility(View.INVISIBLE);
                         add_event_card_3_textview.setVisibility(View.VISIBLE);
                         break;
 
@@ -282,7 +294,7 @@ public class Add_event extends AppCompatActivity implements LocationListener {
 
         ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, categories);
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        add_event_card_3_spinner.setAdapter(dataAdapter);
+        pick_location_card_3_spinner.setAdapter(dataAdapter);
     }
 
     private void getCurrentLocation() {
@@ -298,7 +310,8 @@ public class Add_event extends AppCompatActivity implements LocationListener {
     public void onLocationChanged(Location location) {
         System.out.println("location :" + location);
         add_event_card_3_textview.setText("Current Location: " + location.getLatitude() + ", " + location.getLongitude());
-
+        currentLng = location.getLongitude();
+        currentLat = location.getLatitude();
     }
 
     @Override
@@ -335,13 +348,31 @@ public class Add_event extends AppCompatActivity implements LocationListener {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+
+        System.out.println("vv IN onActivityResult");
+        System.out.println("vv data : " + data);
+        System.out.println("vv requestCode : " + requestCode);
+
         if (requestCode == PICK_IMAGE && resultCode == Activity.RESULT_OK) {
 
         }
         if (requestCode == PICK_LOCATION) {
-            System.out.print("PICK_LOCATION");
-            System.out.print("LAT : " + data.getStringExtra("Lat"));
-            System.out.print("LNG : " + data.getStringExtra("Lng"));
+            System.out.print("vv PICK_LOCATION");
+            System.out.print("vv LAT : " + data.getStringExtra("Lat"));
+            System.out.print("vv LNG : " + data.getStringExtra("Lng"));
+        }
+        if (requestCode == 3) {
+
+            System.out.println("vv PICK_LOCATION");
+            System.out.println("vv LAT : " + data.getStringExtra("Lat"));
+            System.out.println("vv LNG : " + data.getStringExtra("Lng"));
+//            selectedLat = Double.parseDouble(data.getStringExtra("Lat"));
+//            selectedLng = Double.parseDouble(data.getStringExtra("Lng"));
+
+            selectedLng = Double.parseDouble(decimalFormat.format(Double.valueOf(data.getStringExtra("Lat"))));
+            selectedLat = Double.parseDouble(decimalFormat.format(Double.valueOf(data.getStringExtra("Lng"))));
+
+            add_event_card_3_textview.setText("Dropped pin at : " + selectedLat + "," + selectedLng);
         }
         if (requestCode == CAMERA_REQUEST && resultCode == Activity.RESULT_OK) {
             Bitmap picture = (Bitmap) data.getExtras().get("data");//this is your bitmap image and now you can do whatever you want with this
@@ -438,6 +469,8 @@ public class Add_event extends AppCompatActivity implements LocationListener {
                         post_scope_radio_value = 2;
                         break;
                 }
+                System.out.println("post_scope_radio_grp : " + post_scope_radio_value);
+
             }
         });
         post_event_type_radio_grp.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
@@ -450,11 +483,15 @@ public class Add_event extends AppCompatActivity implements LocationListener {
                         event_type_radio_value = 1;
                         break;
                 }
+                System.out.println("post_event_type_radio_grp : " + event_type_radio_value);
+
             }
         });
         post_location_radio_grp.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             public void onCheckedChanged(RadioGroup group, int checkedId) {
+
                 switch (checkedId) {
+
                     case R.id.post_location_current_radio:
                         location_type_radio_value = 0;
                         break;
@@ -465,9 +502,11 @@ public class Add_event extends AppCompatActivity implements LocationListener {
                         location_type_radio_value = 2;
                         break;
                 }
+                System.out.println("post_location_radio_grp : " + location_type_radio_value);
+
             }
         });
-
+        eventLocation = pick_location_card_3_spinner.getSelectedItem().toString();
 
         System.out.println("postDescription : " + postDescription);
         System.out.println("postDescriptionTimeDt : " + postDescriptionTimeDt);
@@ -482,12 +521,14 @@ public class Add_event extends AppCompatActivity implements LocationListener {
         jsonObjectPostEventParameters.addProperty("scope", post_scope_radio_value);
         jsonObjectPostEventParameters.addProperty("description", postDescription);
         jsonObjectPostEventParameters.addProperty("all_day", all_day_status);
-        jsonObjectPostEventParameters.addProperty("location_name", "Breezway");
-        jsonObjectPostEventParameters.addProperty("img_url", "https://umbc.och101.com/shared/images/backgrounds/UMBC.jpg");
+        jsonObjectPostEventParameters.addProperty("location_name", eventLocation);
+
+        Random random = new Random();
+        int x = random.nextInt(900) + 100;
+
+        jsonObjectPostEventParameters.addProperty("img_url", "https://picsum.photos/400/200/?image=" + x);
 
         return true;
 
     }
-
-
 }

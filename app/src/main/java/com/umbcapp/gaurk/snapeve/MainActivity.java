@@ -229,15 +229,15 @@ public class MainActivity extends AppCompatActivity implements Listview_communic
             JsonObject feeds_list_object = feedsJsonArray.get(j).getAsJsonObject();
             System.out.println(" feeds_list_object  " + feeds_list_object);
 
-            String feed_description = feeds_list_object.get("description").toString();
+            String img_comment = feeds_list_object.get("img_comment").toString();
             String feed_img_url = feeds_list_object.get("img_url").toString();
             String feed_user_id = feeds_list_object.get("initializer_id").toString();
-            System.out.println(" feed_description " + feed_description);
+            System.out.println(" img_comment " + img_comment);
             System.out.println(" feed_img_url " + feed_img_url);
 
 
             //Remove " from start and end from every string
-            feed_description = feed_description.substring(1, feed_description.length() - 1);
+            img_comment = img_comment.substring(1, img_comment.length() - 1);
             feed_user_id = feed_user_id.substring(1, feed_user_id.length() - 1);
             feed_img_url = feed_img_url.substring(1, feed_img_url.length() - 1);
 
@@ -251,7 +251,7 @@ public class MainActivity extends AppCompatActivity implements Listview_communic
 //                        e.printStackTrace();
 //                    }
 
-            event_main_list.add(0, new Event_dash_list_obj(feed_user_id, "Name_x", feed_description, "10 hrs ago", feed_img_url));
+            event_main_list.add(0, new Event_dash_list_obj(feed_user_id, "Name_x", img_comment, "10 hrs ago", feed_img_url));
 
 
         }

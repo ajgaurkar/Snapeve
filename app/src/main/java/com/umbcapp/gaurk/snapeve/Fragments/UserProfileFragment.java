@@ -51,6 +51,7 @@ public class UserProfileFragment extends Fragment {
     private TextView leaderboard_text_view;
 
     public UserProfileFragment() {
+
     }
 
     @Override

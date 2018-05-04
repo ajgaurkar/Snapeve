@@ -1,36 +1,85 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:card_view="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="10dp">
+    android:paddingBottom="5dp"
+    android:paddingEnd="10dp"
+    android:paddingStart="10dp"
+    android:paddingTop="5dp">
 
-    <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/leaderboard_list_item_dp_imageview"
-        android:layout_width="30dp"
-        android:layout_height="30dp" />
-
-    <TextView
-        android:id="@+id/leaderboard_list_item_name_textview"
+    <android.support.v7.widget.CardView
         android:layout_width="match_parent"
-        android:singleLine="true"
         android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/leaderboard_list_item_dp_imageview"
-        android:layout_toEndOf="@+id/leaderboard_list_item_dp_imageview" />
+        android:elevation="10dp"
+        card_view:cardCornerRadius="4dp"
+        card_view:cardUseCompatPadding="true">
 
-    <com.akexorcist.roundcornerprogressbar.RoundCornerProgressBar
-        android:id="@+id/leaderboard_list_item_rank_progress_bar"
-        android:layout_width="match_parent"
-        android:layout_height="30dp"
-        android:layout_below="@+id/leaderboard_list_item_dp_imageview"
-        android:layout_toEndOf="@+id/leaderboard_list_item_dp_imageview"
-        app:rcBackgroundColor="#00ffffff"
-        app:rcBackgroundPadding="10dp"
-        app:rcMax="10"
-        app:rcProgress="10"
-        app:rcProgressColor="#7cffffff"
-        app:rcRadius="10dp"
-        app:rcReverse="false"
-        app:rcSecondaryProgress="5"
-        app:rcSecondaryProgressColor="#ebf7ff" />
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="5dp">
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/leaderboard_list_item_dp_imageview"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_margin="5dp"
+                android:src="@drawable/my_pic" />
+
+            <TextView
+                android:id="@+id/leaderboard_list_item_name_textview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@+id/leaderboard_list_item_dp_imageview"
+                android:layout_marginStart="10dp"
+                android:layout_toEndOf="@+id/leaderboard_list_item_dp_imageview"
+                android:layout_toStartOf="@+id/leaderboard_list_item_rank_textview"
+                android:padding="3dp"
+                android:singleLine="true"
+                android:text="Ajinkya Gaurkar"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/leaderboard_list_item_rank_textview"
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignTop="@+id/leaderboard_list_item_dp_imageview"
+                android:gravity="end"
+                android:padding="3dp"
+                android:paddingEnd="10dp"
+                android:text="58"
+                android:textSize="17sp"
+                android:textStyle="bold" />
+
+            <com.akexorcist.roundcornerprogressbar.RoundCornerProgressBar
+                android:id="@+id/leaderboard_list_item_rank_progress_bar"
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:layout_marginTop="-5dp"
+                android:layout_below="@+id/leaderboard_list_item_dp_imageview"
+                android:layout_toEndOf="@+id/leaderboard_list_item_dp_imageview"
+                app:rcBackgroundColor="#00ffffff"
+                app:rcBackgroundPadding="10dp"
+                app:rcProgressColor="@color/colorAccent"
+                app:rcRadius="10dp"
+                app:rcReverse="false"
+                app:rcSecondaryProgressColor="#dddddd" />
+
+            <TextView
+                android:id="@+id/leaderboard_list_item_you_textview"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/leaderboard_list_item_rank_progress_bar"
+                android:layout_alignEnd="@+id/leaderboard_list_item_dp_imageview"
+                android:layout_alignStart="@+id/leaderboard_list_item_dp_imageview"
+                android:layout_below="@+id/leaderboard_list_item_dp_imageview"
+                android:gravity="center"
+                android:text="YOU"
+                android:textColor="@color/colorPrimary" />
+
+        </RelativeLayout>
+    </android.support.v7.widget.CardView>
 </RelativeLayout>
