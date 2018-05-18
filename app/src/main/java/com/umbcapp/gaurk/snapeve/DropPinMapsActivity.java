@@ -187,6 +187,7 @@ public class DropPinMapsActivity extends FragmentActivity implements OnMapReadyC
         String latLong = String.valueOf(center_latlong);
         cood = new Cood(latLong.substring(latLong.indexOf('(') + 1, latLong.indexOf(',')),
                 latLong.substring(latLong.indexOf(',') + 1, latLong.indexOf(')')));
+        System.out.println("formatLatLong cood : " + cood.getLat() + cood.getLng());
         return cood;
     }
 

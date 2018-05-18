@@ -106,13 +106,13 @@ public class CreateGroupAdapter extends BaseAdapter {
 
         }
 
-        viewHolder.create_grp_list_item_request_status_text_view.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                System.out.print("position 2 " + position);
-                ((Listview_communicator) context).main_event_listview_element_clicked(position, 0);
-            }
-        });
+//        viewHolder.create_grp_list_item_request_status_text_view.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                System.out.print("position 2 " + position);
+//                ((Listview_communicator) context).main_event_listview_element_clicked(position, 0);
+//            }
+//        });
 
         return view;
     }

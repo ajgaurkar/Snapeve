@@ -309,7 +309,7 @@
                 android:layout_below="@+id/post_location_radio_grp"
                 android:layout_marginBottom="5dp"
                 android:layout_marginEnd="10dp"
-                android:layout_marginStart="10dp"/>
+                android:layout_marginStart="10dp" />
 
         </RelativeLayout>
 
@@ -405,31 +405,70 @@
             card_view:cardCornerRadius="5dp"
             card_view:cardUseCompatPadding="true">
 
-            <TextView
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:gravity="center"
-                android:padding="5dp"
-                android:text="Submit post"
-                android:textColor="#fff" />
+                android:layout_height="match_parent">
 
+
+                <TextView
+                    android:id="@+id/submit_btn_status_textview"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:gravity="center"
+                    android:padding="5dp"
+                    android:text="Submit post"
+                    android:textColor="#fff" />
+
+                <ProgressBar
+                    android:id="@+id/submit_btn_status_progressbar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@+id/submit_btn_status_textview"
+                    android:layout_alignStart="@+id/submit_btn_status_textview"
+                    android:layout_alignTop="@+id/submit_btn_status_textview"
+                    android:indeterminateTint="#fff"
+                    android:indeterminateTintMode="src_in"
+                    android:padding="5dp"
+                    android:visibility="invisible" />
+
+            </RelativeLayout>
         </android.support.v7.widget.CardView>
+
 
         <android.support.v7.widget.CardView
             android:id="@+id/similar_button_cardview"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:elevation="10dp"
+            android:visibility="gone"
             card_view:cardBackgroundColor="@color/colorPrimaryDark"
             card_view:cardCornerRadius="5dp"
             card_view:cardUseCompatPadding="true">
 
-            <ImageView
+            <RelativeLayout
                 android:layout_width="wrap_content"
-                android:layout_height="40dp"
-                android:padding="5dp"
-                android:src="@drawable/copy_48" />
+                android:layout_height="wrap_content">
 
+                <ImageView
+                    android:id="@+id/similarpostimageview"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:padding="5dp"
+                    android:src="@drawable/copy_48" />
+
+                <TextView
+                    android:id="@+id/similarpost_count_textview"
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"
+                    android:layout_alignEnd="@+id/similarpostimageview"
+                    android:layout_margin="1dp"
+                    android:background="@drawable/white_circle_1dp_bg"
+                    android:gravity="center"
+                    android:text="6"
+                    android:textColor="#fff"
+                    android:textSize="10sp"
+                    android:textStyle="bold" />
+            </RelativeLayout>
         </android.support.v7.widget.CardView>
 
     </RelativeLayout>
@@ -441,16 +480,16 @@
         android:layout_alignParentBottom="true"
         android:layout_below="@+id/add_event_card_1"
         android:layout_marginBottom="-20dp"
-        android:layout_marginEnd="20dp"
-        android:layout_marginStart="20dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginStart="10dp"
         android:elevation="10dp"
-        android:visibility="gone"
         card_view:cardCornerRadius="10dp"
         card_view:cardUseCompatPadding="true">
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:paddingBottom="20dp">
 
             <TextView
                 android:layout_width="match_parent"
@@ -474,9 +513,12 @@
                 android:textStyle="bold" />
 
             <ListView
+                android:id="@+id/similar_posts_cardview_list_view"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_below="@+id/similar_posts_cardview_skip_text_view" />
+                android:layout_below="@+id/similar_posts_cardview_skip_text_view"
+                android:divider="#fff"
+                android:dividerHeight="0dp" />
 
         </RelativeLayout>
     </android.support.v7.widget.CardView>

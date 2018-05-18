@@ -1,18 +1,14 @@
 package com.umbcapp.gaurk.snapeve.Adapters;
 
-import android.graphics.Movie;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.akexorcist.roundcornerprogressbar.IconRoundCornerProgressBar;
 import com.akexorcist.roundcornerprogressbar.RoundCornerProgressBar;
 import com.squareup.picasso.Picasso;
 import com.umbcapp.gaurk.snapeve.Controllers.LeaderboardListItem;
-import com.umbcapp.gaurk.snapeve.Leaderboard;
 import com.umbcapp.gaurk.snapeve.R;
 
 import java.util.ArrayList;
@@ -23,11 +19,13 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class LeaderBoardAdapter extends RecyclerView.Adapter<LeaderBoardAdapter.MyViewHolder> {
     private List<LeaderboardListItem> leaderboardList;
     int maxRank = 100;
+    int user_type_selection_status = 0;
 
 
-    public LeaderBoardAdapter(ArrayList<LeaderboardListItem> leaderboardList, int maxRank) {
+    public LeaderBoardAdapter(ArrayList<LeaderboardListItem> leaderboardList, int maxRank, int user_type_selection_status) {
         this.leaderboardList = leaderboardList;
         this.maxRank = maxRank;
+        this.user_type_selection_status = user_type_selection_status;
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
@@ -58,7 +56,6 @@ public class LeaderBoardAdapter extends RecyclerView.Adapter<LeaderBoardAdapter.
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
         LeaderboardListItem selectedLeaderboardListItem = leaderboardList.get(position);
-        holder.userName.setText(selectedLeaderboardListItem.getUserName());
 //        holder.userRankBar.setProgress(maxRank);
 //        holder.userRankBar.setSecondaryProgress(selectedLeaderboardListItem.getUserRank());
         holder.userRankBar.setProgress(selectedLeaderboardListItem.getUserRank());
@@ -68,6 +65,16 @@ public class LeaderBoardAdapter extends RecyclerView.Adapter<LeaderBoardAdapter.
             holder.youTextView.setVisibility(View.VISIBLE);
         } else {
             holder.youTextView.setVisibility(View.INVISIBLE);
+        }
+
+        if (user_type_selection_status == 0) {
+            holder.userName.setText(selectedLeaderboardListItem.getUserName());
+            System.out.println("000");
+        }
+        if (user_type_selection_status == 1) {
+            holder.userName.setText(selectedLeaderboardListItem.getUserGroup());
+
+            System.out.println("111");
         }
 
         holder.userRank.setText(String.valueOf(selectedLeaderboardListItem.getUserRank()));

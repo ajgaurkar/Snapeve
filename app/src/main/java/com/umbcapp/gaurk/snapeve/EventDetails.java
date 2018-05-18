@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.Window;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
@@ -56,6 +57,10 @@ public class EventDetails extends AppCompatActivity implements Listview_communic
     private AttendiesAdapter attendiesAdapter;
     private int listViewVisiblePosition;
     private Parcelable state;
+    private int intent_type;
+    private RelativeLayout merge_options_layout;
+    private TextView merge_event_cancel_btn_text_view;
+    private TextView merge_event_merge_btn_text_view;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -65,15 +70,21 @@ public class EventDetails extends AppCompatActivity implements Listview_communic
         attendies_type_selection_status = 0;
         eventDetailIntent = getIntent();
         user_id = eventDetailIntent.getStringExtra("user_id");
+        intent_type = eventDetailIntent.getIntExtra("intent_type", 3);
         user_name = eventDetailIntent.getStringExtra("user_name");
 //        img_url = eventDetailIntent.getStringExtra("img_url").replace("\\n", "\n").replace("\\", "");
         img_url = eventDetailIntent.getStringExtra("img_url");
         comm_time = eventDetailIntent.getStringExtra("comm_time");
         user_comment = eventDetailIntent.getStringExtra("user_comment");
 
+        merge_options_layout = (RelativeLayout) findViewById(R.id.merge_options_layout);
         event_detail_user_name_text_view = (TextView) findViewById(R.id.event_detail_user_name_text_view);
         event_detail_user_post_dt_time_text_view = (TextView) findViewById(R.id.event_detail_user_post_dt_time_text_view);
         event_detail_user_comment_text_view = (TextView) findViewById(R.id.event_detail_user_comment_text_view);
+
+        merge_event_cancel_btn_text_view = (TextView) findViewById(R.id.merge_event_cancel_btn_text_view);
+        merge_event_merge_btn_text_view = (TextView) findViewById(R.id.merge_event_merge_btn_text_view);
+
         event_detail_attendies_text_view = (CardView) findViewById(R.id.event_detail_attendies_card_view);
         event_detail_event_image_image_view = (ImageView) findViewById(R.id.event_detail_event_image_image_view);
 
@@ -100,8 +111,33 @@ public class EventDetails extends AppCompatActivity implements Listview_communic
                 showAttendiesDialog();
             }
         });
+        if (intent_type == 1) {
+            merge_options_layout.setVisibility(View.VISIBLE);
+        } else {
+            merge_options_layout.setVisibility(View.GONE);
+        }
+
+        merge_event_merge_btn_text_view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent returnIntent = new Intent();
+                returnIntent.putExtra("Merge_action","1");
+                setResult(RESULT_OK, returnIntent);
+                finish();
+            }
+        });
+        merge_event_cancel_btn_text_view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent returnIntent = new Intent();
+                returnIntent.putExtra("Merge_action","2");
+                setResult(RESULT_OK, returnIntent);
+                finish();
+            }
+        });
 
     }
+
 
     private void showAttendiesDialog() {
         Dialog alertDialog = new Dialog(this);
@@ -168,7 +204,7 @@ public class EventDetails extends AppCompatActivity implements Listview_communic
         attendiesClubbedArrayList.addAll(attendiesAttendingArrayList);
         attendiesClubbedArrayList.addAll(attendiesNotAttendingRequestedArrayList);
         attendiesClubbedArrayList.addAll(attendiesNotAttendingArrayList);
-         //attendiesAdapter = new AttendiesAdapter(getApplicationContext(), attendiesClubbedArrayList, attendies_type_selection_status);
+        //attendiesAdapter = new AttendiesAdapter(getApplicationContext(), attendiesClubbedArrayList, attendies_type_selection_status);
         //getApplicationContext not working for listview item click listener Interface, Hence EventDetails.this
         attendiesAdapter = new AttendiesAdapter(EventDetails.this, attendiesClubbedArrayList, attendies_type_selection_status);
 

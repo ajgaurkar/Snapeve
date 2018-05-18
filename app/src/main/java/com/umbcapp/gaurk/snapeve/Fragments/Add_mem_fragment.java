@@ -1,10 +1,12 @@
 package com.umbcapp.gaurk.snapeve.Fragments;
 
 import android.app.Fragment;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -36,7 +38,7 @@ import com.umbcapp.gaurk.snapeve.R;
 
 import java.util.ArrayList;
 
-public class Add_mem_fragment extends Fragment implements Listview_communicator {
+public class Add_mem_fragment extends Fragment {
 
     private ListView add_mem_frag_listview;
     private Parcelable state;
@@ -69,9 +71,10 @@ public class Add_mem_fragment extends Fragment implements Listview_communicator 
         userArrayList.add("Pranav rana");
         userArrayList.add("Neha reddy");
         userArrayList.add("Rushabh mehta");
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(),android.R.layout.simple_list_item_1,userArrayList);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, userArrayList);
         addmemberAutoCompleteTextView.setAdapter(adapter);
 
+        groupList.clear();
         groupList.add(new CreateGroupListItem("Ajinkya Gaurkar", "GU1", 3, "user_1@gmail.com", "http://keenthemes.com/preview/metronic/theme/assets/pages/media/profile/profile_user.jpg"));
         groupList.add(new CreateGroupListItem("Siddhrth Ptro", "GU1", 3, "user_1@gmail.com", "http://www.dast.biz/wp-content/uploads/2016/11/John_Doe.jpg"));
         groupList.add(new CreateGroupListItem("Pranav rana", "GU1", 3, "user_1@gmail.com", "https://www.bnl.gov/today/body_pics/2017/06/stephanhruszkewycz-355px.jpg"));
@@ -81,18 +84,37 @@ public class Add_mem_fragment extends Fragment implements Listview_communicator 
         createGroupAdapter = new CreateGroupAdapter(getActivity(), groupList);
         add_mem_frag_listview.setAdapter(createGroupAdapter);
 
+        add_mem_frag_listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                System.out.println("position :" + position);
+                openCancelRequestDialog(position);
+            }
+        });
+
         return rootView;
     }
 
-    @Override
-    public void main_event_listview_element_clicked(int position, int click_code) {
+    private void openCancelRequestDialog(int position) {
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
 
-// Restore previous state (including selected item index and scroll position)
-        state = add_mem_frag_listview.onSaveInstanceState();
+        alertDialogBuilder.setMessage("Do you want to add member to the group?");
+        alertDialogBuilder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                System.out.println("YES");
 
-        modifyRequestStatus(position);
-
+            }
+        });
+        alertDialogBuilder.setNegativeButton("NO", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                System.out.println("NO");
+            }
+        });
+        alertDialogBuilder.show();
     }
+
 
     private void modifyRequestStatus(int position) {
 

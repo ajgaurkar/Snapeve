@@ -2,11 +2,15 @@ package com.umbcapp.gaurk.snapeve;
 
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
@@ -105,6 +109,8 @@ public class MainActivity extends AppCompatActivity implements Listview_communic
                     fragmentTransaction1.replace(R.id.dashboard_main_frame_layout, notificationFragment);
                     fragmentTransaction1.commit();
 
+                    testNotification();
+
                     System.out.print("notificationFragment");
                     Toast.makeText(getApplicationContext(), "toast", Toast.LENGTH_SHORT).show();
                     return true;
@@ -121,6 +127,26 @@ public class MainActivity extends AppCompatActivity implements Listview_communic
             return false;
         }
     };
+
+    private void testNotification() {
+
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
+        builder.setSmallIcon(R.drawable.walking_48);
+        builder.setTicker("Ticker");
+        builder.setAutoCancel(true);
+        builder.setWhen(System.currentTimeMillis());
+        builder.setContentTitle("Titke");
+        builder.setContentText("Content");
+
+        Intent intent = new Intent(this, NotificationReceiver.class);
+        PendingIntent pIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        builder.setContentIntent(pIntent);
+
+        NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        notificationManager.notify(8978, builder.build());
+
+    }
+
     private ListView main_event_list_view;
     private ArrayList<Event_dash_list_obj> event_main_list;
     private FloatingActionButton main_img_pick_fab;
@@ -131,6 +157,8 @@ public class MainActivity extends AppCompatActivity implements Listview_communic
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        testNotification();
 
         event_main_list = new ArrayList<Event_dash_list_obj>();
 
@@ -235,7 +263,6 @@ public class MainActivity extends AppCompatActivity implements Listview_communic
             System.out.println(" img_comment " + img_comment);
             System.out.println(" feed_img_url " + feed_img_url);
 
-
             //Remove " from start and end from every string
             img_comment = img_comment.substring(1, img_comment.length() - 1);
             feed_user_id = feed_user_id.substring(1, feed_user_id.length() - 1);
@@ -305,6 +332,7 @@ public class MainActivity extends AppCompatActivity implements Listview_communic
         eventDetailIntent.putExtra("img_url", selectedEvent_dash_list_obj.getImage_url());
         eventDetailIntent.putExtra("comm_time", selectedEvent_dash_list_obj.getComment_time());
         eventDetailIntent.putExtra("user_comment", selectedEvent_dash_list_obj.getUser_comment());
+        eventDetailIntent.putExtra("intent_type", 0);
         startActivity(eventDetailIntent);
 
     }

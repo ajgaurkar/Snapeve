@@ -2,15 +2,99 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tool="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:background="#EEEEEE"
     android:layout_height="match_parent"
+    android:background="#EEEEEE"
     tool:context=".Leaderboard">
+
+
+    <LinearLayout
+        android:id="@+id/leader_board_user_switch_lin_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimaryDark"
+        android:orientation="horizontal"
+        android:paddingBottom="10dp"
+        android:paddingTop="10dp"
+        android:weightSum="100">
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="25" />
+
+        <TextView
+            android:id="@+id/leader_board_switch_you_textview"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="25"
+            android:background="@drawable/text_selection_left_seleted"
+            android:gravity="center"
+            android:padding="5dp"
+            android:text="You"
+            android:textColor="#fff"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/leader_board_switch_grp_textview"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="25"
+            android:background="@drawable/text_selection_right_unseleted"
+            android:gravity="center"
+            android:padding="5dp"
+            android:text="Group"
+            android:textColor="#fff"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="25" />
+
+    </LinearLayout>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/leader_board_recyclerview"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_below="@+id/leader_board_user_switch_lin_layout">
 
     </android.support.v7.widget.RecyclerView>
+
+    <TextView
+        android:id="@+id/top_10_all_sort_textview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignEnd="@+id/leader_board_user_switch_lin_layout"
+        android:layout_margin="10dp"
+        android:background="@drawable/trans_bg_10_round_white"
+        android:paddingBottom="5dp"
+        android:paddingEnd="20dp"
+        android:paddingStart="10dp"
+        android:paddingTop="5dp"
+        android:text="Top 10"
+        android:textColor="#fff"
+        android:textStyle="bold" />
+
+    <ImageView
+        android:layout_width="15dp"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/top_10_all_sort_textview"
+        android:layout_alignEnd="@+id/top_10_all_sort_textview"
+        android:layout_alignTop="@+id/top_10_all_sort_textview"
+        android:paddingEnd="3dp"
+        android:src="@drawable/sort_up_dpwn_24" />
+
+    <!--<TextView-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_alignStart="@+id/leader_board_user_switch_lin_layout"-->
+    <!--android:layout_margin="10dp"-->
+    <!--android:padding="5dp"-->
+    <!--android:text="Top 10"-->
+    <!--android:textColor="#fff"-->
+    <!--android:textStyle="bold" />-->
 
 </RelativeLayout>

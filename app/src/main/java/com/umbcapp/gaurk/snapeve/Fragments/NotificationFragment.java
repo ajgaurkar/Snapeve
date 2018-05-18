@@ -1,6 +1,9 @@
 package com.umbcapp.gaurk.snapeve.Fragments;
 
 import android.app.Fragment;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -19,6 +22,8 @@ import com.google.gson.JsonObject;
 import com.umbcapp.gaurk.snapeve.CreateGruoups;
 import com.umbcapp.gaurk.snapeve.MainActivity;
 import com.umbcapp.gaurk.snapeve.R;
+
+import static android.content.Context.NOTIFICATION_SERVICE;
 
 public class NotificationFragment extends Fragment {
 
@@ -61,6 +66,8 @@ public class NotificationFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.notification_fragment, container, false);
+
+
 
         return rootView;
     }
