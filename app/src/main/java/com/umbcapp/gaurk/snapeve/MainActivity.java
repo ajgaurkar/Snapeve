@@ -19,6 +19,7 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -43,6 +44,8 @@ import com.umbcapp.gaurk.snapeve.Fragments.UserProfileFragment;
 
 import java.net.MalformedURLException;
 import java.util.ArrayList;
+import java.util.Locale;
+import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 
 import com.squareup.okhttp.OkHttpClient;
@@ -59,6 +62,7 @@ public class MainActivity extends AppCompatActivity implements Listview_communic
     private SettingsFragment settingsFragment;
     private MapsFragment mapsFragment;
     private NotificationFragment notificationFragment;
+    private long sessionCounter;
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
 
@@ -157,6 +161,12 @@ public class MainActivity extends AppCompatActivity implements Listview_communic
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        sessionCounter = System.currentTimeMillis();
+        DateFormat formatter = new SimpleDateFormat("HH:mm:ss", Locale.US);
+        formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
+        String text = formatter.format(new Date(sessionCounter));
+        System.out.println("Start @ sessionCounter : " + text);
 
         testNotification();
 
@@ -316,9 +326,7 @@ public class MainActivity extends AppCompatActivity implements Listview_communic
                 System.out.print("click_code " + position + " " + click_code);
                 break;
 
-
         }
-
 
     }
 
@@ -336,4 +344,16 @@ public class MainActivity extends AppCompatActivity implements Listview_communic
         startActivity(eventDetailIntent);
 
     }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+        sessionCounter = System.currentTimeMillis() - sessionCounter;
+        long minutes = TimeUnit.MILLISECONDS.toMinutes(sessionCounter);
+        long seconds = TimeUnit.MILLISECONDS.toSeconds(sessionCounter);
+
+        System.out.println("MAINACTIVITY sessionCounter : " + minutes + "m " + seconds + "s");
+    }
+
 }

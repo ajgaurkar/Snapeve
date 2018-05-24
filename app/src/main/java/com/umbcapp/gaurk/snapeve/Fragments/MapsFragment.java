@@ -34,7 +34,13 @@ import com.umbcapp.gaurk.snapeve.Controllers.Event_dash_list_obj;
 import com.umbcapp.gaurk.snapeve.MainActivity;
 import com.umbcapp.gaurk.snapeve.R;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Locale;
+import java.util.TimeZone;
+import java.util.concurrent.TimeUnit;
 
 public class MapsFragment extends Fragment {
 
@@ -42,6 +48,18 @@ public class MapsFragment extends Fragment {
     private GoogleMap googleMap;
     private ArrayList<Event_dash_list_obj> event_main_list;
     private CardView maps_loading_events_cardview;
+    private long sessionCounter;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        sessionCounter = System.currentTimeMillis();
+        DateFormat formatter = new SimpleDateFormat("HH:mm:ss", Locale.US);
+        formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
+        String text = formatter.format(new Date(sessionCounter));
+        System.out.println("Start @ sessionCounter : " + text);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -154,9 +172,7 @@ public class MapsFragment extends Fragment {
 
             googleMap.addMarker(new MarkerOptions().position(event_marker).title(img_comment).icon(BitmapDescriptorFactory.fromResource(R.drawable.flag_32_trai)));
 
-
         }
-
 
     }
 
@@ -183,5 +199,16 @@ public class MapsFragment extends Fragment {
     public void onLowMemory() {
         super.onLowMemory();
         mMapView.onLowMemory();
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+
+        sessionCounter = System.currentTimeMillis() - sessionCounter;
+        long minutes = TimeUnit.MILLISECONDS.toMinutes(sessionCounter);
+        long seconds = TimeUnit.MILLISECONDS.toSeconds(sessionCounter);
+
+        System.out.println("MAPS sessionCounter : " + minutes + "m " + seconds + "s");
     }
 }

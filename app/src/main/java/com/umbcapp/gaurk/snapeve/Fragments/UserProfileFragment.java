@@ -32,7 +32,13 @@ import com.umbcapp.gaurk.snapeve.Leaderboard;
 import com.umbcapp.gaurk.snapeve.MainActivity;
 import com.umbcapp.gaurk.snapeve.R;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Locale;
+import java.util.TimeZone;
+import java.util.concurrent.TimeUnit;
 
 public class UserProfileFragment extends Fragment {
 
@@ -52,6 +58,8 @@ public class UserProfileFragment extends Fragment {
     private TextView leaderboard_text_view;
     private ImageView user_profile_settings_imageview;
 
+    long sessionCounter = 0;
+
     public UserProfileFragment() {
 
     }
@@ -61,6 +69,13 @@ public class UserProfileFragment extends Fragment {
         super.onCreate(savedInstanceState);
         contributionList = new ArrayList<>();
         fetch_group_details();
+
+        sessionCounter = System.currentTimeMillis();
+        DateFormat formatter = new SimpleDateFormat("HH:mm:ss", Locale.US);
+        formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
+        String text = formatter.format(new Date(sessionCounter));
+        System.out.println("Start @ sessionCounter : " + text);
+
     }
 
     private void fetch_group_details() {
@@ -202,7 +217,6 @@ public class UserProfileFragment extends Fragment {
 
             user_profile_contribution_list_view.setAdapter(userContributionAdapter);
 
-
         }
     }
 
@@ -211,5 +225,14 @@ public class UserProfileFragment extends Fragment {
         super.onCreateOptionsMenu(menu, inflater);
     }
 
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
 
+        sessionCounter = System.currentTimeMillis() - sessionCounter;
+        long minutes = TimeUnit.MILLISECONDS.toMinutes(sessionCounter);
+        long seconds = TimeUnit.MILLISECONDS.toSeconds(sessionCounter);
+
+        System.out.println("PROFILE sessionCounter : " + minutes +"m "+ seconds+"s");
+    }
 }

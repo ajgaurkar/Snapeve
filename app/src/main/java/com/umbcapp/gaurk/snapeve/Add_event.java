@@ -359,8 +359,7 @@ public class Add_event extends AppCompatActivity implements LocationListener {
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
         PendingIntent leaderboardpendingIntent = PendingIntent.getActivity(this, 0, LeaderBoardIntent, 0);
-
-
+        
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this, CHANNEL_ID)
                 .addAction(R.drawable.approve_dark_grey_48, "Approve", leaderboardpendingIntent)
                 .addAction(R.drawable.deny_dark_grey_48, "Snooze", pendingIntent)
