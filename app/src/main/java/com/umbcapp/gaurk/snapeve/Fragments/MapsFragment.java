@@ -268,6 +268,7 @@ public class MapsFragment extends Fragment {
 
     private void poupulateList(JsonElement response) {
 
+        googleMap.clear();
 
         System.out.println(" IN PARSE JASON");
 
@@ -285,7 +286,6 @@ public class MapsFragment extends Fragment {
             System.out.println(" img_comment " + img_comment);
             System.out.println(" feed_img_url " + feed_img_url);
 
-
             //Remove " from start and end from every string
             img_comment = img_comment.substring(1, img_comment.length() - 1);
             event_lat = event_lat.substring(1, event_lat.length() - 1);
@@ -301,7 +301,8 @@ public class MapsFragment extends Fragment {
 
             if (event_type.equals("0")) {
                 googleMap.addMarker(new MarkerOptions().position(event_marker).title(img_comment).icon(BitmapDescriptorFactory.fromResource(R.drawable.flag_blue_32)));
-            } else {
+            }
+            if (event_type.equals("1")) {
                 googleMap.addMarker(new MarkerOptions().position(event_marker).title(img_comment).icon(BitmapDescriptorFactory.fromResource(R.drawable.flag_32_trai)));
             }
         }
