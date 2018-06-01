@@ -236,7 +236,6 @@ public class MapsFragment extends Fragment {
             @Override
             public void onClick(DialogInterface dialog, int which) {
 
-
             }
         });
 
@@ -257,7 +256,6 @@ public class MapsFragment extends Fragment {
                     filterEndDate = c.getTime();
                     modeValue = 1;
                 }
-
 
                 //call self function with modevalue 2
                 if (modeValue == 2) {

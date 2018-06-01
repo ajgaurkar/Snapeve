@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center_horizontal"
+    tools:context=".LoginActivity">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/umbc_bg_4"
+        android:scaleType="fitCenter" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/login_gradient_bg" />
+
+
+    <ImageView
+        android:id="@+id/login_page_icon_imageview"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="30dp"
+        android:src="@drawable/mind_map_100" />
+
+    <TextView
+        android:id="@+id/login_page_app_name_textview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/login_page_icon_imageview"
+        android:gravity="center"
+        android:padding="5dp"
+        android:text="Snapeve"
+        android:textColor="#fff"
+        android:textSize="28sp"
+        android:textStyle="bold" />
+
+    <RelativeLayout
+        android:id="@+id/login_page_email_rel_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/login_page_app_name_textview"
+        android:layout_marginBottom="20dp"
+        android:layout_marginEnd="30dp"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/login_text_bg_round_corner_transp"
+        android:paddingBottom="5dp"
+        android:paddingEnd="10dp"
+        android:paddingTop="5dp">
+
+        <ImageView
+            android:id="@+id/email_icon"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginStart="10dp"
+            android:padding="5dp"
+            android:src="@drawable/email_white_48" />
+
+        <EditText
+            android:id="@+id/login_page_email_edittext"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/email_icon"
+            android:layout_alignTop="@+id/email_icon"
+            android:layout_marginEnd="30dp"
+            android:layout_marginStart="50dp"
+            android:background="@android:color/transparent"
+            android:gravity="center_vertical"
+            android:hint="Email"
+            android:inputType="textEmailAddress"
+            android:padding="5dp"
+            android:textColor="#fff"
+            android:textColorHint="#fff" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/login_page_pass_rel_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignEnd="@+id/login_page_email_rel_layout"
+        android:layout_alignStart="@+id/login_page_email_rel_layout"
+        android:layout_below="@+id/login_page_email_rel_layout"
+        android:layout_marginBottom="20dp"
+        android:background="@drawable/login_text_bg_round_corner_transp"
+        android:paddingBottom="5dp"
+        android:paddingEnd="10dp"
+        android:paddingTop="5dp">
+
+        <ImageView
+            android:id="@+id/pass_icon"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginStart="10dp"
+            android:padding="5dp"
+            android:src="@drawable/lock_2_white_48" />
+
+        <EditText
+            android:id="@+id/login_page_pass_edittext"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/pass_icon"
+            android:layout_alignTop="@+id/pass_icon"
+            android:layout_marginEnd="30dp"
+            android:layout_marginStart="50dp"
+            android:background="@android:color/transparent"
+            android:gravity="center_vertical"
+            android:hint="Password"
+            android:inputType="textPassword"
+            android:padding="5dp"
+            android:textColor="#fff"
+            android:textColorHint="#fff" />
+    </RelativeLayout>
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/login_btn_card"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignEnd="@+id/login_page_email_rel_layout"
+        android:layout_alignStart="@+id/login_page_email_rel_layout"
+        android:layout_below="@+id/login_page_pass_rel_layout"
+        card_view:cardBackgroundColor="@color/colorPrimaryDark"
+        card_view:cardCornerRadius="20dp"
+        card_view:cardElevation="5dp">
+
+        <TextView
+            android:id="@+id/login_page_login_btn_textview"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:gravity="center"
+            android:text="LOGIN"
+            android:textColor="#fff"
+            android:textStyle="bold" />
+
+    </android.support.v7.widget.CardView>
+
+    <TextView
+        android:id="@+id/forgot_pass_textview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/login_btn_card"
+        android:layout_centerHorizontal="true"
+        android:padding="20dp"
+        android:text="Forgot password?"
+        android:textColor="#fff" />
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/signup_btn_card"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignEnd="@+id/login_page_email_rel_layout"
+        android:layout_alignStart="@+id/login_page_email_rel_layout"
+        android:layout_below="@+id/forgot_pass_textview"
+        card_view:cardBackgroundColor="@color/colorPrimaryDark"
+        card_view:cardCornerRadius="20dp"
+        card_view:cardElevation="5dp">
+
+        <TextView
+            android:id="@+id/login_page_signup_btn_textview"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:gravity="center"
+            android:text="SIGNUP"
+            android:textColor="#fff"
+            android:textStyle="bold" />
+
+    </android.support.v7.widget.CardView>
+
+    <TextView
+        android:id="@+id/login_page_or_textview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/signup_btn_card"
+        android:layout_centerHorizontal="true"
+        android:layout_margin="15dp"
+        android:padding="2dp"
+        android:text="OR"
+        android:textColor="#fff"
+        android:textSize="14sp" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignBottom="@+id/login_page_or_textview"
+        android:layout_alignStart="@+id/signup_btn_card"
+        android:layout_alignTop="@+id/login_page_or_textview"
+        android:layout_toStartOf="@+id/login_page_or_textview">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:layout_centerVertical="true"
+            android:background="#fff" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignBottom="@+id/login_page_or_textview"
+        android:layout_alignEnd="@+id/signup_btn_card"
+        android:layout_alignTop="@+id/login_page_or_textview"
+        android:layout_toEndOf="@+id/login_page_or_textview">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:layout_centerVertical="true"
+            android:background="#fff" />
+    </RelativeLayout>
+
+
+    <TextView
+        android:id="@+id/login_page_login_google_textview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/login_page_or_textview"
+        android:layout_centerHorizontal="true"
+        android:padding="5dp"
+        android:text="Login via Google"
+        android:textColor="#fff"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+</RelativeLayout>

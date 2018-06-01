@@ -63,6 +63,8 @@
             android:windowSoftInputMode="stateHidden" />
         <activity android:name=".NotificationReceiver" />
         <activity android:name=".WelcomeActivity" />
+        <activity android:name=".test_activity" />
+        <activity android:name=".Login_snapeve_activity" />
     </application>
 
 </manifest>

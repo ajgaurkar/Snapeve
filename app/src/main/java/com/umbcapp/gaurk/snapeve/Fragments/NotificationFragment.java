@@ -22,6 +22,8 @@ import com.google.gson.JsonObject;
 import com.umbcapp.gaurk.snapeve.CreateGruoups;
 import com.umbcapp.gaurk.snapeve.MainActivity;
 import com.umbcapp.gaurk.snapeve.R;
+import com.umbcapp.gaurk.snapeve.WelcomeActivity;
+import com.umbcapp.gaurk.snapeve.test_activity;
 
 import static android.content.Context.NOTIFICATION_SERVICE;
 
@@ -39,35 +41,13 @@ public class NotificationFragment extends Fragment {
 
     }
 
-    private void fetch_group_details() {
-        jsonObjectUserProfileFragParameters = new JsonObject();
-        jsonObjectUserProfileFragParameters.addProperty("studentId", "check123");
-
-        final SettableFuture<JsonElement> resultFuture = SettableFuture.create();
-        ListenableFuture<JsonElement> serviceFilterFuture = MainActivity.mClient.invokeApi("group_details_api", jsonObjectUserProfileFragParameters);
-
-        Futures.addCallback(serviceFilterFuture, new FutureCallback<JsonElement>() {
-            @Override
-            public void onFailure(Throwable exception) {
-                resultFuture.setException(exception);
-                System.out.println(" fetch_group_details exception    " + exception);
-
-            }
-
-            @Override
-            public void onSuccess(JsonElement response) {
-                resultFuture.set(response);
-                System.out.println(" fetch_group_details success response    " + response);
-
-            }
-        });
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.notification_fragment, container, false);
 
 
+        startActivity(new Intent(getActivity(), test_activity.class));
 
         return rootView;
     }
