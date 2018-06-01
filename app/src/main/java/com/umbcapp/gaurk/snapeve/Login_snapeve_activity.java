@@ -3,6 +3,7 @@ package com.umbcapp.gaurk.snapeve;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.CardView;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -24,16 +25,17 @@ public class Login_snapeve_activity extends AppCompatActivity {
     private TextView login_page_signup_btn_textview;
     private TextView forgot_pass_textview;
     private EditText login_page_email_edittext;
+    private CardView login_btn_card;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login_snapeve);
 
-
         login_page_email_edittext = (EditText) findViewById(R.id.login_page_email_edittext);
         login_page_pass_edittext = (EditText) findViewById(R.id.login_page_pass_edittext);
         login_page_login_btn_textview = (TextView) findViewById(R.id.login_page_login_btn_textview);
+        login_btn_card = (CardView) findViewById(R.id.login_btn_card);
         login_page_signup_btn_textview = (TextView) findViewById(R.id.login_page_signup_btn_textview);
         forgot_pass_textview = (TextView) findViewById(R.id.forgot_pass_textview);
         login_page_login_google_textview = (TextView) findViewById(R.id.login_page_login_google_textview);
@@ -42,6 +44,7 @@ public class Login_snapeve_activity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Toast.makeText(getApplicationContext(), validateInputs(), Toast.LENGTH_SHORT).show();
+                System.out.println("VALIDATION");
 
             }
         });
@@ -49,6 +52,8 @@ public class Login_snapeve_activity extends AppCompatActivity {
     }
 
     private String validateInputs() {
+        System.out.println("IN VALIDATION");
+
         email = login_page_email_edittext.getText().toString().trim();
         password = login_page_pass_edittext.getText().toString().trim();
         String response = "";

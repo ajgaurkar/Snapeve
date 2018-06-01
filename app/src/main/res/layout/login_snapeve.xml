@@ -1,11 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:gravity="center_horizontal"
-    tools:context=".LoginActivity">
+    android:layout_height="match_parent">
 
     <ImageView
         android:layout_width="match_parent"
@@ -123,6 +120,7 @@
         android:layout_alignEnd="@+id/login_page_email_rel_layout"
         android:layout_alignStart="@+id/login_page_email_rel_layout"
         android:layout_below="@+id/login_page_pass_rel_layout"
+        android:background="?android:selectableItemBackground"
         card_view:cardBackgroundColor="@color/colorPrimaryDark"
         card_view:cardCornerRadius="20dp"
         card_view:cardElevation="5dp">
@@ -131,6 +129,7 @@
             android:id="@+id/login_page_login_btn_textview"
             android:layout_width="match_parent"
             android:layout_height="45dp"
+            android:background="?android:selectableItemBackground"
             android:gravity="center"
             android:text="LOGIN"
             android:textColor="#fff"
@@ -144,6 +143,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/login_btn_card"
         android:layout_centerHorizontal="true"
+        android:background="?android:selectableItemBackground"
         android:padding="20dp"
         android:text="Forgot password?"
         android:textColor="#fff" />
@@ -155,6 +155,7 @@
         android:layout_alignEnd="@+id/login_page_email_rel_layout"
         android:layout_alignStart="@+id/login_page_email_rel_layout"
         android:layout_below="@+id/forgot_pass_textview"
+        android:background="?android:selectableItemBackground"
         card_view:cardBackgroundColor="@color/colorPrimaryDark"
         card_view:cardCornerRadius="20dp"
         card_view:cardElevation="5dp">
@@ -163,6 +164,7 @@
             android:id="@+id/login_page_signup_btn_textview"
             android:layout_width="match_parent"
             android:layout_height="45dp"
+            android:background="?android:selectableItemBackground"
             android:gravity="center"
             android:text="SIGNUP"
             android:textColor="#fff"
@@ -219,6 +221,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/login_page_or_textview"
         android:layout_centerHorizontal="true"
+        android:background="?android:selectableItemBackground"
         android:padding="5dp"
         android:text="Login via Google"
         android:textColor="#fff"
