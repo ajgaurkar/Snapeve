@@ -42,13 +42,23 @@ public class Event_dash_list_obj {
     String user_comment;
     String comment_time;
     String image_url;
+    String post_id;
 
-    public Event_dash_list_obj(String user_id, String user_name, String user_comment, String comment_time, String image_url) {
+    public Event_dash_list_obj(String user_id, String user_name, String user_comment, String comment_time, String image_url, String post_id) {
         this.user_id = user_id;
         this.user_name = user_name;
         this.user_comment = user_comment;
         this.comment_time = comment_time;
         this.image_url = image_url;
+        this.post_id = post_id;
+    }
+
+    public String getPost_id() {
+        return post_id;
+    }
+
+    public void setPost_id(String post_id) {
+        this.post_id = post_id;
     }
 
     public String getUser_id() {

@@ -123,7 +123,7 @@
                         android:id="@+id/list_item_verify_tv"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:layout_weight="17"
+                        android:layout_weight="30"
                         android:gravity="center_vertical"
                         android:text="Verify"
                         android:textSize="12sp" />
@@ -141,28 +141,28 @@
                         android:id="@+id/list_item_comment_tv"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:layout_weight="23"
+                        android:layout_weight="34"
                         android:gravity="center_vertical"
                         android:text="Comment"
                         android:textSize="12sp" />
 
-                    <ImageView
-                        android:id="@+id/list_item_deny_iv"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_below="@+id/card_bottom_seperator2"
-                        android:layout_weight="8"
-                        android:padding="3dp"
-                        android:src="@drawable/deny_light_grey_48" />
+                    <!--<ImageView-->
+                        <!--android:id="@+id/list_item_deny_iv"-->
+                        <!--android:layout_width="0dp"-->
+                        <!--android:layout_height="match_parent"-->
+                        <!--android:layout_below="@+id/card_bottom_seperator2"-->
+                        <!--android:layout_weight="8"-->
+                        <!--android:padding="3dp"-->
+                        <!--android:src="@drawable/deny_light_grey_48" />-->
 
-                    <TextView
-                        android:id="@+id/list_item_deny_tv"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="15"
-                        android:gravity="center_vertical"
-                        android:text="Deny"
-                        android:textSize="12sp" />
+                    <!--<TextView-->
+                        <!--android:id="@+id/list_item_deny_tv"-->
+                        <!--android:layout_width="0dp"-->
+                        <!--android:layout_height="match_parent"-->
+                        <!--android:layout_weight="30"-->
+                        <!--android:gravity="center_vertical"-->
+                        <!--android:text="Deny"-->
+                        <!--android:textSize="12sp" />-->
 
                     <ImageView
                         android:id="@+id/list_item_spam_iv"
@@ -177,7 +177,7 @@
                         android:id="@+id/list_item_spam_tv"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:layout_weight="13"
+                        android:layout_weight="25"
                         android:gravity="center_vertical"
                         android:text="Spam"
                         android:textSize="12sp" />

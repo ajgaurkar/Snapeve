@@ -1,13 +1,18 @@
 package com.umbcapp.gaurk.snapeve.Fragments;
 
 import android.Manifest;
+import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.Fragment;
+import android.app.TimePickerDialog;
+import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -16,8 +21,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.CheckBox;
+import android.widget.DatePicker;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.TimePicker;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -35,7 +43,11 @@ import com.google.common.util.concurrent.SettableFuture;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.prolificinteractive.materialcalendarview.CalendarDay;
+import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
+import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
 import com.umbcapp.gaurk.snapeve.Adapters.Dash_Event_ListAdapter;
+import com.umbcapp.gaurk.snapeve.Add_event;
 import com.umbcapp.gaurk.snapeve.Controllers.Event_dash_list_obj;
 import com.umbcapp.gaurk.snapeve.MainActivity;
 import com.umbcapp.gaurk.snapeve.R;
@@ -43,6 +55,7 @@ import com.umbcapp.gaurk.snapeve.R;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
@@ -55,7 +68,6 @@ public class MapsFragment extends Fragment {
     private ArrayList<Event_dash_list_obj> event_main_list;
     private CardView maps_loading_events_cardview;
     private long sessionCounter;
-    private FloatingActionButton maps_frag_filter_fab;
     private CheckBox filter_dialog_event_time_upcoming_chk_box;
     private CheckBox filter_dialog_event_time_ongoing_chk_box;
     private CheckBox filter_dialog_event_time_completed_chk_box;
@@ -67,6 +79,11 @@ public class MapsFragment extends Fragment {
     int event_type_event = 1;
     int event_type_incident = 1;
     int event_dt_all = 1;
+    private View recurrenceDateSelectorDialogView;
+    private int modeValue = 1;
+    Date filterStartDate = new Date();
+    Date filterEndDate = new Date();
+    private TextView date_range_text_view_1;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -85,7 +102,8 @@ public class MapsFragment extends Fragment {
 
         mMapView = (MapView) rootView.findViewById(R.id.mapView);
         maps_loading_events_cardview = (CardView) rootView.findViewById(R.id.maps_loading_events_cardview);
-        maps_frag_filter_fab = (FloatingActionButton) rootView.findViewById(R.id.maps_frag_filter_fab);
+        FloatingActionButton maps_frag_filter_fab = (FloatingActionButton) rootView.findViewById(R.id.maps_frag_filter_fab);
+
         mMapView.onCreate(savedInstanceState);
 
         mMapView.onResume(); // needed to get the map to display immediately
@@ -151,6 +169,7 @@ public class MapsFragment extends Fragment {
         TextView filter_dialog_cancel_btn_text_view = (TextView) view.findViewById(R.id.filter_dialog_cancel_btn_text_view);
         TextView filter_dialog_set_btn_text_view = (TextView) view.findViewById(R.id.filter_dialog_set_btn_text_view);
         final TextView filter_dialog_error_textview = (TextView) view.findViewById(R.id.filter_dialog_error_textview);
+        date_range_text_view_1 = (TextView) view.findViewById(R.id.date_range_text_view_1);
         filter_dialog_error_textview.setVisibility(View.INVISIBLE);
 
         alertDialog.setContentView(view);
@@ -181,6 +200,73 @@ public class MapsFragment extends Fragment {
         });
 
         alertDialog.show();
+
+        date_range_text_view_1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getDates();
+
+            }
+        });
+    }
+
+    private void getDates() {
+        LayoutInflater flater = getActivity().getLayoutInflater();
+        recurrenceDateSelectorDialogView = flater.inflate(R.layout.filter_range_dt_selector_dialog, null);
+        MaterialCalendarView dt_selector_materialCalendarView = (MaterialCalendarView) recurrenceDateSelectorDialogView.findViewById(R.id.filter_range_dt_dt_selector_calendarView);
+
+        final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setView(recurrenceDateSelectorDialogView);
+        builder.setCancelable(false);
+        if (modeValue == 1) {
+            builder.setTitle("Select start date");
+        } else {
+            builder.setTitle("Select end date");
+            builder.setPositiveButton("Select", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+
+                    date_range_text_view_1.setText(filterStartDate + " To " + filterEndDate);
+
+                }
+            });
+        }
+
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+
+            }
+        });
+
+        builder.show();
+
+        dt_selector_materialCalendarView.setOnDateChangedListener(new OnDateSelectedListener() {
+            @Override
+            public void onDateSelected(@NonNull MaterialCalendarView widget, @NonNull CalendarDay calendarDayDate, boolean selected) {
+
+                System.out.println("MODE 1 date : " + calendarDayDate);
+                Calendar c = Calendar.getInstance();
+                c.set(calendarDayDate.getYear(), calendarDayDate.getMonth(), calendarDayDate.getDay());
+
+                if (modeValue == 1) {
+                    filterStartDate = c.getTime();
+                    modeValue = 2;
+                } else {
+                    filterEndDate = c.getTime();
+                    modeValue = 1;
+                }
+
+
+                //call self function with modevalue 2
+                if (modeValue == 2) {
+                    getDates();
+                }
+                System.out.println("startDate endDate " + filterStartDate + " ** " + filterEndDate);
+
+            }
+        });
     }
 
     private void getCheckedStatus() {
@@ -308,7 +394,6 @@ public class MapsFragment extends Fragment {
         }
 
     }
-
 
     @Override
     public void onResume() {

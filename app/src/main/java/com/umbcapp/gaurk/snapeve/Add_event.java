@@ -692,7 +692,6 @@ public class Add_event extends AppCompatActivity implements LocationListener {
                 similarPostBar.setVisibility(View.INVISIBLE);
                 submit_btn_status_textview.setText("Submit Post");
                 similar_button_cardview.setVisibility(View.VISIBLE);
-
             }
 
             @Override

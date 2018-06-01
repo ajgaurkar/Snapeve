@@ -38,8 +38,8 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_margin="3dp"
-            android:checked="true"
             android:layout_weight="33"
+            android:checked="true"
             android:text="Completed" />
 
         <CheckBox
@@ -60,10 +60,18 @@
 
     </LinearLayout>
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_below="@+id/filter_dialog_event_time_lin_layout"
+        android:layout_marginTop="5dp"
+        android:background="#aeaeae" />
+
     <TextView
         android:id="@+id/filter_dialog_event_type_label"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
         android:layout_alignParentEnd="true"
         android:layout_below="@+id/filter_dialog_event_time_lin_layout"
         android:text="Event type" />
@@ -95,36 +103,63 @@
 
     </LinearLayout>
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_below="@+id/filter_dialog_event_type_lin_layout"
+        android:layout_marginTop="5dp"
+        android:background="#aeaeae" />
+
     <TextView
         android:id="@+id/filter_dialog_dt_range_label"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/filter_dialog_event_type_lin_layout"
         android:layout_marginTop="10dp"
-        android:paddingTop="2dp"
+        android:paddingTop="5dp"
         android:text="date range" />
 
     <CheckBox
         android:id="@+id/filter_dialog_all_events_checkbox"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:scaleX="0.9"
+        android:scaleY="0.9"
         android:layout_alignEnd="@+id/filter_dialog_event_label"
         android:layout_alignTop="@+id/filter_dialog_dt_range_label"
         android:layout_marginEnd="16dp"
-        android:text="All events" />
+        android:text="All dates" />
 
     <TextView
         android:id="@+id/date_range_text_view_1"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/filter_dialog_all_events_checkbox"
-        android:text="Jan 21, 2018" />
+        android:padding="5dp"
+        android:paddingEnd="30dp"
+        android:text="Jan 21, 2018 - Jan 31, 2018" />
+
+    <ImageView
+        android:layout_width="20dp"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/date_range_text_view_1"
+        android:layout_alignEnd="@+id/date_range_text_view_1"
+        android:layout_alignTop="@+id/date_range_text_view_1"
+        android:src="@drawable/down_arrow_grey_24" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_below="@+id/date_range_text_view_1"
+        android:layout_marginTop="10dp"
+        android:background="#aeaeae" />
 
     <LinearLayout
         android:id="@+id/filter_map_btn_lin_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/date_range_text_view_1"
+        android:layout_marginTop="10dp"
         android:orientation="horizontal"
         android:weightSum="2">
 

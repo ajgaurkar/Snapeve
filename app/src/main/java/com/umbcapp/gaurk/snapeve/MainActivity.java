@@ -2,9 +2,9 @@ package com.umbcapp.gaurk.snapeve;
 
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
-import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -20,7 +20,6 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -35,7 +34,6 @@ import com.google.gson.JsonObject;
 import com.microsoft.windowsazure.mobileservices.MobileServiceClient;
 import com.microsoft.windowsazure.mobileservices.http.OkHttpClientFactory;
 import com.umbcapp.gaurk.snapeve.Adapters.Dash_Event_ListAdapter;
-import com.umbcapp.gaurk.snapeve.Controllers.CommentsListItem;
 import com.umbcapp.gaurk.snapeve.Controllers.Event_dash_list_obj;
 import com.umbcapp.gaurk.snapeve.Fragments.MapsFragment;
 import com.umbcapp.gaurk.snapeve.Fragments.NotificationFragment;
@@ -43,16 +41,11 @@ import com.umbcapp.gaurk.snapeve.Fragments.SettingsFragment;
 import com.umbcapp.gaurk.snapeve.Fragments.UserProfileFragment;
 
 import java.net.MalformedURLException;
-import java.util.ArrayList;
 import java.util.Locale;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 
 import com.squareup.okhttp.OkHttpClient;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 public class MainActivity extends AppCompatActivity implements Listview_communicator {
 
@@ -240,14 +233,14 @@ public class MainActivity extends AppCompatActivity implements Listview_communic
             @Override
             public void onFailure(Throwable exception) {
                 resultFuture.setException(exception);
-                System.out.println(" executeLoginApi exception    " + exception);
+                System.out.println(" get_event_feeds_api exception    " + exception);
 
             }
 
             @Override
             public void onSuccess(JsonElement response) {
                 resultFuture.set(response);
-                System.out.println(" executeLoginApi success response    " + response);
+                System.out.println(" get_event_feeds_api success response    " + response);
 
                 poupulateList(response);
 
@@ -270,6 +263,7 @@ public class MainActivity extends AppCompatActivity implements Listview_communic
             String img_comment = feeds_list_object.get("img_comment").toString();
             String feed_img_url = feeds_list_object.get("img_url").toString();
             String feed_user_id = feeds_list_object.get("initializer_id").toString();
+            String post_id = feeds_list_object.get("post_id").toString();
             System.out.println(" img_comment " + img_comment);
             System.out.println(" feed_img_url " + feed_img_url);
 
@@ -277,6 +271,7 @@ public class MainActivity extends AppCompatActivity implements Listview_communic
             img_comment = img_comment.substring(1, img_comment.length() - 1);
             feed_user_id = feed_user_id.substring(1, feed_user_id.length() - 1);
             feed_img_url = feed_img_url.substring(1, feed_img_url.length() - 1);
+            post_id = post_id.substring(1, post_id.length() - 1);
 
 //                    try {
 //                        Date date = format.parse(timestamp);
@@ -288,7 +283,7 @@ public class MainActivity extends AppCompatActivity implements Listview_communic
 //                        e.printStackTrace();
 //                    }
 
-            event_main_list.add(0, new Event_dash_list_obj(feed_user_id, "Name_x", img_comment, "10 hrs ago", feed_img_url));
+            event_main_list.add(0, new Event_dash_list_obj(feed_user_id, "Name_x", img_comment, "10 hrs ago", feed_img_url, post_id));
 
 
         }
@@ -305,7 +300,10 @@ public class MainActivity extends AppCompatActivity implements Listview_communic
         System.out.print("click_code " + click_code);
 //        Toast.makeText(getApplicationContext(),""+position,Toast.LENGTH_SHORT).show();
 
+        int currentstatus = 0;
+        String userComment = "";
         switch (click_code) {
+
 
             case 0:
                 Log.d("click_code ", +position + " " + click_code);
@@ -313,21 +311,73 @@ public class MainActivity extends AppCompatActivity implements Listview_communic
                 break;
             case 1:
                 Log.d("click_code ", +position + " " + click_code);
+
+                actionEvent(event_main_list.get(position).getPost_id(), event_main_list.get(position).getUser_id(), currentstatus, click_code, userComment);
+
                 break;
             case 2:
+                userComment = "Test comment";
                 Log.d("click_code ", +position + " " + click_code);
+                actionEvent(event_main_list.get(position).getPost_id(), event_main_list.get(position).getUser_id(), currentstatus, click_code, userComment);
+
                 break;
             case 3:
-                Log.d("click_code ", +position + " " + click_code);
                 System.out.print("click_code " + position + " " + click_code);
-                break;
-            case 4:
-                Log.d("click_code ", +position + " " + click_code);
-                System.out.print("click_code " + position + " " + click_code);
-                break;
+                actionEvent(event_main_list.get(position).getPost_id(), event_main_list.get(position).getUser_id(), currentstatus, click_code, userComment);
 
+                break;
         }
 
+    }
+
+    private void actionEvent(String post_id, String user_id, int currentstatus, int click_code, String userComment) {
+        JsonObject jsonObjectPostEventParameters = new JsonObject();
+
+        if (click_code == 1) {
+            jsonObjectPostEventParameters.addProperty("verify_status", 1);
+            jsonObjectPostEventParameters.addProperty("spam_status", 0);
+        }
+        if (click_code == 2) {
+            jsonObjectPostEventParameters.addProperty("verify_status", 0);
+            jsonObjectPostEventParameters.addProperty("spam_status", 0);
+        }
+        if (click_code == 3) {
+            jsonObjectPostEventParameters.addProperty("verify_status", 0);
+            jsonObjectPostEventParameters.addProperty("spam_status", 1);
+        }
+
+        jsonObjectPostEventParameters.addProperty("userComment", userComment);
+        jsonObjectPostEventParameters.addProperty("user_id", user_id);
+        jsonObjectPostEventParameters.addProperty("post_id", post_id);
+        jsonObjectPostEventParameters.addProperty("click_code", click_code);
+
+
+        final ProgressDialog mProgressDialog = new ProgressDialog(this);
+        mProgressDialog.setIndeterminate(true);
+        mProgressDialog.setMessage("Posting. Please wait...");
+
+
+        mProgressDialog.show();
+
+        final SettableFuture<JsonElement> resultFuture = SettableFuture.create();
+        ListenableFuture<JsonElement> serviceFilterFuture = MainActivity.mClient.invokeApi("action_event_api", jsonObjectPostEventParameters);
+
+        Futures.addCallback(serviceFilterFuture, new FutureCallback<JsonElement>() {
+            @Override
+            public void onFailure(Throwable exception) {
+                resultFuture.setException(exception);
+                System.out.println(" actionEvent exception    " + exception);
+                mProgressDialog.dismiss();
+            }
+
+            @Override
+            public void onSuccess(JsonElement response) {
+                resultFuture.set(response);
+                System.out.println(" actionEvent success response    " + response);
+                mProgressDialog.dismiss();
+
+            }
+        });
     }
 
     private void openEventDetails(int position) {
