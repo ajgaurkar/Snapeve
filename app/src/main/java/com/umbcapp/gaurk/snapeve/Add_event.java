@@ -775,7 +775,8 @@ public class Add_event extends AppCompatActivity implements LocationListener {
         Random random = new Random();
         int x = random.nextInt(900) + 100;
 
-        jsonObjectPostEventParameters.addProperty("img_url", "https://picsum.photos/400/200/?image=" + x);
+//        jsonObjectPostEventParameters.addProperty("img_url", "https://picsum.photos/400/200/?image=" + x);
+        jsonObjectPostEventParameters.addProperty("img_url", "https://source.unsplash.com/random");
 
         return true;
 

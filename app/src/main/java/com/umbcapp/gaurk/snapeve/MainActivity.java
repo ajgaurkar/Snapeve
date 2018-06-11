@@ -176,9 +176,16 @@ public class MainActivity extends AppCompatActivity implements Listview_communic
         notificationFragment = new NotificationFragment();
 
         // Mobile Service URL and key
+
+        //Old access url(aj account)
         try {
+//            mClient = new MobileServiceClient(
+//                    "https://azure-test-app.azurewebsites.net",
+//                    this);
+
+            //New access url(amey account)
             mClient = new MobileServiceClient(
-                    "https://azure-test-app.azurewebsites.net",
+                    "https://snapeve.azurewebsites.net",
                     this);
 
             // Extend timeout from default of 10s to 20s
