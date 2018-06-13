@@ -20,6 +20,7 @@ import com.google.common.util.concurrent.SettableFuture;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.umbcapp.gaurk.snapeve.CreateGruoups;
+import com.umbcapp.gaurk.snapeve.Login_snapeve_activity;
 import com.umbcapp.gaurk.snapeve.MainActivity;
 import com.umbcapp.gaurk.snapeve.R;
 import com.umbcapp.gaurk.snapeve.WelcomeActivity;
@@ -47,7 +48,7 @@ public class NotificationFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.notification_fragment, container, false);
 
 
-        startActivity(new Intent(getActivity(), test_activity.class));
+        startActivity(new Intent(getActivity(), Login_snapeve_activity.class));
 
         return rootView;
     }

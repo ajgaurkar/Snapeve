@@ -86,6 +86,7 @@ public class Add_event extends AppCompatActivity implements LocationListener {
     private RadioGroup post_scope_radio_grp;
     private RadioGroup post_location_radio_grp;
     private RadioGroup post_event_type_radio_grp;
+    private RadioGroup post_as_radio_grp;
     private String postDescription;
     private String postDescriptionTimeDt;
     private TextView post_event_time_dt_text_view;
@@ -118,7 +119,7 @@ public class Add_event extends AppCompatActivity implements LocationListener {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.add_event);
+        setContentView(R.layout.test_2);
         initiate_permission_check();
 
 
@@ -149,6 +150,7 @@ public class Add_event extends AppCompatActivity implements LocationListener {
         post_scope_radio_grp = (RadioGroup) findViewById(R.id.post_scope_radio_grp);
         post_location_radio_grp = (RadioGroup) findViewById(R.id.post_location_radio_grp);
         post_event_type_radio_grp = (RadioGroup) findViewById(R.id.post_event_type_radio_grp);
+        post_as_radio_grp = (RadioGroup) findViewById(R.id.post_as_radio_grp);
 
         similar_posts_list_cardview = (CardView) findViewById(R.id.similar_posts_list_cardview);
         submit_button_cardview = (CardView) findViewById(R.id.submit_button_cardview);
@@ -359,7 +361,7 @@ public class Add_event extends AppCompatActivity implements LocationListener {
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
         PendingIntent leaderboardpendingIntent = PendingIntent.getActivity(this, 0, LeaderBoardIntent, 0);
-        
+
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this, CHANNEL_ID)
                 .addAction(R.drawable.approve_dark_grey_48, "Approve", leaderboardpendingIntent)
                 .addAction(R.drawable.deny_dark_grey_48, "Snooze", pendingIntent)
@@ -775,8 +777,8 @@ public class Add_event extends AppCompatActivity implements LocationListener {
         Random random = new Random();
         int x = random.nextInt(900) + 100;
 
-//        jsonObjectPostEventParameters.addProperty("img_url", "https://picsum.photos/400/200/?image=" + x);
-        jsonObjectPostEventParameters.addProperty("img_url", "https://source.unsplash.com/random");
+        jsonObjectPostEventParameters.addProperty("img_url", "https://picsum.photos/400/200/?image=" + x);
+//        jsonObjectPostEventParameters.addProperty("img_url", "https://source.unsplash.com/random");
 
         return true;
 
