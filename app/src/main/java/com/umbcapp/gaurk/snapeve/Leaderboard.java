@@ -10,6 +10,12 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.common.util.concurrent.FutureCallback;
+import com.google.common.util.concurrent.Futures;
+import com.google.common.util.concurrent.ListenableFuture;
+import com.google.common.util.concurrent.SettableFuture;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.umbcapp.gaurk.snapeve.Adapters.LeaderBoardAdapter;
 import com.umbcapp.gaurk.snapeve.Controllers.LeaderboardListItem;
 
@@ -29,6 +35,7 @@ public class Leaderboard extends AppCompatActivity {
     private int user_type_selection_status;
     private Boolean top_10_selection_status;
     private RecyclerView.LayoutManager mLayoutManager;
+    private JsonObject jsonObjectLoginParameters;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -44,6 +51,8 @@ public class Leaderboard extends AppCompatActivity {
         leader_board_switch_you_textview = (TextView) findViewById(R.id.leader_board_switch_you_textview);
 
         System.out.println("System.currentTimeMillis() onCreate : " + System.currentTimeMillis());
+
+        getLeaderboardData();
 
         leader_board_switch_you_textview.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -89,6 +98,32 @@ public class Leaderboard extends AppCompatActivity {
 
     }
 
+    private void getLeaderboardData() {
+        jsonObjectLoginParameters = new JsonObject();
+        jsonObjectLoginParameters.addProperty("fetch_code", "0");
+
+        final SettableFuture<JsonElement> resultFuture = SettableFuture.create();
+        ListenableFuture<JsonElement> serviceFilterFuture = MainActivity.mClient.invokeApi("get_leader_board_info_api", jsonObjectLoginParameters);
+
+        Futures.addCallback(serviceFilterFuture, new FutureCallback<JsonElement>() {
+            @Override
+            public void onFailure(Throwable exception) {
+                resultFuture.setException(exception);
+                System.out.println(" get_leader_board_info_api exception    " + exception);
+
+            }
+
+            @Override
+            public void onSuccess(JsonElement response) {
+                resultFuture.set(response);
+                System.out.println(" get_leader_board_info_api success response    " + response);
+
+//                poupulateList(response);
+
+            }
+        });
+    }
+
     private void loadLeaderboardList(int user_type_selection_status) {
 
         if (user_type_selection_status == 0) {
@@ -130,7 +165,6 @@ public class Leaderboard extends AppCompatActivity {
 
         }
     }
-
 
 
 }
