@@ -121,7 +121,7 @@ public class EventDetails extends AppCompatActivity implements Listview_communic
             @Override
             public void onClick(View v) {
                 Intent returnIntent = new Intent();
-                returnIntent.putExtra("Merge_action","1");
+                returnIntent.putExtra("Merge_action", "1");
                 setResult(RESULT_OK, returnIntent);
                 finish();
             }
@@ -130,7 +130,7 @@ public class EventDetails extends AppCompatActivity implements Listview_communic
             @Override
             public void onClick(View v) {
                 Intent returnIntent = new Intent();
-                returnIntent.putExtra("Merge_action","2");
+                returnIntent.putExtra("Merge_action", "2");
                 setResult(RESULT_OK, returnIntent);
                 finish();
             }
@@ -235,7 +235,7 @@ public class EventDetails extends AppCompatActivity implements Listview_communic
         AttendiesListItem selectedAttendiesListItem = attendiesClubbedArrayList.get(position);
 
         int tempStatus = selectedAttendiesListItem.getRequest_status();
-        Log.d("tempStatus before", tempStatus + "");
+        Log.d("tempStatus before", tempStatus + "position " + position);
 
         if (tempStatus == 0) {
             selectedAttendiesListItem.setRequest_status(1);

@@ -10,4 +10,12 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+
+    <style name="TransparentTheme">
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <!--<item name="android:windowDrawsSystemBarBackgrounds">true</item>-->
+        <!--<item name="android:windowActionBar">false</item>-->
+        <!--<item name="android:statusBarColor">@android:color/transparent</item>-->
+    </style>
 </resources>
