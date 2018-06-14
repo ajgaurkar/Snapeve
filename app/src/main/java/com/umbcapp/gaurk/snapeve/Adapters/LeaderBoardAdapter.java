@@ -1,5 +1,6 @@
 package com.umbcapp.gaurk.snapeve.Adapters;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,7 +10,9 @@ import android.widget.TextView;
 import com.akexorcist.roundcornerprogressbar.RoundCornerProgressBar;
 import com.squareup.picasso.Picasso;
 import com.umbcapp.gaurk.snapeve.Controllers.LeaderboardListItem;
+import com.umbcapp.gaurk.snapeve.Leaderboard;
 import com.umbcapp.gaurk.snapeve.R;
+import com.umbcapp.gaurk.snapeve.SessionManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,13 +23,15 @@ public class LeaderBoardAdapter extends RecyclerView.Adapter<LeaderBoardAdapter.
     private List<LeaderboardListItem> leaderboardList;
     int maxRank = 100;
     int user_type_selection_status = 0;
+    Context context;
 
-
-    public LeaderBoardAdapter(ArrayList<LeaderboardListItem> leaderboardList, int maxRank, int user_type_selection_status) {
+    public LeaderBoardAdapter(Leaderboard context, ArrayList<LeaderboardListItem> leaderboardList, int maxRank, int user_type_selection_status) {
         this.leaderboardList = leaderboardList;
         this.maxRank = maxRank;
+        this.context = context;
         this.user_type_selection_status = user_type_selection_status;
     }
+
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         public TextView userName;
@@ -61,7 +66,9 @@ public class LeaderBoardAdapter extends RecyclerView.Adapter<LeaderBoardAdapter.
         holder.userRankBar.setProgress(selectedLeaderboardListItem.getUserRank());
         holder.userRankBar.setSecondaryProgress(maxRank);
 
-        if (selectedLeaderboardListItem.getUserId().equals("LU6")) {
+        System.out.println("new SessionManager(context).getSpecificUserDetail(SessionManager.KEY_USER_ID) " + new SessionManager(context).getSpecificUserDetail(SessionManager.KEY_USER_ID));
+        System.out.println("selectedLeaderboardListItem.getUserId() " + selectedLeaderboardListItem.getUserId());
+        if (selectedLeaderboardListItem.getUserName().equals(new SessionManager(context).getSpecificUserDetail(SessionManager.KEY_USER_ID))) {
             holder.youTextView.setVisibility(View.VISIBLE);
         } else {
             holder.youTextView.setVisibility(View.INVISIBLE);

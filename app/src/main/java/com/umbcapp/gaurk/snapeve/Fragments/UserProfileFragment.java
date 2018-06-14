@@ -31,6 +31,7 @@ import com.umbcapp.gaurk.snapeve.EventDetails;
 import com.umbcapp.gaurk.snapeve.Leaderboard;
 import com.umbcapp.gaurk.snapeve.MainActivity;
 import com.umbcapp.gaurk.snapeve.R;
+import com.umbcapp.gaurk.snapeve.SessionManager;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -68,6 +69,7 @@ public class UserProfileFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         contributionList = new ArrayList<>();
+        fetch_user_details();
         fetch_group_details();
 
         sessionCounter = System.currentTimeMillis();
@@ -96,6 +98,28 @@ public class UserProfileFragment extends Fragment {
             public void onSuccess(JsonElement response) {
                 resultFuture.set(response);
                 System.out.println(" fetch_group_details success response    " + response);
+            }
+        });
+    }
+
+    private void fetch_user_details() {
+        jsonObjectUserProfileFragParameters = new JsonObject();
+        jsonObjectUserProfileFragParameters.addProperty("user_name", new SessionManager(getActivity()).getSpecificUserDetail(SessionManager.KEY_USER_NAME));
+
+        final SettableFuture<JsonElement> resultFuture = SettableFuture.create();
+        ListenableFuture<JsonElement> serviceFilterFuture = MainActivity.mClient.invokeApi("fetch_user_details_api", jsonObjectUserProfileFragParameters);
+
+        Futures.addCallback(serviceFilterFuture, new FutureCallback<JsonElement>() {
+            @Override
+            public void onFailure(Throwable exception) {
+                resultFuture.setException(exception);
+                System.out.println(" fetch_user_details exception    " + exception);
+            }
+
+            @Override
+            public void onSuccess(JsonElement response) {
+                resultFuture.set(response);
+                System.out.println(" fetch_user_details success response    " + response);
             }
         });
     }
@@ -233,6 +257,6 @@ public class UserProfileFragment extends Fragment {
         long minutes = TimeUnit.MILLISECONDS.toMinutes(sessionCounter);
         long seconds = TimeUnit.MILLISECONDS.toSeconds(sessionCounter);
 
-        System.out.println("PROFILE sessionCounter : " + minutes +"m "+ seconds+"s");
+        System.out.println("PROFILE sessionCounter : " + minutes + "m " + seconds + "s");
     }
 }

@@ -24,6 +24,7 @@ public class SessionManager {
     // keys should be strings
     //data should be specific data type
     private static final String IS_LOGIN = "IsLoggedIn";
+    public static final String KEY_USER_ID = "userid";
     public static final String KEY_USER_NAME = "username";
     public static final String KEY_PASSWORD = "password";
 
@@ -114,7 +115,7 @@ public class SessionManager {
 
     public String getSpecificUserDetail(String dataKEY) {
 
-        String itemValue = pref.getString(dataKEY, null);
+        String itemValue = pref.getString(dataKEY, "T_cruise");
 
         return itemValue;
     }
