@@ -333,6 +333,7 @@ public class MainActivity extends AppCompatActivity implements Listview_communic
     private void actionEvent(String post_id, String user_id, int currentstatus, int click_code, String userComment) {
         JsonObject jsonObjectPostEventParameters = new JsonObject();
 
+
         if (click_code == 1) {
             jsonObjectPostEventParameters.addProperty("verify_status", 1);
             jsonObjectPostEventParameters.addProperty("spam_status", 0);
