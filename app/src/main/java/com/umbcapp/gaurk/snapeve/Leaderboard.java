@@ -56,7 +56,7 @@ public class Leaderboard extends AppCompatActivity {
 
         System.out.println("System.currentTimeMillis() onCreate : " + System.currentTimeMillis());
 
-        getLeaderboardData();
+        getLeaderboardData(0);
 
         leader_board_switch_you_textview.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -102,14 +102,14 @@ public class Leaderboard extends AppCompatActivity {
 
     }
 
-    private void getLeaderboardData() {
+    private void getLeaderboardData(final int code) {
 
         final ProgressDialog progressDialog = new ProgressDialog(Leaderboard.this);
         progressDialog.setTitle("Loading, Please wait...");
         progressDialog.create();
         progressDialog.show();
         jsonObjectLoginParameters = new JsonObject();
-        jsonObjectLoginParameters.addProperty("fetch_code", "0");
+        jsonObjectLoginParameters.addProperty("fetch_code", code);
 
         final SettableFuture<JsonElement> resultFuture = SettableFuture.create();
         ListenableFuture<JsonElement> serviceFilterFuture = MainActivity.mClient.invokeApi("get_leader_board_info_api", jsonObjectLoginParameters);
@@ -129,13 +129,18 @@ public class Leaderboard extends AppCompatActivity {
                 progressDialog.dismiss();
                 System.out.println(" get_leader_board_info_api success response    " + response);
 
-                poupulateList(response);
+                if (code == 0) {
+                    poupulateUsersList(response);
+                }
+                if (code == 1) {
+//                    poupulateGrpList(response);
+                }
 
             }
         });
     }
 
-    private void poupulateList(JsonElement response) {
+    private void poupulateUsersList(JsonElement response) {
         leaderBoardList = new ArrayList<LeaderboardListItem>();
 
         System.out.println(" IN PARSE JASON");
@@ -169,7 +174,47 @@ public class Leaderboard extends AppCompatActivity {
 
         }
         System.out.println(" leaderBoardList " + leaderBoardList.size());
-        leaderBoardAdapter = new LeaderBoardAdapter(Leaderboard.this,leaderBoardList, maxRank, user_type_selection_status);
+        leaderBoardAdapter = new LeaderBoardAdapter(Leaderboard.this, leaderBoardList, maxRank, user_type_selection_status);
+        leader_board_recyclerview.setLayoutManager(mLayoutManager);
+        leader_board_recyclerview.setItemAnimator(new DefaultItemAnimator());
+        leader_board_recyclerview.setAdapter(leaderBoardAdapter);
+    }
+
+    private void poupulateGrpList(JsonElement response) {
+        leaderBoardList = new ArrayList<LeaderboardListItem>();
+
+        System.out.println(" IN PARSE JASON");
+
+        JsonArray rankingJSONArray = response.getAsJsonArray();
+
+        for (int j = 0; j < rankingJSONArray.size(); j++) {
+            JsonObject ranking_list_object = rankingJSONArray.get(j).getAsJsonObject();
+            System.out.println(" ranking_list_object  " + ranking_list_object);
+
+            String user_id = ranking_list_object.get("id").toString();
+            String user_name = ranking_list_object.get("user_name").toString();
+            int user_points = Integer.parseInt(ranking_list_object.get("user_points").toString());
+            String dp_url = ranking_list_object.get("dp_url").toString();
+
+            if (user_points > maxRank) {
+                maxRank = user_points;
+            }
+
+            System.out.println(" user_id " + user_id);
+            System.out.println(" user_name " + user_name);
+            System.out.println(" user_points " + user_points);
+            System.out.println(" dp_url " + dp_url);
+
+            //Remove " from start and end from every string
+            user_id = user_id.substring(1, user_id.length() - 1);
+            user_name = user_name.substring(1, user_name.length() - 1);
+            dp_url = dp_url.substring(1, dp_url.length() - 1);
+
+            leaderBoardList.add(new LeaderboardListItem(user_id, user_name, user_points, "Grp UMBC", dp_url));
+
+        }
+        System.out.println(" leaderBoardList " + leaderBoardList.size());
+        leaderBoardAdapter = new LeaderBoardAdapter(Leaderboard.this, leaderBoardList, maxRank, user_type_selection_status);
         leader_board_recyclerview.setLayoutManager(mLayoutManager);
         leader_board_recyclerview.setItemAnimator(new DefaultItemAnimator());
         leader_board_recyclerview.setAdapter(leaderBoardAdapter);
@@ -178,6 +223,9 @@ public class Leaderboard extends AppCompatActivity {
     private void loadLeaderboardList(int user_type_selection_status) {
 
         if (user_type_selection_status == 0) {
+
+//            getLeaderboardData(0);
+
             leaderBoardList = new ArrayList<LeaderboardListItem>();
 
             leaderBoardList.add(new LeaderboardListItem("LU5", "Ajinkya gaurkar", 99, "Grp UMBC", "http://keenthemes.com/preview/metronic/theme/assets/pages/media/profile/profile_user.jpg"));
@@ -191,13 +239,15 @@ public class Leaderboard extends AppCompatActivity {
             leaderBoardList.add(new LeaderboardListItem("LU3", "Karen Dhruv", 18, "Grp UMBC", "https://www.bnl.gov/today/body_pics/2017/06/stephanhruszkewycz-355px.jpg"));
             leaderBoardList.add(new LeaderboardListItem("LU7", "Sri", 15, "Grp UMBC", "http://www.dast.biz/wp-content/uploads/2016/11/John_Doe.jpg"));
 
-            leaderBoardAdapter = new LeaderBoardAdapter(Leaderboard.this,leaderBoardList, maxRank, user_type_selection_status);
+            leaderBoardAdapter = new LeaderBoardAdapter(Leaderboard.this, leaderBoardList, maxRank, user_type_selection_status);
             leader_board_recyclerview.setLayoutManager(mLayoutManager);
             leader_board_recyclerview.setItemAnimator(new DefaultItemAnimator());
             leader_board_recyclerview.setAdapter(leaderBoardAdapter);
 
         }
         if (user_type_selection_status == 1) {
+
+//            getLeaderboardData(1);
 
             leaderBoardList = new ArrayList<LeaderboardListItem>();
             leaderBoardList.add(new LeaderboardListItem("LU5", "Ajinkya gaurkar", 99, "Math Group", "https://www.jetairways.com/Images/forms/group-booking.jpg"));
@@ -209,7 +259,7 @@ public class Leaderboard extends AppCompatActivity {
             leaderBoardList.add(new LeaderboardListItem("LU4", "Mayur Pate", 44, "Halethorpe", "https://icd.hwstatic.com/static/images/3.60.3.0/groups_article_three.jpg"));
             leaderBoardList.add(new LeaderboardListItem("LU1", "Arya Shah", 31, "Common vision", "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQIC3Cc33fz59_cmyr90iwzRb7AnSDKqieV63Mgeq6NrSqsXl2m"));
 
-            leaderBoardAdapter = new LeaderBoardAdapter(Leaderboard.this,leaderBoardList, maxRank, user_type_selection_status);
+            leaderBoardAdapter = new LeaderBoardAdapter(Leaderboard.this, leaderBoardList, maxRank, user_type_selection_status);
             leader_board_recyclerview.setLayoutManager(mLayoutManager);
             leader_board_recyclerview.setItemAnimator(new DefaultItemAnimator());
             leader_board_recyclerview.setAdapter(leaderBoardAdapter);

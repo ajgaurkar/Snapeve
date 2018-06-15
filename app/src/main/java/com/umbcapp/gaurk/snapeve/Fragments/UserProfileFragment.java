@@ -21,6 +21,7 @@ import com.google.common.util.concurrent.FutureCallback;
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.SettableFuture;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.squareup.picasso.Picasso;
@@ -60,6 +61,19 @@ public class UserProfileFragment extends Fragment {
     private ImageView user_profile_settings_imageview;
 
     long sessionCounter = 0;
+    private String temp_user_points;
+    private String userName;
+    private String dp_url;
+    private String first_name;
+    private String last_name;
+    private String grp_id;
+    private String grp_name;
+    private String grp_dp_url;
+    private String temp_total_pts;
+    private TextView user_name_textview;
+    private int grp_total_pts;
+    private int user_total_pts;
+    private TextView user_points;
 
     public UserProfileFragment() {
 
@@ -70,7 +84,7 @@ public class UserProfileFragment extends Fragment {
         super.onCreate(savedInstanceState);
         contributionList = new ArrayList<>();
         fetch_user_details();
-        fetch_group_details();
+//        fetch_group_details();
 
         sessionCounter = System.currentTimeMillis();
         DateFormat formatter = new SimpleDateFormat("HH:mm:ss", Locale.US);
@@ -120,25 +134,53 @@ public class UserProfileFragment extends Fragment {
             public void onSuccess(JsonElement response) {
                 resultFuture.set(response);
                 System.out.println(" fetch_user_details success response    " + response);
+
+                parseResponse(response);
             }
         });
+    }
+
+    private void parseResponse(JsonElement response) {
+        JsonArray responseJsonArray = response.getAsJsonArray();
+
+        JsonObject userDetailsObj = responseJsonArray.get(0).getAsJsonObject();
+
+        userName = userDetailsObj.get("user_name").toString();
+        dp_url = userDetailsObj.get("user_name").toString();
+        first_name = userDetailsObj.get("first_name").toString();
+        last_name = userDetailsObj.get("last_name").toString();
+        grp_id = userDetailsObj.get("grp_id").toString();
+        grp_name = userDetailsObj.get("grp_name").toString();
+        grp_dp_url = userDetailsObj.get("grp_dp_url").toString();
+        grp_total_pts = Integer.parseInt(userDetailsObj.get("total_pts").toString());
+        user_total_pts = Integer.parseInt(userDetailsObj.get("user_points").toString());
+
+        userName = userName.substring(1, userName.length() - 1);
+        dp_url = dp_url.substring(1, dp_url.length() - 1);
+        first_name = first_name.substring(1, first_name.length() - 1);
+        last_name = last_name.substring(1, last_name.length() - 1);
+        grp_id = grp_id.substring(1, grp_id.length() - 1);
+        grp_name = grp_name.substring(1, grp_name.length() - 1);
+        grp_dp_url = grp_dp_url.substring(1, grp_dp_url.length() - 1);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.userprofile, container, false);
 
-
         grp_profile_btn = (TextView) rootView.findViewById(R.id.profile_switch_grp_textview);
+        user_name_textview = (TextView) rootView.findViewById(R.id.user_name);
         user_profile_btn = (TextView) rootView.findViewById(R.id.profile_switch_you_textview);
+        user_points = (TextView) rootView.findViewById(R.id.user_points);
         user_profile_list_view = (ListView) rootView.findViewById(R.id.user_profile_contribution_list_view);
         profile_relative_layout = (RelativeLayout) rootView.findViewById(R.id.profile_relative_layout);
         user_profile_contribution_list_view = (ListView) rootView.findViewById(R.id.user_profile_contribution_list_view);
         leaderboard_text_view = (TextView) rootView.findViewById(R.id.leaderboard_text_view);
         profile_pic_image_view = (ImageView) rootView.findViewById(R.id.profile_pic_image_view);
         user_profile_settings_imageview = (ImageView) rootView.findViewById(R.id.user_profile_settings_imageview);
-        Picasso.get().load("https://www.goldenglobes.com/sites/default/files/styles/portrait_medium/public/gallery_images/17-tomcruiseag.jpg?itok=qNj0cQGV&c=c9a73b7bdf609d72214d226ab9ea015e")
-                .fit().centerCrop().into(profile_pic_image_view);
+
+//        Picasso.get().load("https://www.goldenglobes.com/sites/default/files/styles/portrait_medium/public/gallery_images/17-tomcruiseag.jpg?itok=qNj0cQGV&c=c9a73b7bdf609d72214d226ab9ea015e")
+//                .fit().centerCrop().into(profile_pic_image_view);
 
         loadContributionList(0);
 
@@ -190,9 +232,11 @@ public class UserProfileFragment extends Fragment {
                 user_profile_btn.setBackground(getResources().getDrawable(R.drawable.text_selection_left_seleted));
                 grp_profile_btn.setBackground(getResources().getDrawable(R.drawable.text_selection_right_unseleted));
                 user_type_selection_status = 0;
-                Picasso.get().load("https://www.goldenglobes.com/sites/default/files/styles/portrait_medium/public/gallery_images/17-tomcruiseag.jpg?itok=qNj0cQGV&c=c9a73b7bdf609d72214d226ab9ea015e")
+                Picasso.get().load(dp_url)
                         .fit().centerCrop().into(profile_pic_image_view);
                 loadContributionList(user_type_selection_status);
+                user_name_textview.setText(userName);
+                user_points.setText(String.valueOf(user_total_pts));
             }
         });
 
@@ -202,9 +246,11 @@ public class UserProfileFragment extends Fragment {
                 grp_profile_btn.setBackground(getResources().getDrawable(R.drawable.text_selection_right_seleted));
                 user_profile_btn.setBackground(getResources().getDrawable(R.drawable.text_selection_left_unseleted));
                 user_type_selection_status = 1;
-                Picasso.get().load("https://thumbs.dreamstime.com/b/group-friends-having-fun-beach-summer-holidays-vacation-happy-people-concept-34394694.jpg")
+                Picasso.get().load(grp_dp_url)
                         .fit().centerCrop().into(profile_pic_image_view);
                 loadContributionList(user_type_selection_status);
+                user_name_textview.setText(grp_name);
+                user_points.setText(String.valueOf(grp_total_pts));
             }
         });
 

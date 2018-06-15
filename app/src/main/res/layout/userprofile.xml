@@ -130,6 +130,20 @@
             android:textStyle="bold" />
 
         <TextView
+            android:id="@+id/user_points"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignEnd="@+id/profile_progress_bar"
+            android:layout_below="@+id/user_name"
+            android:padding="5dp"
+            android:text="15"
+            android:textSize="18sp"
+            android:maxLength="4"
+            android:textColor="#fff"
+            android:textStyle="bold" />
+
+
+        <TextView
             android:id="@+id/leaderboard_text_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
