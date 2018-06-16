@@ -65,6 +65,9 @@
         <activity android:name=".WelcomeActivity" />
         <activity android:name=".test_activity" />
         <activity android:name=".Login_snapeve_activity" />
+        <activity android:name=".BrowseGroupProfile" />
+        <activity android:name=".BrowseUserProfile" />
+        <activity android:name=".SignUp" />
     </application>
 
 </manifest>

@@ -161,6 +161,8 @@ public class MainActivity extends AppCompatActivity implements Listview_communic
         String text = formatter.format(new Date(sessionCounter));
         System.out.println("Start @ sessionCounter : " + text);
 
+        new SessionManager(getApplicationContext()).checkLogin();
+
         testNotification();
 
         event_main_list = new ArrayList<Event_dash_list_obj>();

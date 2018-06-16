@@ -48,7 +48,7 @@ public class NotificationFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.notification_fragment, container, false);
 
 
-        startActivity(new Intent(getActivity(), Login_snapeve_activity.class));
+//        startActivity(new Intent(getActivity(), Login_snapeve_activity.class));
 
         return rootView;
     }

@@ -27,12 +27,11 @@ public class SessionManager {
     public static final String KEY_USER_ID = "userid";
     public static final String KEY_USER_NAME = "username";
     public static final String KEY_PASSWORD = "password";
-
-
-    public static final String KEY_CLIENT_ID = "clientid";
-    public static final String KEY_CLIENT_SECRET = "clientsecret";
-    public static final String KEY_ACCESS_TOKEN = "accesstoken";
-
+    public static final String KEY_FIRST_NAME = "firstname";
+    public static final String KEY_LAST_NAME = "lastname";
+    public static final String KEY_EMAIL = "email";
+    public static final String KEY_DP_URL = "user_dp_url";
+    public static final String KEY_GRP_DP_URL = "grp_dp_url";
 
     SharedPreferences pref;
     // Editor for Shared preferences
@@ -49,15 +48,26 @@ public class SessionManager {
         editor = pref.edit();
     }
 
-
-    public Boolean createLoginSession(String name, String password) {
+    public Boolean createLoginSession(String user_id, String user_name, String user_pass, String first_name, String last_name, String email) {
         Log.d("INTO shapref CREAT SESS", "INTO shapref CREAT SESS");
         // Storing login value as TRUE
         editor.putBoolean(IS_LOGIN, true);
-        editor.putString(KEY_USER_NAME, name);
-        System.out.println("KEY_PASSWORD : " + name);
-        editor.putString(KEY_PASSWORD, password);
-        System.out.println("KEY_PASSWORD : " + password);
+        editor.putString(KEY_USER_NAME, user_name);
+        System.out.println("user_name : " + user_name);
+        editor.putString(KEY_PASSWORD, user_pass);
+        System.out.println("KEY_PASSWORD : " + user_pass);
+
+        editor.putString(KEY_USER_ID, user_id);
+        System.out.println("user_id : " + user_id);
+
+        editor.putString(KEY_EMAIL, email);
+        System.out.println("email : " + email);
+
+        editor.putString(KEY_FIRST_NAME, first_name);
+        System.out.println("first_name : " + first_name);
+
+        editor.putString(KEY_LAST_NAME, last_name);
+        System.out.println("last_name : " + last_name);
 
         // commit changes
         editor.commit();
@@ -65,22 +75,6 @@ public class SessionManager {
         return true;
     }
 
-    public Boolean createSignInSession(String client_id, String client_secret, String access_tkn) {
-        Log.d("INTO shapref CREAT SESS", "INTO shapref CREAT SESS");
-        // Storing login value as TRUE
-        editor.putBoolean(IS_LOGIN, true);
-        editor.putString(KEY_CLIENT_ID, client_id);
-        System.out.println("client_id : " + client_id);
-        editor.putString(KEY_CLIENT_SECRET, client_secret);
-        System.out.println("client_secret : " + client_secret);
-        editor.putString(KEY_ACCESS_TOKEN, access_tkn);
-        System.out.println("access_tkn : " + access_tkn);
-
-        // commit changes
-        editor.commit();
-
-        return true;
-    }
 
     /**
      * Check login method wil check user login status
@@ -93,14 +87,14 @@ public class SessionManager {
             Log.d("data null", "data null");
 
             // user is not logged in redirect him to Login Activity
-            Intent i = new Intent(_context, LoginActivity.class);
+            Intent i = new Intent(_context, Login_snapeve_activity.class);
             // Closing all the Activities
             i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
             // Add new Flag to start new Activity
             i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
-            // Staring Login Activity
+            // Starting Login Activity
             _context.startActivity(i);
         } else {
             Log.d("data present", "data present");
@@ -134,7 +128,7 @@ public class SessionManager {
         editor.commit();
 
         // After logout redirect user to Loing Activity
-        Intent i = new Intent(_context, MainActivity.class);
+        Intent i = new Intent(_context, Login_snapeve_activity.class);
         // Closing all the Activities
         i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 

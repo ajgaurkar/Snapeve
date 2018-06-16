@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/profile_relative_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorMainBg">
+
+    <RelativeLayout
+        android:id="@+id/home_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginBottom="2dp">
+
+        <View
+            android:id="@+id/vertical_divider_user_profile"
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:layout_centerHorizontal="true" />
+
+        <View
+            android:id="@+id/view"
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true" />
+
+        <ImageView
+            android:id="@+id/header_bg"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_above="@id/view"
+            android:layout_alignBottom="@+id/grp_member_count_text_view"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginBottom="-10dp"
+            android:background="@color/colorPrimary"
+            android:paddingBottom="10dp" />
+
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/profile_pic_image_view"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_below="@+id/profile_layout_user_switch_lin_layout"
+            android:layout_margin="16dp"
+            android:src="@drawable/my_pic"
+            app:civ_border_color="@color/colorPrimaryDark"
+            app:civ_border_width="3dp" />
+
+        <TextView
+            android:id="@+id/grp_user_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/profile_pic_image_view"
+            android:layout_toEndOf="@+id/profile_pic_image_view"
+            android:padding="5dp"
+            android:text="STRBX"
+            android:textColor="#fff"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/grp_full_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/grp_user_name"
+            android:layout_toEndOf="@+id/profile_pic_image_view"
+            android:padding="5dp"
+            android:text="STRBX Emp"
+            android:textColor="#fff"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/grp_status"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/grp_full_name"
+            android:layout_toEndOf="@+id/profile_pic_image_view"
+            android:padding="5dp"
+            android:text="Contribution : Level 5"
+            android:textColor="#fff"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/grp_points"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/profile_progress_bar"
+            android:layout_alignEnd="@+id/profile_progress_bar"
+            android:maxLength="4"
+            android:padding="5dp"
+            android:text="85"
+            android:textColor="#fff"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+
+        <TextView
+            android:id="@+id/grp_member_count_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_below="@+id/profile_progress_bar"
+            android:layout_marginBottom="20dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/trans_bg_10_round_white"
+            android:gravity="end"
+            android:paddingBottom="5dp"
+            android:paddingEnd="35dp"
+            android:paddingStart="15dp"
+            android:paddingTop="5dp"
+            android:singleLine="true"
+            android:text="3 Members"
+            android:textColor="#fff"
+            android:textSize="15sp"
+            android:textStyle="bold" />
+
+        <ImageView
+            android:layout_width="30dp"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/grp_member_count_text_view"
+            android:layout_alignEnd="@+id/grp_member_count_text_view"
+            android:layout_alignTop="@+id/grp_member_count_text_view"
+            android:padding="3dp"
+            android:src="@drawable/down_arrow_white_24" />
+
+        <TextView
+            android:id="@+id/grp_post_count_textview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/grp_member_count_text_view"
+            android:layout_alignStart="@+id/profile_pic_image_view"
+            android:layout_alignTop="@+id/grp_member_count_text_view"
+            android:layout_toStartOf="@+id/vertical_divider_user_profile"
+            android:gravity="center_vertical"
+            android:padding="5dp"
+            android:singleLine="true"
+            android:text="17 Events posted"
+            android:textColor="#fff"
+            android:textStyle="bold" />
+
+        <com.akexorcist.roundcornerprogressbar.RoundCornerProgressBar
+            android:id="@+id/profile_progress_bar"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:layout_below="@+id/grp_status"
+            android:layout_marginEnd="30dp"
+            android:layout_marginRight="30dp"
+            android:layout_marginStart="-5dp"
+            android:layout_marginTop="10dp"
+            android:layout_toEndOf="@+id/profile_pic_image_view"
+            app:rcBackgroundColor="#00ffffff"
+            app:rcBackgroundPadding="10dp"
+            app:rcMax="10"
+            app:rcProgress="10"
+            app:rcProgressColor="#7cffffff"
+            app:rcRadius="10dp"
+            app:rcReverse="false"
+            app:rcSecondaryProgress="5"
+            app:rcSecondaryProgressColor="#ebf7ff" />
+
+        <ListView
+            android:id="@+id/user_profile_contribution_list_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/header_bg"
+            android:layout_marginTop="10dp"
+            android:divider="#00ffffff"
+            android:dividerHeight="0dp" />
+
+    </RelativeLayout>
+
+
+</RelativeLayout>

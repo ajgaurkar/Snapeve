@@ -1,6 +1,7 @@
 package com.umbcapp.gaurk.snapeve;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -9,7 +10,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.common.util.concurrent.FutureCallback;
 import com.google.common.util.concurrent.Futures;
@@ -18,21 +18,21 @@ import com.google.common.util.concurrent.SettableFuture;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.umbcapp.gaurk.snapeve.Adapters.Dash_Event_ListAdapter;
 import com.umbcapp.gaurk.snapeve.Adapters.LeaderBoardAdapter;
 import com.umbcapp.gaurk.snapeve.Controllers.Event_dash_list_obj;
 import com.umbcapp.gaurk.snapeve.Controllers.LeaderboardListItem;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 
-public class Leaderboard extends AppCompatActivity {
+public class Leaderboard extends AppCompatActivity implements Listview_communicator {
 
     int user_type = -1;
     private RecyclerView leader_board_recyclerview;
-    private ArrayList<LeaderboardListItem> leaderBoardList;
+    private ArrayList<LeaderboardListItem> leaderBoardIndList;
+    private ArrayList<LeaderboardListItem> leaderBoardGrpList;
     private LeaderBoardAdapter leaderBoardAdapter;
-    private int maxRank = 0;
+    private int maxIndividualRank = 0;
+    private int maxGrpRank = 0;
     private TextView top_10_all_sort_textview;
     private TextView leader_board_switch_grp_textview;
     private TextView leader_board_switch_you_textview;
@@ -40,6 +40,8 @@ public class Leaderboard extends AppCompatActivity {
     private Boolean top_10_selection_status;
     private RecyclerView.LayoutManager mLayoutManager;
     private JsonObject jsonObjectLoginParameters;
+    private JsonElement bkupUserResponse;
+    private JsonElement bkupGrpResponse;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -56,7 +58,10 @@ public class Leaderboard extends AppCompatActivity {
 
         System.out.println("System.currentTimeMillis() onCreate : " + System.currentTimeMillis());
 
+        //get individual data
         getLeaderboardData(0);
+        //get grp data
+        getLeaderboardData(1);
 
         leader_board_switch_you_textview.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -65,7 +70,7 @@ public class Leaderboard extends AppCompatActivity {
                 leader_board_switch_you_textview.setBackground(getResources().getDrawable(R.drawable.text_selection_left_seleted));
                 leader_board_switch_grp_textview.setBackground(getResources().getDrawable(R.drawable.text_selection_right_unseleted));
                 user_type_selection_status = 0;
-                loadLeaderboardList(user_type_selection_status);
+                populateLeaderboardListView(user_type_selection_status);
             }
         });
 
@@ -76,7 +81,7 @@ public class Leaderboard extends AppCompatActivity {
                 leader_board_switch_you_textview.setBackground(getResources().getDrawable(R.drawable.text_selection_left_unseleted));
                 leader_board_switch_grp_textview.setBackground(getResources().getDrawable(R.drawable.text_selection_right_seleted));
                 user_type_selection_status = 1;
-                loadLeaderboardList(user_type_selection_status);
+                populateLeaderboardListView(user_type_selection_status);
 
             }
         });
@@ -94,11 +99,30 @@ public class Leaderboard extends AppCompatActivity {
             }
         });
 
-        leaderBoardList = new ArrayList<LeaderboardListItem>();
+        leaderBoardIndList = new ArrayList<LeaderboardListItem>();
 
         mLayoutManager = new LinearLayoutManager(getApplicationContext());
 
-        loadLeaderboardList(0);
+        leader_board_recyclerview.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if (user_type_selection_status == 0) {
+
+                    int selectedItemPosition = leader_board_recyclerview.getChildLayoutPosition(v);
+//                    leaderBoardIndList.get(selectedItemPosition).getUserId();
+                    System.out.println(leaderBoardIndList.get(selectedItemPosition).getUserId());
+
+                }
+                if (user_type_selection_status == 1) {
+
+                    int selectedItemPosition = leader_board_recyclerview.getChildLayoutPosition(v);
+//                    leaderBoardGrpList.get(selectedItemPosition).getUserId();
+                    System.out.println(leaderBoardGrpList.get(selectedItemPosition).getUserId());
+                }
+            }
+        });
+
 
     }
 
@@ -127,21 +151,24 @@ public class Leaderboard extends AppCompatActivity {
             public void onSuccess(JsonElement response) {
                 resultFuture.set(response);
                 progressDialog.dismiss();
+
                 System.out.println(" get_leader_board_info_api success response    " + response);
 
                 if (code == 0) {
-                    poupulateUsersList(response);
+                    bkupUserResponse = response;
+                    createUsersArrayList(response);
                 }
                 if (code == 1) {
-//                    poupulateGrpList(response);
+                    bkupGrpResponse = response;
+                    createGrpArrayList(response);
                 }
 
             }
         });
     }
 
-    private void poupulateUsersList(JsonElement response) {
-        leaderBoardList = new ArrayList<LeaderboardListItem>();
+    private void createUsersArrayList(JsonElement response) {
+        leaderBoardIndList = new ArrayList<LeaderboardListItem>();
 
         System.out.println(" IN PARSE JASON");
 
@@ -156,8 +183,8 @@ public class Leaderboard extends AppCompatActivity {
             int user_points = Integer.parseInt(ranking_list_object.get("user_points").toString());
             String dp_url = ranking_list_object.get("dp_url").toString();
 
-            if (user_points > maxRank) {
-                maxRank = user_points;
+            if (user_points > maxIndividualRank) {
+                maxIndividualRank = user_points;
             }
 
             System.out.println(" user_id " + user_id);
@@ -170,18 +197,18 @@ public class Leaderboard extends AppCompatActivity {
             user_name = user_name.substring(1, user_name.length() - 1);
             dp_url = dp_url.substring(1, dp_url.length() - 1);
 
-            leaderBoardList.add(new LeaderboardListItem(user_id, user_name, user_points, "Grp UMBC", dp_url));
+            leaderBoardIndList.add(new LeaderboardListItem(user_id, user_name, user_points, "Grp UMBC", dp_url));
 
         }
-        System.out.println(" leaderBoardList " + leaderBoardList.size());
-        leaderBoardAdapter = new LeaderBoardAdapter(Leaderboard.this, leaderBoardList, maxRank, user_type_selection_status);
+        System.out.println(" leaderBoardIndList " + leaderBoardIndList.size());
+        leaderBoardAdapter = new LeaderBoardAdapter(Leaderboard.this, leaderBoardIndList, maxIndividualRank, user_type_selection_status);
         leader_board_recyclerview.setLayoutManager(mLayoutManager);
         leader_board_recyclerview.setItemAnimator(new DefaultItemAnimator());
         leader_board_recyclerview.setAdapter(leaderBoardAdapter);
     }
 
-    private void poupulateGrpList(JsonElement response) {
-        leaderBoardList = new ArrayList<LeaderboardListItem>();
+    private void createGrpArrayList(JsonElement response) {
+        leaderBoardGrpList = new ArrayList<LeaderboardListItem>();
 
         System.out.println(" IN PARSE JASON");
 
@@ -191,55 +218,36 @@ public class Leaderboard extends AppCompatActivity {
             JsonObject ranking_list_object = rankingJSONArray.get(j).getAsJsonObject();
             System.out.println(" ranking_list_object  " + ranking_list_object);
 
-            String user_id = ranking_list_object.get("id").toString();
-            String user_name = ranking_list_object.get("user_name").toString();
-            int user_points = Integer.parseInt(ranking_list_object.get("user_points").toString());
-            String dp_url = ranking_list_object.get("dp_url").toString();
+            String grp_id = ranking_list_object.get("id").toString();
+            String grp_name = ranking_list_object.get("grp_name").toString();
+            int grp_points = Integer.parseInt(ranking_list_object.get("total_pts").toString());
+            String grp_dp_url = ranking_list_object.get("grp_dp_url").toString();
 
-            if (user_points > maxRank) {
-                maxRank = user_points;
+            if (grp_points > maxGrpRank) {
+                maxGrpRank = grp_points;
             }
 
-            System.out.println(" user_id " + user_id);
-            System.out.println(" user_name " + user_name);
-            System.out.println(" user_points " + user_points);
-            System.out.println(" dp_url " + dp_url);
+            System.out.println(" grp_id " + grp_id);
+            System.out.println(" grp_name " + grp_name);
+            System.out.println(" grp_points " + grp_points);
+            System.out.println(" grp_dp_url " + grp_dp_url);
 
             //Remove " from start and end from every string
-            user_id = user_id.substring(1, user_id.length() - 1);
-            user_name = user_name.substring(1, user_name.length() - 1);
-            dp_url = dp_url.substring(1, dp_url.length() - 1);
+            grp_id = grp_id.substring(1, grp_id.length() - 1);
+            grp_name = grp_name.substring(1, grp_name.length() - 1);
+            grp_dp_url = grp_dp_url.substring(1, grp_dp_url.length() - 1);
 
-            leaderBoardList.add(new LeaderboardListItem(user_id, user_name, user_points, "Grp UMBC", dp_url));
+            leaderBoardGrpList.add(new LeaderboardListItem(grp_id, "place holder", grp_points, grp_name, grp_dp_url));
 
         }
-        System.out.println(" leaderBoardList " + leaderBoardList.size());
-        leaderBoardAdapter = new LeaderBoardAdapter(Leaderboard.this, leaderBoardList, maxRank, user_type_selection_status);
-        leader_board_recyclerview.setLayoutManager(mLayoutManager);
-        leader_board_recyclerview.setItemAnimator(new DefaultItemAnimator());
-        leader_board_recyclerview.setAdapter(leaderBoardAdapter);
+        System.out.println(" leaderBoardIndList " + leaderBoardIndList.size());
     }
 
-    private void loadLeaderboardList(int user_type_selection_status) {
+    private void populateLeaderboardListView(int user_type_selection_status) {
 
         if (user_type_selection_status == 0) {
 
-//            getLeaderboardData(0);
-
-            leaderBoardList = new ArrayList<LeaderboardListItem>();
-
-            leaderBoardList.add(new LeaderboardListItem("LU5", "Ajinkya gaurkar", 99, "Grp UMBC", "http://keenthemes.com/preview/metronic/theme/assets/pages/media/profile/profile_user.jpg"));
-            leaderBoardList.add(new LeaderboardListItem("LU8", "Pranav Rana", 73, "Grp UMBC", "http://www.dast.biz/wp-content/uploads/2016/11/John_Doe.jpg"));
-            leaderBoardList.add(new LeaderboardListItem("LU6", "Srinivas sandu", 66, "Grp UMBC", "https://www.bnl.gov/today/body_pics/2017/06/stephanhruszkewycz-355px.jpg"));
-            leaderBoardList.add(new LeaderboardListItem("LU2", "Neha Reddy", 56, "Grp UMBC", "http://www.medicine20congress.com/ocs/public/profiles/3141.jpg"));
-            leaderBoardList.add(new LeaderboardListItem("LU9", "Rushabh Mehta", 52, "Grp UMBC", "http://www.dast.biz/wp-content/uploads/2016/11/John_Doe.jpg"));
-            leaderBoardList.add(new LeaderboardListItem("LU10", "Bala Kumaran", 45, "Grp UMBC", "https://www.bnl.gov/today/body_pics/2017/06/stephanhruszkewycz-355px.jpg"));
-            leaderBoardList.add(new LeaderboardListItem("LU4", "Mayur Pate", 44, "Grp UMBC", "http://www.dast.biz/wp-content/uploads/2016/11/John_Doe.jpg"));
-            leaderBoardList.add(new LeaderboardListItem("LU1", "Arya Shah", 31, "Grp UMBC", "https://cdn.earthdata.nasa.gov/conduit/upload/6072/Glenn_headshot_resize.jpg"));
-            leaderBoardList.add(new LeaderboardListItem("LU3", "Karen Dhruv", 18, "Grp UMBC", "https://www.bnl.gov/today/body_pics/2017/06/stephanhruszkewycz-355px.jpg"));
-            leaderBoardList.add(new LeaderboardListItem("LU7", "Sri", 15, "Grp UMBC", "http://www.dast.biz/wp-content/uploads/2016/11/John_Doe.jpg"));
-
-            leaderBoardAdapter = new LeaderBoardAdapter(Leaderboard.this, leaderBoardList, maxRank, user_type_selection_status);
+            leaderBoardAdapter = new LeaderBoardAdapter(Leaderboard.this, leaderBoardIndList, maxIndividualRank, user_type_selection_status);
             leader_board_recyclerview.setLayoutManager(mLayoutManager);
             leader_board_recyclerview.setItemAnimator(new DefaultItemAnimator());
             leader_board_recyclerview.setAdapter(leaderBoardAdapter);
@@ -247,19 +255,7 @@ public class Leaderboard extends AppCompatActivity {
         }
         if (user_type_selection_status == 1) {
 
-//            getLeaderboardData(1);
-
-            leaderBoardList = new ArrayList<LeaderboardListItem>();
-            leaderBoardList.add(new LeaderboardListItem("LU5", "Ajinkya gaurkar", 99, "Math Group", "https://www.jetairways.com/Images/forms/group-booking.jpg"));
-            leaderBoardList.add(new LeaderboardListItem("LU8", "Pranav Rana", 73, "Biology dept", "https://i.pinimg.com/originals/cf/70/ce/cf70ce32f1981d64ed82875772e33dfa.jpg"));
-            leaderBoardList.add(new LeaderboardListItem("LU6", "Srinivas sandu", 66, "Strbx emp", "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTqqhjnoMVUWJiIAnOOHwUPcxfB37rxI9xgBLmjhAsp3XYkXBOH"));
-            leaderBoardList.add(new LeaderboardListItem("LU2", "Neha Reddy", 56, "Grad students", "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS4X84zn3LElb8LDfCXoqA9P3kpW4JFWTn64tzsHx64SJE-dgbB"));
-            leaderBoardList.add(new LeaderboardListItem("LU9", "Rushabh Mehta", 52, "Hindu council", "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQKoSN8vTpRB5egHRBingBCjtqjpvbOJ_9nM7MRrRWh5PLC7ECu"));
-            leaderBoardList.add(new LeaderboardListItem("LU10", "Bala Kumaran", 45, "Chevy chase", "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTybt8DR46L_OFmDPBAF3qAIBLtlcFDME8H4PEuXSkzSdjmSKQOXA"));
-            leaderBoardList.add(new LeaderboardListItem("LU4", "Mayur Pate", 44, "Halethorpe", "https://icd.hwstatic.com/static/images/3.60.3.0/groups_article_three.jpg"));
-            leaderBoardList.add(new LeaderboardListItem("LU1", "Arya Shah", 31, "Common vision", "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQIC3Cc33fz59_cmyr90iwzRb7AnSDKqieV63Mgeq6NrSqsXl2m"));
-
-            leaderBoardAdapter = new LeaderBoardAdapter(Leaderboard.this, leaderBoardList, maxRank, user_type_selection_status);
+            leaderBoardAdapter = new LeaderBoardAdapter(Leaderboard.this, leaderBoardGrpList, maxGrpRank, user_type_selection_status);
             leader_board_recyclerview.setLayoutManager(mLayoutManager);
             leader_board_recyclerview.setItemAnimator(new DefaultItemAnimator());
             leader_board_recyclerview.setAdapter(leaderBoardAdapter);
@@ -268,4 +264,30 @@ public class Leaderboard extends AppCompatActivity {
     }
 
 
+    @Override
+    public void main_event_listview_element_clicked(int position, int click_code) {
+        System.out.println("position :" + position);
+
+
+
+        if (user_type_selection_status == 0) {
+            leaderBoardIndList.get(position);
+            System.out.println(leaderBoardIndList.get(position).getUserId());
+
+
+            Intent browseUserIntent = new Intent(getApplicationContext(), BrowseUserProfile.class);
+            browseUserIntent.putExtra("user_id",leaderBoardIndList.get(position).getUserId());
+            startActivity(browseUserIntent);
+        }
+        if (user_type_selection_status == 1) {
+            leaderBoardGrpList.get(position);
+            System.out.println(leaderBoardGrpList.get(position).getUserId());
+
+            Intent browseGrpIntent = new Intent(getApplicationContext(), BrowseGroupProfile.class);
+            browseGrpIntent.putExtra("grp_id",leaderBoardGrpList.get(position).getUserId());
+            startActivity(browseGrpIntent);
+
+        }
+
+    }
 }

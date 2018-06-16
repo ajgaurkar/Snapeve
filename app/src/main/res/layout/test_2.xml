@@ -159,7 +159,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="45"
                     android:checked="true"
-                    android:text="User name" />
+                    android:text="T_cruise" />
 
                 <View
                     android:layout_width="1dp"
@@ -183,7 +183,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="45"
-                    android:text="Group 123" />
+                    android:text="Common Vision" />
 
 
             </RadioGroup>
