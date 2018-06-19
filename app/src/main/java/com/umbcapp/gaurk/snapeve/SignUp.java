@@ -1,6 +1,7 @@
 package com.umbcapp.gaurk.snapeve;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -82,7 +83,6 @@ public class SignUp extends AppCompatActivity {
         jsonObjectParameters.addProperty("pass", pass);
 
 
-
         final SettableFuture<JsonElement> resultFuture = SettableFuture.create();
         ListenableFuture<JsonElement> serviceFilterFuture = MainActivity.mClient.invokeApi("sign_up_api", jsonObjectParameters);
 
@@ -103,14 +103,23 @@ public class SignUp extends AppCompatActivity {
                 System.out.println(" sign_up_api success response    " + response);
 
 //
-//                if (response.toString().contains("Authentication Failed")) {
-//                    Toast.makeText(getApplicationContext(), "Authentication Failed", Toast.LENGTH_SHORT).show();
-//                } else {
-//                    parseResponse(response);
-//                }
+                if (response.toString().contains("Email Exist")) {
+                    Toast.makeText(getApplicationContext(), "Email Already Exist!", Toast.LENGTH_SHORT).show();
+                } else if (response.toString().contains("Username Exist")) {
+                    Toast.makeText(getApplicationContext(), "Username Not Available!", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(getApplicationContext(), "Account Created", Toast.LENGTH_SHORT).show();
+                    parseResponse(response);
+                }
 
             }
         });
+
+    }
+
+    private void parseResponse(JsonElement response) {
+
+        startActivity(new Intent(getApplicationContext(), MainActivity.class));
 
     }
 
@@ -135,7 +144,7 @@ public class SignUp extends AppCompatActivity {
             if (email.matches(emailPattern)) {
 //            if (email != null) {
 
-                if (pass.length() > 4) {
+                if (pass.length() > 3) {
                     if (pass.equals(confirm_pass)) {
 
                         return true;
