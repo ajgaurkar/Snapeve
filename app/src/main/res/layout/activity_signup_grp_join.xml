@@ -44,6 +44,8 @@
         android:id="@+id/signup_grp_list_view"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:dividerHeight="0dp"
+        android:divider="#00ffffff"
         android:layout_weight="65" />
 
     <RelativeLayout

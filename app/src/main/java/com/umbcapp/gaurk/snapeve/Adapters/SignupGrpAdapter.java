@@ -75,7 +75,8 @@ public class SignupGrpAdapter extends BaseAdapter {
         Picasso.get().load(selectedSignUpGrpListItem.getGrpDpUrl())
                 .fit().centerCrop().into(viewHolder.signup_list_item_grp_pic_img_view);
         viewHolder.signup_list_item_grp_name_text_view.setText(selectedSignUpGrpListItem.getGrpName());
-        viewHolder.signup_list_total_members_count_text_view.setText(String.valueOf(selectedSignUpGrpListItem.getMembersCount()));
+
+        viewHolder.signup_list_total_members_count_text_view.setText(String.valueOf(selectedSignUpGrpListItem.getMembersCount())+" Members");
 
 
         return view;

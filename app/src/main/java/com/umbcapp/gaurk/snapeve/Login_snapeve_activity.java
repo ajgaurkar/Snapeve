@@ -80,13 +80,12 @@ public class Login_snapeve_activity extends AppCompatActivity {
 
     private void executeLoginApi() {
 
-               final ProgressDialog progressDialog = new ProgressDialog(Login_snapeve_activity.this);
+        final ProgressDialog progressDialog = new ProgressDialog(Login_snapeve_activity.this);
         progressDialog.setTitle("Logging in, Please wait...");
         progressDialog.create();
         progressDialog.show();
         JsonObject jsonObjectParameters = new JsonObject();
-        jsonObjectParameters.addProperty("user_name", login_page_email_edittext.getText().toString().trim())
-        ;
+        jsonObjectParameters.addProperty("user_name", login_page_email_edittext.getText().toString().trim());
         jsonObjectParameters.addProperty("user_password", login_page_pass_edittext.getText().toString().trim());
 
         final SettableFuture<JsonElement> resultFuture = SettableFuture.create();
@@ -117,8 +116,6 @@ public class Login_snapeve_activity extends AppCompatActivity {
 
             }
         });
-
-
     }
 
     private void parseResponse(JsonElement response) {

@@ -1,6 +1,10 @@
 package com.umbcapp.gaurk.snapeve;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -8,6 +12,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -43,7 +48,94 @@ public class Signup_grp_join extends AppCompatActivity {
         signup_grp_skip_textview = (TextView) findViewById(R.id.signup_grp_skip_textview);
 
         fetchGroupList();
-        parseResponse();
+
+        signup_grp_skip_textview.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+                startActivity(new Intent(getApplicationContext(), MainActivity.class));
+            }
+        });
+        signup_grp_create_grp_textview.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+                startActivity(new Intent(getApplicationContext(), CreateGruoups.class));
+            }
+        });
+        grpNameListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//                SignUpGrpListItem selectedGrpItem = signupGrpList.get(position);
+
+                requestToJoinGrpDialog(signupGrpList.get(position).getGrpId(), signupGrpList.get(position).getGrpName(), new SessionManager(getApplicationContext()).getSpecificUserDetail(SessionManager.KEY_USER_ID));
+
+            }
+        });
+
+    }
+
+    private void requestToJoinGrpDialog(final String grpId, String grpName, final String userId) {
+        final AlertDialog.Builder grpJoinDialog = new AlertDialog.Builder(Signup_grp_join.this);
+
+        grpJoinDialog.setTitle("Confirm");
+        grpJoinDialog.setMessage("Do you wish to join " + grpName);
+        grpJoinDialog.setCancelable(false);
+
+        grpJoinDialog.setPositiveButton("Join", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                requestToJoinGrp(grpId, userId);
+            }
+        });
+        grpJoinDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+            }
+        });
+        grpJoinDialog.create().show();
+    }
+
+    private void requestToJoinGrp(String grpId, String userId) {
+
+        final ProgressDialog progressDialog = new ProgressDialog(Signup_grp_join.this);
+        progressDialog.setTitle("Sending request to join group, Please wait...");
+        progressDialog.create();
+        progressDialog.show();
+        progressDialog.setCanceledOnTouchOutside(false);
+        progressDialog.setCancelable(false);
+        JsonObject jsonObjectParameters = new JsonObject();
+        jsonObjectParameters.addProperty("req_code", 0);
+        jsonObjectParameters.addProperty("grpId", grpId);
+        jsonObjectParameters.addProperty("userId", userId);
+
+        final SettableFuture<JsonElement> resultFuture = SettableFuture.create();
+        ListenableFuture<JsonElement> serviceFilterFuture = MainActivity.mClient.invokeApi("group_request_handler_api", jsonObjectParameters);
+
+        Futures.addCallback(serviceFilterFuture, new FutureCallback<JsonElement>() {
+            @Override
+            public void onFailure(Throwable exception) {
+                resultFuture.setException(exception);
+                progressDialog.dismiss();
+                System.out.println(" group_request_handler_api exception    " + exception);
+
+            }
+
+            @Override
+            public void onSuccess(JsonElement response) {
+                resultFuture.set(response);
+                progressDialog.dismiss();
+                System.out.println(" group_request_handler_api success response    " + response);
+
+                Toast.makeText(getApplicationContext(), response.toString(), Toast.LENGTH_SHORT).show();
+
+                if (response.toString().contains("JOIN REQUEST RESPONSE")) {
+                    System.out.println("response OK");
+                }
+
+//                    parseJoinRequestResponse(response);
+            }
+        });
 
     }
 
@@ -52,18 +144,20 @@ public class Signup_grp_join extends AppCompatActivity {
         progressDialog.setTitle("fetaching groups, Please wait...");
         progressDialog.create();
         progressDialog.show();
+        progressDialog.setCanceledOnTouchOutside(false);
+        progressDialog.setCancelable(false);
         JsonObject jsonObjectParameters = new JsonObject();
 
         final SettableFuture<JsonElement> resultFuture = SettableFuture.create();
-//        ListenableFuture<JsonElement> serviceFilterFuture = MainActivity.mClient.invokeApi("group_details_api", jsonObjectParameters);
-        ListenableFuture<JsonElement> serviceFilterFuture = MainActivity.mClient.invokeApi("neha_test_api", jsonObjectParameters);
+        ListenableFuture<JsonElement> serviceFilterFuture = MainActivity.mClient.invokeApi("all_grp_list_api", jsonObjectParameters);
+//        ListenableFuture<JsonElement> serviceFilterFuture = MainActivity.mClient.invokeApi("neha_test_api", jsonObjectParameters);
 
         Futures.addCallback(serviceFilterFuture, new FutureCallback<JsonElement>() {
             @Override
             public void onFailure(Throwable exception) {
                 resultFuture.setException(exception);
                 progressDialog.dismiss();
-                System.out.println(" group_details_api exception    " + exception);
+                System.out.println(" all_grp_list_api exception    " + exception);
 
             }
 
@@ -72,55 +166,47 @@ public class Signup_grp_join extends AppCompatActivity {
                 resultFuture.set(response);
                 progressDialog.dismiss();
 
-                System.out.println(" group_details_api success response    " + response);
+                System.out.println(" all_grp_list_api success response    " + response);
 
                 if (response.toString().equals("[]")) {
                     Toast.makeText(getApplicationContext(), "No groups found", Toast.LENGTH_SHORT).show();
                 } else {
-//                    parseResponse(response);
+                    parseResponse(response);
                 }
-
             }
         });
-
-
     }
 
-//    private void parseResponse(JsonElement response) {
-    private void parseResponse() {
+    private void parseResponse(JsonElement response) {
+//    private void parseResponse() {
 
         signupGrpList = new ArrayList<SignUpGrpListItem>();
 
         System.out.println(" IN PARSE JASON");
 
-//        JsonArray rankingJSONArray = response.getAsJsonArray();
+        JsonArray groupsJSONArray = response.getAsJsonArray();
 
-//        for (int j = 0; j < rankingJSONArray.size(); j++) {
-        for (int j = 0; j < 5; j++) {
-//            JsonObject ranking_list_object = rankingJSONArray.get(j).getAsJsonObject();
-//            System.out.println(" ranking_list_object  " + ranking_list_object);
-//
-//            String user_id = ranking_list_object.get("id").toString();
-//            String user_name = ranking_list_object.get("user_name").toString();
-//            int user_points = Integer.parseInt(ranking_list_object.get("user_points").toString());
-//            String dp_url = ranking_list_object.get("dp_url").toString();
-//
-//
-//            System.out.println(" user_id " + user_id);
-//            System.out.println(" user_name " + user_name);
-//            System.out.println(" user_points " + user_points);
-//            System.out.println(" dp_url " + dp_url);
+        for (int j = 0; j < groupsJSONArray.size(); j++) {
+            JsonObject group_list_object = groupsJSONArray.get(j).getAsJsonObject();
+            System.out.println(" group_list_object  " + group_list_object);
 
-            //Remove " from start and end from every string
-//            user_id = user_id.substring(1, user_id.length() - 1);
-//            user_name = user_name.substring(1, user_name.length() - 1);
-//            dp_url = dp_url.substring(1, dp_url.length() - 1);
+            String grp_id = group_list_object.get("id").toString();
+            String grp_name = group_list_object.get("grp_name").toString();
+            int grp_points = Integer.parseInt(group_list_object.get("total_pts").toString());
+            int member_count = Integer.parseInt(group_list_object.get("member_count").toString());
+            String dp_url = group_list_object.get("grp_dp_url").toString();
 
-            signupGrpList.add(new SignUpGrpListItem(12,"Strbx emp","https://icd.hwstatic.com/static/images/3.60.3.0/groups_article_three.jpg"));
-            signupGrpList.add(new SignUpGrpListItem(12,"Strbx emp","https://icd.hwstatic.com/static/images/3.60.3.0/groups_article_three.jpg"));
-            signupGrpList.add(new SignUpGrpListItem(12,"Strbx emp","https://icd.hwstatic.com/static/images/3.60.3.0/groups_article_three.jpg"));
-            signupGrpList.add(new SignUpGrpListItem(12,"Strbx emp","https://icd.hwstatic.com/static/images/3.60.3.0/groups_article_three.jpg"));
-            signupGrpList.add(new SignUpGrpListItem(12,"Strbx emp","https://icd.hwstatic.com/static/images/3.60.3.0/groups_article_three.jpg"));
+            System.out.println(" user_id " + grp_id);
+            System.out.println(" grp_name " + grp_name);
+            System.out.println(" grp_points " + grp_points);
+            System.out.println(" dp_url " + dp_url);
+
+//            Remove " from start and end from every string
+            grp_id = grp_id.substring(1, grp_id.length() - 1);
+            grp_name = grp_name.substring(1, grp_name.length() - 1);
+            dp_url = dp_url.substring(1, dp_url.length() - 1);
+
+            signupGrpList.add(new SignUpGrpListItem(grp_id, member_count, grp_name, dp_url));
 
         }
         System.out.println(" signupGrpList " + signupGrpList.size());

@@ -2,14 +2,24 @@ package com.umbcapp.gaurk.snapeve.Controllers;
 
 public class SignUpGrpListItem {
 
+    String grpId;
     int membersCount;
     String grpName;
     String grpDpUrl;
 
-    public SignUpGrpListItem(int membersCount, String grpName, String grpDpUrl) {
+    public SignUpGrpListItem(String grpId, int membersCount, String grpName, String grpDpUrl) {
+        this.grpId = grpId;
         this.membersCount = membersCount;
         this.grpName = grpName;
         this.grpDpUrl = grpDpUrl;
+    }
+
+    public String getGrpId() {
+        return grpId;
+    }
+
+    public void setGrpId(String grpId) {
+        this.grpId = grpId;
     }
 
     public int getMembersCount() {

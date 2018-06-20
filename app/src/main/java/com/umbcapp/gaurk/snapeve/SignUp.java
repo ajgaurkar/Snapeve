@@ -14,6 +14,7 @@ import com.google.common.util.concurrent.FutureCallback;
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.SettableFuture;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
@@ -59,7 +60,6 @@ public class SignUp extends AppCompatActivity {
             }
         });
 
-
     }
 
     private void executeSignupApi() {
@@ -104,7 +104,6 @@ public class SignUp extends AppCompatActivity {
 
                 System.out.println(" sign_up_api success response    " + response);
 
-//
                 if (response.toString().contains("Email Exist")) {
                     Toast.makeText(getApplicationContext(), "Email Already Exist!", Toast.LENGTH_SHORT).show();
                 } else if (response.toString().contains("Username Exist")) {
@@ -121,8 +120,35 @@ public class SignUp extends AppCompatActivity {
 
     private void parseResponse(JsonElement response) {
 
-//        startActivity(new Intent(getApplicationContext(), MainActivity.class));
-        startActivity(new Intent(getApplicationContext(), Signup_grp_join.class));
+        //currently its jsonobject/element in response. It might change to Array later
+
+//        JsonArray userDataJSONArray = response.getAsJsonArray();
+
+//        JsonObject userData_list_object = userDataJSONArray.get(0).getAsJsonObject();
+        JsonObject userData_list_object = response.getAsJsonObject();
+
+        System.out.println(" userData_list_object  " + userData_list_object);
+
+        String user_id = userData_list_object.get("id").toString();
+        String user_name = userData_list_object.get("user_name").toString();
+        String user_pass = userData_list_object.get("user_pass").toString();
+//        String dp_url = userData_list_object.get("dp_url").toString();
+        String first_name = userData_list_object.get("first_name").toString();
+        String last_name = userData_list_object.get("last_name").toString();
+        String email = userData_list_object.get("email").toString();
+        int user_points = Integer.parseInt(userData_list_object.get("user_points").toString());
+
+//        dp_url = dp_url.substring(1, dp_url.length() - 1);
+        user_id = user_id.substring(1, user_id.length() - 1);
+        user_name = user_name.substring(1, user_name.length() - 1);
+        user_pass = user_pass.substring(1, user_pass.length() - 1);
+        first_name = first_name.substring(1, first_name.length() - 1);
+        last_name = last_name.substring(1, last_name.length() - 1);
+        email = email.substring(1, email.length() - 1);
+
+        if (new SessionManager(getApplicationContext()).createLoginSession(user_id, user_name, user_pass, first_name, last_name, email)) {
+            startActivity(new Intent(getApplicationContext(), Signup_grp_join.class));
+        }
 
     }
 
