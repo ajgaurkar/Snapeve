@@ -68,6 +68,10 @@
         <activity android:name=".BrowseGroupProfile" />
         <activity android:name=".BrowseUserProfile" />
         <activity android:name=".SignUp" />
+        <activity
+            android:name=".Signup_grp_join"
+            android:label="@string/title_activity_signup_grp_join"
+            android:theme="@style/AppFullScreenTheme"></activity>
     </application>
 
 </manifest>

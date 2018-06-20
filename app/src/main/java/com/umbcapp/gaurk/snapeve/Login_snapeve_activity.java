@@ -80,7 +80,7 @@ public class Login_snapeve_activity extends AppCompatActivity {
 
     private void executeLoginApi() {
 
-        final ProgressDialog progressDialog = new ProgressDialog(Login_snapeve_activity.this);
+               final ProgressDialog progressDialog = new ProgressDialog(Login_snapeve_activity.this);
         progressDialog.setTitle("Logging in, Please wait...");
         progressDialog.create();
         progressDialog.show();
@@ -117,6 +117,7 @@ public class Login_snapeve_activity extends AppCompatActivity {
 
             }
         });
+
 
     }
 

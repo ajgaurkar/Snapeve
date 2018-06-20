@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:weightSum="100"
+    tools:context=".Signup_grp_join">
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="20"
+        android:background="@color/colorPrimaryDark">
+
+        <TextView
+            android:id="@+id/signup_group_header_1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:gravity="center"
+            android:padding="5dp"
+            android:text="Do you wish to join a group?"
+            android:textColor="#fff"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/signup_group_header_1"
+            android:layout_marginEnd="20dp"
+            android:layout_marginStart="20dp"
+            android:gravity="center"
+            android:padding="5dp"
+            android:text="Joing a group will let you collaborate effectviely and earn more rewards"
+            android:textColor="#fff"
+            android:textSize="14sp" />
+    </RelativeLayout>
+
+    <ListView
+        android:id="@+id/signup_grp_list_view"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="65" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="15"
+        android:background="@color/colorPrimaryDark">
+
+        <TextView
+            android:id="@+id/signup_grp_page_or_textview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_margin="5dp"
+            android:padding="2dp"
+            android:text="OR"
+            android:textColor="#fff"
+            android:textSize="14sp" />
+
+        <RelativeLayout
+            android:layout_width="30dp"
+            android:layout_height="match_parent"
+            android:layout_alignBottom="@+id/signup_grp_page_or_textview"
+            android:layout_alignTop="@+id/signup_grp_page_or_textview"
+            android:layout_marginEnd="10dp"
+            android:layout_toStartOf="@+id/signup_grp_page_or_textview">
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:layout_centerVertical="true"
+                android:background="#fff" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="30dp"
+            android:layout_height="match_parent"
+            android:layout_alignBottom="@+id/signup_grp_page_or_textview"
+            android:layout_alignTop="@+id/signup_grp_page_or_textview"
+            android:layout_marginStart="10dp"
+            android:layout_toEndOf="@+id/signup_grp_page_or_textview">
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:layout_centerVertical="true"
+                android:background="#fff" />
+        </RelativeLayout>
+
+        <ImageView
+            android:id="@+id/signup_grp_plus_imageview"
+            android:layout_width="30dp"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/signup_grp_create_grp_textview"
+            android:layout_alignTop="@+id/signup_grp_create_grp_textview"
+            android:layout_marginStart="16dp"
+            android:src="@drawable/plus_white_96" />
+
+        <!--<ImageView-->
+        <!--android:id="@+id/signup_grp_skip_imageview"-->
+        <!--android:layout_width="30dp"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_alignBottom="@+id/signup_grp_create_grp_textview"-->
+        <!--android:layout_alignParentEnd="true"-->
+        <!--android:layout_alignTop="@+id/signup_grp_create_grp_textview"-->
+        <!--android:layout_marginEnd="16dp"-->
+        <!--android:src="@drawable/plus_white_96" />-->
+
+        <TextView
+            android:id="@+id/signup_grp_create_grp_textview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/signup_grp_page_or_textview"
+            android:layout_toEndOf="@+id/signup_grp_plus_imageview"
+            android:gravity="center"
+            android:padding="5dp"
+            android:text="Create a group"
+            android:background="?android:selectableItemBackground"
+            android:textColor="#fff"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/signup_grp_skip_textview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/signup_grp_create_grp_textview"
+            android:layout_alignParentEnd="true"
+            android:layout_alignTop="@+id/signup_grp_create_grp_textview"
+            android:layout_marginEnd="20dp"
+            android:gravity="center"
+            android:padding="5dp"
+            android:text="Skip"
+            android:textColor="#fff"
+            android:background="?android:selectableItemBackground"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+    </RelativeLayout>
+
+</LinearLayout>

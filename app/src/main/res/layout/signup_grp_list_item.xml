@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:padding="10dp">
+
+    <View
+        android:id="@+id/signup_list_separator_view"
+        android:layout_width="match_parent"
+        android:layout_height="10dp"
+        android:background="#bd6f6f"
+        android:visibility="gone" />
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/signup_list_item_grp_pic_img_view"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@drawable/my_pic" />
+
+        <TextView
+            android:id="@+id/signup_list_item_grp_name_text_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:layout_toEndOf="@+id/signup_list_item_grp_pic_img_view"
+            android:paddingStart="2dp"
+            android:singleLine="true"
+            android:text="Starbux employees"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/signup_list_item_request_btn_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/signup_list_total_members_count_text_view"
+            android:layout_alignParentEnd="true"
+            android:layout_alignTop="@+id/signup_list_item_grp_name_text_view"
+            android:layout_marginBottom="8dp"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/grey_bg_five_corner_round"
+            android:gravity="center"
+            android:maxLines="2"
+            android:paddingEnd="6dp"
+            android:paddingStart="6dp"
+            android:text="Request to join"
+            android:textColor="#469ac3"
+            android:textSize="11sp" />
+
+        <TextView
+            android:id="@+id/signup_list_total_members_count_text_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignStart="@+id/signup_list_item_grp_name_text_view"
+            android:layout_below="@+id/signup_list_item_grp_name_text_view"
+            android:padding="2dp"
+            android:singleLine="true"
+            android:text="17 Members"
+            android:textSize="12sp"
+            android:textStyle="italic" />
+
+    </RelativeLayout>
+</RelativeLayout>

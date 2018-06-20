@@ -51,6 +51,8 @@ public class SignUp extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
+                startActivity(new Intent(getApplicationContext(), Signup_grp_join.class));
+
                 if (validateInputs()) {
                     executeSignupApi();
                 }
@@ -119,7 +121,8 @@ public class SignUp extends AppCompatActivity {
 
     private void parseResponse(JsonElement response) {
 
-        startActivity(new Intent(getApplicationContext(), MainActivity.class));
+//        startActivity(new Intent(getApplicationContext(), MainActivity.class));
+        startActivity(new Intent(getApplicationContext(), Signup_grp_join.class));
 
     }
 
