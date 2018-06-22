@@ -107,13 +107,11 @@ public class Login_snapeve_activity extends AppCompatActivity {
 
                 System.out.println(" executeLoginApi success response    " + response);
 
-
                 if (response.toString().contains("Authentication Failed")) {
                     Toast.makeText(getApplicationContext(), "Authentication Failed", Toast.LENGTH_SHORT).show();
                 } else {
                     parseResponse(response);
                 }
-
             }
         });
     }
@@ -147,7 +145,6 @@ public class Login_snapeve_activity extends AppCompatActivity {
         if (new SessionManager(getApplicationContext()).createLoginSession(user_id, user_name, user_pass, first_name, last_name, email)) {
             startActivity(new Intent(getApplicationContext(), MainActivity.class));
         }
-
     }
 
     private String validateInputs() {
@@ -178,9 +175,7 @@ public class Login_snapeve_activity extends AppCompatActivity {
                 response = "Email failed";
             }
 
-
         }
-
         return response;
     }
 
