@@ -764,7 +764,7 @@ public class Add_event extends AppCompatActivity implements LocationListener {
         System.out.println("location_type_radio_value : " + location_type_radio_value);
         System.out.println("all_day_status : " + all_day_status);
 
-        jsonObjectPostEventParameters.addProperty("user_id", "T_cruise");
+        jsonObjectPostEventParameters.addProperty("user_id", new SessionManager(getApplicationContext()).getSpecificUserDetail(SessionManager.KEY_USER_ID));
         jsonObjectPostEventParameters.addProperty("location_type", location_type_radio_value);
         jsonObjectPostEventParameters.addProperty("event_type", event_type_radio_value);
         jsonObjectPostEventParameters.addProperty("scope", post_scope_radio_value);

@@ -4,11 +4,20 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.View;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
+import com.google.common.util.concurrent.FutureCallback;
+import com.google.common.util.concurrent.Futures;
+import com.google.common.util.concurrent.ListenableFuture;
+import com.google.common.util.concurrent.SettableFuture;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.squareup.picasso.Picasso;
 import com.umbcapp.gaurk.snapeve.Fragments.Add_mem_fragment;
 import com.umbcapp.gaurk.snapeve.Fragments.ApprovalPendingFragment;
@@ -42,6 +51,8 @@ public class CreateGruoups extends Activity {
         setContentView(R.layout.create_groups);
 
         fragmentManager = getFragmentManager();
+
+        fetchGroupDetails(new SessionManager(getApplicationContext()).getSpecificUserDetail(SessionManager.KEY_USER_ID));
 
         add_mem_fragment = new Add_mem_fragment();
         mem_joined_fragment = new Mem_joined_fragment();
@@ -144,4 +155,45 @@ public class CreateGruoups extends Activity {
         });
 
     }
+
+    private void fetchGroupDetails(String userId) {
+
+//        group_mgmt_details_fetch_api
+
+        final ProgressDialog progressDialog = new ProgressDialog(CreateGruoups.this);
+        progressDialog.setTitle("Fetching details, Please wait...");
+        progressDialog.create();
+        progressDialog.show();
+        progressDialog.setCanceledOnTouchOutside(false);
+        progressDialog.setCancelable(false);
+        JsonObject jsonObjectParameters = new JsonObject();
+//        jsonObjectParameters.addProperty("req_code", 10);
+//        jsonObjectParameters.addProperty("grpName", grp_name);
+//        jsonObjectParameters.addProperty("userId", new SessionManager(getApplicationContext()).getSpecificUserDetail(SessionManager.KEY_USER_ID));
+
+        final SettableFuture<JsonElement> resultFuture = SettableFuture.create();
+        ListenableFuture<JsonElement> serviceFilterFuture = MainActivity.mClient.invokeApi("group_mgmt_details_fetch_api", jsonObjectParameters);
+
+        Futures.addCallback(serviceFilterFuture, new FutureCallback<JsonElement>() {
+            @Override
+            public void onFailure(Throwable exception) {
+                resultFuture.setException(exception);
+                progressDialog.dismiss();
+                System.out.println(" group_mgmt_details_fetch_api exception    " + exception);
+
+            }
+
+            @Override
+            public void onSuccess(JsonElement response) {
+                resultFuture.set(response);
+                progressDialog.dismiss();
+                System.out.println(" group_mgmt_details_fetch_api success response    " + response);
+
+
+            }
+        });
+
+
+    }
+
 }

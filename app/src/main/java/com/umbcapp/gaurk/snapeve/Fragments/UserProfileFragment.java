@@ -16,6 +16,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.common.util.concurrent.FutureCallback;
 import com.google.common.util.concurrent.Futures;
@@ -74,6 +75,7 @@ public class UserProfileFragment extends Fragment {
     private int grp_total_pts;
     private int user_total_pts;
     private TextView user_points;
+    private int admin_flag = 0;
 
     public UserProfileFragment() {
 
@@ -149,19 +151,43 @@ public class UserProfileFragment extends Fragment {
         dp_url = userDetailsObj.get("user_name").toString();
         first_name = userDetailsObj.get("first_name").toString();
         last_name = userDetailsObj.get("last_name").toString();
-        grp_id = userDetailsObj.get("grp_id").toString();
-        grp_name = userDetailsObj.get("grp_name").toString();
-        grp_dp_url = userDetailsObj.get("grp_dp_url").toString();
-        grp_total_pts = Integer.parseInt(userDetailsObj.get("total_pts").toString());
         user_total_pts = Integer.parseInt(userDetailsObj.get("user_points").toString());
+        //time being untill admin flag is not 0 for all
+
+        try {
+            admin_flag = Integer.parseInt(userDetailsObj.get("group_admin_flag").toString());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
 
         userName = userName.substring(1, userName.length() - 1);
         dp_url = dp_url.substring(1, dp_url.length() - 1);
         first_name = first_name.substring(1, first_name.length() - 1);
         last_name = last_name.substring(1, last_name.length() - 1);
-        grp_id = grp_id.substring(1, grp_id.length() - 1);
-        grp_name = grp_name.substring(1, grp_name.length() - 1);
-        grp_dp_url = grp_dp_url.substring(1, grp_dp_url.length() - 1);
+
+        if (userDetailsObj.get("grp_id").toString().isEmpty() || userDetailsObj.get("grp_id").toString().equals("null") || userDetailsObj.get("grp_id") == null) {
+
+            grp_id = "xxxxx____xxxxx";
+            grp_name = "xxxxx_____xxxxx";
+            grp_dp_url = "xxxxx_____xxxxx";
+
+        } else {
+            grp_id = userDetailsObj.get("grp_id").toString();
+            grp_name = userDetailsObj.get("grp_name").toString();
+            grp_dp_url = userDetailsObj.get("grp_dp_url").toString();
+            grp_total_pts = Integer.parseInt(userDetailsObj.get("total_pts").toString());
+
+            grp_id = grp_id.substring(1, grp_id.length() - 1);
+            grp_name = grp_name.substring(1, grp_name.length() - 1);
+            grp_dp_url = grp_dp_url.substring(1, grp_dp_url.length() - 1);
+        }
+
+        if (admin_flag == 1) {
+            user_profile_settings_imageview.setVisibility(View.VISIBLE);
+        } else {
+            user_profile_settings_imageview.setVisibility(View.INVISIBLE);
+        }
     }
 
     @Override
@@ -211,7 +237,10 @@ public class UserProfileFragment extends Fragment {
         user_profile_settings_imageview.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(getActivity(), CreateGruoups.class));
+                if (admin_flag == 1) {
+                    startActivity(new Intent(getActivity(), CreateGruoups.class));
+                }
+
             }
         });
 
@@ -243,14 +272,19 @@ public class UserProfileFragment extends Fragment {
         grp_profile_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                grp_profile_btn.setBackground(getResources().getDrawable(R.drawable.text_selection_right_seleted));
-                user_profile_btn.setBackground(getResources().getDrawable(R.drawable.text_selection_left_unseleted));
-                user_type_selection_status = 1;
-                Picasso.get().load(grp_dp_url)
-                        .fit().centerCrop().into(profile_pic_image_view);
-                loadContributionList(user_type_selection_status);
-                user_name_textview.setText(grp_name);
-                user_points.setText(String.valueOf(grp_total_pts));
+                if (grp_id.equals("xxxxx____xxxxx")) {
+                    Toast.makeText(getActivity(), "No group info found", Toast.LENGTH_SHORT).show();
+                    grp_profile_btn.setError("No group info found");
+                } else {
+                    grp_profile_btn.setBackground(getResources().getDrawable(R.drawable.text_selection_right_seleted));
+                    user_profile_btn.setBackground(getResources().getDrawable(R.drawable.text_selection_left_unseleted));
+                    user_type_selection_status = 1;
+                    Picasso.get().load(grp_dp_url)
+                            .fit().centerCrop().into(profile_pic_image_view);
+                    loadContributionList(user_type_selection_status);
+                    user_name_textview.setText(grp_name);
+                    user_points.setText(String.valueOf(grp_total_pts));
+                }
             }
         });
 

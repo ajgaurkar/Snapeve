@@ -52,7 +52,7 @@ public class SignUp extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                startActivity(new Intent(getApplicationContext(), Signup_grp_join.class));
+//                startActivity(new Intent(getApplicationContext(), Signup_grp_join.class));
 
                 if (validateInputs()) {
                     executeSignupApi();
