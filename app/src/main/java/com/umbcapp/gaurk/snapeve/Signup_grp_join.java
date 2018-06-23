@@ -107,6 +107,7 @@ public class Signup_grp_join extends AppCompatActivity {
     }
 
     private void showCreateGroupDialog() {
+
         Dialog alertDialog = new Dialog(this);
         LayoutInflater flater = this.getLayoutInflater();
         View view = flater.inflate(R.layout.create_grp_dialog, null);
