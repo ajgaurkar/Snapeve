@@ -84,7 +84,6 @@ public class Add_event extends AppCompatActivity implements LocationListener {
     private static final int CAMERA_REQUEST = 1888; // field
     private static final int MERGE_OPTION = 4;
     private ImageView selected_posting_image_view;
-
     final static int PERMISSION_CODE = 1;
     // final static String[] PERMISSIONS = {Manifest.permission.CAMERA};
     private RelativeLayout camera_gallery_selector_img_rel_layout;
@@ -153,12 +152,10 @@ public class Add_event extends AppCompatActivity implements LocationListener {
 
         initiate_permission_check();
 
-
         createNotificationChannel();
         setNotification();
-// find_similar_posts
+        // find_similar_posts
         mClient = Singleton.Instance().mClientMethod(this);
-
 
         decimalFormat = new DecimalFormat("#.#######");
         decimalFormat.setRoundingMode(RoundingMode.CEILING);
@@ -256,19 +253,31 @@ public class Add_event extends AppCompatActivity implements LocationListener {
                 similar_posts_list_cardview.setVisibility(View.GONE);
             }
         });
+
         submit_button_cardview.setOnClickListener(new View.OnClickListener() {
             //        similar_posts_list_cardview.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                add_event_card_2.setVisibility(View.VISIBLE);
-                add_event_card_3.setVisibility(View.VISIBLE);
-                add_event_card_4.setVisibility(View.VISIBLE);
-                add_event_card_5_rel_layout.setVisibility(View.VISIBLE);
-                similar_posts_list_cardview.setVisibility(View.GONE);
-                post_event();
+                //text data upload START
+                //Lines commented temporarily for image uploading process
+//                add_event_card_2.setVisibility(View.VISIBLE);
+//                add_event_card_3.setVisibility(View.VISIBLE);
+//                add_event_card_4.setVisibility(View.VISIBLE);
+//                add_event_card_5_rel_layout.setVisibility(View.VISIBLE);
+//                similar_posts_list_cardview.setVisibility(View.GONE);
+//                post_event();
+                //text data upload END
+
+                //----------------------------------------------------------------------------//
+
+                //temporary for image upload
+                uploadEventImage();
+
             }
         });
+
+
         similar_button_cardview.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -388,12 +397,11 @@ public class Add_event extends AppCompatActivity implements LocationListener {
             }
         });
 
-        submit_btn_status_textview.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                uploadEventImage();
-            }
-        });
+//        submit_btn_status_textview.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//            }
+//        });
 
     }
 
@@ -558,7 +566,7 @@ public class Add_event extends AppCompatActivity implements LocationListener {
         try {
             locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
-        }catch (Exception e){
+        } catch (Exception e) {
 
         }
     }
@@ -759,7 +767,6 @@ public class Add_event extends AppCompatActivity implements LocationListener {
 
     }
 
-
     private void initiate_permission_check() {
 //Permission check to set switch status
         if (Build.VERSION.SDK_INT >= 23 && !isPermissionGranted()) {
@@ -938,7 +945,6 @@ public class Add_event extends AppCompatActivity implements LocationListener {
 
     }
 
-
     public String CompressionOfImage(String selectedImagePath) {
         //************************compress logic start****************
         BitmapFactory.Options options = new BitmapFactory.Options();
@@ -1036,13 +1042,13 @@ public class Add_event extends AppCompatActivity implements LocationListener {
             protected void onPostExecute(Void result) {
                 super.onPostExecute(result);
                 //condition to check, if there is some problem uploading attachments
+                System.out.println("result " + result);
 
             }
         };
 
         runAsyncTask(task);
     }
-
 
     private AsyncTask<Void, Void, Void> runAsyncTask(AsyncTask<Void, Void, Void> task) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
