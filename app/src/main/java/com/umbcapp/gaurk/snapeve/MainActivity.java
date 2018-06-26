@@ -11,6 +11,7 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
@@ -32,7 +33,6 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.microsoft.windowsazure.mobileservices.MobileServiceClient;
-import com.microsoft.windowsazure.mobileservices.http.OkHttpClientFactory;
 import com.umbcapp.gaurk.snapeve.Adapters.Dash_Event_ListAdapter;
 import com.umbcapp.gaurk.snapeve.Controllers.Event_dash_list_obj;
 import com.umbcapp.gaurk.snapeve.Fragments.MapsFragment;
@@ -40,12 +40,9 @@ import com.umbcapp.gaurk.snapeve.Fragments.NotificationFragment;
 import com.umbcapp.gaurk.snapeve.Fragments.SettingsFragment;
 import com.umbcapp.gaurk.snapeve.Fragments.UserProfileFragment;
 
-import java.net.MalformedURLException;
 import java.util.Locale;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
-
-import com.squareup.okhttp.OkHttpClient;
 
 public class MainActivity extends AppCompatActivity implements Listview_communicator {
 
@@ -55,6 +52,7 @@ public class MainActivity extends AppCompatActivity implements Listview_communic
     private SettingsFragment settingsFragment;
     private MapsFragment mapsFragment;
     private NotificationFragment notificationFragment;
+    private SwipeRefreshLayout pullToRefresh;
     private long sessionCounter;
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -148,7 +146,7 @@ public class MainActivity extends AppCompatActivity implements Listview_communic
     private ArrayList<Event_dash_list_obj> event_main_list;
     private FloatingActionButton main_img_pick_fab;
     private Dash_Event_ListAdapter dash_event_listAdapter;
-    private Button refreshBtn;
+//    private Button refreshBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -168,9 +166,10 @@ public class MainActivity extends AppCompatActivity implements Listview_communic
         event_main_list = new ArrayList<Event_dash_list_obj>();
 
         main_event_list_view = (ListView) findViewById(R.id.dashboard_event_listview);
-        main_img_pick_fab = (FloatingActionButton) findViewById(R.id.main_img_pick_fab);
-        refreshBtn = (Button) findViewById(R.id.button2);
+        pullToRefresh = (SwipeRefreshLayout) findViewById(R.id.dashboard_pull_refresh_layout);
 
+        main_img_pick_fab = (FloatingActionButton) findViewById(R.id.main_img_pick_fab);
+//        refreshBtn = (Button) findViewById(R.id.button2);
 
         userProfileFragment = new UserProfileFragment();
         settingsFragment = new SettingsFragment();
@@ -181,7 +180,6 @@ public class MainActivity extends AppCompatActivity implements Listview_communic
 
         //Old access url(aj account)
         try {
-
             //New access url(amey account)
             mClient = Singleton.Instance().mClientMethod(this);
 
@@ -193,6 +191,8 @@ public class MainActivity extends AppCompatActivity implements Listview_communic
 
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+//        navigation.
+
 
         main_img_pick_fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -203,18 +203,31 @@ public class MainActivity extends AppCompatActivity implements Listview_communic
             }
         });
 
-        executeLoginApi();
-
-        refreshBtn.setOnClickListener(new View.OnClickListener() {
+        pullToRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
-            public void onClick(View v) {
-                executeLoginApi();
+            public void onRefresh() {
+                executeGetFeedsApi();
             }
         });
 
+        executeGetFeedsApi();
+
+//        refreshBtn.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                executeGetFeedsApi();
+//            }
+//        });
+
     }
 
-    private void executeLoginApi() {
+    private void executeGetFeedsApi() {
+        final ProgressDialog progressDialog = new ProgressDialog(MainActivity.this);
+        progressDialog.setMessage("Loading feeds, Please wait...");
+        progressDialog.setCancelable(false);
+        progressDialog.setCanceledOnTouchOutside(false);
+        progressDialog.create();
+        progressDialog.show();
         jsonObjectLoginParameters = new JsonObject();
         jsonObjectLoginParameters.addProperty("studentId", "check123");
 
@@ -227,7 +240,9 @@ public class MainActivity extends AppCompatActivity implements Listview_communic
             public void onFailure(Throwable exception) {
                 resultFuture.setException(exception);
                 System.out.println(" get_event_feeds_api exception    " + exception);
-
+                pullToRefresh.setRefreshing(false);
+                progressDialog.dismiss();
+                Toast.makeText(MainActivity.this, "Something went wrong try again", Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -236,6 +251,8 @@ public class MainActivity extends AppCompatActivity implements Listview_communic
                 System.out.println(" get_event_feeds_api success response    " + response);
 
                 poupulateList(response);
+                pullToRefresh.setRefreshing(false);
+                progressDialog.dismiss();
 
             }
         });

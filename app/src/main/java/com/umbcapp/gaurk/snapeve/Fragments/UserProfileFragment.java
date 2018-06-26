@@ -84,6 +84,8 @@ public class UserProfileFragment extends Fragment {
     private int user_total_pts;
     private TextView user_points;
     private int admin_flag = 0;
+    private TextView user_profile_member_count_text_view;
+    private ImageView user_profile_member_count_text_view_icon;
 
     public UserProfileFragment() {
 
@@ -213,6 +215,12 @@ public class UserProfileFragment extends Fragment {
         profile_pic_image_view = (ImageView) rootView.findViewById(R.id.profile_pic_image_view);
         user_profile_settings_imageview = (ImageView) rootView.findViewById(R.id.user_profile_settings_imageview);
 
+        user_profile_member_count_text_view = (TextView) rootView.findViewById(R.id.user_profile_member_count_text_view);
+        user_profile_member_count_text_view_icon = (ImageView) rootView.findViewById(R.id.user_profile_member_count_text_view_icon);
+        //gone by default, check for group avaiablity and show/hide accordingly
+        user_profile_member_count_text_view.setVisibility(View.GONE);
+        user_profile_member_count_text_view_icon.setVisibility(View.GONE);
+
 //        Picasso.get().load("https://www.goldenglobes.com/sites/default/files/styles/portrait_medium/public/gallery_images/17-tomcruiseag.jpg?itok=qNj0cQGV&c=c9a73b7bdf609d72214d226ab9ea015e")
 //                .fit().centerCrop().into(profile_pic_image_view);
 
@@ -221,7 +229,6 @@ public class UserProfileFragment extends Fragment {
         user_profile_contribution_list_view.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
 
                 CommentsListItem selectedCommentsListItem = contributionList.get(position);
                 Intent eventDetailIntent = new Intent(getActivity(), EventDetails.class);
@@ -274,6 +281,9 @@ public class UserProfileFragment extends Fragment {
                 loadContributionList(user_type_selection_status);
                 user_name_textview.setText(userName);
                 user_points.setText(String.valueOf(user_total_pts));
+
+                user_profile_member_count_text_view.setVisibility(View.GONE);
+                user_profile_member_count_text_view_icon.setVisibility(View.GONE);
             }
         });
 
@@ -283,6 +293,8 @@ public class UserProfileFragment extends Fragment {
                 if (grp_id.equals("xxxxx____xxxxx")) {
                     Toast.makeText(getActivity(), "No group info found", Toast.LENGTH_SHORT).show();
 //                    grp_profile_btn.setError("No group info found");
+                    user_profile_member_count_text_view.setVisibility(View.GONE);
+                    user_profile_member_count_text_view_icon.setVisibility(View.GONE);
 
                     if (new SessionManager(getActivity()).getSpecificUserBooleanDetail(SessionManager.KEY_REQ_PENDING_GRP_STATUS)) {
                         showPendingGrpRequestDialog();
@@ -292,6 +304,8 @@ public class UserProfileFragment extends Fragment {
                         startActivity(joinGrpIntent);
                     }
                 } else {
+                    user_profile_member_count_text_view.setVisibility(View.VISIBLE);
+                    user_profile_member_count_text_view_icon.setVisibility(View.VISIBLE);
                     grp_profile_btn.setBackground(getResources().getDrawable(R.drawable.text_selection_right_seleted));
                     user_profile_btn.setBackground(getResources().getDrawable(R.drawable.text_selection_left_unseleted));
                     user_type_selection_status = 1;
