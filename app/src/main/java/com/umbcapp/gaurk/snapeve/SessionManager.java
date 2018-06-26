@@ -32,6 +32,9 @@ public class SessionManager {
     public static final String KEY_EMAIL = "email";
     public static final String KEY_DP_URL = "user_dp_url";
     public static final String KEY_GRP_DP_URL = "grp_dp_url";
+    public static final String KEY_REQ_PENDING_GRP_STATUS = "req_pend_grp_status";
+    public static final String KEY_REQ_PENDING_GRP_ID = "req_pend_grp_id";
+    public static final String KEY_REQ_PENDING_GRP_NAME = "req_pend_grp_name";
 
     SharedPreferences pref;
     // Editor for Shared preferences
@@ -116,6 +119,16 @@ public class SessionManager {
 
     public void setSpecificUserDetail(String dataKEY, String dataValue) {
         editor.putString(dataKEY, dataValue);
+        editor.commit();
+    }
+
+    public Boolean getSpecificUserBooleanDetail(String dataKEY) {
+
+        return pref.getBoolean(dataKEY, false);
+    }
+
+    public void setSpecificUserBooleanDetail(String dataKEY, Boolean dataValue) {
+        editor.putBoolean(dataKEY, dataValue);
         editor.commit();
     }
 

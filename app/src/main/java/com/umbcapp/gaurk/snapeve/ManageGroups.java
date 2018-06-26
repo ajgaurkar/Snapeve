@@ -1,17 +1,14 @@
 package com.umbcapp.gaurk.snapeve;
 
 import android.app.Activity;
-import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.app.ProgressDialog;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
-import android.widget.Toast;
+import android.widget.TextView;
 
 import com.google.common.util.concurrent.FutureCallback;
 import com.google.common.util.concurrent.Futures;
@@ -28,7 +25,7 @@ import com.umbcapp.gaurk.snapeve.Fragments.RequestPendingFragment;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class CreateGruoups extends Activity {
+public class ManageGroups extends Activity {
     private RelativeLayout add_mem_layout;
     private RelativeLayout mem_joined_layout;
     private RelativeLayout appr_pend_layout;
@@ -45,12 +42,13 @@ public class CreateGruoups extends Activity {
     RequestPendingFragment req_pending_fragment;
     ApprovalPendingFragment approval_pending_fragment;
     private CircleImageView create_group_profile_pic_image_view;
+    private TextView create_group_user_name_text_view;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.create_groups);
+        setContentView(R.layout.manage_groups);
 
         fragmentManager = getFragmentManager();
 
@@ -68,6 +66,7 @@ public class CreateGruoups extends Activity {
         appr_pend_layout = (RelativeLayout) findViewById(R.id.add_mem_pending_appr_layout);
 
         create_group_profile_pic_image_view = (CircleImageView) findViewById(R.id.create_group_profile_pic_image_view);
+        create_group_user_name_text_view = (TextView) findViewById(R.id.create_group_user_name_text_view);
 
         create_group_cardview_bottom_view = (View) findViewById(R.id.create_group_cardview_bottom_view);
         create_group_cardview_req_pending_bottom_view = (View) findViewById(R.id.create_group_cardview_req_pending_bottom_view);
@@ -161,7 +160,7 @@ public class CreateGruoups extends Activity {
 
     private void fetchGroupDetails(String admin_id) {
 
-        final ProgressDialog progressDialog = new ProgressDialog(CreateGruoups.this);
+        final ProgressDialog progressDialog = new ProgressDialog(ManageGroups.this);
         progressDialog.setTitle("Fetching details, Please wait...");
         progressDialog.create();
         progressDialog.show();
@@ -267,7 +266,7 @@ public class CreateGruoups extends Activity {
 
     private void fetchGroupReqDetails(String admin_id) {
 
-        final ProgressDialog progressDialog = new ProgressDialog(CreateGruoups.this);
+        final ProgressDialog progressDialog = new ProgressDialog(ManageGroups.this);
         progressDialog.setTitle("Fetching details, Please wait...");
         progressDialog.create();
         progressDialog.show();

@@ -59,7 +59,7 @@
         <activity android:name=".Leaderboard" />
         <activity android:name=".DropPinMapsActivity" />
         <activity
-            android:name=".CreateGruoups"
+            android:name=".ManageGroups"
             android:windowSoftInputMode="stateHidden" />
         <activity android:name=".NotificationReceiver" />
         <activity android:name=".WelcomeActivity" />

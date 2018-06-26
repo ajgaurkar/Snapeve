@@ -93,7 +93,7 @@ public class DropPinMapsActivity extends FragmentActivity implements OnMapReadyC
     private void getCurrentLocation() {
         try {
             locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 5, this);
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
         } catch (SecurityException e) {
             e.printStackTrace();
         }

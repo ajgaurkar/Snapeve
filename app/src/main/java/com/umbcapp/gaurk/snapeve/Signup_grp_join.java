@@ -6,11 +6,7 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
@@ -27,9 +23,7 @@ import com.google.common.util.concurrent.SettableFuture;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.umbcapp.gaurk.snapeve.Adapters.LeaderBoardAdapter;
 import com.umbcapp.gaurk.snapeve.Adapters.SignupGrpAdapter;
-import com.umbcapp.gaurk.snapeve.Controllers.LeaderboardListItem;
 import com.umbcapp.gaurk.snapeve.Controllers.SignUpGrpListItem;
 
 import java.util.ArrayList;
@@ -45,17 +39,30 @@ public class Signup_grp_join extends AppCompatActivity {
     private CircleImageView create_group_dialog_profile_pic_image_view;
     private TextView create_group_dialog_create_btn_card_textview;
     private EditText create_group_dialog_grp_name_edittext;
+    private int page_mode;
+    private String temp_req_pending_grp_name_to_push_to_sp;
+    private String temp_req_pending_grp_id_to_push_to_sp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup_grp_join);
 
+        Intent intent = getIntent();
+        page_mode = intent.getIntExtra("page_open_mode", 1);
+
         grpNameListView = (ListView) findViewById(R.id.signup_grp_list_view);
         signup_grp_create_grp_textview = (TextView) findViewById(R.id.signup_grp_create_grp_textview);
         signup_grp_skip_textview = (TextView) findViewById(R.id.signup_grp_skip_textview);
 
         fetchGroupList();
+
+        if (page_mode == 0) {
+            signup_grp_skip_textview.setVisibility(View.VISIBLE);
+        }
+        if (page_mode == 1) {
+            signup_grp_skip_textview.setVisibility(View.GONE);
+        }
 
         signup_grp_skip_textview.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -68,7 +75,7 @@ public class Signup_grp_join extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 //                finish();
-//                startActivity(new Intent(getApplicationContext(), CreateGruoups.class));
+//                startActivity(new Intent(getApplicationContext(), ManageGroups.class));
                 showCreateGroupDialog();
             }
         });
@@ -85,6 +92,10 @@ public class Signup_grp_join extends AppCompatActivity {
     }
 
     private void requestToJoinGrpDialog(final String grpId, String grpName, final String userId) {
+
+        temp_req_pending_grp_id_to_push_to_sp = grpId;
+        temp_req_pending_grp_name_to_push_to_sp = grpName;
+
         final AlertDialog.Builder grpJoinDialog = new AlertDialog.Builder(Signup_grp_join.this);
 
         grpJoinDialog.setTitle("Confirm");
@@ -131,8 +142,8 @@ public class Signup_grp_join extends AppCompatActivity {
                 }
             }
         });
-
         alertDialog.show();
+
     }
 
     private void executeCreateGroupApi(String grp_name) {
@@ -167,12 +178,12 @@ public class Signup_grp_join extends AppCompatActivity {
                 System.out.println(" create_grp_api success response    " + response);
 
                 Toast.makeText(getApplicationContext(), response.toString(), Toast.LENGTH_SHORT).show();
-                startActivity(new Intent(getApplicationContext(), CreateGruoups.class));
+                startActivity(new Intent(getApplicationContext(), ManageGroups.class));
 
 //                if (response.toString().contains("true")) {
 //                    System.out.println("response OK");
 //                    finish();
-//                    startActivity(new Intent(getApplicationContext(), CreateGruoups.class));
+//                    startActivity(new Intent(getApplicationContext(), ManageGroups.class));
 //                } else {
 //                    System.out.println("Something went wrong, Try again");
 //                }
@@ -215,9 +226,31 @@ public class Signup_grp_join extends AppCompatActivity {
 
                 Toast.makeText(getApplicationContext(), response.toString(), Toast.LENGTH_SHORT).show();
 
-                if (response.toString().contains("JOIN REQUEST RESPONSE")) {
+                if (response.toString().contains("true")) {
                     System.out.println("response OK");
+
+                    //set boolean as pending status true
+                    new SessionManager(getApplicationContext()).setSpecificUserBooleanDetail(SessionManager.KEY_REQ_PENDING_GRP_STATUS, true);
+
+                    //set data for pending status
+                    new SessionManager(getApplicationContext()).setSpecificUserDetail(SessionManager.KEY_REQ_PENDING_GRP_ID, temp_req_pending_grp_id_to_push_to_sp);
+                    new SessionManager(getApplicationContext()).setSpecificUserDetail(SessionManager.KEY_REQ_PENDING_GRP_NAME, temp_req_pending_grp_name_to_push_to_sp);
+
+                    //                either parse response or store response grp data in SP as created grp id OR request to join grp as pending request
+                    //depending on intent type open dashboard page or finish this page and go to profile mgmnt
+//                0 : open dashboard
+//                1 : finish and go back
+
+                    if (page_mode == 0) {
+                        finish();
+                        startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                    }
+                    if (page_mode == 1) {
+                        finish();
+//                        startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                    }
                 }
+
 
 //                    parseJoinRequestResponse(response);
             }
