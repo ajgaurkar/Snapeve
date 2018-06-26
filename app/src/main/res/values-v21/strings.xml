@@ -1,0 +1,49 @@
+<resources>
+    <string name="app_name">Snapeve</string>
+    <string name="title_home">Home</string>
+    <string name="title_maps">Maps</string>
+    <string name="title_user">Profile</string>
+    <string name="title_notification">Notifications</string>
+    <string name="title_settings">Settings</string>
+    <string name="title_activity_login">Sign in</string>
+
+    <!-- Strings related to login -->
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Password (optional)</string>
+    <string name="action_sign_in">Sign in or register</string>
+    <string name="action_sign_in_short">Sign in</string>
+    <string name="error_invalid_email">This email address is invalid</string>
+    <string name="error_invalid_password">This password is too short</string>
+    <string name="error_incorrect_password">This password is incorrect</string>
+    <string name="error_field_required">This field is required</string>
+    <string name="permission_rationale">"Contacts permissions are needed for providing email
+        completions."
+    </string>
+    <string name="title_activity_maps_fragment">Map</string>
+    <string name="me_fragment_title">You</string>
+    <string name="grp_fragment_title">Group</string>
+
+
+    <string name="title_activity_welcome">Home Screen</string>
+    <string name="next">NEXT</string>
+    <string name="skip">SKIP</string>
+    <string name="start">GOT IT</string>
+
+    <string name="slide_1_title">See what\'s going on</string>
+    <string name="slide_1_desc">Check nearby events or get latest updates for new events posted</string>
+
+    <string name="slide_2_title">Share what you know</string>
+    <string name="slide_2_desc">Post events you would like to tell other about</string>
+
+    <string name="slide_3_title">Earn reputation</string>
+    <string name="slide_3_desc">Every task needs effort, every effort is worth few points</string>
+
+    <string name="slide_4_title">Make your surroundings better</string>
+    <string name="slide_4_desc">Help your community and institution grow better by sharing important information</string>
+
+    <string name="play_again_desc">To see the welcome slider again, goto Settings -> apps -> welcome slider -> clear data</string>
+    <string name="play_again">Play Again</string>
+    <string name="title_activity_signup_grp_join">Signup_grp_join</string>
+    <string name="folderName">Snapeve</string>
+
+</resources>
