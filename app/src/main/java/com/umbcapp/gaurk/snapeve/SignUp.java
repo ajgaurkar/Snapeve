@@ -147,7 +147,9 @@ public class SignUp extends AppCompatActivity {
         email = email.substring(1, email.length() - 1);
 
         if (new SessionManager(getApplicationContext()).createLoginSession(user_id, user_name, user_pass, first_name, last_name, email)) {
-            startActivity(new Intent(getApplicationContext(), Signup_grp_join.class));
+            Intent joinGrpIntent = new Intent(getApplicationContext(), Signup_grp_join.class);
+            joinGrpIntent.putExtra("page_open_mode", 0);
+            startActivity(joinGrpIntent);
         }
 
     }

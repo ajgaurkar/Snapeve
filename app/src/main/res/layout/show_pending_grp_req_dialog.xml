@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:padding="10dp"
+        android:text="Join request pending for"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/show_pending_req_dialog_btn_grp_name_textView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/textView"
+        android:gravity="center"
+        android:padding="10dp"
+        android:singleLine="true"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+
+    <LinearLayout
+        android:id="@+id/show_pending_req_dialog_btn_lin_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/show_pending_req_dialog_btn_grp_name_textView"
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal"
+        android:weightSum="10">
+
+        <android.support.v7.widget.CardView
+            android:id="@+id/show_pending_req_dialog_cancel_req_btn_card_view"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:layout_weight="7"
+            android:elevation="10dp"
+            android:gravity="center_vertical"
+            card_view:cardBackgroundColor="@color/dot_dark_screen1"
+            card_view:cardCornerRadius="5dp">
+
+            <TextView
+                android:id="@+id/show_pending_req_dialog_cancel_req_btn_textview"
+                android:layout_width="match_parent"
+                android:layout_height="35dp"
+                android:layout_alignEnd="@+id/event_detail_user_post_dt_time_text_view"
+                android:layout_alignTop="@+id/event_detail_user_comment_text_view"
+                android:gravity="center"
+                android:singleLine="true"
+                android:text="CANCEL REQUEST"
+                android:textColor="#fff"
+                android:textSize="12sp"
+                android:textStyle="bold" />
+
+        </android.support.v7.widget.CardView>
+
+        <android.support.v7.widget.CardView
+            android:id="@+id/show_pending_req_dialog_ok_btn_card_view"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:layout_weight="3"
+            android:elevation="10dp"
+            android:gravity="center_vertical"
+            card_view:cardBackgroundColor="@color/colorPrimaryDark"
+            card_view:cardCornerRadius="5dp">
+
+            <TextView
+                android:id="@+id/show_pending_req_dialog_ok_btn_textview"
+                android:layout_width="match_parent"
+                android:layout_height="35dp"
+                android:layout_alignEnd="@+id/event_detail_user_post_dt_time_text_view"
+                android:layout_alignTop="@+id/event_detail_user_comment_text_view"
+                android:gravity="center"
+                android:singleLine="true"
+                android:text="OK"
+                android:textColor="#fff"
+                android:textSize="12sp"
+                android:textStyle="bold" />
+
+        </android.support.v7.widget.CardView>
+    </LinearLayout>
+</RelativeLayout>

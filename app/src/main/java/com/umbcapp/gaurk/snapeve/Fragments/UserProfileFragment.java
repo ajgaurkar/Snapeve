@@ -1,17 +1,22 @@
 package com.umbcapp.gaurk.snapeve.Fragments;
 
+import android.app.Dialog;
 import android.app.Fragment;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
+import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.AdapterView;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
@@ -28,12 +33,13 @@ import com.google.gson.JsonObject;
 import com.squareup.picasso.Picasso;
 import com.umbcapp.gaurk.snapeve.Adapters.UserContributionAdapter;
 import com.umbcapp.gaurk.snapeve.Controllers.CommentsListItem;
-import com.umbcapp.gaurk.snapeve.CreateGruoups;
+import com.umbcapp.gaurk.snapeve.ManageGroups;
 import com.umbcapp.gaurk.snapeve.EventDetails;
 import com.umbcapp.gaurk.snapeve.Leaderboard;
 import com.umbcapp.gaurk.snapeve.MainActivity;
 import com.umbcapp.gaurk.snapeve.R;
 import com.umbcapp.gaurk.snapeve.SessionManager;
+import com.umbcapp.gaurk.snapeve.Signup_grp_join;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -42,6 +48,8 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class UserProfileFragment extends Fragment {
 
@@ -238,7 +246,7 @@ public class UserProfileFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 if (admin_flag == 1) {
-                    startActivity(new Intent(getActivity(), CreateGruoups.class));
+                    startActivity(new Intent(getActivity(), ManageGroups.class));
                 }
 
             }
@@ -274,7 +282,15 @@ public class UserProfileFragment extends Fragment {
             public void onClick(View v) {
                 if (grp_id.equals("xxxxx____xxxxx")) {
                     Toast.makeText(getActivity(), "No group info found", Toast.LENGTH_SHORT).show();
-                    grp_profile_btn.setError("No group info found");
+//                    grp_profile_btn.setError("No group info found");
+
+                    if (new SessionManager(getActivity()).getSpecificUserBooleanDetail(SessionManager.KEY_REQ_PENDING_GRP_STATUS)) {
+                        showPendingGrpRequestDialog();
+                    } else {
+                        Intent joinGrpIntent = new Intent(getActivity(), Signup_grp_join.class);
+                        joinGrpIntent.putExtra("page_open_mode", 1);
+                        startActivity(joinGrpIntent);
+                    }
                 } else {
                     grp_profile_btn.setBackground(getResources().getDrawable(R.drawable.text_selection_right_seleted));
                     user_profile_btn.setBackground(getResources().getDrawable(R.drawable.text_selection_left_unseleted));
@@ -289,6 +305,90 @@ public class UserProfileFragment extends Fragment {
         });
 
         return rootView;
+    }
+
+    private void showPendingGrpRequestDialog() {
+        final Dialog alertDialog = new Dialog(getActivity());
+        LayoutInflater flater = getActivity().getLayoutInflater();
+        View view = flater.inflate(R.layout.show_pending_grp_req_dialog, null);
+        alertDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        alertDialog.setContentView(view);
+        alertDialog.setCancelable(true);
+        alertDialog.setCanceledOnTouchOutside(false);
+
+        TextView show_pending_req_dialog_btn_grp_name_textView = (TextView) view.findViewById(R.id.show_pending_req_dialog_btn_grp_name_textView);
+        CardView show_pending_req_dialog_cancel_req_btn_card_view = (CardView) view.findViewById(R.id.show_pending_req_dialog_cancel_req_btn_card_view);
+        CardView show_pending_req_dialog_ok_btn_card_view = (CardView) view.findViewById(R.id.show_pending_req_dialog_ok_btn_card_view);
+
+        show_pending_req_dialog_btn_grp_name_textView.setText(new SessionManager(getActivity()).getSpecificUserDetail(SessionManager.KEY_REQ_PENDING_GRP_NAME));
+
+        show_pending_req_dialog_ok_btn_card_view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                alertDialog.dismiss();
+            }
+        });
+        show_pending_req_dialog_cancel_req_btn_card_view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                alertDialog.dismiss();
+                cancelJoinGrpPendingRequest();
+            }
+        });
+        alertDialog.setCanceledOnTouchOutside(false);
+        alertDialog.setCancelable(false);
+        alertDialog.show();
+    }
+
+    private void cancelJoinGrpPendingRequest() {
+        Toast.makeText(getActivity(), "Cancel request called", Toast.LENGTH_SHORT).show();
+
+//make an API call here to cancel the request
+//then
+        cancelGrpJoinRequest();
+
+        //if response = true then store SP as false and clear values of grp pending request
+
+    }
+
+    private void cancelGrpJoinRequest() {
+        final ProgressDialog progressDialog = new ProgressDialog(getActivity());
+        progressDialog.setTitle("Cancelling request, Please wait...");
+        progressDialog.create();
+        progressDialog.show();
+        progressDialog.setCanceledOnTouchOutside(false);
+        progressDialog.setCancelable(false);
+        JsonObject jsonObjectParameters = new JsonObject();
+        jsonObjectParameters.addProperty("req_code", -11);
+        jsonObjectParameters.addProperty("grpId", new SessionManager(getActivity()).getSpecificUserDetail(SessionManager.KEY_REQ_PENDING_GRP_ID));
+        jsonObjectParameters.addProperty("userId", new SessionManager(getActivity()).getSpecificUserDetail(SessionManager.KEY_USER_ID));
+
+        final SettableFuture<JsonElement> resultFuture = SettableFuture.create();
+        ListenableFuture<JsonElement> serviceFilterFuture = MainActivity.mClient.invokeApi("group_request_handler_api", jsonObjectParameters);
+
+        Futures.addCallback(serviceFilterFuture, new FutureCallback<JsonElement>() {
+            @Override
+            public void onFailure(Throwable exception) {
+                resultFuture.setException(exception);
+                progressDialog.dismiss();
+                System.out.println(" group_request_handler_api exception    " + exception);
+
+            }
+
+            @Override
+            public void onSuccess(JsonElement response) {
+                resultFuture.set(response);
+                progressDialog.dismiss();
+                System.out.println(" group_request_handler_api success response    " + response);
+
+                if (response.toString().contains("true")) {
+                    new SessionManager(getActivity()).setSpecificUserBooleanDetail(SessionManager.KEY_REQ_PENDING_GRP_STATUS, false);
+                    new SessionManager(getActivity()).setSpecificUserDetail(SessionManager.KEY_REQ_PENDING_GRP_ID, null);
+                    new SessionManager(getActivity()).setSpecificUserDetail(SessionManager.KEY_REQ_PENDING_GRP_NAME, null);
+                }
+
+            }
+        });
     }
 
     private void loadContributionList(int user_type_selection_status) {
