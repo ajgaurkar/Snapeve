@@ -1,9 +1,9 @@
 package com.umbcapp.gaurk.snapeve;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Activity;
-import android.app.Dialog;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -17,16 +17,21 @@ import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
+import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
-import android.view.LayoutInflater;
+import android.util.Log;
 import android.view.View;
-import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CompoundButton;
@@ -48,18 +53,32 @@ import com.google.common.util.concurrent.SettableFuture;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.microsoft.azure.storage.blob.CloudBlobContainer;
+import com.microsoft.azure.storage.blob.CloudBlockBlob;
+import com.microsoft.windowsazure.mobileservices.MobileServiceClient;
 import com.umbcapp.gaurk.snapeve.Adapters.SimilarPostsAdapter;
-import com.umbcapp.gaurk.snapeve.Controllers.Event_dash_list_obj;
 import com.umbcapp.gaurk.snapeve.Controllers.SimilarPostsListItem;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 import java.util.Random;
 
+import me.iwf.photopicker.PhotoPicker;
+
 import static android.media.CamcorderProfile.get;
+import static com.umbcapp.gaurk.snapeve.AzureConfiguration.getContainer;
 
 public class Add_event extends AppCompatActivity implements LocationListener {
     private static final int CAMERA_REQUEST = 1888; // field
@@ -67,7 +86,7 @@ public class Add_event extends AppCompatActivity implements LocationListener {
     private ImageView selected_posting_image_view;
 
     final static int PERMISSION_CODE = 1;
-    final static String[] PERMISSIONS = {Manifest.permission.CAMERA};
+    // final static String[] PERMISSIONS = {Manifest.permission.CAMERA};
     private RelativeLayout camera_gallery_selector_img_rel_layout;
     private ImageView select_image_trash_can_image_view;
     private ImageView cameraOpenImageView;
@@ -95,7 +114,7 @@ public class Add_event extends AppCompatActivity implements LocationListener {
     private int post_scope_radio_value;
     private int event_type_radio_value;
     private int location_type_radio_value;
-    private int PICK_IMAGE = 1;
+    private int PICK_GALLERY_IMAGE = 1;
     private int PICK_LOCATION = 3;
     private ImageView galleryOpenImageView;
     LocationManager locationManager;
@@ -114,18 +133,32 @@ public class Add_event extends AppCompatActivity implements LocationListener {
     private SimilarPostsAdapter similarPostAdapter;
     private ArrayList<SimilarPostsListItem> similarPostsList;
     private String CHANNEL_ID = "chchchchc";
+    private File mCameraImageFile;
+    public Uri mCameraImageFileUri = null;
+    static final int REQUEST_TAKE_PHOTO = 5;
+    final static int PERMISSION_ALL = 1;
+    final static String[] PERMISSIONS = {Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE,
+            Manifest.permission.CAMERA, Manifest.permission.READ_CONTACTS, Manifest.permission.WRITE_CONTACTS,
+            Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.RECORD_AUDIO};
+    public LocationManager mLocationManager;
+    private MobileServiceClient mClient;
+    private CloudBlobContainer container;
+    private Map<String, Uri> mapForUploadingSelectedImage;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.test_2);
+
         initiate_permission_check();
 
 
         createNotificationChannel();
         setNotification();
-//        find_similar_posts
+// find_similar_posts
+        mClient = Singleton.Instance().mClientMethod(this);
+
 
         decimalFormat = new DecimalFormat("#.#######");
         decimalFormat.setRoundingMode(RoundingMode.CEILING);
@@ -196,6 +229,8 @@ public class Add_event extends AppCompatActivity implements LocationListener {
             @Override
             public void onClick(View v) {
                 selcectFromGallery();
+
+
                 System.out.println("galleryOpenImageView");
             }
         });
@@ -350,6 +385,13 @@ public class Add_event extends AppCompatActivity implements LocationListener {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 openMegrePostDialog(position);
+            }
+        });
+
+        submit_btn_status_textview.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                uploadEventImage();
             }
         });
 
@@ -510,21 +552,25 @@ public class Add_event extends AppCompatActivity implements LocationListener {
         pick_location_card_3_spinner.setAdapter(dataAdapter);
     }
 
+    @SuppressLint("MissingPermission")
     private void getCurrentLocation() {
+
         try {
             locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 5, this);
-        } catch (SecurityException e) {
-            e.printStackTrace();
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
+        }catch (Exception e){
+
         }
     }
 
     @Override
     public void onLocationChanged(Location location) {
-        System.out.println("location :" + location);
+        System.out.println("onLocationChanged :" + location);
         add_event_card_3_textview.setText("Current Location: " + location.getLatitude() + ", " + location.getLongitude());
         currentLng = location.getLongitude();
         currentLat = location.getLatitude();
+        System.out.println("currentLng------------ " + currentLng);
+        System.out.println("currentLat------------ " + currentLat);
     }
 
     @Override
@@ -546,16 +592,59 @@ public class Add_event extends AppCompatActivity implements LocationListener {
     }
 
     private void selcectFromGallery() {
-        Intent intent = new Intent();
-        intent.setType("image/*");
-        intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE);
+        PhotoPicker.builder()
+                .setPhotoCount(1)
+                .setShowCamera(false)
+                .setShowGif(true)
+                .setPreviewEnabled(false)
+                .start(Add_event.this, PICK_GALLERY_IMAGE);
     }
 
-    private void takePicture() { //you can call this every 5 seconds using a timer or whenever you want
+    private void takePicture() {
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+            System.out.println("takePictureIntent not Null");
 
-        Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-        startActivityForResult(cameraIntent, CAMERA_REQUEST);
+            try {
+                mCameraImageFile = createImageFile();
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
+            }
+            System.out.println("Created Camera Image --- " + mCameraImageFile);
+
+            if (mCameraImageFile != null) {
+                if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    // Do something for Nougat and above versions
+                    System.out.println("Above Nougat ");
+                    takePictureIntent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                    mCameraImageFileUri = FileProvider.getUriForFile(getApplicationContext(), getApplicationContext().getPackageName() + ".provider", mCameraImageFile);
+                } else {
+                    System.out.println("Below Nougat ");
+                    // do something for phones running an SDK before Nougat
+                    mCameraImageFileUri = Uri.fromFile(mCameraImageFile);
+                }
+
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, mCameraImageFileUri);
+                startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
+            }
+
+
+        } else {
+            System.out.println("takePictureIntent  Null");
+
+        }
+    }
+
+    private File createImageFile() throws IOException {
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
+        String imageFileName = "JPEG_" + timeStamp + "_";
+
+        File storageDir = Environment.getExternalStorageDirectory();
+
+        File createdImageFile = File.createTempFile(imageFileName,/* prefix */".jpg",/* suffix */ storageDir /* directory */);
+        System.out.println("===createdImageFile---  " + createdImageFile);
+
+        return createdImageFile;
     }
 
     @Override
@@ -566,7 +655,34 @@ public class Add_event extends AppCompatActivity implements LocationListener {
         System.out.println("vv data : " + data);
         System.out.println("vv requestCode : " + requestCode);
 
-        if (requestCode == PICK_IMAGE && resultCode == Activity.RESULT_OK) {
+        if (requestCode == PICK_GALLERY_IMAGE && resultCode == Activity.RESULT_OK) {
+
+            System.out.println("Selected Gallery Image---");
+            if (data != null) {
+                ArrayList<String> photos = data.getStringArrayListExtra(PhotoPicker.KEY_SELECTED_PHOTOS);
+                System.out.println("Photos-List Size-- " + photos.size());
+
+                File imgFile = new File(photos.get(0));
+                Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
+                selected_posting_image_view.setImageBitmap(myBitmap);
+
+                /*Intialization of Map;
+                Why this is here because we want to keep map size always ONE
+                 */
+                mapForUploadingSelectedImage = new HashMap<>();
+
+                int index = photos.get(0).lastIndexOf('/');
+                String selectedGalleryImageName = photos.get(0).substring(index + 1);
+
+                String addFileString = "file://" + photos.get(0);
+                Uri getUriToSendAzure = Uri.parse(addFileString);
+                System.out.println("selectedImageName------- " + selectedGalleryImageName);
+                System.out.println("getUriToSendAzure------- " + getUriToSendAzure);
+                mapForUploadingSelectedImage.put(selectedGalleryImageName, getUriToSendAzure);
+                System.out.println("Gallery : mapForUploadingSelectedImage---- Size  " + mapForUploadingSelectedImage.size());
+
+
+            }
 
         }
         if (requestCode == PICK_LOCATION) {
@@ -588,8 +704,6 @@ public class Add_event extends AppCompatActivity implements LocationListener {
             System.out.println("vv PICK_LOCATION");
             System.out.println("vv LAT : " + data.getStringExtra("Lat"));
             System.out.println("vv LNG : " + data.getStringExtra("Lng"));
-//            selectedLat = Double.parseDouble(data.getStringExtra("Lat"));
-//            selectedLng = Double.parseDouble(data.getStringExtra("Lng"));
 
             selectedLat = Double.parseDouble(decimalFormat.format(Double.valueOf(data.getStringExtra("Lat"))));
             selectedLng = Double.parseDouble(decimalFormat.format(Double.valueOf(data.getStringExtra("Lng"))));
@@ -598,18 +712,58 @@ public class Add_event extends AppCompatActivity implements LocationListener {
         }
         if (requestCode == CAMERA_REQUEST && resultCode == Activity.RESULT_OK) {
             Bitmap picture = (Bitmap) data.getExtras().get("data");//this is your bitmap image and now you can do whatever you want with this
-//            picture.compress(Bitmap.CompressFormat.JPEG,100,)
             selected_posting_image_view.setImageBitmap(picture); //for example I put bmp in an ImageView
             camera_gallery_selector_img_rel_layout.setVisibility(View.GONE);
             select_image_trash_can_image_view.setVisibility(View.VISIBLE);
+
         }
+
+
+        if (requestCode == REQUEST_TAKE_PHOTO && resultCode == Activity.RESULT_OK) {
+
+
+            try {
+                System.out.println("Check Photo----");
+                String attachedFilePath = mCameraImageFile.getAbsolutePath();
+                String attachedFilePath_From_SaveImage = CompressionOfImage(attachedFilePath);
+                System.out.println("attachedFilePath_From_SaveImage----------- " + attachedFilePath_From_SaveImage);
+                File imgFile = new File(attachedFilePath_From_SaveImage);
+                Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
+
+                selected_posting_image_view.setImageBitmap(myBitmap);
+
+                //delete original large File
+                mCameraImageFile.delete();
+
+                mapForUploadingSelectedImage = new HashMap<>();
+
+                int index = attachedFilePath_From_SaveImage.lastIndexOf('/');
+                String selectedCameraImageName = attachedFilePath_From_SaveImage.substring(index + 1);
+
+                String addFileString = "file://" + attachedFilePath_From_SaveImage;
+                Uri getUriToSendAzure = Uri.parse(addFileString);
+                System.out.println("selectedImageName------- " + selectedCameraImageName);
+                System.out.println("getUriToSendAzure------- " + getUriToSendAzure);
+                mapForUploadingSelectedImage.put(selectedCameraImageName, getUriToSendAzure);
+                System.out.println("Camera : mapForUploadingSelectedImage---- Size  " + mapForUploadingSelectedImage.size());
+
+
+            } catch (Exception e) {
+                System.out.println("image not capture from camera " + e.getMessage());
+            }
+
+            camera_gallery_selector_img_rel_layout.setVisibility(View.GONE);
+            select_image_trash_can_image_view.setVisibility(View.VISIBLE);
+        }
+
+
     }
 
 
     private void initiate_permission_check() {
 //Permission check to set switch status
         if (Build.VERSION.SDK_INT >= 23 && !isPermissionGranted()) {
-        } else {
+            requestPermissions(PERMISSIONS, PERMISSION_ALL);
         }
     }
 
@@ -635,7 +789,7 @@ public class Add_event extends AppCompatActivity implements LocationListener {
             mProgressDialog.show();
 
             final SettableFuture<JsonElement> resultFuture = SettableFuture.create();
-            ListenableFuture<JsonElement> serviceFilterFuture = MainActivity.mClient.invokeApi("post_event_api", jsonObjectPostEventParameters);
+            ListenableFuture<JsonElement> serviceFilterFuture = mClient.invokeApi("post_event_api", jsonObjectPostEventParameters);
 
             Futures.addCallback(serviceFilterFuture, new FutureCallback<JsonElement>() {
                 @Override
@@ -782,5 +936,121 @@ public class Add_event extends AppCompatActivity implements LocationListener {
 
         return true;
 
+    }
+
+
+    public String CompressionOfImage(String selectedImagePath) {
+        //************************compress logic start****************
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inJustDecodeBounds = true;
+
+        BitmapFactory.decodeFile(selectedImagePath, options);
+        final int REQUIRED_SIZE = 500;
+        int scale = 1;
+        while (options.outWidth / scale / 2 >= REQUIRED_SIZE && options.outHeight / scale / 2 >= REQUIRED_SIZE) {
+            scale *= 2;
+            System.out.println("Scaling start@@@@@@@@@@@");
+        }
+        options.inSampleSize = scale;
+        options.inJustDecodeBounds = false;
+        System.out.println("selectedImagePath" + selectedImagePath);
+        Bitmap bm = BitmapFactory.decodeFile(selectedImagePath, options);
+        System.out.println("selectedImagefile bitmap" + bm);
+
+        return SaveImage(bm);
+
+        //************************compress logic end****************
+    }
+
+    private String SaveImage(Bitmap finalBitmap) {
+        String filePath = null;
+
+        String root = Environment.getExternalStorageDirectory().toString();
+        File myDir = new File(root + "/" + getString(R.string.folderName) + "/Event");
+        System.out.println("myDir" + myDir);
+        myDir.mkdirs();
+        Random generator = new Random();
+        int n = 10000;
+        n = generator.nextInt(n);
+        String imageFileName = getString(R.string.folderName) + "-Snapeve-" + n + ".jpg";
+        File file = new File(myDir, imageFileName);
+        System.out.println("myDir : " + file);
+        System.out.println("_File_Name : " + imageFileName);
+
+        if (file.exists()) {
+            file.delete();
+        }
+        try {
+            FileOutputStream out = new FileOutputStream(file);
+            System.out.println("out" + out);
+            finalBitmap.compress(Bitmap.CompressFormat.JPEG, 100, out);
+            out.flush();
+            out.close();
+
+            Uri imagePath = Uri.fromFile(file);
+            filePath = imagePath.getPath();
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return filePath;
+    }
+
+    private void uploadEventImage() {
+
+        AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
+
+            @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+            }
+
+            @Override
+            protected Void doInBackground(Void... params) {
+                try {
+
+                    for (Map.Entry<String, Uri> entry : mapForUploadingSelectedImage.entrySet()) {
+                        System.out.println("UploadinG Image------------------");
+
+                        final InputStream imageStream = getContentResolver().openInputStream(entry.getValue());
+                        final int imageLength = imageStream.available();
+                        container = getContainer();
+                        CloudBlockBlob imageBlob = container.getBlockBlobReference(entry.getKey());
+                        imageBlob.upload(imageStream, imageLength);
+                    }
+
+
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                        }
+                    });
+                } catch (final Exception e) {
+                    System.out.println("Image uploading Execption--- " + e.getMessage());
+                }
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void result) {
+                super.onPostExecute(result);
+                //condition to check, if there is some problem uploading attachments
+
+            }
+        };
+
+        runAsyncTask(task);
+    }
+
+
+    private AsyncTask<Void, Void, Void> runAsyncTask(AsyncTask<Void, Void, Void> task) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+            Log.d("AsyncTask", "if..calling");
+            return task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        } else {
+            Log.d("AsyncTask", "else..calling");
+            return task.execute();
+        }
     }
 }

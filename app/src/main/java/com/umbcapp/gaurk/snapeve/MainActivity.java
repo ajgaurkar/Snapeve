@@ -181,27 +181,11 @@ public class MainActivity extends AppCompatActivity implements Listview_communic
 
         //Old access url(aj account)
         try {
-//            mClient = new MobileServiceClient(
-//                    "https://azure-test-app.azurewebsites.net",
-//                    this);
 
             //New access url(amey account)
-            mClient = new MobileServiceClient(
-                    "https://snapeve.azurewebsites.net",
-                    this);
+            mClient = Singleton.Instance().mClientMethod(this);
 
-            // Extend timeout from default of 10s to 20s
-            mClient.setAndroidHttpClientFactory(new OkHttpClientFactory() {
-                @Override
-                public OkHttpClient createOkHttpClient() {
-                    OkHttpClient client = new OkHttpClient();
-                    client.setReadTimeout(20, TimeUnit.SECONDS);
-                    client.setWriteTimeout(20, TimeUnit.SECONDS);
-                    return client;
-                }
-            });
-
-        } catch (MalformedURLException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
