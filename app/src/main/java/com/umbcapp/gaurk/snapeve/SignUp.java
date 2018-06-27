@@ -70,7 +70,6 @@ public class SignUp extends AppCompatActivity {
         progressDialog.show();
         JsonObject jsonObjectParameters = new JsonObject();
 
-
         first_name = signup_page_f_name_edittext.getText().toString().trim();
         last_name = signup_page_l_name_edittext.getText().toString().trim();
         email = signup_page_email_edittext.getText().toString().trim();

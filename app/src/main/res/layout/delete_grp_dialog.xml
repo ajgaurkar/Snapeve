@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:gravity="center"
+        android:padding="10dp"
+        android:text="Confirm Deletion"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/delete_grp_dialog_header_textView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/textView"
+        android:gravity="center"
+        android:maxLines="2"
+        android:padding="10dp"
+        android:text="This will delete all the records from the group and its group members."
+        android:textStyle="bold" />
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/delete_grp_dialog_type_grp_name_cardview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/delete_grp_dialog_header_textView"
+        android:layout_marginEnd="10dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="5dp"
+        android:elevation="10dp"
+        card_view:cardCornerRadius="5dp"
+        card_view:cardUseCompatPadding="true">
+
+        <EditText
+            android:id="@+id/delete_grp_dialog_type_grp_name_edittext"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:background="@android:color/transparent"
+            android:ems="10"
+            android:hint="Type group name"
+            android:padding="10dp" />
+
+    </android.support.v7.widget.CardView>
+
+    <LinearLayout
+        android:id="@+id/delete_grp_dialog_btn_lin_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/delete_grp_dialog_type_grp_name_cardview"
+        android:layout_marginBottom="10dp"
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal"
+        android:weightSum="10">
+
+        <android.support.v7.widget.CardView
+            android:id="@+id/delete_grp_dialog_confirm_btn_card_view"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:layout_weight="7"
+            android:elevation="10dp"
+            android:gravity="center_vertical"
+            card_view:cardBackgroundColor="@color/dot_dark_screen1"
+            card_view:cardCornerRadius="5dp">
+
+            <TextView
+                android:id="@+id/delete_grp_dialog_confirm_btn_textview"
+                android:layout_width="match_parent"
+                android:layout_height="35dp"
+                android:layout_alignEnd="@+id/event_detail_user_post_dt_time_text_view"
+                android:layout_alignTop="@+id/event_detail_user_comment_text_view"
+                android:gravity="center"
+                android:singleLine="true"
+                android:text="Delete this group"
+                android:textColor="#fff"
+                android:textSize="12sp"
+                android:textStyle="bold" />
+
+        </android.support.v7.widget.CardView>
+
+        <android.support.v7.widget.CardView
+            android:id="@+id/delete_grp_dialog_cancel_btn_card_view"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:layout_weight="3"
+            android:elevation="10dp"
+            android:gravity="center_vertical"
+            card_view:cardBackgroundColor="@color/colorPrimaryDark"
+            card_view:cardCornerRadius="5dp">
+
+            <TextView
+                android:id="@+id/delete_grp_dialog_cancel_btn_textview"
+                android:layout_width="match_parent"
+                android:layout_height="35dp"
+                android:layout_alignEnd="@+id/event_detail_user_post_dt_time_text_view"
+                android:layout_alignTop="@+id/event_detail_user_comment_text_view"
+                android:gravity="center"
+                android:singleLine="true"
+                android:text="Cancel"
+                android:textColor="#fff"
+                android:textSize="12sp"
+                android:textStyle="bold" />
+
+        </android.support.v7.widget.CardView>
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/delete_grp_validation_error_footer_textView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/delete_grp_dialog_btn_lin_layout"
+        android:layout_marginBottom="15dp"
+        android:layout_marginTop="-15dp"
+        android:gravity="center"
+        android:text="Group name mismatch, Try again."
+        android:textColor="@android:color/holo_red_light"
+        android:textStyle="bold"
+        android:visibility="gone" />
+</RelativeLayout>

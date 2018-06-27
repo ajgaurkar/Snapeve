@@ -38,9 +38,9 @@ dependencies {
     implementation 'com.squareup.okhttp:okhttp:2.5.0'
     implementation 'com.prolificinteractive:material-calendarview:1.4.3'
     //Gallery Photo selector Library
-    compile 'me.iwf.photopicker:PhotoPicker:0.9.12@aar'
-    compile 'com.github.bumptech.glide:glide:4.1.1'
-    compile 'com.microsoft.azure.android:azure-storage-android:0.6.0@aar'
+    implementation 'me.iwf.photopicker:PhotoPicker:0.9.12@aar'
+    implementation 'com.github.bumptech.glide:glide:4.1.1'
+    implementation 'com.microsoft.azure.android:azure-storage-android:0.6.0@aar'
 
 
 }

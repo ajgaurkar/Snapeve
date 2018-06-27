@@ -9,9 +9,11 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.CardView;
+import android.support.v7.widget.PopupMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -33,10 +35,10 @@ import com.google.gson.JsonObject;
 import com.squareup.picasso.Picasso;
 import com.umbcapp.gaurk.snapeve.Adapters.UserContributionAdapter;
 import com.umbcapp.gaurk.snapeve.Controllers.CommentsListItem;
-import com.umbcapp.gaurk.snapeve.ManageGroups;
 import com.umbcapp.gaurk.snapeve.EventDetails;
 import com.umbcapp.gaurk.snapeve.Leaderboard;
 import com.umbcapp.gaurk.snapeve.MainActivity;
+import com.umbcapp.gaurk.snapeve.ManageGroups;
 import com.umbcapp.gaurk.snapeve.R;
 import com.umbcapp.gaurk.snapeve.SessionManager;
 import com.umbcapp.gaurk.snapeve.Signup_grp_join;
@@ -48,8 +50,6 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
-
-import de.hdodenhof.circleimageview.CircleImageView;
 
 public class UserProfileFragment extends Fragment {
 
@@ -253,7 +253,8 @@ public class UserProfileFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 if (admin_flag == 1) {
-                    startActivity(new Intent(getActivity(), ManageGroups.class));
+
+                    openSettingsMenu();
                 }
 
             }
@@ -319,6 +320,120 @@ public class UserProfileFragment extends Fragment {
         });
 
         return rootView;
+    }
+
+    private void openSettingsMenu() {
+
+//        if (userPermission == P0 || P1) {
+//            open leave group dialog
+//        }
+//
+//        if (userPermission == P2) {
+//            open 2 options settings menu
+//        }
+//
+//        if (userPermission == P3) {
+//            open 3 options settings menu
+//        }
+
+        PopupMenu popup = new PopupMenu(getActivity(), user_profile_settings_imageview);
+        popup.getMenuInflater().inflate(R.menu.user_profile_3_settings_popup_menu, popup.getMenu());
+        popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+
+                if (item.getTitle().equals("Manage Members")) {
+//                    Toast.makeText(getActivity(), "Manage Members", Toast.LENGTH_SHORT).show();
+                    startActivity(new Intent(getActivity(), ManageGroups.class));
+                } else if (item.getTitle().equals("Leave Group")) {
+                    openLeaveGroupDialog();
+                } else if (item.getTitle().equals("Delete Group")) {
+                    openLDeleteGroupDialog();
+                }
+                return false;
+            }
+        });
+        popup.show();
+    }
+
+    private void openLDeleteGroupDialog() {
+        final Dialog alertDialog = new Dialog(getActivity());
+        LayoutInflater flater = getActivity().getLayoutInflater();
+        View view = flater.inflate(R.layout.delete_grp_dialog, null);
+        alertDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        alertDialog.setContentView(view);
+        alertDialog.setCancelable(true);
+        alertDialog.setCanceledOnTouchOutside(false);
+
+        CardView delete_grp_dialog_confirm_btn_card_view = (CardView) view.findViewById(R.id.delete_grp_dialog_confirm_btn_card_view);
+        CardView delete_grp_dialog_cancel_btn_card_view = (CardView) view.findViewById(R.id.delete_grp_dialog_cancel_btn_card_view);
+        final EditText delete_grp_dialog_type_grp_name_edittext = (EditText) view.findViewById(R.id.delete_grp_dialog_type_grp_name_edittext);
+        final TextView delete_grp_validation_error_footer_textView = (TextView) view.findViewById(R.id.delete_grp_validation_error_footer_textView);
+
+        delete_grp_dialog_cancel_btn_card_view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                alertDialog.dismiss();
+            }
+        });
+        delete_grp_dialog_confirm_btn_card_view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                System.out.println("11 : " + delete_grp_dialog_type_grp_name_edittext.getText().toString());
+                System.out.println("12 : " + grp_name);
+                if (delete_grp_dialog_type_grp_name_edittext.getText().toString().equalsIgnoreCase(grp_name)) {
+                    alertDialog.dismiss();
+                    executeDeleteGroupApi();
+                    delete_grp_validation_error_footer_textView.setVisibility(View.GONE);
+                } else {
+                    delete_grp_validation_error_footer_textView.setVisibility(View.VISIBLE);
+                }
+            }
+        });
+        alertDialog.setCanceledOnTouchOutside(false);
+        alertDialog.setCancelable(false);
+        alertDialog.show();
+    }
+
+
+    private void openLeaveGroupDialog() {
+        final Dialog alertDialog = new Dialog(getActivity());
+        LayoutInflater flater = getActivity().getLayoutInflater();
+        View view = flater.inflate(R.layout.leave_grp_dialog, null);
+        alertDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        alertDialog.setContentView(view);
+        alertDialog.setCancelable(true);
+        alertDialog.setCanceledOnTouchOutside(false);
+
+        CardView leave_grp_dialog_confirm_btn_card_view = (CardView) view.findViewById(R.id.leave_grp_dialog_confirm_btn_card_view);
+        CardView leave_grp_dialog_cancel_btn_card_view = (CardView) view.findViewById(R.id.leave_grp_dialog_cancel_btn_card_view);
+
+        leave_grp_dialog_cancel_btn_card_view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                alertDialog.dismiss();
+            }
+        });
+        leave_grp_dialog_confirm_btn_card_view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                alertDialog.dismiss();
+                executeLeaveGroupApi();
+            }
+        });
+        alertDialog.setCanceledOnTouchOutside(false);
+        alertDialog.setCancelable(false);
+        alertDialog.show();
+    }
+
+    private void executeLeaveGroupApi() {
+        //execute leave group api and if response success, delete all data related to group from SP
+        Toast.makeText(getActivity(), "executeLeaveGroupApi", Toast.LENGTH_SHORT).show();
+    }
+
+    private void executeDeleteGroupApi() {
+        //execute delete group api and if response success, delete all data related to group from SP
+        Toast.makeText(getActivity(), "executeDeleteGroupApi", Toast.LENGTH_SHORT).show();
     }
 
     private void showPendingGrpRequestDialog() {
