@@ -45,4 +45,8 @@
     <string name="play_again">Play Again</string>
     <string name="title_activity_signup_grp_join">Signup_grp_join</string>
 
+    <string name="set_privilege_set_1">Set privilege - post only</string>
+    <string name="set_privilege_set_2">Set privilege\n
+        - post and manage group members</string>
+
 </resources>

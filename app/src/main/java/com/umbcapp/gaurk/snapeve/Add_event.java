@@ -143,6 +143,7 @@ public class Add_event extends AppCompatActivity implements LocationListener {
     private MobileServiceClient mClient;
     private CloudBlobContainer container;
     private Map<String, Uri> mapForUploadingSelectedImage;
+    private ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -785,11 +786,23 @@ public class Add_event extends AppCompatActivity implements LocationListener {
     }
 
     private void post_event() {
+
+        //temporary lines only for sequencing postevent after image upload
+        add_event_card_2.setVisibility(View.VISIBLE);
+        add_event_card_3.setVisibility(View.VISIBLE);
+        add_event_card_4.setVisibility(View.VISIBLE);
+        add_event_card_5_rel_layout.setVisibility(View.VISIBLE);
+        similar_posts_list_cardview.setVisibility(View.GONE);
+        //temp lines end
+
         jsonObjectPostEventParameters = new JsonObject();
 
         final ProgressDialog mProgressDialog = new ProgressDialog(this);
         mProgressDialog.setIndeterminate(true);
         mProgressDialog.setMessage("Posting. Please wait...");
+        progressDialog.setCancelable(false);
+        progressDialog.setCanceledOnTouchOutside(false);
+        progressDialog.create();
 
         if (fetchUiParams()) {
 
@@ -1005,11 +1018,19 @@ public class Add_event extends AppCompatActivity implements LocationListener {
 
     private void uploadEventImage() {
 
+        progressDialog = new ProgressDialog(Add_event.this);
+        progressDialog.setMessage("Uploading image");
+        progressDialog.setCancelable(false);
+        progressDialog.setCanceledOnTouchOutside(false);
+        progressDialog.create();
+
+
         AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
 
             @Override
             protected void onPreExecute() {
                 super.onPreExecute();
+                progressDialog.show();
             }
 
             @Override
@@ -1043,7 +1064,9 @@ public class Add_event extends AppCompatActivity implements LocationListener {
                 super.onPostExecute(result);
                 //condition to check, if there is some problem uploading attachments
                 System.out.println("result " + result);
-
+                progressDialog.dismiss();
+                //method temporary called....may or may not needed here. depending on how image upload and text upload is written
+                post_event();
             }
         };
 

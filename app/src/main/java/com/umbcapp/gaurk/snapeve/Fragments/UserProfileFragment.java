@@ -162,8 +162,8 @@ public class UserProfileFragment extends Fragment {
         first_name = userDetailsObj.get("first_name").toString();
         last_name = userDetailsObj.get("last_name").toString();
         user_total_pts = Integer.parseInt(userDetailsObj.get("user_points").toString());
-        //time being untill admin flag is not 0 for all
 
+        //time being untill admin flag is not 0 for all
         try {
             admin_flag = Integer.parseInt(userDetailsObj.get("group_admin_flag").toString());
         } catch (Exception e) {
@@ -198,6 +198,8 @@ public class UserProfileFragment extends Fragment {
         } else {
             user_profile_settings_imageview.setVisibility(View.INVISIBLE);
         }
+        populateUserInfo();
+
     }
 
     @Override
@@ -276,15 +278,7 @@ public class UserProfileFragment extends Fragment {
             public void onClick(View v) {
                 user_profile_btn.setBackground(getResources().getDrawable(R.drawable.text_selection_left_seleted));
                 grp_profile_btn.setBackground(getResources().getDrawable(R.drawable.text_selection_right_unseleted));
-                user_type_selection_status = 0;
-                Picasso.get().load(dp_url)
-                        .fit().centerCrop().into(profile_pic_image_view);
-                loadContributionList(user_type_selection_status);
-                user_name_textview.setText(userName);
-                user_points.setText(String.valueOf(user_total_pts));
-
-                user_profile_member_count_text_view.setVisibility(View.GONE);
-                user_profile_member_count_text_view_icon.setVisibility(View.GONE);
+                populateUserInfo();
             }
         });
 
@@ -322,6 +316,19 @@ public class UserProfileFragment extends Fragment {
         return rootView;
     }
 
+    private void populateUserInfo() {
+
+        user_type_selection_status = 0;
+        Picasso.get().load(dp_url)
+                .fit().centerCrop().into(profile_pic_image_view);
+        loadContributionList(user_type_selection_status);
+        user_name_textview.setText(userName);
+        user_points.setText(String.valueOf(user_total_pts));
+
+        user_profile_member_count_text_view.setVisibility(View.GONE);
+        user_profile_member_count_text_view_icon.setVisibility(View.GONE);
+    }
+
     private void openSettingsMenu() {
 
 //        if (userPermission == P0 || P1) {
@@ -344,7 +351,12 @@ public class UserProfileFragment extends Fragment {
 
                 if (item.getTitle().equals("Manage Members")) {
 //                    Toast.makeText(getActivity(), "Manage Members", Toast.LENGTH_SHORT).show();
-                    startActivity(new Intent(getActivity(), ManageGroups.class));
+                    Intent manageMembersIntent = new Intent(getActivity(), ManageGroups.class);
+                    manageMembersIntent.putExtra("Grp_id", grp_id);
+                    manageMembersIntent.putExtra("Grp_name", grp_name);
+                    manageMembersIntent.putExtra("Grp_dp_url", grp_dp_url);
+                    startActivity(manageMembersIntent);
+
                 } else if (item.getTitle().equals("Leave Group")) {
                     openLeaveGroupDialog();
                 } else if (item.getTitle().equals("Delete Group")) {

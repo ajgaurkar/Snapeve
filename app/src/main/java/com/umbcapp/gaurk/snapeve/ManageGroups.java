@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.View;
@@ -43,12 +44,19 @@ public class ManageGroups extends Activity {
     ApprovalPendingFragment approval_pending_fragment;
     private CircleImageView create_group_profile_pic_image_view;
     private TextView create_group_user_name_text_view;
+    private String grp_id;
+    private String grp_name;
+    private String grp_dp_url;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.manage_groups);
+
+        Intent intent = getIntent();
+        grp_id = intent.getStringExtra("Grp_id");
+        grp_name = intent.getStringExtra("Grp_name");
+        grp_dp_url = intent.getStringExtra("Grp_dp_url");
 
         fragmentManager = getFragmentManager();
 
@@ -73,8 +81,11 @@ public class ManageGroups extends Activity {
         create_group_cardview_req_sent_bottom_view = (View) findViewById(R.id.create_group_cardview_req_sent_bottom_view);
         create_group_cardview_add_mem_bottom_view = (View) findViewById(R.id.create_group_cardview_add_mem_bottom_view);
 
-        Picasso.get().load("https://thumbs.dreamstime.com/b/group-friends-having-fun-beach-summer-holidays-vacation-happy-people-concept-34394694.jpg")
-                .fit().centerCrop().into(create_group_profile_pic_image_view);
+//        Picasso.get().load("https://thumbs.dreamstime.com/b/group-friends-having-fun-beach-summer-holidays-vacation-happy-people-concept-34394694.jpg")
+//                .fit().centerCrop().into(create_group_profile_pic_image_view);
+
+        create_group_user_name_text_view.setText(grp_name);
+        Picasso.get().load(grp_dp_url).fit().centerCrop().into(create_group_profile_pic_image_view);
 
         fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.create_group_list_layout, mem_joined_fragment);

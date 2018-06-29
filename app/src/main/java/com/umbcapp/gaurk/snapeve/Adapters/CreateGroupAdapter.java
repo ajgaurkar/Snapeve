@@ -92,7 +92,7 @@ public class CreateGroupAdapter extends BaseAdapter {
             STATUS 3 = Not a member*/
 
             case 0:
-                viewHolder.create_grp_list_item_request_status_text_view.setText("Remove");
+                viewHolder.create_grp_list_item_request_status_text_view.setText("More");
                 break;
             case 1:
                 viewHolder.create_grp_list_item_request_status_text_view.setText("Approve");
