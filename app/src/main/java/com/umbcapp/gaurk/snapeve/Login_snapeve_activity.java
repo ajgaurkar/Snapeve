@@ -56,11 +56,14 @@ public class Login_snapeve_activity extends AppCompatActivity {
         login_page_login_btn_textview.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getApplicationContext(), validateInputs(), Toast.LENGTH_SHORT).show();
                 System.out.println("VALIDATION");
 
-                if (validateInputs().equals("TRUE")) {
+                String validationResponse = validateInputs();
+
+                if (validationResponse.equals("TRUE")) {
                     executeLoginApi();
+                } else {
+                    Toast.makeText(getApplicationContext(), validationResponse, Toast.LENGTH_SHORT).show();
                 }
 
             }
@@ -68,7 +71,7 @@ public class Login_snapeve_activity extends AppCompatActivity {
         login_page_signup_btn_textview.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getApplicationContext(), validateInputs(), Toast.LENGTH_SHORT).show();
+//                Toast.makeText(getApplicationContext(), validateInputs(), Toast.LENGTH_SHORT).show();
                 System.out.println("VALIDATION");
 
                 startActivity(new Intent(getApplicationContext(), SignUp.class));
@@ -97,7 +100,7 @@ public class Login_snapeve_activity extends AppCompatActivity {
                 resultFuture.setException(exception);
                 progressDialog.dismiss();
                 System.out.println(" executeLoginApi exception    " + exception);
-
+                Toast.makeText(getApplicationContext(), "Something went wrong, Try again", Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -166,7 +169,7 @@ public class Login_snapeve_activity extends AppCompatActivity {
                 response = "Email success";
 
                 if (password.length() < 4) {
-                    response = response + " Password short";
+                    response = "Password short";
                 } else {
                     response = "TRUE";
                 }
