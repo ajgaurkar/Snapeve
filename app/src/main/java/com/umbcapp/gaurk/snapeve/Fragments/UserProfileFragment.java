@@ -35,6 +35,7 @@ import com.google.gson.JsonObject;
 import com.squareup.picasso.Picasso;
 import com.umbcapp.gaurk.snapeve.Adapters.UserContributionAdapter;
 import com.umbcapp.gaurk.snapeve.Controllers.CommentsListItem;
+import com.umbcapp.gaurk.snapeve.Controllers.LeaderboardListItem;
 import com.umbcapp.gaurk.snapeve.EventDetails;
 import com.umbcapp.gaurk.snapeve.Leaderboard;
 import com.umbcapp.gaurk.snapeve.MainActivity;
@@ -86,6 +87,9 @@ public class UserProfileFragment extends Fragment {
     private int admin_flag = 0;
     private TextView user_profile_member_count_text_view;
     private ImageView user_profile_member_count_text_view_icon;
+    private JsonElement bkupPostResponse;
+    private JsonElement bkupMemberResponse;
+    private ArrayList<LeaderboardListItem> userProfileList;
 
     public UserProfileFragment() {
 
@@ -103,6 +107,118 @@ public class UserProfileFragment extends Fragment {
         formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
         String text = formatter.format(new Date(sessionCounter));
         System.out.println("Start @ sessionCounter : " + text);
+
+    }
+
+    private void fetchGrpPostAndMembers(String grp_id, final int fetch_type_post_or_members) {
+        final ProgressDialog progressDialog = new ProgressDialog(getActivity());
+        progressDialog.setTitle("Loading, Please wait...");
+        progressDialog.create();
+        progressDialog.show();
+        JsonObject jsonObjectParameters = new JsonObject();
+        jsonObjectParameters.addProperty("grp_id", grp_id);
+        jsonObjectParameters.addProperty("fetch_type_post_or_members", fetch_type_post_or_members);
+
+        final SettableFuture<JsonElement> resultFuture = SettableFuture.create();
+        ListenableFuture<JsonElement> serviceFilterFuture = MainActivity.mClient.invokeApi("browse_grp_profile_api", jsonObjectParameters);
+
+        Futures.addCallback(serviceFilterFuture, new FutureCallback<JsonElement>() {
+
+
+            @Override
+            public void onFailure(Throwable exception) {
+                resultFuture.setException(exception);
+                progressDialog.dismiss();
+                System.out.println(" browse_grp_profile_api exception    " + exception);
+
+            }
+
+            @Override
+            public void onSuccess(JsonElement response) {
+                resultFuture.set(response);
+                progressDialog.dismiss();
+
+                System.out.println(" browse_grp_profile_api success response    " + response);
+
+                if (fetch_type_post_or_members == 0) {
+                    bkupPostResponse = response;
+                    parseGrpPostData(bkupPostResponse);
+                }
+                if (fetch_type_post_or_members == 1) {
+                    bkupMemberResponse = response;
+                    parseMemberdata(bkupMemberResponse);
+                }
+            }
+        });
+    }
+
+    private void parseGrpPostData(JsonElement response) {
+
+    }
+
+    private void parseMemberdata(JsonElement response) {
+        System.out.println(" IN PARSE JASON");
+
+        userProfileList = new ArrayList<>();
+        JsonArray userDataJSONArray = response.getAsJsonArray();
+        int max_user_points = 0;
+        for (int i = 0; i < userDataJSONArray.size(); i++) {
+            JsonObject userData_list_object = userDataJSONArray.get(i).getAsJsonObject();
+
+            System.out.println(" userData_list_object  " + userData_list_object);
+
+            String user_id = userData_list_object.get("user_id").toString();
+
+            if (user_id == null || user_id.length() == 0 || user_id.equals("null")) {
+//            if (TextUtils.isEmpty(user_id)) {
+                System.out.println("user_id NULL : " + user_id);
+            } else {
+
+                System.out.println("user_id NOT NULL : " + user_id);
+                String user_name = userData_list_object.get("user_name").toString();
+                String dp_url = userData_list_object.get("dp_url").toString();
+                String first_name = userData_list_object.get("first_name").toString();
+                String last_name = userData_list_object.get("last_name").toString();
+                int user_points = Integer.parseInt(userData_list_object.get("user_points").toString());
+                if (user_points > max_user_points) {
+                    max_user_points = user_points;
+                }
+
+                System.out.println(" user_name " + user_name);
+                System.out.println(" user_points " + user_points);
+                System.out.println(" dp_url " + dp_url);
+                System.out.println(" first_name " + first_name);
+                System.out.println(" last_name " + last_name);
+
+                //Remove " from start and end from every string
+                user_name = user_name.substring(1, user_name.length() - 1);
+                first_name = first_name.substring(1, first_name.length() - 1);
+                last_name = last_name.substring(1, last_name.length() - 1);
+                dp_url = dp_url.substring(1, dp_url.length() - 1);
+                user_id = user_id.substring(1, user_id.length() - 1);
+                userProfileList.add(new LeaderboardListItem(user_id, user_name, user_points, "", dp_url));
+
+            }
+        }
+
+
+        System.out.println("userProfileList size after parsing : " + userProfileList.size());
+
+//        GroupMembersAdapter groupMembersAdapter = new GroupMembersAdapter(BrowseGroupProfile.this, userProfileList, max_user_points);
+//        user_profile_contribution_rec_view.setLayoutManager(mLayoutManager);
+//        user_profile_contribution_rec_view.setItemAnimator(new DefaultItemAnimator());
+//        user_profile_contribution_rec_view.setAdapter(groupMembersAdapter);
+//
+        if (userProfileList.size() == 0) {
+            user_profile_member_count_text_view.setVisibility(View.VISIBLE);
+            user_profile_member_count_text_view.setText(userProfileList.size() + " Members");
+        } else if (userProfileList.size() == 1) {
+            user_profile_member_count_text_view.setVisibility(View.GONE);
+            user_profile_member_count_text_view.setText(userProfileList.size() + " Member");
+        } else {
+            user_profile_member_count_text_view.setVisibility(View.GONE);
+            user_profile_member_count_text_view.setText(userProfileList.size() + " Members");
+        }
 
     }
 
@@ -130,6 +246,7 @@ public class UserProfileFragment extends Fragment {
 
     private void fetch_user_details() {
         jsonObjectUserProfileFragParameters = new JsonObject();
+        //might need to change it to user id from user name
         jsonObjectUserProfileFragParameters.addProperty("user_name", new SessionManager(getActivity()).getSpecificUserDetail(SessionManager.KEY_USER_NAME));
 
         final SettableFuture<JsonElement> resultFuture = SettableFuture.create();
@@ -148,6 +265,8 @@ public class UserProfileFragment extends Fragment {
                 System.out.println(" fetch_user_details success response    " + response);
 
                 parseResponse(response);
+                fetchGrpPostAndMembers(grp_id, 0);
+                fetchGrpPostAndMembers(grp_id, 1);
             }
         });
     }
@@ -210,7 +329,6 @@ public class UserProfileFragment extends Fragment {
         user_name_textview = (TextView) rootView.findViewById(R.id.user_name);
         user_profile_btn = (TextView) rootView.findViewById(R.id.profile_switch_you_textview);
         user_points = (TextView) rootView.findViewById(R.id.user_points);
-        user_profile_list_view = (ListView) rootView.findViewById(R.id.user_profile_contribution_list_view);
         profile_relative_layout = (RelativeLayout) rootView.findViewById(R.id.profile_relative_layout);
         user_profile_contribution_list_view = (ListView) rootView.findViewById(R.id.user_profile_contribution_list_view);
         leaderboard_text_view = (TextView) rootView.findViewById(R.id.leaderboard_text_view);
@@ -309,6 +427,7 @@ public class UserProfileFragment extends Fragment {
                     loadContributionList(user_type_selection_status);
                     user_name_textview.setText(grp_name);
                     user_points.setText(String.valueOf(grp_total_pts));
+
                 }
             }
         });

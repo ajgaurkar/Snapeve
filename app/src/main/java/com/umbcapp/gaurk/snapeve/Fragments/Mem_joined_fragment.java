@@ -3,6 +3,7 @@ package com.umbcapp.gaurk.snapeve.Fragments;
 import android.app.Dialog;
 import android.app.Fragment;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
@@ -22,6 +23,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.umbcapp.gaurk.snapeve.Adapters.CreateGroupAdapter;
+import com.umbcapp.gaurk.snapeve.BrowseUserProfile;
 import com.umbcapp.gaurk.snapeve.Controllers.CreateGroupListItem;
 import com.umbcapp.gaurk.snapeve.Listview_communicator;
 import com.umbcapp.gaurk.snapeve.R;
@@ -78,7 +80,7 @@ public class Mem_joined_fragment extends Fragment {
         return rootView;
     }
 
-    private void openOptionsDialog(int memebr_position) {
+    private void openOptionsDialog(final int memebr_position) {
 
         LayoutInflater flater = getActivity().getLayoutInflater();
         View view = flater.inflate(R.layout.mem_joined_frag_options_dialog, null);
@@ -131,6 +133,10 @@ public class Mem_joined_fragment extends Fragment {
                     case 0:
                         System.out.println(memJoinedOptionsList.get(position));
                         mem_joined_dialog_selected_option = position;
+
+                        Intent userProfileIntent = new Intent(getActivity(), BrowseUserProfile.class);
+                        userProfileIntent.putExtra("user_id", groupList.get(memebr_position).getUserId());
+                        startActivity(userProfileIntent);
 
                         break;
 

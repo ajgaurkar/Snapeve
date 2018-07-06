@@ -54,12 +54,91 @@ public class MainActivity extends AppCompatActivity implements Listview_communic
     private NotificationFragment notificationFragment;
     private SwipeRefreshLayout pullToRefresh;
     private long sessionCounter;
+    private ListView main_event_list_view;
+    private ArrayList<Event_dash_list_obj> event_main_list;
+    private FloatingActionButton main_img_pick_fab;
+    private Dash_Event_ListAdapter dash_event_listAdapter;
+//    private Button refreshBtn;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        sessionCounter = System.currentTimeMillis();
+        DateFormat formatter = new SimpleDateFormat("HH:mm:ss", Locale.US);
+        formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
+        String text = formatter.format(new Date(sessionCounter));
+        System.out.println("Start @ sessionCounter : " + text);
+
+        new SessionManager(getApplicationContext()).checkLogin();
+
+        testNotification();
+
+        event_main_list = new ArrayList<Event_dash_list_obj>();
+
+        main_event_list_view = (ListView) findViewById(R.id.dashboard_event_listview);
+        pullToRefresh = (SwipeRefreshLayout) findViewById(R.id.dashboard_pull_refresh_layout);
+
+        main_img_pick_fab = (FloatingActionButton) findViewById(R.id.main_img_pick_fab);
+//        refreshBtn = (Button) findViewById(R.id.button2);
+
+        userProfileFragment = new UserProfileFragment();
+        settingsFragment = new SettingsFragment();
+        mapsFragment = new MapsFragment();
+        notificationFragment = new NotificationFragment();
+
+        // Mobile Service URL and key
+
+        //Old access url(aj account)
+        try {
+            //New access url(amey account)
+            mClient = Singleton.Instance().mClientMethod(this);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+//        startActivity(new Intent(getApplicationContext(), LoginActivity.class));
+
+        BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
+        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+//        navigation.
+
+
+        main_img_pick_fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                startActivity(new Intent(getApplicationContext(), Add_event.class));
+
+            }
+        });
+
+        pullToRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                executeGetFeedsApi();
+            }
+        });
+
+        executeGetFeedsApi();
+
+//        refreshBtn.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                executeGetFeedsApi();
+//            }
+//        });
+
+    }
+
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
 
         FragmentManager fragmentManager = getFragmentManager();
         FragmentTransaction fragmentTransaction1;
-//        FragmentTransaction fragmentTransaction2;
+        //        FragmentTransaction fragmentTransaction2;
 
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -139,85 +218,6 @@ public class MainActivity extends AppCompatActivity implements Listview_communic
 
         NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         notificationManager.notify(8978, builder.build());
-
-    }
-
-    private ListView main_event_list_view;
-    private ArrayList<Event_dash_list_obj> event_main_list;
-    private FloatingActionButton main_img_pick_fab;
-    private Dash_Event_ListAdapter dash_event_listAdapter;
-//    private Button refreshBtn;
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-
-        sessionCounter = System.currentTimeMillis();
-        DateFormat formatter = new SimpleDateFormat("HH:mm:ss", Locale.US);
-        formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
-        String text = formatter.format(new Date(sessionCounter));
-        System.out.println("Start @ sessionCounter : " + text);
-
-        new SessionManager(getApplicationContext()).checkLogin();
-
-        testNotification();
-
-        event_main_list = new ArrayList<Event_dash_list_obj>();
-
-        main_event_list_view = (ListView) findViewById(R.id.dashboard_event_listview);
-        pullToRefresh = (SwipeRefreshLayout) findViewById(R.id.dashboard_pull_refresh_layout);
-
-        main_img_pick_fab = (FloatingActionButton) findViewById(R.id.main_img_pick_fab);
-//        refreshBtn = (Button) findViewById(R.id.button2);
-
-        userProfileFragment = new UserProfileFragment();
-        settingsFragment = new SettingsFragment();
-        mapsFragment = new MapsFragment();
-        notificationFragment = new NotificationFragment();
-
-        // Mobile Service URL and key
-
-        //Old access url(aj account)
-        try {
-            //New access url(amey account)
-            mClient = Singleton.Instance().mClientMethod(this);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-//        startActivity(new Intent(getApplicationContext(), LoginActivity.class));
-
-        BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
-        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
-//        navigation.
-
-
-        main_img_pick_fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                startActivity(new Intent(getApplicationContext(), Add_event.class));
-
-            }
-        });
-
-        pullToRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                executeGetFeedsApi();
-            }
-        });
-
-        executeGetFeedsApi();
-
-//        refreshBtn.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                executeGetFeedsApi();
-//            }
-//        });
 
     }
 
@@ -323,7 +323,6 @@ public class MainActivity extends AppCompatActivity implements Listview_communic
                 Log.d("click_code ", +position + " " + click_code);
 
                 actionEvent(event_main_list.get(position).getPost_id(), event_main_list.get(position).getUser_id(), currentstatus, click_code, userComment);
-
                 break;
             case 2:
                 userComment = "Test comment";
@@ -334,7 +333,6 @@ public class MainActivity extends AppCompatActivity implements Listview_communic
             case 3:
                 System.out.print("click_code " + position + " " + click_code);
                 actionEvent(event_main_list.get(position).getPost_id(), event_main_list.get(position).getUser_id(), currentstatus, click_code, userComment);
-
                 break;
         }
 

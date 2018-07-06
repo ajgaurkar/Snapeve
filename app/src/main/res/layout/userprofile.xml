@@ -190,7 +190,7 @@
             android:paddingStart="15dp"
             android:paddingTop="5dp"
             android:singleLine="true"
-            android:text="3 Members"
+            android:text="Members"
             android:textColor="#fff"
             android:textSize="15sp"
             android:textStyle="bold" />

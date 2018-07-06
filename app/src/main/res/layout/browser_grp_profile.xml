@@ -164,14 +164,25 @@
             app:rcSecondaryProgress="5"
             app:rcSecondaryProgressColor="#ebf7ff" />
 
-        <ListView
-            android:id="@+id/user_profile_contribution_list_view"
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/user_profile_contribution_rec_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_below="@+id/header_bg"
             android:layout_marginTop="10dp"
             android:divider="#00ffffff"
             android:dividerHeight="0dp" />
+
+        <TextView
+            android:id="@+id/browse_grp_profile_no_member_label_text_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:gravity="center"
+            android:padding="5dp"
+            android:text="No group members found"
+            android:textSize="16sp"
+            android:textStyle="bold|italic" />
 
     </RelativeLayout>
 
