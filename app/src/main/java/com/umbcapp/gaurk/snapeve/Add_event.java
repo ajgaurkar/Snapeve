@@ -144,6 +144,7 @@ public class Add_event extends AppCompatActivity implements LocationListener {
     private CloudBlobContainer container;
     private Map<String, Uri> mapForUploadingSelectedImage;
     private ProgressDialog progressDialog;
+    private String ImageFileName;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -938,6 +939,25 @@ public class Add_event extends AppCompatActivity implements LocationListener {
         System.out.println("location_type_radio_value : " + location_type_radio_value);
         System.out.println("all_day_status : " + all_day_status);
 
+
+        /*
+        Event post Date logic
+
+
+          SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault());
+           Calendar eventPostDate=Calendar.getInstance();
+            Date date = sdf.parse(post_event_time_dt_text_view.getText().toString());
+            calenderDue.setTime(date);
+            event_post_date_in_milisecond = calenderDue.getTimeInMillis();
+
+         */
+
+        Calendar eventPostDate=Calendar.getInstance();
+
+
+
+        System.out.println("");
+
         jsonObjectPostEventParameters.addProperty("user_id", new SessionManager(getApplicationContext()).getSpecificUserDetail(SessionManager.KEY_USER_ID));
         jsonObjectPostEventParameters.addProperty("location_type", location_type_radio_value);
         jsonObjectPostEventParameters.addProperty("event_type", event_type_radio_value);
@@ -947,11 +967,12 @@ public class Add_event extends AppCompatActivity implements LocationListener {
         jsonObjectPostEventParameters.addProperty("location_name", eventLocation);
         jsonObjectPostEventParameters.addProperty("lattitude", selectedLat);
         jsonObjectPostEventParameters.addProperty("longitude", selectedLng);
+        jsonObjectPostEventParameters.addProperty("evenpostdate", eventPostDate.getTimeInMillis());
 
         Random random = new Random();
         int x = random.nextInt(900) + 100;
 
-        jsonObjectPostEventParameters.addProperty("img_url", "https://picsum.photos/400/200/?image=" + x);
+        jsonObjectPostEventParameters.addProperty("img_url", AzureConfiguration.Storage_url + ImageFileName);
 //        jsonObjectPostEventParameters.addProperty("img_url", "https://source.unsplash.com/random");
 
         return true;
@@ -1044,6 +1065,7 @@ public class Add_event extends AppCompatActivity implements LocationListener {
                         final int imageLength = imageStream.available();
                         container = getContainer();
                         CloudBlockBlob imageBlob = container.getBlockBlobReference(entry.getKey());
+                        ImageFileName=entry.getKey();
                         imageBlob.upload(imageStream, imageLength);
                     }
 
