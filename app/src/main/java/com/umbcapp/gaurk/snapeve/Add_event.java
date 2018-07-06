@@ -1009,7 +1009,6 @@ public class Add_event extends AppCompatActivity implements LocationListener {
             Uri imagePath = Uri.fromFile(file);
             filePath = imagePath.getPath();
 
-
         } catch (Exception e) {
             e.printStackTrace();
         }
