@@ -43,14 +43,24 @@ public class Event_dash_list_obj {
     String comment_time;
     String image_url;
     String post_id;
+    String post_dt;
 
-    public Event_dash_list_obj(String user_id, String user_name, String user_comment, String comment_time, String image_url, String post_id) {
+    public Event_dash_list_obj(String user_id, String user_name, String user_comment, String comment_time, String image_url, String post_id, String post_dt) {
         this.user_id = user_id;
+        this.post_dt = post_dt;
         this.user_name = user_name;
         this.user_comment = user_comment;
         this.comment_time = comment_time;
         this.image_url = image_url;
         this.post_id = post_id;
+    }
+
+    public String getPost_dt() {
+        return post_dt;
+    }
+
+    public void setPost_dt(String post_dt) {
+        this.post_dt = post_dt;
     }
 
     public String getPost_id() {

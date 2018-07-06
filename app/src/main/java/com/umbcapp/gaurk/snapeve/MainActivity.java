@@ -21,8 +21,10 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 
 import com.google.common.util.concurrent.FutureCallback;
@@ -261,6 +263,8 @@ public class MainActivity extends AppCompatActivity implements Listview_communic
     private void poupulateList(JsonElement response) {
 
         event_main_list = new ArrayList<Event_dash_list_obj>();
+        DateFormat feedsDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSX");
+        DateFormat displayDtFormat = new SimpleDateFormat("MMM dd HH:mm");
 
         System.out.println(" IN PARSE JASON");
 
@@ -274,6 +278,7 @@ public class MainActivity extends AppCompatActivity implements Listview_communic
             String feed_img_url = feeds_list_object.get("img_url").toString();
             String feed_user_id = feeds_list_object.get("initializer_id").toString();
             String post_id = feeds_list_object.get("post_id").toString();
+            String post_dt = feeds_list_object.get("post_date").toString();
             System.out.println(" img_comment " + img_comment);
             System.out.println(" feed_img_url " + feed_img_url);
 
@@ -282,18 +287,19 @@ public class MainActivity extends AppCompatActivity implements Listview_communic
             feed_user_id = feed_user_id.substring(1, feed_user_id.length() - 1);
             feed_img_url = feed_img_url.substring(1, feed_img_url.length() - 1);
             post_id = post_id.substring(1, post_id.length() - 1);
+            post_dt = post_dt.substring(1, post_dt.length() - 1);
 
-//                    try {
-//                        Date date = format.parse(timestamp);
-//                        System.out.println(date);
-//
-//                        new_date = newDateFormat.format(date);
-//
-//                    } catch (ParseException e) {
-//                        e.printStackTrace();
-//                    }
+            Date date = null;
+            try {
+                date = feedsDateFormat.parse(post_dt);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+            System.out.println(date);
+            post_dt = displayDtFormat.format(date);
+            System.out.println("Report Date: " + post_dt);
 
-            event_main_list.add(0, new Event_dash_list_obj(feed_user_id, "Name_x", img_comment, "10 hrs ago", feed_img_url, post_id));
+            event_main_list.add(0, new Event_dash_list_obj(feed_user_id, "Name_x", img_comment, "10 hrs ago", feed_img_url, post_id, post_dt));
 
 
         }

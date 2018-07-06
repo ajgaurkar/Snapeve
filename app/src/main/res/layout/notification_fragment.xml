@@ -1,7 +1,98 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/main_notification_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#fff">
+    android:background="@color/colorMainBg">
 
-</android.support.constraint.ConstraintLayout>
+    <RelativeLayout
+        android:id="@+id/notification_header_bg"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/view"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:background="@color/colorPrimary"
+        android:paddingBottom="5dp"
+        android:paddingTop="10dp">
+
+        <LinearLayout
+            android:id="@+id/notification_layout_switch_lin_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="100">
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="20" />
+
+            <TextView
+                android:id="@+id/notification_switch_notification_textview"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="30"
+                android:background="@drawable/text_selection_left_seleted"
+                android:gravity="center"
+                android:padding="5dp"
+                android:text="Notifications"
+                android:textColor="#fff"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/notification_switch_messages_textview"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="30"
+                android:background="@drawable/text_selection_right_unseleted"
+                android:gravity="center"
+                android:padding="5dp"
+                android:text="Messages"
+                android:textColor="#fff"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="20" />
+
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/notification_settings_imageview"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_alignBottom="@+id/notification_layout_switch_lin_layout"
+            android:layout_alignParentEnd="true"
+            android:layout_alignTop="@+id/notification_layout_switch_lin_layout"
+            android:layout_marginEnd="16dp"
+            android:padding="2dp"
+            android:src="@drawable/settings_white_48" />
+
+        <TextView
+            android:id="@+id/notification_unread_textview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/notification_layout_switch_lin_layout"
+            android:layout_marginEnd="16dp"
+            android:layout_marginStart="16dp"
+            android:gravity="center"
+            android:padding="5dp"
+            android:text="Youh have 2 new notification and 1 unread message"
+            android:textColor="#fff"
+            android:textSize="12sp" />
+
+    </RelativeLayout>
+
+    <ListView
+        android:id="@+id/notification_layout_listview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/notification_header_bg"
+        android:divider="#00ffffff"
+        android:dividerHeight="0dp" />
+
+</RelativeLayout>

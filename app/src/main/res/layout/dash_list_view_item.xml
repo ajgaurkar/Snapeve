@@ -58,7 +58,7 @@
                     android:id="@+id/list_item_user_img"
                     android:layout_width="50dp"
                     android:layout_height="match_parent"
-                    android:layout_above="@+id/list_item_actions_linear_layout"
+                    android:layout_above="@+id/likes_status_textview"
                     android:layout_marginBottom="5dp"
                     android:layout_marginTop="5dp"
                     android:padding="5dp"
@@ -98,6 +98,35 @@
                     android:layout_marginRight="10dp"
                     android:layout_marginStart="10dp"
                     android:background="#9b9b9b" />
+
+                <TextView
+                    android:id="@+id/likes_status_textview"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@+id/card_bottom_seperator1"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignTop="@+id/card_bottom_seperator1"
+                    android:layout_marginEnd="5dp"
+                    android:layout_marginStart="10dp"
+                    android:layout_toStartOf="@+id/post_dt_time_textview"
+                    android:padding="2dp"
+                    android:text="12 Likes  24 Comments  3 Spam"
+                    android:textSize="11sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/post_dt_time_textview"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@+id/card_bottom_seperator1"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignTop="@+id/card_bottom_seperator1"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginStart="5dp"
+                    android:padding="2dp"
+                    android:text="Jun 12 12:30"
+                    android:textSize="11sp"
+                    android:textStyle="bold" />
 
                 <LinearLayout
                     android:id="@+id/list_item_actions_linear_layout"
@@ -147,22 +176,22 @@
                         android:textSize="12sp" />
 
                     <!--<ImageView-->
-                        <!--android:id="@+id/list_item_deny_iv"-->
-                        <!--android:layout_width="0dp"-->
-                        <!--android:layout_height="match_parent"-->
-                        <!--android:layout_below="@+id/card_bottom_seperator2"-->
-                        <!--android:layout_weight="8"-->
-                        <!--android:padding="3dp"-->
-                        <!--android:src="@drawable/deny_light_grey_48" />-->
+                    <!--android:id="@+id/list_item_deny_iv"-->
+                    <!--android:layout_width="0dp"-->
+                    <!--android:layout_height="match_parent"-->
+                    <!--android:layout_below="@+id/card_bottom_seperator2"-->
+                    <!--android:layout_weight="8"-->
+                    <!--android:padding="3dp"-->
+                    <!--android:src="@drawable/deny_light_grey_48" />-->
 
                     <!--<TextView-->
-                        <!--android:id="@+id/list_item_deny_tv"-->
-                        <!--android:layout_width="0dp"-->
-                        <!--android:layout_height="match_parent"-->
-                        <!--android:layout_weight="30"-->
-                        <!--android:gravity="center_vertical"-->
-                        <!--android:text="Deny"-->
-                        <!--android:textSize="12sp" />-->
+                    <!--android:id="@+id/list_item_deny_tv"-->
+                    <!--android:layout_width="0dp"-->
+                    <!--android:layout_height="match_parent"-->
+                    <!--android:layout_weight="30"-->
+                    <!--android:gravity="center_vertical"-->
+                    <!--android:text="Deny"-->
+                    <!--android:textSize="12sp" />-->
 
                     <ImageView
                         android:id="@+id/list_item_spam_iv"

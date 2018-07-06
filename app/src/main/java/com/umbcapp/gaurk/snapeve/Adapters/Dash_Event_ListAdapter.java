@@ -59,7 +59,7 @@ public class Dash_Event_ListAdapter extends BaseAdapter {
             viewHolder.list_item_comment_iv = (ImageView) view.findViewById(R.id.list_item_comment_iv);
             viewHolder.list_item_spam_iv = (ImageView) view.findViewById(R.id.list_item_spam_iv);
             viewHolder.list_item_verify_tv = (TextView) view.findViewById(R.id.list_item_verify_tv);
-//            viewHolder.list_item_deny_tv = (TextView) view.findViewById(R.id.list_item_deny_tv);
+            viewHolder.list_item_post_dt_time = (TextView) view.findViewById(R.id.post_dt_time_textview);
             viewHolder.list_item_comment_tv = (TextView) view.findViewById(R.id.list_item_comment_tv);
             viewHolder.list_item_spam_tv = (TextView) view.findViewById(R.id.list_item_spam_tv);
 
@@ -77,6 +77,7 @@ public class Dash_Event_ListAdapter extends BaseAdapter {
         Picasso.get().load(event_dash_list_obj.getImage_url()).fit().centerCrop().into(viewHolder.main_card_imageview);
         viewHolder.list_item_event_title.setText(event_dash_list_obj.getUser_comment());
         viewHolder.list_item_user_name.setText(event_dash_list_obj.getUser_name());
+        viewHolder.list_item_post_dt_time.setText(event_dash_list_obj.getPost_dt());
 
         viewHolder.main_card_imageview.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -180,5 +181,6 @@ public class Dash_Event_ListAdapter extends BaseAdapter {
         private TextView list_item_spam_tv;
         private TextView list_item_event_title;
         private TextView list_item_user_name;
+        private TextView list_item_post_dt_time;
     }
 }
