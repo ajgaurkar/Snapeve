@@ -73,7 +73,7 @@
                 android:background="#dfeeeeee">
 
                 <TextView
-                    android:id="@+id/post_event_time_dt_text_view"
+                    android:id="@+id/post_event_dt_text_view"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="5dp"
@@ -85,9 +85,9 @@
                     android:id="@+id/all_day_switch"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignBottom="@+id/post_event_time_dt_text_view"
+                    android:layout_alignBottom="@+id/post_event_dt_text_view"
                     android:layout_alignParentEnd="true"
-                    android:layout_alignTop="@+id/post_event_time_dt_text_view"
+                    android:layout_alignTop="@+id/post_event_dt_text_view"
                     android:layout_marginEnd="5dp"
                     android:text="All day " />
 
@@ -97,8 +97,8 @@
                     android:layout_height="match_parent"
                     android:layout_alignEnd="@+id/all_day_switch"
                     android:layout_alignParentBottom="true"
-                    android:layout_alignStart="@+id/post_event_time_dt_text_view"
-                    android:layout_below="@+id/post_event_time_dt_text_view"
+                    android:layout_alignStart="@+id/post_event_dt_text_view"
+                    android:layout_below="@+id/post_event_dt_text_view"
                     android:layout_marginBottom="5dp"
                     android:background="@android:color/transparent"
                     android:gravity="top"

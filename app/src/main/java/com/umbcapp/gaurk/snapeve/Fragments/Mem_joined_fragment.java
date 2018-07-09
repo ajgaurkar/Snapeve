@@ -1,7 +1,7 @@
 package com.umbcapp.gaurk.snapeve.Fragments;
 
-import android.app.Dialog;
 import android.app.Fragment;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,22 +13,24 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.CheckBox;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.umbcapp.gaurk.snapeve.Adapters.CreateGroupAdapter;
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.umbcapp.gaurk.snapeve.Adapters.ManageGroupAdapter;
 import com.umbcapp.gaurk.snapeve.BrowseUserProfile;
 import com.umbcapp.gaurk.snapeve.Controllers.CreateGroupListItem;
-import com.umbcapp.gaurk.snapeve.Listview_communicator;
+import com.umbcapp.gaurk.snapeve.ManageGroups;
 import com.umbcapp.gaurk.snapeve.R;
+import com.umbcapp.gaurk.snapeve.SessionManager;
 
-import java.sql.Array;
 import java.util.ArrayList;
 
 public class Mem_joined_fragment extends Fragment {
@@ -36,11 +38,11 @@ public class Mem_joined_fragment extends Fragment {
     private Parcelable state;
 
     private ListView mem_joined_frag_listview;
-    private CreateGroupAdapter createGroupAdapter;
+    private ManageGroupAdapter manageGroupAdapter;
     private int mem_joined_dialog_selected_option;
+    private Context mContext;
 
     public Mem_joined_fragment() {
-
     }
 
     ArrayList<CreateGroupListItem> groupList = new ArrayList<CreateGroupListItem>();
@@ -55,19 +57,13 @@ public class Mem_joined_fragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.mem_joined_fragment, container, false);
 
+        String mem_joined_response = getArguments().getString("mem_joined_response");
+
         mem_joined_frag_listview = (ListView) rootView.findViewById(R.id.mem_joined_frag_listview);
 
-        groupList.clear();
-        groupList.add(new CreateGroupListItem("Ajinkya Gaurkar", "GU1", 0, "user_1@gmail.com", "http://keenthemes.com/preview/metronic/theme/assets/pages/media/profile/profile_user.jpg"));
-        groupList.add(new CreateGroupListItem("Siddhrth Ptro", "GU1", 0, "user_1@gmail.com", "http://www.dast.biz/wp-content/uploads/2016/11/John_Doe.jpg"));
-        groupList.add(new CreateGroupListItem("Pranav rana", "GU1", 0, "user_1@gmail.com", "https://www.bnl.gov/today/body_pics/2017/06/stephanhruszkewycz-355px.jpg"));
-        groupList.add(new CreateGroupListItem("Neha reddy", "GU1", 0, "user_1@gmail.com", "http://www.medicine20congress.com/ocs/public/profiles/3141.jpg"));
-        groupList.add(new CreateGroupListItem("Gautam Rao", "GU1", 0, "user_1@gmail.com", "https://cdn.earthdata.nasa.gov/conduit/upload/6072/Glenn_headshot_resize.jpg"));
-        groupList.add(new CreateGroupListItem("Charles Nikola", "GU1", 0, "user_1@gmail.com", "http://www.medicine20congress.com/ocs/public/profiles/3141.jpg"));
-        groupList.add(new CreateGroupListItem("Rushabh mehta", "GU1", 0, "user_1@gmail.com", "https://cdn.earthdata.nasa.gov/conduit/upload/6072/Glenn_headshot_resize.jpg"));
+        //convert string to jsonelement and parse
+        parseFetchGroupDetailsResponse(new Gson().fromJson(mem_joined_response, JsonElement.class));
 
-        createGroupAdapter = new CreateGroupAdapter(getActivity(), groupList);
-        mem_joined_frag_listview.setAdapter(createGroupAdapter);
         mem_joined_frag_listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -78,6 +74,50 @@ public class Mem_joined_fragment extends Fragment {
         });
 
         return rootView;
+    }
+
+    private void parseFetchGroupDetailsResponse(JsonElement fetchGroupDetailsResponse) {
+
+        JsonArray grpDetailsJSONArray = fetchGroupDetailsResponse.getAsJsonArray();
+        groupList.clear();
+
+        for (int i = 0; i < grpDetailsJSONArray.size(); i++) {
+
+            JsonObject grpDetails_list_object = grpDetailsJSONArray.get(i).getAsJsonObject();
+
+//            System.out.println("-- grpDetails_list_object  " + grpDetails_list_object);
+
+            String user_id = grpDetails_list_object.get("user_id").getAsString();
+            String user_name = grpDetails_list_object.get("user_name").getAsString();
+            String first_name = grpDetails_list_object.get("first_name").getAsString();
+            String last_name = grpDetails_list_object.get("last_name").getAsString();
+            String email = grpDetails_list_object.get("email").getAsString();
+
+            //dp_url might come null
+            String dp_url = null;
+            try {
+                dp_url = grpDetails_list_object.get("dp_url").getAsString();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+//            System.out.println(" user_id " + user_id);
+//            System.out.println(" user_name " + user_name);
+//            System.out.println(" first_name " + first_name);
+//            System.out.println(" last_name " + last_name);
+//            System.out.println(" dp_url " + dp_url);
+
+            if (!user_id.equals(new SessionManager(getActivity()).getSpecificUserDetail(SessionManager.KEY_USER_ID))) {
+                groupList.add(new CreateGroupListItem(user_name, first_name, last_name, user_id, 0, email, dp_url));
+            } else {
+                System.out.println("List item skipped : item same as admin");
+            }
+
+        }
+        manageGroupAdapter = new ManageGroupAdapter(getActivity(), groupList);
+        mem_joined_frag_listview.setAdapter(manageGroupAdapter);
+
+        //set data on activity members count tab
+        ((ManageGroups) getActivity()).takeNumbers(1, groupList.size());
     }
 
     private void openOptionsDialog(final int memebr_position) {
@@ -110,7 +150,7 @@ public class Mem_joined_fragment extends Fragment {
         CardView mem_joined_frag_confirm_btn_card_view = (CardView) view.findViewById(R.id.mem_joined_frag_confirm_btn_card_view);
         mem_joined_frag_btn_lin_layout.setVisibility(View.GONE);
         mem_joined_frag_confirm_textview.setVisibility(View.GONE);
-        mem_joined_frag_user_name_textview.setText(groupList.get(memebr_position).getUserId());
+        mem_joined_frag_user_name_textview.setText(groupList.get(memebr_position).getUserEmail());
 
         mem_joined_frag_confirm_btn_card_view.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -202,7 +242,6 @@ public class Mem_joined_fragment extends Fragment {
         alertDialogBuilder.create().show();
     }
 
-
     private void modifyRequestStatus(int position) {
 
         CreateGroupListItem selectedCreateGroupListItem = groupList.get(position);
@@ -219,8 +258,9 @@ public class Mem_joined_fragment extends Fragment {
         groupList.set(position, selectedCreateGroupListItem);
 
         //Update listview and set selection
-        createGroupAdapter.notifyDataSetChanged();
+        manageGroupAdapter.notifyDataSetChanged();
         mem_joined_frag_listview.onRestoreInstanceState(state);
 
     }
+
 }

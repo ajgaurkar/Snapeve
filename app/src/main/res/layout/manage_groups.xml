@@ -115,7 +115,7 @@
                     android:layout_height="wrap_content"
                     android:gravity="center_horizontal"
                     android:padding="2dp"
-                    android:text="7"
+                    android:text="-"
                     android:textColor="@color/colorPrimary"
                     android:textSize="18sp"
                     android:textStyle="bold" />
@@ -153,7 +153,7 @@
                     android:layout_height="wrap_content"
                     android:gravity="center_horizontal"
                     android:padding="2dp"
-                    android:text="2"
+                    android:text="-"
                     android:textColor="@color/colorPrimary"
                     android:textSize="18sp"
                     android:textStyle="bold" />
@@ -164,7 +164,7 @@
                     android:layout_above="@+id/create_group_cardview_req_pending_bottom_view"
                     android:layout_below="@+id/create_group_cardview_req_pending_mem_textview"
                     android:gravity="center_horizontal"
-                    android:text="Pending    Approval"
+                    android:text="Request    Received"
                     android:textSize="12sp" />
 
                 <View
@@ -191,7 +191,7 @@
                     android:layout_height="wrap_content"
                     android:gravity="center_horizontal"
                     android:padding="2dp"
-                    android:text="5"
+                    android:text="-"
                     android:textColor="@color/colorPrimary"
                     android:textSize="18sp"
                     android:textStyle="bold" />
@@ -202,7 +202,7 @@
                     android:layout_above="@+id/create_group_cardview_req_sent_bottom_view"
                     android:layout_below="@+id/create_group_cardview_req_sent_mem_textview"
                     android:gravity="center_horizontal"
-                    android:text="Request       Pending"
+                    android:text="Joining     Request sent"
                     android:textSize="12sp" />
 
                 <View

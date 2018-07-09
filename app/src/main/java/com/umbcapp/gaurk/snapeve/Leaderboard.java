@@ -290,4 +290,5 @@ public class Leaderboard extends AppCompatActivity implements Listview_communica
         }
 
     }
+
 }

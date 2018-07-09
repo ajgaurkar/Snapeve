@@ -44,15 +44,45 @@ public class Event_dash_list_obj {
     String image_url;
     String post_id;
     String post_dt;
+    String post_start_dt_time;
+    String post_end_dt_time;
+    Boolean all_day_status;
 
-    public Event_dash_list_obj(String user_id, String user_name, String user_comment, String comment_time, String image_url, String post_id, String post_dt) {
+    public Event_dash_list_obj(String user_id, String user_name, String user_comment, String comment_time, String image_url, String post_id, String post_dt, String post_start_dt_time, String post_end_dt_time, boolean all_day_status) {
         this.user_id = user_id;
+        this.all_day_status = all_day_status;
         this.post_dt = post_dt;
+        this.post_start_dt_time = post_start_dt_time;
+        this.post_end_dt_time = post_end_dt_time;
         this.user_name = user_name;
         this.user_comment = user_comment;
         this.comment_time = comment_time;
         this.image_url = image_url;
         this.post_id = post_id;
+    }
+
+    public Boolean getAll_day_status() {
+        return all_day_status;
+    }
+
+    public void setAll_day_status(Boolean all_day_status) {
+        this.all_day_status = all_day_status;
+    }
+
+    public String getPost_start_dt_time() {
+        return post_start_dt_time;
+    }
+
+    public void setPost_start_dt_time(String post_start_dt_time) {
+        this.post_start_dt_time = post_start_dt_time;
+    }
+
+    public String getPost_end_dt_time() {
+        return post_end_dt_time;
+    }
+
+    public void setPost_end_dt_time(String post_end_dt_time) {
+        this.post_end_dt_time = post_end_dt_time;
     }
 
     public String getPost_dt() {

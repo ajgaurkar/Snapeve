@@ -171,4 +171,5 @@ public class BrowseGroupProfile extends AppCompatActivity implements Listview_co
         userProfileList.get(position);
         System.out.println(userProfileList.get(position).getUserId());
     }
+
 }

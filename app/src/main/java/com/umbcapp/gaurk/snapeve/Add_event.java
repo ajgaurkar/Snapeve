@@ -4,6 +4,7 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.app.DatePickerDialog;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -24,7 +25,6 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 import android.support.v4.content.FileProvider;
@@ -35,8 +35,10 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CompoundButton;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.RadioGroup;
@@ -107,7 +109,7 @@ public class Add_event extends AppCompatActivity implements LocationListener {
     private RadioGroup post_as_radio_grp;
     private String postDescription;
     private String postDescriptionTimeDt;
-    private TextView post_event_time_dt_text_view;
+    private TextView post_event_date_text_view;
     private boolean all_day_status;
     private String eventLocation = "NULL";
     private int post_scope_radio_value;
@@ -145,11 +147,14 @@ public class Add_event extends AppCompatActivity implements LocationListener {
     private Map<String, Uri> mapForUploadingSelectedImage;
     private ProgressDialog progressDialog;
     private String ImageFileName;
+    private TextView post_event_time_text_view;
+    private Calendar eventStartDateTime;
+    private Calendar eventEndDateTime;
+    private boolean allDayEvent;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.test_2);
 
         initiate_permission_check();
@@ -161,6 +166,11 @@ public class Add_event extends AppCompatActivity implements LocationListener {
 
         decimalFormat = new DecimalFormat("#.#######");
         decimalFormat.setRoundingMode(RoundingMode.CEILING);
+
+        //initialize start and end date-time objects, with end time 1 hr ahead of start time
+        eventStartDateTime = Calendar.getInstance();
+        eventEndDateTime = Calendar.getInstance();
+        eventEndDateTime.add(Calendar.HOUR, 1);
 
         camera_gallery_selector_img_rel_layout = (RelativeLayout) findViewById(R.id.camera_gallery_selector_img_rel_layout);
         similar_posts_cardview_list_view = (ListView) findViewById(R.id.similar_posts_cardview_list_view);
@@ -175,7 +185,8 @@ public class Add_event extends AppCompatActivity implements LocationListener {
 
         all_day_switch = (Switch) findViewById(R.id.all_day_switch);
         post_event_description_text_view = (EditText) findViewById(R.id.post_event_description_text_view);
-        post_event_time_dt_text_view = (TextView) findViewById(R.id.post_event_time_dt_text_view);
+        post_event_date_text_view = (TextView) findViewById(R.id.post_event_dt_text_view);
+        post_event_time_text_view = (TextView) findViewById(R.id.post_event_time_text_view);
         add_event_card_3_textview = (TextView) findViewById(R.id.add_event_card_3_textview);
         submit_btn_status_textview = (TextView) findViewById(R.id.submit_btn_status_textview);
         similarpost_count_textview = (TextView) findViewById(R.id.similarpost_count_textview);
@@ -193,6 +204,8 @@ public class Add_event extends AppCompatActivity implements LocationListener {
         similar_button_cardview = (CardView) findViewById(R.id.similar_button_cardview);
         add_event_card_5_rel_layout = (RelativeLayout) findViewById(R.id.add_event_card_5_rel_layout);
 
+        setStartEndDateTime(eventStartDateTime, eventEndDateTime);
+
         pick_location_card_3_spinner.setVisibility(View.INVISIBLE);
         add_event_card_3_textview.setVisibility(View.VISIBLE);
         getCurrentLocation();
@@ -203,15 +216,28 @@ public class Add_event extends AppCompatActivity implements LocationListener {
         all_day_switch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+//                LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(0, 260);
+//                lp.weight = 100;
+//                pointer.setLayoutParams(lp);
+                LinearLayout.LayoutParams dateFieldParam = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                LinearLayout.LayoutParams timeFieldParam = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+
                 if (isChecked) {
-//                    post_event_time_dt_text_view.setText(new SimpleDateFormat("MMM dd, YYYY", Locale.getDefault()).format(new Date()));
-                    post_event_time_dt_text_view.setText("May 10, 2018 12:30 PM - 02:30 PM");
-                    post_event_time_dt_text_view.setError(null);
-                    fetch_similar_events(2);
+                    all_day_status = true;
+                    timeFieldParam.weight = 100;
+                    post_event_time_text_view.setLayoutParams(timeFieldParam);
+                    dateFieldParam.weight = 0;
+                    post_event_date_text_view.setLayoutParams(dateFieldParam);
+                    post_event_date_text_view.setError(null);
 
                 } else {
-                    post_event_time_dt_text_view.setText("");
-                    post_event_time_dt_text_view.setError(null);
+                    all_day_status = false;
+                    timeFieldParam.weight = 40;
+                    post_event_time_text_view.setLayoutParams(timeFieldParam);
+                    dateFieldParam.weight = 60;
+                    dateFieldParam.setMargins(0, 0, 10, 0);
+                    post_event_date_text_view.setLayoutParams(dateFieldParam);
+                    post_event_date_text_view.setError(null);
                 }
 
             }
@@ -373,11 +399,21 @@ public class Add_event extends AppCompatActivity implements LocationListener {
                 }
             }
         });
-        post_event_time_dt_text_view.setOnClickListener(new View.OnClickListener() {
+        post_event_date_text_view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 timePickerFlag = 0;
-                selectDateTimeRange();
+//                selectDateTimeRange();
+                selectDate();
+            }
+        });
+        post_event_time_text_view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                timePickerFlag = 0;
+                selectTime(0);
+//                selectTime(1);
+
             }
         });
         pick_location_card_3_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -405,6 +441,117 @@ public class Add_event extends AppCompatActivity implements LocationListener {
 //            }
 //        });
 
+    }
+
+    private void setStartEndDateTime(Calendar eventStartDateTime, Calendar eventEndDateTime) {
+
+        SimpleDateFormat dateFormatter = new SimpleDateFormat("MMM dd");
+        SimpleDateFormat timeFormatter = new SimpleDateFormat("HH:MM");
+
+        post_event_date_text_view.setText(dateFormatter.format(eventStartDateTime.getTime()));
+        post_event_time_text_view.setText(timeFormatter.format(eventStartDateTime.getTime()) + " TO " + timeFormatter.format(eventEndDateTime.getTime()));
+
+    }
+
+    private void selectTime(int start_code) {
+        // Get Current Time
+
+        //0 : start time
+        //1 : end time
+        if (start_code == 0) {
+            final Calendar c = Calendar.getInstance();
+            int mHour = c.get(Calendar.HOUR_OF_DAY);
+            int mMinute = c.get(Calendar.MINUTE);
+
+            // Launch Time Picker Dialog
+            TimePickerDialog timePickerDialog = new TimePickerDialog(this,
+                    new TimePickerDialog.OnTimeSetListener() {
+
+                        @Override
+                        public void onTimeSet(TimePicker view, int hourOfDay,
+                                              int minute) {
+
+                            eventStartDateTime.set(Calendar.HOUR_OF_DAY, hourOfDay);
+                            eventStartDateTime.set(Calendar.MINUTE, minute);
+                            setStartEndDateTime(eventStartDateTime, eventEndDateTime);
+
+                            post_event_time_text_view.setText(hourOfDay + ":" + minute);
+                            System.out.println("TT_1" + hourOfDay + ":" + minute);
+                            selectTime(1);
+//                        computeEventStartEndDateTime();
+                        }
+                    }, mHour, mMinute, false);
+            timePickerDialog.setMessage("Select start time");
+            timePickerDialog.show();
+        }
+        if (start_code == 1) {
+            int mHour = eventStartDateTime.get(Calendar.HOUR_OF_DAY);
+            mHour++;
+            int mMinute = eventStartDateTime.get(Calendar.MINUTE);
+
+            // Launch Time Picker Dialog
+            TimePickerDialog timePickerDialog = new TimePickerDialog(this,
+                    new TimePickerDialog.OnTimeSetListener() {
+
+                        @Override
+                        public void onTimeSet(TimePicker view, int hourOfDay,
+                                              int minute) {
+
+                            eventEndDateTime.set(Calendar.HOUR_OF_DAY, hourOfDay);
+                            eventEndDateTime.set(Calendar.MINUTE, minute);
+                            System.out.println("TT_2" + hourOfDay + ":" + minute);
+                            setStartEndDateTime(eventStartDateTime, eventEndDateTime);
+
+                            post_event_time_text_view.setText(eventStartDateTime.get(Calendar.HOUR_OF_DAY) + " : " + eventStartDateTime.get(Calendar.MINUTE) + " TO " + eventEndDateTime.get(Calendar.HOUR_OF_DAY) + " : " + eventEndDateTime.get(Calendar.MINUTE));
+//                        computeEventStartEndDateTime();
+                            System.out.println("eventStartDateTime : " + eventStartDateTime);
+                            System.out.println("eventEndDateTime : " + eventEndDateTime);
+                        }
+                    }, mHour, mMinute, false);
+            timePickerDialog.setMessage("Select end time");
+            timePickerDialog.show();
+
+        }
+    }
+
+    private void selectDate() {
+
+        final Calendar c = Calendar.getInstance();
+        int mYear = c.get(Calendar.YEAR);
+        int mMonth = c.get(Calendar.MONTH);
+        int mDay = c.get(Calendar.DAY_OF_MONTH);
+
+
+        DatePickerDialog datePickerDialog = new DatePickerDialog(this,
+                new DatePickerDialog.OnDateSetListener() {
+
+                    @Override
+                    public void onDateSet(DatePicker view, int year,
+                                          int monthOfYear, int dayOfMonth) {
+
+                        //date is same for start and end - time is different
+                        eventStartDateTime.set(Calendar.YEAR, year);
+                        eventStartDateTime.set(Calendar.MONTH, monthOfYear + 1);
+                        eventStartDateTime.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+
+                        eventEndDateTime.set(Calendar.YEAR, year);
+                        eventEndDateTime.set(Calendar.MONTH, monthOfYear + 1);
+                        eventEndDateTime.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+
+                        setStartEndDateTime(eventStartDateTime, eventEndDateTime);
+
+                        System.out.println("eventStartDateTime : " + eventStartDateTime);
+                        System.out.println("eventEndDateTime : " + eventEndDateTime);
+                    }
+                }, mYear, mMonth, mDay);
+        datePickerDialog.setMessage("Select event date");
+        datePickerDialog.show();
+
+    }
+
+    private void computeEventStartEndDateTime() {
+//        eventStartDateTime = Calendar.getInstance();
+//        eventEndDateTime = Calendar.getInstance();
     }
 
     private void setNotification() {
@@ -519,11 +666,11 @@ public class Add_event extends AppCompatActivity implements LocationListener {
                 System.out.println("temp 1 : " + selectedHour + " " + selectedMinute);
 
                 if (timePickerFlag == 0) {
-                    post_event_time_dt_text_view.setText(selectedHour + ":" + selectedMinute);
+                    post_event_date_text_view.setText(selectedHour + ":" + selectedMinute);
                     temp = temp + selectedHour + ":" + selectedMinute + " ";
                 }
                 if (timePickerFlag == 1) {
-                    post_event_time_dt_text_view.setText(selectedHour + ":" + selectedMinute);
+                    post_event_date_text_view.setText(selectedHour + ":" + selectedMinute);
                     temp = temp + selectedHour + ":" + selectedMinute + " ";
 
                 }
@@ -535,7 +682,7 @@ public class Add_event extends AppCompatActivity implements LocationListener {
                 }
                 timePickerFlag++;
 
-                post_event_time_dt_text_view.setText(temp);
+                post_event_date_text_view.setText(temp);
             }
         }, hour, minute, false);//Yes 24 hour time
         mTimePicker.setTitle("Select Time");
@@ -922,13 +1069,14 @@ public class Add_event extends AppCompatActivity implements LocationListener {
             all_day_status = true;
         } else {
             all_day_status = false;
-            if (!post_event_time_dt_text_view.getText().toString().trim().equals("")) {
-                postDescriptionTimeDt = post_event_time_dt_text_view.getText().toString().trim();
+            if (!post_event_date_text_view.getText().toString().trim().equals("")) {
+                postDescriptionTimeDt = post_event_date_text_view.getText().toString().trim();
             } else {
-                post_event_time_dt_text_view.setError("Input required");
+                post_event_date_text_view.setError("Input required");
                 return false;
             }
         }
+
 
         eventLocation = pick_location_card_3_spinner.getSelectedItem().toString();
 
@@ -946,17 +1094,27 @@ public class Add_event extends AppCompatActivity implements LocationListener {
 
           SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault());
            Calendar eventPostDate=Calendar.getInstance();
-            Date date = sdf.parse(post_event_time_dt_text_view.getText().toString());
+            Date date = sdf.parse(post_event_date_text_view.getText().toString());
             calenderDue.setTime(date);
             event_post_date_in_milisecond = calenderDue.getTimeInMillis();
 
          */
 
-        Calendar eventPostDate=Calendar.getInstance();
-
-
+        Calendar eventPostDate = Calendar.getInstance();
 
         System.out.println("");
+
+        if (all_day_status) {
+            eventStartDateTime.set(Calendar.HOUR_OF_DAY, 0);
+            eventStartDateTime.set(Calendar.MINUTE, 1);
+
+            eventEndDateTime.set(Calendar.HOUR_OF_DAY, 23);
+            eventEndDateTime.set(Calendar.MINUTE, 59);
+        }
+        //condition to check if datetime is smaller and bigger as required
+        if (eventStartDateTime.getTimeInMillis() > eventEndDateTime.getTimeInMillis()) {
+            return false;
+        }
 
         jsonObjectPostEventParameters.addProperty("user_id", new SessionManager(getApplicationContext()).getSpecificUserDetail(SessionManager.KEY_USER_ID));
         jsonObjectPostEventParameters.addProperty("location_type", location_type_radio_value);
@@ -968,6 +1126,8 @@ public class Add_event extends AppCompatActivity implements LocationListener {
         jsonObjectPostEventParameters.addProperty("lattitude", selectedLat);
         jsonObjectPostEventParameters.addProperty("longitude", selectedLng);
         jsonObjectPostEventParameters.addProperty("evenpostdate", eventPostDate.getTimeInMillis());
+        jsonObjectPostEventParameters.addProperty("even_start_dt_time", eventStartDateTime.getTimeInMillis());
+        jsonObjectPostEventParameters.addProperty("even_end_dt_time", eventEndDateTime.getTimeInMillis());
 
         Random random = new Random();
         int x = random.nextInt(900) + 100;
@@ -1064,7 +1224,7 @@ public class Add_event extends AppCompatActivity implements LocationListener {
                         final int imageLength = imageStream.available();
                         container = getContainer();
                         CloudBlockBlob imageBlob = container.getBlockBlobReference(entry.getKey());
-                        ImageFileName=entry.getKey();
+                        ImageFileName = entry.getKey();
                         imageBlob.upload(imageStream, imageLength);
                     }
 

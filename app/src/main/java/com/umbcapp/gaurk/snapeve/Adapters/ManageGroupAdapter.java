@@ -1,25 +1,21 @@
 package com.umbcapp.gaurk.snapeve.Adapters;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
-import com.umbcapp.gaurk.snapeve.Controllers.AttendiesListItem;
 import com.umbcapp.gaurk.snapeve.Controllers.CreateGroupListItem;
-import com.umbcapp.gaurk.snapeve.Listview_communicator;
 import com.umbcapp.gaurk.snapeve.R;
 
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class CreateGroupAdapter extends BaseAdapter {
+public class ManageGroupAdapter extends BaseAdapter {
     LayoutInflater inflater;
     Context context;
     List<CreateGroupListItem> create_grp_List;
@@ -33,7 +29,7 @@ public class CreateGroupAdapter extends BaseAdapter {
     STATUS 3 = Not a member
     */
 
-    public CreateGroupAdapter(Context context, List<CreateGroupListItem> comments_list) {
+    public ManageGroupAdapter(Context context, List<CreateGroupListItem> comments_list) {
 
         this.create_grp_List = comments_list;
         this.attendies_type = attendies_type;
@@ -60,9 +56,9 @@ public class CreateGroupAdapter extends BaseAdapter {
     @Override
     public View getView(final int position, View view, ViewGroup parent) {
 
-        CreateGroupAdapter.ViewHolder viewHolder;
+        ManageGroupAdapter.ViewHolder viewHolder;
         if (view == null) {
-            viewHolder = new CreateGroupAdapter.ViewHolder();
+            viewHolder = new ManageGroupAdapter.ViewHolder();
             view = this.inflater.inflate(R.layout.create_grp_list_item, parent, false);
 
             viewHolder.create_grp_list_item_user_pic_img_view = (CircleImageView) view.findViewById(R.id.attendies_list_item_user_pic_img_view);
@@ -74,16 +70,22 @@ public class CreateGroupAdapter extends BaseAdapter {
 
         } else {
 
-            viewHolder = (CreateGroupAdapter.ViewHolder) view.getTag();
+            viewHolder = (ManageGroupAdapter.ViewHolder) view.getTag();
 
         }
 
         CreateGroupListItem selectedCreateGroupListItem = create_grp_List.get(position);
 
-        Picasso.get().load(selectedCreateGroupListItem.getUserPicUrl())
-                .fit().centerCrop().into(viewHolder.create_grp_list_item_user_pic_img_view);
+        if (selectedCreateGroupListItem.getUserPicUrl() == null) {
+
+            viewHolder.create_grp_list_item_user_pic_img_view.setImageResource(R.drawable.ai_dusk_100);
+        } else {
+            Picasso.get().load(selectedCreateGroupListItem.getUserPicUrl())
+                    .fit().centerCrop().into(viewHolder.create_grp_list_item_user_pic_img_view);
+        }
+
         viewHolder.create_grp_list_item_user_name_text_view.setText(selectedCreateGroupListItem.getUserName());
-        viewHolder.create_grp_list_item_user_email_text_view.setText(selectedCreateGroupListItem.getUserEmail());
+        viewHolder.create_grp_list_item_user_email_text_view.setText(selectedCreateGroupListItem.getUserFirstName() + " " + selectedCreateGroupListItem.getUserLastName());
 
         switch (selectedCreateGroupListItem.getUserReqStatus()) {
             /*STATUS 0 = Already joined

@@ -72,24 +72,57 @@
                 android:layout_alignParentBottom="true"
                 android:background="#dfeeeeee">
 
-                <TextView
-                    android:id="@+id/post_event_time_dt_text_view"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="5dp"
-                    android:layout_toStartOf="@+id/all_day_switch"
-                    android:hint="Select time"
-                    android:padding="3dp" />
 
                 <Switch
                     android:id="@+id/all_day_switch"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignBottom="@+id/post_event_time_dt_text_view"
+                    android:layout_alignBottom="@+id/post_event_dt_time_lin_layout"
                     android:layout_alignParentEnd="true"
-                    android:layout_alignTop="@+id/post_event_time_dt_text_view"
+                    android:layout_alignTop="@+id/post_event_dt_time_lin_layout"
                     android:layout_marginEnd="5dp"
                     android:text="All day " />
+
+                <LinearLayout
+                    android:id="@+id/post_event_dt_time_lin_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:layout_toStartOf="@+id/all_day_switch"
+                    android:orientation="horizontal"
+                    android:weightSum="100">
+
+                    <TextView
+                        android:id="@+id/post_event_dt_text_view"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="5dp"
+                        android:layout_weight="40"
+                        android:background="@drawable/grey_bg_five_corner_round"
+                        android:gravity="center"
+                        android:hint="Select date"
+                        android:padding="5dp"
+                        android:singleLine="true" />
+
+                    <TextView
+                        android:id="@+id/post_event_time_text_view"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="60"
+                        android:background="@drawable/grey_bg_five_corner_round"
+                        android:gravity="center"
+                        android:hint="Select time range"
+                        android:padding="5dp"
+                        android:singleLine="true" />
+
+                    <!--<Switch-->
+                    <!--android:id="@+id/all_day_switch"-->
+                    <!--android:layout_width="0dp"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_weight="25"-->
+                    <!--android:singleLine="true"-->
+                    <!--android:text="All day " />-->
+                </LinearLayout>
 
                 <EditText
                     android:id="@+id/post_event_description_text_view"
@@ -97,15 +130,15 @@
                     android:layout_height="match_parent"
                     android:layout_alignEnd="@+id/all_day_switch"
                     android:layout_alignParentBottom="true"
-                    android:layout_alignStart="@+id/post_event_time_dt_text_view"
-                    android:layout_below="@+id/post_event_time_dt_text_view"
+                    android:layout_alignStart="@+id/post_event_dt_time_lin_layout"
+                    android:layout_below="@+id/post_event_dt_time_lin_layout"
                     android:layout_marginBottom="5dp"
-                    android:background="@android:color/transparent"
+                    android:background="@drawable/grey_bg_five_corner_round"
                     android:gravity="top"
                     android:hint="Add description"
                     android:maxLines="5"
                     android:minLines="2"
-                    android:padding="3dp" />
+                    android:padding="5dp" />
 
             </RelativeLayout>
 
