@@ -393,6 +393,7 @@ public class ManageGroups extends Activity {
                 //set data to fragment bundel
                 Bundle bundle = new Bundle();
                 bundle.putString("mem_joined_response", response.toString());
+                bundle.putString("grp_id", grp_id);
                 mem_joined_fragment.setArguments(bundle);
 
                 modifyViews(1);
