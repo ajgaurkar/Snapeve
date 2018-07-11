@@ -2,27 +2,29 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content">
 
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:padding="10dp"
-        android:text="Join request pending for"
-        android:textStyle="bold" />
+    <!--<TextView-->
+    <!--android:id="@+id/textView"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:gravity="center"-->
+    <!--android:padding="5dp"-->
+    <!--android:text="Pending request for"-->
+    <!--android:textStyle="bold" />-->
 
     <TextView
         android:id="@+id/show_pending_req_dialog_btn_grp_name_textView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
-        android:layout_below="@+id/textView"
-        android:gravity="center"
-        android:padding="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginStart="10dp"
+        android:gravity="center_vertical"
+        android:padding="5dp"
         android:singleLine="true"
-        android:textSize="18sp"
+        android:text="Pending request for : Math dept"
+        android:textSize="16sp"
         android:textStyle="bold" />
 
     <LinearLayout
@@ -30,7 +32,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/show_pending_req_dialog_btn_grp_name_textView"
-        android:layout_marginTop="10dp"
         android:orientation="horizontal"
         android:weightSum="10">
 
@@ -38,8 +39,8 @@
             android:id="@+id/show_pending_req_dialog_cancel_req_btn_card_view"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_margin="16dp"
-            android:layout_weight="7"
+            android:layout_margin="10dp"
+            android:layout_weight="6"
             android:elevation="10dp"
             android:gravity="center_vertical"
             card_view:cardBackgroundColor="@color/dot_dark_screen1"
@@ -64,8 +65,8 @@
             android:id="@+id/show_pending_req_dialog_ok_btn_card_view"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_margin="16dp"
-            android:layout_weight="3"
+            android:layout_margin="10dp"
+            android:layout_weight="4"
             android:elevation="10dp"
             android:gravity="center_vertical"
             card_view:cardBackgroundColor="@color/colorPrimaryDark"
@@ -79,11 +80,104 @@
                 android:layout_alignTop="@+id/event_detail_user_comment_text_view"
                 android:gravity="center"
                 android:singleLine="true"
-                android:text="OK"
+                android:text="DISMISS"
                 android:textColor="#fff"
                 android:textSize="12sp"
                 android:textStyle="bold" />
 
         </android.support.v7.widget.CardView>
     </LinearLayout>
+
+    <ProgressBar
+        android:id="@+id/show_pending_req_dialog_progressBar"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_below="@+id/show_pending_req_dialog_btn_lin_layout"
+        android:layout_marginEnd="20dp"
+        android:layout_marginStart="20dp"
+        android:visibility="visible" />
+
+    <TextView
+        android:id="@+id/show_pending_req_dialog_progressBar_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/show_pending_req_dialog_progressBar"
+        android:layout_alignTop="@+id/show_pending_req_dialog_progressBar"
+        android:layout_toEndOf="@+id/show_pending_req_dialog_progressBar"
+        android:gravity="center"
+        android:text="Loading group invitations"
+        android:visibility="visible" />
+
+    <RelativeLayout
+        android:id="@+id/show_accept_invitation_dialog_invitations_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:layout_below="@+id/show_pending_req_dialog_btn_lin_layout">
+
+        <TextView
+            android:id="@+id/signup_grp_page_or_textview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_margin="5dp"
+            android:padding="2dp"
+            android:text="OR"
+            android:textSize="14sp" />
+
+        <RelativeLayout
+            android:layout_width="80dp"
+            android:layout_height="match_parent"
+            android:layout_alignBottom="@+id/signup_grp_page_or_textview"
+            android:layout_alignTop="@+id/signup_grp_page_or_textview"
+            android:layout_marginEnd="10dp"
+            android:layout_toStartOf="@+id/signup_grp_page_or_textview">
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:layout_centerVertical="true"
+                android:background="#b3b3b3" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="80dp"
+            android:layout_height="match_parent"
+            android:layout_alignBottom="@+id/signup_grp_page_or_textview"
+            android:layout_alignTop="@+id/signup_grp_page_or_textview"
+            android:layout_marginStart="10dp"
+            android:layout_toEndOf="@+id/signup_grp_page_or_textview">
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:layout_centerVertical="true"
+                android:background="#b3b3b3" />
+        </RelativeLayout>
+
+
+        <TextView
+            android:id="@+id/show_pending_req_dialog_accept_invitation_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/signup_grp_page_or_textview"
+            android:layout_marginEnd="10dp"
+            android:layout_marginStart="10dp"
+            android:gravity="center_vertical"
+            android:padding="5dp"
+            android:singleLine="true"
+            android:text="Accept pending invitation"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <ListView
+            android:id="@+id/show_pending_req_dialog_pending_req_listview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/show_pending_req_dialog_accept_invitation_label" />
+
+
+    </RelativeLayout>
+
 </RelativeLayout>

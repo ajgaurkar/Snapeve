@@ -325,7 +325,10 @@ public class Signup_grp_join extends AppCompatActivity {
             grp_name = grp_name.substring(1, grp_name.length() - 1);
             dp_url = dp_url.substring(1, dp_url.length() - 1);
 
-            signupGrpList.add(new SignUpGrpListItem(grp_id, member_count, grp_name, dp_url));
+            //accept_or_request_flag : 5th param
+            //0 : request
+            //1 : accept
+            signupGrpList.add(new SignUpGrpListItem(grp_id, member_count, grp_name, dp_url,0));
 
         }
         System.out.println(" signupGrpList " + signupGrpList.size());

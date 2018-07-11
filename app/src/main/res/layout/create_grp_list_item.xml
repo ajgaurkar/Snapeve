@@ -52,14 +52,14 @@
                 android:layout_alignTop="@+id/attendies_list_item_user_name_text_view"
                 android:layout_marginBottom="8dp"
                 android:layout_marginTop="8dp"
-                android:background="@drawable/grey_bg_five_corner_round"
+                android:background="@drawable/grey_round_bg"
                 android:gravity="center"
                 android:maxLines="2"
                 android:paddingEnd="6dp"
                 android:paddingStart="6dp"
-                android:text="Request sent"
+                android:text=" i "
                 android:textColor="#469ac3"
-                android:textSize="11sp" />
+                android:textSize="14sp" />
 
             <TextView
                 android:id="@+id/attendies_list_item_user_attending_status_text_view"

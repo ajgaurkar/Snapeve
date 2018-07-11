@@ -60,23 +60,29 @@ public class SignupGrpAdapter extends BaseAdapter {
             viewHolder.signup_list_item_grp_pic_img_view = (CircleImageView) view.findViewById(R.id.signup_list_item_grp_pic_img_view);
             viewHolder.signup_list_item_grp_name_text_view = (TextView) view.findViewById(R.id.signup_list_item_grp_name_text_view);
             viewHolder.signup_list_total_members_count_text_view = (TextView) view.findViewById(R.id.signup_list_total_members_count_text_view);
-
+            viewHolder.signup_list_item_request_accept_btn_text_view = (TextView) view.findViewById(R.id.signup_list_item_request_accept_btn_text_view);
 
             view.setTag(viewHolder);
-
         } else {
-
             viewHolder = (SignupGrpAdapter.ViewHolder) view.getTag();
-
         }
 
         SignUpGrpListItem selectedSignUpGrpListItem = SignUpGrpList.get(position);
+
+        //0 : request to join...from signup grp join
+        //1 : accept invitation from user profile frag
+        if (selectedSignUpGrpListItem.getAccept_or_request_flag() == 0) {
+            viewHolder.signup_list_item_request_accept_btn_text_view.setText("Request to join");
+        }
+        if (selectedSignUpGrpListItem.getAccept_or_request_flag() == 1) {
+            viewHolder.signup_list_item_request_accept_btn_text_view.setText("Accept");
+        }
 
         Picasso.get().load(selectedSignUpGrpListItem.getGrpDpUrl())
                 .fit().centerCrop().into(viewHolder.signup_list_item_grp_pic_img_view);
         viewHolder.signup_list_item_grp_name_text_view.setText(selectedSignUpGrpListItem.getGrpName());
 
-        viewHolder.signup_list_total_members_count_text_view.setText(String.valueOf(selectedSignUpGrpListItem.getMembersCount())+" Members");
+        viewHolder.signup_list_total_members_count_text_view.setText(String.valueOf(selectedSignUpGrpListItem.getMembersCount()) + " Members");
 
 
         return view;
@@ -87,6 +93,7 @@ public class SignupGrpAdapter extends BaseAdapter {
         private CircleImageView signup_list_item_grp_pic_img_view;
         private TextView signup_list_item_grp_name_text_view;
         private TextView signup_list_total_members_count_text_view;
+        private TextView signup_list_item_request_accept_btn_text_view;
 
 
     }

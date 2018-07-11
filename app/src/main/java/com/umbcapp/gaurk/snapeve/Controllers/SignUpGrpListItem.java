@@ -6,12 +6,22 @@ public class SignUpGrpListItem {
     int membersCount;
     String grpName;
     String grpDpUrl;
+    int accept_or_request_flag;
 
-    public SignUpGrpListItem(String grpId, int membersCount, String grpName, String grpDpUrl) {
+    public SignUpGrpListItem(String grpId, int membersCount, String grpName, String grpDpUrl, int accept_or_request_flag) {
         this.grpId = grpId;
         this.membersCount = membersCount;
         this.grpName = grpName;
         this.grpDpUrl = grpDpUrl;
+        this.accept_or_request_flag = accept_or_request_flag;
+    }
+
+    public int getAccept_or_request_flag() {
+        return accept_or_request_flag;
+    }
+
+    public void setAccept_or_request_flag(int accept_or_request_flag) {
+        this.accept_or_request_flag = accept_or_request_flag;
     }
 
     public String getGrpId() {

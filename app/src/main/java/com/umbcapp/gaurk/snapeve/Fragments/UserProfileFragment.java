@@ -21,6 +21,7 @@ import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -33,9 +34,11 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.squareup.picasso.Picasso;
+import com.umbcapp.gaurk.snapeve.Adapters.SignupGrpAdapter;
 import com.umbcapp.gaurk.snapeve.Adapters.UserContributionAdapter;
 import com.umbcapp.gaurk.snapeve.Controllers.CommentsListItem;
 import com.umbcapp.gaurk.snapeve.Controllers.LeaderboardListItem;
+import com.umbcapp.gaurk.snapeve.Controllers.SignUpGrpListItem;
 import com.umbcapp.gaurk.snapeve.EventDetails;
 import com.umbcapp.gaurk.snapeve.Leaderboard;
 import com.umbcapp.gaurk.snapeve.MainActivity;
@@ -90,6 +93,11 @@ public class UserProfileFragment extends Fragment {
     private JsonElement bkupPostResponse;
     private JsonElement bkupMemberResponse;
     private ArrayList<LeaderboardListItem> userProfileList;
+    private ProgressBar show_pending_req_dialog_progressBar;
+    private TextView show_pending_req_dialog_progressBar_label;
+    private RelativeLayout show_accept_invitation_dialog_invitations_layout;
+    private ArrayList<SignUpGrpListItem> signupGrpList;
+    private ListView show_pending_req_dialog_pending_req_listview;
 
     public UserProfileFragment() {
 
@@ -404,6 +412,7 @@ public class UserProfileFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 if (grp_id.equals("xxxxx____xxxxx")) {
+                    checkForGroupRequest();
                     Toast.makeText(getActivity(), "No group info found", Toast.LENGTH_SHORT).show();
 //                    grp_profile_btn.setError("No group info found");
                     user_profile_member_count_text_view.setVisibility(View.GONE);
@@ -434,6 +443,70 @@ public class UserProfileFragment extends Fragment {
 
         return rootView;
     }
+
+    private void checkForGroupRequest() {
+        JsonObject jsonObjectParameters = new JsonObject();
+        jsonObjectParameters.addProperty("user_id", new SessionManager(getActivity()).getSpecificUserDetail(SessionManager.KEY_USER_ID));
+
+        final SettableFuture<JsonElement> resultFuture = SettableFuture.create();
+        ListenableFuture<JsonElement> serviceFilterFuture = MainActivity.mClient.invokeApi("check_user_group_requests_api", jsonObjectParameters);
+
+        Futures.addCallback(serviceFilterFuture, new FutureCallback<JsonElement>() {
+            @Override
+            public void onFailure(Throwable exception) {
+                resultFuture.setException(exception);
+//                progressDialog.dismiss();
+                System.out.println(" check_user_group_requests_api exception    " + exception);
+                show_pending_req_dialog_progressBar.setVisibility(View.GONE);
+                show_pending_req_dialog_progressBar_label.setVisibility(View.GONE);
+                show_accept_invitation_dialog_invitations_layout.setVisibility(View.GONE);
+
+            }
+
+            @Override
+            public void onSuccess(JsonElement response) {
+                resultFuture.set(response);
+//                progressDialog.dismiss();
+                System.out.println(" check_user_group_requests_api success response    " + response);
+                show_pending_req_dialog_progressBar.setVisibility(View.GONE);
+                show_pending_req_dialog_progressBar_label.setVisibility(View.GONE);
+                show_accept_invitation_dialog_invitations_layout.setVisibility(View.VISIBLE);
+                parseInvitationsData(response);
+
+            }
+        });
+    }
+
+    private void parseInvitationsData(JsonElement invitationsResponse) {
+        signupGrpList = new ArrayList<SignUpGrpListItem>();
+
+        System.out.println(" IN PARSE JASON");
+
+        JsonArray groupsJSONArray = invitationsResponse.getAsJsonArray();
+
+        for (int j = 0; j < groupsJSONArray.size(); j++) {
+            JsonObject group_list_object = groupsJSONArray.get(j).getAsJsonObject();
+            System.out.println(" group_list_object  " + group_list_object);
+
+            String grp_id = group_list_object.get("grp_id").getAsString();
+            String grp_name = group_list_object.get("grp_name").getAsString();
+            String grp_dp_url = group_list_object.get("grp_dp_url").getAsString();
+            int req_code = group_list_object.get("REQ_CODE").getAsInt();
+
+            System.out.println(" user_id " + grp_id);
+            System.out.println(" grp_name " + grp_name);
+            System.out.println(" grp_dp_url " + grp_dp_url);
+            System.out.println(" req_code " + req_code);
+
+            signupGrpList.add(new SignUpGrpListItem(grp_id, 0, grp_name, dp_url,1));
+
+        }
+        System.out.println(" signupGrpList " + signupGrpList.size());
+        SignupGrpAdapter signupGrpAdapter = new SignupGrpAdapter(getActivity(), signupGrpList);
+        show_pending_req_dialog_pending_req_listview.setAdapter(signupGrpAdapter);
+
+    }
+
 
     private void populateUserInfo() {
 
@@ -579,8 +652,15 @@ public class UserProfileFragment extends Fragment {
         TextView show_pending_req_dialog_btn_grp_name_textView = (TextView) view.findViewById(R.id.show_pending_req_dialog_btn_grp_name_textView);
         CardView show_pending_req_dialog_cancel_req_btn_card_view = (CardView) view.findViewById(R.id.show_pending_req_dialog_cancel_req_btn_card_view);
         CardView show_pending_req_dialog_ok_btn_card_view = (CardView) view.findViewById(R.id.show_pending_req_dialog_ok_btn_card_view);
+        show_accept_invitation_dialog_invitations_layout = (RelativeLayout) view.findViewById(R.id.show_accept_invitation_dialog_invitations_layout);
+        show_pending_req_dialog_pending_req_listview = (ListView) view.findViewById(R.id.show_pending_req_dialog_pending_req_listview);
 
-        show_pending_req_dialog_btn_grp_name_textView.setText(new SessionManager(getActivity()).getSpecificUserDetail(SessionManager.KEY_REQ_PENDING_GRP_NAME));
+        show_pending_req_dialog_progressBar = (ProgressBar) view.findViewById(R.id.show_pending_req_dialog_progressBar);
+        show_pending_req_dialog_progressBar_label = (TextView) view.findViewById(R.id.show_pending_req_dialog_progressBar_label);
+        show_pending_req_dialog_progressBar.setVisibility(View.VISIBLE);
+        show_pending_req_dialog_progressBar_label.setVisibility(View.VISIBLE);
+
+        show_pending_req_dialog_btn_grp_name_textView.setText("Pending request for : " + new SessionManager(getActivity()).getSpecificUserDetail(SessionManager.KEY_REQ_PENDING_GRP_NAME));
 
         show_pending_req_dialog_ok_btn_card_view.setOnClickListener(new View.OnClickListener() {
             @Override

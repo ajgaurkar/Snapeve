@@ -1,6 +1,7 @@
 package com.umbcapp.gaurk.snapeve.Adapters;
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -87,26 +88,29 @@ public class ManageGroupAdapter extends BaseAdapter {
         viewHolder.create_grp_list_item_user_name_text_view.setText(selectedCreateGroupListItem.getUserName());
         viewHolder.create_grp_list_item_user_email_text_view.setText(selectedCreateGroupListItem.getUserFirstName() + " " + selectedCreateGroupListItem.getUserLastName());
 
-        switch (selectedCreateGroupListItem.getUserReqStatus()) {
+//        switch (selectedCreateGroupListItem.getUserReqStatus()) {
             /*STATUS 0 = Already joined
             STATUS 1 = Pending approval
             STATUS 2 = Request Sent
             STATUS 3 = Not a member*/
 
-            case 0:
-                viewHolder.create_grp_list_item_request_status_text_view.setText("More");
-                break;
-            case 1:
-                viewHolder.create_grp_list_item_request_status_text_view.setText("Approve");
-                break;
-            case 2:
-                viewHolder.create_grp_list_item_request_status_text_view.setText("Request sent");
-                break;
-            case 3:
-                viewHolder.create_grp_list_item_request_status_text_view.setText("Send request");
-                break;
+        viewHolder.create_grp_list_item_request_status_text_view.setText(" i ");
 
-        }
+
+//            case 0:
+//                viewHolder.create_grp_list_item_request_status_text_view.setText("More");
+//                break;
+//            case 1:
+//                viewHolder.create_grp_list_item_request_status_text_view.setText("Approve");
+//                break;
+//            case 2:
+//                viewHolder.create_grp_list_item_request_status_text_view.setText("Request sent");
+//                break;
+//            case 3:
+//                viewHolder.create_grp_list_item_request_status_text_view.setText("Send request");
+//                break;
+//
+//        }
 
 //        viewHolder.create_grp_list_item_request_status_text_view.setOnClickListener(new View.OnClickListener() {
 //            @Override
