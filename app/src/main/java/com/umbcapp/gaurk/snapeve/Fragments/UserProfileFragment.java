@@ -588,12 +588,19 @@ public class UserProfileFragment extends Fragment {
             System.out.println(" grp_dp_url " + grp_dp_url);
             System.out.println(" req_code " + req_code);
 
-            signupGrpList.add(new SignUpGrpListItem(grp_id, 0, grp_name, grp_dp_url, 1));
+            //condition to put data only if code = 11 (Invitation from admin)
+            if (req_code == 11) {
+                signupGrpList.add(new SignUpGrpListItem(grp_id, 0, grp_name, grp_dp_url, 1));
+            }
 
         }
-        System.out.println(" signupGrpList " + signupGrpList.size());
-        SignupGrpAdapter signupGrpAdapter = new SignupGrpAdapter(getActivity(), signupGrpList);
-        show_pending_req_dialog_pending_req_listview.setAdapter(signupGrpAdapter);
+        if (signupGrpList.size() > 0) {
+            System.out.println(" signupGrpList " + signupGrpList.size());
+            SignupGrpAdapter signupGrpAdapter = new SignupGrpAdapter(getActivity(), signupGrpList);
+            show_pending_req_dialog_pending_req_listview.setAdapter(signupGrpAdapter);
+        } else {
+            show_accept_invitation_dialog_invitations_layout.setVisibility(View.GONE);
+        }
 
     }
 

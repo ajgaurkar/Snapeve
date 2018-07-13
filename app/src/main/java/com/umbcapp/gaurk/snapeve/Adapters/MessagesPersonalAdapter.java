@@ -55,7 +55,7 @@ public class MessagesPersonalAdapter extends BaseAdapter {
         MessagesPersonalAdapter.ViewHolder viewHolder;
         if (view == null) {
             viewHolder = new MessagesPersonalAdapter.ViewHolder();
-            view = this.inflater.inflate(R.layout.attendies_list_item, parent, false);
+            view = this.inflater.inflate(R.layout.notification_list_item, parent, false);
 
             viewHolder.message_list_item_circle_img_view = (CircleImageView) view.findViewById(R.id.notification_list_item_circle_img_view);
             viewHolder.message_list_item_other_user_name_text_view = (TextView) view.findViewById(R.id.notification_list_item_header_text_view);

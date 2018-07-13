@@ -1,6 +1,7 @@
 package com.umbcapp.gaurk.snapeve.Fragments;
 
 import android.app.Fragment;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -8,6 +9,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -17,6 +19,7 @@ import com.umbcapp.gaurk.snapeve.Adapters.MessagesPersonalAdapter;
 import com.umbcapp.gaurk.snapeve.Adapters.NotificationsAdapter;
 import com.umbcapp.gaurk.snapeve.Controllers.MessagesPersonalListItem;
 import com.umbcapp.gaurk.snapeve.Controllers.NotificationListItem;
+import com.umbcapp.gaurk.snapeve.MessageThread;
 import com.umbcapp.gaurk.snapeve.R;
 
 import java.util.ArrayList;
@@ -80,6 +83,15 @@ public class NotificationFragment extends Fragment {
         });
 
 //        startActivity(new Intent(getActivity(), Login_snapeve_activity.class));
+
+        notification_layout_listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                startActivity(new Intent(getActivity(), MessageThread.class));
+
+            }
+        });
 
         return rootView;
     }
