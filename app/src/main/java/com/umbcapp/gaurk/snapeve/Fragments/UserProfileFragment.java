@@ -3,11 +3,14 @@ package com.umbcapp.gaurk.snapeve.Fragments;
 import android.app.Dialog;
 import android.app.Fragment;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.media.Image;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.PopupMenu;
 import android.view.LayoutInflater;
@@ -18,8 +21,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
@@ -36,6 +41,7 @@ import com.google.gson.JsonObject;
 import com.squareup.picasso.Picasso;
 import com.umbcapp.gaurk.snapeve.Adapters.SignupGrpAdapter;
 import com.umbcapp.gaurk.snapeve.Adapters.UserContributionAdapter;
+import com.umbcapp.gaurk.snapeve.BrowseUserProfile;
 import com.umbcapp.gaurk.snapeve.Controllers.CommentsListItem;
 import com.umbcapp.gaurk.snapeve.Controllers.LeaderboardListItem;
 import com.umbcapp.gaurk.snapeve.Controllers.SignUpGrpListItem;
@@ -55,6 +61,8 @@ import java.util.Locale;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 public class UserProfileFragment extends Fragment {
 
     private JsonObject jsonObjectUserProfileFragParameters;
@@ -69,7 +77,7 @@ public class UserProfileFragment extends Fragment {
     private ListView user_profile_contribution_list_view;
     private UserContributionAdapter userContributionAdapter;
     private ImageView leaderboard_imageview;
-    private ImageView profile_pic_image_view;
+    private CircleImageView profile_pic_image_view;
     private TextView leaderboard_text_view;
     private ImageView user_profile_settings_imageview;
 
@@ -98,6 +106,8 @@ public class UserProfileFragment extends Fragment {
     private RelativeLayout show_accept_invitation_dialog_invitations_layout;
     private ArrayList<SignUpGrpListItem> signupGrpList;
     private ListView show_pending_req_dialog_pending_req_listview;
+    private RelativeLayout full_screen_imageview_layout;
+    private ImageView full_screen_imageview;
 
     public UserProfileFragment() {
 
@@ -284,11 +294,21 @@ public class UserProfileFragment extends Fragment {
 
         JsonObject userDetailsObj = responseJsonArray.get(0).getAsJsonObject();
 
-        userName = userDetailsObj.get("user_name").toString();
-        dp_url = userDetailsObj.get("user_name").toString();
-        first_name = userDetailsObj.get("first_name").toString();
-        last_name = userDetailsObj.get("last_name").toString();
+        userName = userDetailsObj.get("user_name").getAsString();
+        first_name = userDetailsObj.get("first_name").getAsString();
+        last_name = userDetailsObj.get("last_name").getAsString();
         user_total_pts = Integer.parseInt(userDetailsObj.get("user_points").toString());
+
+        try {
+            dp_url = userDetailsObj.get("dp_url").getAsString();
+            System.out.println("userprofilefragment user dp_url : " + dp_url);
+        } catch (Exception e) {
+            e.printStackTrace();
+            dp_url = null;
+            System.out.println(" dp_url is null, set local image");
+            profile_pic_image_view.setImageResource(R.drawable.avatar_100_3);
+        }
+
 
         //time being untill admin flag is not 0 for all
         try {
@@ -297,11 +317,6 @@ public class UserProfileFragment extends Fragment {
             e.printStackTrace();
         }
 
-
-        userName = userName.substring(1, userName.length() - 1);
-        dp_url = dp_url.substring(1, dp_url.length() - 1);
-        first_name = first_name.substring(1, first_name.length() - 1);
-        last_name = last_name.substring(1, last_name.length() - 1);
 
         if (userDetailsObj.get("grp_id").toString().isEmpty() || userDetailsObj.get("grp_id").toString().equals("null") || userDetailsObj.get("grp_id") == null) {
 
@@ -338,9 +353,11 @@ public class UserProfileFragment extends Fragment {
         user_profile_btn = (TextView) rootView.findViewById(R.id.profile_switch_you_textview);
         user_points = (TextView) rootView.findViewById(R.id.user_points);
         profile_relative_layout = (RelativeLayout) rootView.findViewById(R.id.profile_relative_layout);
+        full_screen_imageview_layout = (RelativeLayout) rootView.findViewById(R.id.full_screen_imageview_layout);
+        full_screen_imageview = (ImageView) rootView.findViewById(R.id.full_screen_imageview);
         user_profile_contribution_list_view = (ListView) rootView.findViewById(R.id.user_profile_contribution_list_view);
         leaderboard_text_view = (TextView) rootView.findViewById(R.id.leaderboard_text_view);
-        profile_pic_image_view = (ImageView) rootView.findViewById(R.id.profile_pic_image_view);
+        profile_pic_image_view = (CircleImageView) rootView.findViewById(R.id.profile_pic_image_view);
         user_profile_settings_imageview = (ImageView) rootView.findViewById(R.id.user_profile_settings_imageview);
 
         user_profile_member_count_text_view = (TextView) rootView.findViewById(R.id.user_profile_member_count_text_view);
@@ -431,8 +448,13 @@ public class UserProfileFragment extends Fragment {
                     grp_profile_btn.setBackground(getResources().getDrawable(R.drawable.text_selection_right_seleted));
                     user_profile_btn.setBackground(getResources().getDrawable(R.drawable.text_selection_left_unseleted));
                     user_type_selection_status = 1;
-                    Picasso.get().load(grp_dp_url)
-                            .fit().centerCrop().into(profile_pic_image_view);
+                    if (grp_dp_url == null) {
+                        profile_pic_image_view.setImageResource(R.drawable.avatar_100_3);
+                    } else {
+                        Picasso.get().load(grp_dp_url).fit().centerCrop().into(profile_pic_image_view);
+                    }
+//                    Picasso.get().load(grp_dp_url)
+//                            .fit().centerCrop().into(profile_pic_image_view);
                     loadContributionList(user_type_selection_status);
                     user_name_textview.setText(grp_name);
                     user_points.setText(String.valueOf(grp_total_pts));
@@ -440,8 +462,71 @@ public class UserProfileFragment extends Fragment {
                 }
             }
         });
-
+        profile_pic_image_view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openImageOptionsDialog();
+            }
+        });
         return rootView;
+    }
+
+    private void openImageOptionsDialog() {
+
+        LayoutInflater flater = getActivity().getLayoutInflater();
+        View view = flater.inflate(R.layout.edit_profile_pic_options_dialog, null);
+        final AlertDialog.Builder alertDialog = new AlertDialog.Builder(getActivity());
+        alertDialog.setView(view);
+        alertDialog.setCancelable(true);
+
+
+        final ArrayList<String> memJoinedOptionsList = new ArrayList<>();
+        memJoinedOptionsList.add("View Profile Pic");
+        memJoinedOptionsList.add("Update from Camera");
+        memJoinedOptionsList.add("Update from Gallery");
+        memJoinedOptionsList.add("Remove Profile Pic");
+
+        ListView edit_profile_pic_options_dialog_listview = (ListView) view.findViewById(R.id.edit_profile_pic_options_dialog_listview);
+        ArrayAdapter adapter = new ArrayAdapter<String>(getActivity(), R.layout.members_joined_options_list_item, memJoinedOptionsList);
+        edit_profile_pic_options_dialog_listview.setAdapter(adapter);
+
+        alertDialog.setNeutralButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+            }
+        });
+
+        edit_profile_pic_options_dialog_listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                switch (position) {
+                    case 0:
+                        full_screen_imageview_layout.setVisibility(View.VISIBLE);
+                        Picasso.get().load(dp_url).fit().centerInside().into(full_screen_imageview);
+                        break;
+
+                    case 1:
+                        //open Camera and update picture
+                        Toast.makeText(getActivity(), "OPEN CAMERA : CHANGE DP", Toast.LENGTH_LONG).show();
+                        break;
+
+                    case 2:
+                        //open Gallery and update picture
+                        Toast.makeText(getActivity(), "OPEN GALLERY : CHANGE DP", Toast.LENGTH_LONG).show();
+                        break;
+
+                    case 3:
+                        Toast.makeText(getActivity(), "DELETE DP API CALL", Toast.LENGTH_LONG).show();
+                        //Remove profile pic
+                        break;
+
+                }
+            }
+        });
+        alertDialog.show();
+
     }
 
     private void checkForGroupRequest() {
@@ -498,7 +583,7 @@ public class UserProfileFragment extends Fragment {
             System.out.println(" grp_dp_url " + grp_dp_url);
             System.out.println(" req_code " + req_code);
 
-            signupGrpList.add(new SignUpGrpListItem(grp_id, 0, grp_name, dp_url,1));
+            signupGrpList.add(new SignUpGrpListItem(grp_id, 0, grp_name, dp_url, 1));
 
         }
         System.out.println(" signupGrpList " + signupGrpList.size());
@@ -511,8 +596,11 @@ public class UserProfileFragment extends Fragment {
     private void populateUserInfo() {
 
         user_type_selection_status = 0;
-        Picasso.get().load(dp_url)
-                .fit().centerCrop().into(profile_pic_image_view);
+        if (dp_url == null) {
+            profile_pic_image_view.setImageResource(R.drawable.avatar_100_3);
+        } else {
+            Picasso.get().load(dp_url).fit().centerCrop().into(profile_pic_image_view);
+        }
         loadContributionList(user_type_selection_status);
         user_name_textview.setText(userName);
         user_points.setText(String.valueOf(user_total_pts));

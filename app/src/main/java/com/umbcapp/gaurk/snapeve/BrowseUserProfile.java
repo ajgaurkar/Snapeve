@@ -92,7 +92,7 @@ public class BrowseUserProfile extends AppCompatActivity {
 
     private void parseUserDataResponse(JsonElement response) {
         System.out.println(" IN PARSE JASON");
-
+        String dp_url = null;
         JsonArray userDataJSONArray = response.getAsJsonArray();
 
         JsonObject userData_list_object = userDataJSONArray.get(0).getAsJsonObject();
@@ -106,13 +106,24 @@ public class BrowseUserProfile extends AppCompatActivity {
         String first_name = userData_list_object.get("first_name").toString();
         String last_name = userData_list_object.get("last_name").toString();
         int user_points = Integer.parseInt(userData_list_object.get("user_points").toString());
-        String dp_url = userData_list_object.get("dp_url").toString();
-        String grp_dp_url = userData_list_object.get("grp_dp_url").toString();
+
+        //exception handling for image url null for user
+        try {
+
+            dp_url = userData_list_object.get("dp_url").getAsString();
+            System.out.println(" dp_url found" + dp_url);
+            Picasso.get().load(dp_url).fit().centerCrop().into(profile_pic_image_view);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println(" dp_url is null, set local image");
+            profile_pic_image_view.setImageResource(R.drawable.avatar_100_1);
+        }
+//        String grp_dp_url = userData_list_object.get("grp_dp_url").getAsString();
 
 
         System.out.println(" user_name " + user_name);
         System.out.println(" user_points " + user_points);
-        System.out.println(" dp_url " + dp_url);
 
         //Remove " from start and end from every string
         grp_id = grp_id.substring(1, grp_id.length() - 1);
@@ -120,15 +131,12 @@ public class BrowseUserProfile extends AppCompatActivity {
         first_name = first_name.substring(1, first_name.length() - 1);
         last_name = last_name.substring(1, last_name.length() - 1);
         grp_name = grp_name.substring(1, grp_name.length() - 1);
-        dp_url = dp_url.substring(1, dp_url.length() - 1);
-        grp_dp_url = grp_dp_url.substring(1, grp_dp_url.length() - 1);
 
         user_name_textview.setText(user_name);
         user_full_name_textview.setText(first_name + " " + last_name);
         user_points_textview.setText(String.valueOf(user_points));
         user_grp_name_text_view.setText("Group : " + grp_name);
         profile_pic_image_view = (ImageView) findViewById(R.id.profile_pic_image_view);
-        Picasso.get().load(dp_url).fit().centerCrop().into(profile_pic_image_view);
 
     }
 

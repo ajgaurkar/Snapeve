@@ -78,8 +78,7 @@ public class ManageGroupAdapter extends BaseAdapter {
         CreateGroupListItem selectedCreateGroupListItem = create_grp_List.get(position);
 
         if (selectedCreateGroupListItem.getUserPicUrl() == null) {
-
-            viewHolder.create_grp_list_item_user_pic_img_view.setImageResource(R.drawable.ai_dusk_100);
+            viewHolder.create_grp_list_item_user_pic_img_view.setImageResource(R.drawable.avatar_100_3);
         } else {
             Picasso.get().load(selectedCreateGroupListItem.getUserPicUrl())
                     .fit().centerCrop().into(viewHolder.create_grp_list_item_user_pic_img_view);

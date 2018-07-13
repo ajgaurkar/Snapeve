@@ -94,7 +94,8 @@
             android:layout_alignParentEnd="true"
             android:layout_alignTop="@+id/profile_layout_user_switch_lin_layout"
             android:layout_marginEnd="16dp"
-            android:src="@drawable/settings_white_48" />
+            android:src="@drawable/settings_white_48"
+            android:visibility="gone" />
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/profile_pic_image_view"
@@ -102,8 +103,8 @@
             android:layout_height="100dp"
             android:layout_below="@+id/profile_layout_user_switch_lin_layout"
             android:layout_margin="16dp"
-            android:src="@drawable/my_pic"
-            app:civ_border_color="@color/colorPrimaryDark"
+            android:src="@drawable/avatar_100_3"
+            app:civ_border_color="@color/cardview_light_background"
             app:civ_border_width="3dp" />
 
         <TextView
@@ -237,5 +238,17 @@
 
     </RelativeLayout>
 
+    <RelativeLayout
+        android:id="@+id/full_screen_imageview_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#000"
+        android:visibility="gone">
+
+        <ImageView
+            android:id="@+id/full_screen_imageview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </RelativeLayout>
 
 </RelativeLayout>
