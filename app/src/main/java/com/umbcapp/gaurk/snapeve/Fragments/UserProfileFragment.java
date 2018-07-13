@@ -575,7 +575,12 @@ public class UserProfileFragment extends Fragment {
 
             String grp_id = group_list_object.get("grp_id").getAsString();
             String grp_name = group_list_object.get("grp_name").getAsString();
-            String grp_dp_url = group_list_object.get("grp_dp_url").getAsString();
+            String grp_dp_url = null;
+            try {
+                grp_dp_url = group_list_object.get("grp_dp_url").getAsString();
+            } catch (Exception e) {
+
+            }
             int req_code = group_list_object.get("REQ_CODE").getAsInt();
 
             System.out.println(" user_id " + grp_id);
@@ -583,7 +588,7 @@ public class UserProfileFragment extends Fragment {
             System.out.println(" grp_dp_url " + grp_dp_url);
             System.out.println(" req_code " + req_code);
 
-            signupGrpList.add(new SignUpGrpListItem(grp_id, 0, grp_name, dp_url, 1));
+            signupGrpList.add(new SignUpGrpListItem(grp_id, 0, grp_name, grp_dp_url, 1));
 
         }
         System.out.println(" signupGrpList " + signupGrpList.size());
