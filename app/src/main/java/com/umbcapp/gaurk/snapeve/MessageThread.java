@@ -24,7 +24,11 @@ public class MessageThread extends AppCompatActivity {
         messageThreadList.add(new MessagesThreadListItem("Hello How are you", 0, 1313131));
         messageThreadList.add(new MessagesThreadListItem("My name is Aj", 0, 1313131));
         messageThreadList.add(new MessagesThreadListItem("Hello How are you", 0, 1313131));
-        messageThreadList.add(new MessagesThreadListItem("Hello How are you", 0, 1313131));
+        messageThreadList.add(new MessagesThreadListItem("Hello How are you", 1, 1313131));
+        messageThreadList.add(new MessagesThreadListItem("Hello How are you Hello How are you Hello How are you Hello How are you Hello How are you Hello How are you Hello How are you", 1, 1313131));
+        messageThreadList.add(new MessagesThreadListItem("My name is Aj", 0, 1313131));
+        messageThreadList.add(new MessagesThreadListItem("Hello How are you", 1, 1313131));
+        messageThreadList.add(new MessagesThreadListItem("Hello How are you", 1, 1313131));
 
         MessagesThreadAdapter messagesThreadAdapter = new MessagesThreadAdapter(getApplicationContext(), messageThreadList);
         message_thread_main_listview.setAdapter(messagesThreadAdapter);

@@ -10,6 +10,7 @@ import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -32,6 +33,8 @@ public class NotificationFragment extends Fragment {
     private TextView notification_switch_notification_textview;
     private TextView notification_switch_messages_textview;
     private ListView notification_layout_listview;
+    int page_type_code = 1;
+    private ImageView notification_settings_imageview;
 
     public NotificationFragment() {
     }
@@ -51,15 +54,21 @@ public class NotificationFragment extends Fragment {
         notification_switch_notification_textview = (TextView) rootView.findViewById(R.id.notification_switch_notification_textview);
         notification_switch_messages_textview = (TextView) rootView.findViewById(R.id.notification_switch_messages_textview);
         notification_layout_listview = (ListView) rootView.findViewById(R.id.notification_layout_listview);
+        notification_settings_imageview = (ImageView) rootView.findViewById(R.id.notification_settings_imageview);
 
-        populateData(1);
+        notification_settings_imageview.setImageResource(R.drawable.settings_white_48);
+
+        populateData(page_type_code);
 
         notification_switch_notification_textview.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                page_type_code = 1;
                 notification_switch_notification_textview.setBackground(getResources().getDrawable(R.drawable.text_selection_left_seleted));
                 notification_switch_messages_textview.setBackground(getResources().getDrawable(R.drawable.text_selection_right_unseleted));
-                populateData(1);
+                populateData(page_type_code);
+                notification_settings_imageview.setImageResource(R.drawable.settings_white_48);
+
             }
         });
 
@@ -67,12 +76,20 @@ public class NotificationFragment extends Fragment {
         notification_switch_messages_textview.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                page_type_code = 2;
                 notification_switch_messages_textview.setBackground(getResources().getDrawable(R.drawable.text_selection_right_seleted));
                 notification_switch_notification_textview.setBackground(getResources().getDrawable(R.drawable.text_selection_left_unseleted));
-                populateData(2);
+                populateData(page_type_code);
+                notification_settings_imageview.setImageResource(R.drawable.plus_white_48);
             }
         });
 
+        notification_settings_imageview.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
 
         //dummy listener to override clicks of main layout
         main_notification_layout.setOnClickListener(new View.OnClickListener() {
@@ -92,7 +109,22 @@ public class NotificationFragment extends Fragment {
 
             }
         });
+        notification_settings_imageview.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
+                switch (page_type_code) {
+                    case 1:
+                        System.out.println("OPEN SETTINGS DIALOG");
+                        break;
+
+                    case 2:
+                        System.out.println("OPEN REQUEST CHAT DIALOG");
+                        break;
+                }
+
+            }
+        });
         return rootView;
     }
 
@@ -101,6 +133,7 @@ public class NotificationFragment extends Fragment {
 
         switch (type_code) {
             case 1:
+
                 ArrayList<NotificationListItem> notificationsList = new ArrayList<>();
                 notificationsList.add(new NotificationListItem("u1", "n1", 1, "Request approved", "Your request to join the group has been accepted", "Today 12:39 PM", true));
                 notificationsList.add(new NotificationListItem("u1", "n1", 1, "Post liked", "Your post from last week has been liked", "Wed 04:12 PM", false));
