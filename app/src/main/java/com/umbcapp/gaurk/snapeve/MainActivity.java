@@ -252,9 +252,9 @@ public class MainActivity extends AppCompatActivity implements Listview_communic
                 resultFuture.set(response);
                 System.out.println(" get_event_feeds_api success response    " + response);
 
+                progressDialog.dismiss();
                 poupulateList(response);
                 pullToRefresh.setRefreshing(false);
-                progressDialog.dismiss();
 
             }
         });

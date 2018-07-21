@@ -309,26 +309,25 @@ public class Signup_grp_join extends AppCompatActivity {
             JsonObject group_list_object = groupsJSONArray.get(j).getAsJsonObject();
             System.out.println(" group_list_object  " + group_list_object);
 
-            String grp_id = group_list_object.get("id").toString();
-            String grp_name = group_list_object.get("grp_name").toString();
+            String grp_id = group_list_object.get("id").getAsString();
+            String grp_name = group_list_object.get("grp_name").getAsString();
             int grp_points = Integer.parseInt(group_list_object.get("total_pts").toString());
             int member_count = Integer.parseInt(group_list_object.get("member_count").toString());
-            String dp_url = group_list_object.get("grp_dp_url").toString();
+            String grp_dp_url = null;
+            try {
+                grp_dp_url = group_list_object.get("grp_dp_url").getAsString();
+            } catch (Exception e) {
 
+            }
             System.out.println(" user_id " + grp_id);
             System.out.println(" grp_name " + grp_name);
             System.out.println(" grp_points " + grp_points);
-            System.out.println(" dp_url " + dp_url);
-
-//            Remove " from start and end from every string
-            grp_id = grp_id.substring(1, grp_id.length() - 1);
-            grp_name = grp_name.substring(1, grp_name.length() - 1);
-            dp_url = dp_url.substring(1, dp_url.length() - 1);
+            System.out.println(" dp_url " + grp_dp_url);
 
             //accept_or_request_flag : 5th param
             //0 : request
             //1 : accept
-            signupGrpList.add(new SignUpGrpListItem(grp_id, member_count, grp_name, dp_url,0));
+            signupGrpList.add(new SignUpGrpListItem(grp_id, member_count, grp_name, grp_dp_url, 0));
 
         }
         System.out.println(" signupGrpList " + signupGrpList.size());

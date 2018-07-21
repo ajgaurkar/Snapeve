@@ -78,8 +78,17 @@ public class SignupGrpAdapter extends BaseAdapter {
             viewHolder.signup_list_item_request_accept_btn_text_view.setText("Accept");
         }
 
-        Picasso.get().load(selectedSignUpGrpListItem.getGrpDpUrl())
-                .fit().centerCrop().into(viewHolder.signup_list_item_grp_pic_img_view);
+        //condition for null PD
+        if (selectedSignUpGrpListItem.getGrpDpUrl() != null) {
+            System.out.println("SignupGrpAdapter getGrpDpUrl found" + selectedSignUpGrpListItem.getGrpDpUrl());
+            Picasso.get().load(selectedSignUpGrpListItem.getGrpDpUrl())
+                    .fit().centerCrop().into(viewHolder.signup_list_item_grp_pic_img_view);
+        } else {
+            System.out.println("SignupGrpAdapter getGrpDpUrl null" + selectedSignUpGrpListItem.getGrpDpUrl());
+            viewHolder.signup_list_item_grp_pic_img_view.setImageResource(R.drawable.avatar_100_3);
+        }
+
+
         viewHolder.signup_list_item_grp_name_text_view.setText(selectedSignUpGrpListItem.getGrpName());
 
         viewHolder.signup_list_total_members_count_text_view.setText(String.valueOf(selectedSignUpGrpListItem.getMembersCount()) + " Members");
