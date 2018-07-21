@@ -57,6 +57,7 @@ public class Dash_Event_ListAdapter extends BaseAdapter {
             view = this.inflater.inflate(R.layout.dash_list_view_item, parent, false);
 
             viewHolder.main_card_imageview = (ImageView) view.findViewById(R.id.cardimgview);
+            viewHolder.list_item_user_img = (ImageView) view.findViewById(R.id.list_item_user_img);
 
             viewHolder.list_item_verify_iv = (ImageView) view.findViewById(R.id.list_item_verify_iv);
 //            viewHolder.list_item_deny_iv = (ImageView) view.findViewById(R.id.list_item_deny_iv);
@@ -93,7 +94,7 @@ public class Dash_Event_ListAdapter extends BaseAdapter {
             } catch (ParseException e) {
                 e.printStackTrace();
             }
-            viewHolder.list_item_event_statr_end_dt_time_textview.setText(displayAlldayDtFormat.format(startDateTime)+", All day event");
+            viewHolder.list_item_event_statr_end_dt_time_textview.setText(displayAlldayDtFormat.format(startDateTime) + ", All day event");
 
         } else {
             DateFormat displayStartDtFormat = new SimpleDateFormat("MMM dd, HH:MM - ");
@@ -113,6 +114,13 @@ public class Dash_Event_ListAdapter extends BaseAdapter {
         viewHolder.list_item_event_title.setText(event_dash_list_obj.getUser_comment());
         viewHolder.list_item_user_name.setText(event_dash_list_obj.getUser_name());
         viewHolder.list_item_post_dt_time.setText(event_dash_list_obj.getPost_dt());
+
+        if (event_dash_list_obj.getUser_dp_url() == null) {
+            viewHolder.list_item_user_img.setImageResource(R.drawable.avatar_100_3);
+        } else {
+            Picasso.get().load(event_dash_list_obj.getUser_dp_url())
+                    .fit().centerCrop().into(viewHolder.list_item_user_img);
+        }
 
         viewHolder.main_card_imageview.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -205,6 +213,7 @@ public class Dash_Event_ListAdapter extends BaseAdapter {
     public class ViewHolder {
 
         private ImageView main_card_imageview;
+        private ImageView list_item_user_img;
 
         private ImageView list_item_verify_iv;
         //        private ImageView list_item_deny_iv;

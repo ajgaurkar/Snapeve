@@ -38,6 +38,7 @@ public class Event_dash_list_obj {
 //    }
 
     String user_id;
+    String user_dp_url;
     String user_name;
     String user_comment;
     String comment_time;
@@ -48,17 +49,26 @@ public class Event_dash_list_obj {
     String post_end_dt_time;
     Boolean all_day_status;
 
-    public Event_dash_list_obj(String user_id, String user_name, String user_comment, String comment_time, String image_url, String post_id, String post_dt, String post_start_dt_time, String post_end_dt_time, boolean all_day_status) {
+    public Event_dash_list_obj(String user_id, String user_dp_url, String user_name, String user_comment, String comment_time, String image_url, String post_id, String post_dt, String post_start_dt_time, String post_end_dt_time, Boolean all_day_status) {
         this.user_id = user_id;
-        this.all_day_status = all_day_status;
-        this.post_dt = post_dt;
-        this.post_start_dt_time = post_start_dt_time;
-        this.post_end_dt_time = post_end_dt_time;
+        this.user_dp_url = user_dp_url;
         this.user_name = user_name;
         this.user_comment = user_comment;
         this.comment_time = comment_time;
         this.image_url = image_url;
         this.post_id = post_id;
+        this.post_dt = post_dt;
+        this.post_start_dt_time = post_start_dt_time;
+        this.post_end_dt_time = post_end_dt_time;
+        this.all_day_status = all_day_status;
+    }
+
+    public String getUser_dp_url() {
+        return user_dp_url;
+    }
+
+    public void setUser_dp_url(String user_dp_url) {
+        this.user_dp_url = user_dp_url;
     }
 
     public Boolean getAll_day_status() {

@@ -276,21 +276,14 @@ public class MainActivity extends AppCompatActivity implements Listview_communic
 
             String img_comment = feeds_list_object.get("img_comment").getAsString();
             String feed_img_url = feeds_list_object.get("img_url").getAsString();
+            String dp_url = feeds_list_object.get("dp_url").getAsString();
             String feed_user_id = feeds_list_object.get("initializer_id").getAsString();
             String post_id = feeds_list_object.get("post_id").getAsString();
             String post_dt = feeds_list_object.get("post_date").getAsString();
             String event_start_dt_time = feeds_list_object.get("event_start_dt_time").getAsString();
             String event_end_dt_time = feeds_list_object.get("event_end_dt_time").getAsString();
             boolean event_all_day_status = feeds_list_object.get("all_day").getAsBoolean();
-
-            //Remove " from start and end from every string
-//            img_comment = img_comment.substring(1, img_comment.length() - 1);
-//            feed_user_id = feed_user_id.substring(1, feed_user_id.length() - 1);
-//            feed_img_url = feed_img_url.substring(1, feed_img_url.length() - 1);
-//            post_id = post_id.substring(1, post_id.length() - 1);
-//            post_dt = post_dt.substring(1, post_dt.length() - 1);
-//            event_start_dt_time = event_start_dt_time.substring(1, event_start_dt_time.length() - 1);
-//            event_end_dt_time = event_end_dt_time.substring(1, event_end_dt_time.length() - 1);
+            String initializer_name = feeds_list_object.get("initializer_name").getAsString();
 
             Date date = null;
             try {
@@ -302,7 +295,7 @@ public class MainActivity extends AppCompatActivity implements Listview_communic
             post_dt = displayDtFormat.format(date);
             System.out.println("Report Date: " + post_dt);
 
-            event_main_list.add(0, new Event_dash_list_obj(feed_user_id, "Name_x", img_comment, "10 hrs ago", feed_img_url, post_id, post_dt, event_start_dt_time, event_end_dt_time, event_all_day_status));
+            event_main_list.add(0, new Event_dash_list_obj(feed_user_id, dp_url, initializer_name, img_comment, "10 hrs ago", feed_img_url, post_id, post_dt, event_start_dt_time, event_end_dt_time, event_all_day_status));
 
         }
         System.out.println(" event_main_list " + event_main_list.size());
