@@ -10,6 +10,9 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="spinner_style">
+        <item name="android:background">@drawable/spinner_left_icon_bg</item>
+    </style>
 
     <style name="TransparentTheme">
         <item name="android:windowFullscreen">true</item>

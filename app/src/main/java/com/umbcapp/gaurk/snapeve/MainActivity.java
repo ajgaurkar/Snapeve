@@ -401,6 +401,7 @@ public class MainActivity extends AppCompatActivity implements Listview_communic
         eventDetailIntent.putExtra("comm_time", selectedEvent_dash_list_obj.getComment_time());
         eventDetailIntent.putExtra("user_comment", selectedEvent_dash_list_obj.getUser_comment());
         eventDetailIntent.putExtra("intent_type", 0);
+        eventDetailIntent.putExtra("post_id", selectedEvent_dash_list_obj.getPost_id());
         startActivity(eventDetailIntent);
 
     }

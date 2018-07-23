@@ -1,6 +1,7 @@
 package com.umbcapp.gaurk.snapeve;
 
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
@@ -13,11 +14,20 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.google.common.util.concurrent.FutureCallback;
+import com.google.common.util.concurrent.Futures;
+import com.google.common.util.concurrent.ListenableFuture;
+import com.google.common.util.concurrent.SettableFuture;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.squareup.picasso.Picasso;
 import com.umbcapp.gaurk.snapeve.Adapters.AttendiesAdapter;
 import com.umbcapp.gaurk.snapeve.Adapters.CommentsAdapter;
@@ -62,6 +72,11 @@ public class EventDetails extends AppCompatActivity implements Listview_communic
     private RelativeLayout merge_options_layout;
     private TextView merge_event_cancel_btn_text_view;
     private TextView merge_event_merge_btn_text_view;
+    private ImageView list_item_verify_iv;
+    private ImageView list_item_spam_iv;
+//    private ImageView list_item_deny_iv;
+    private String post_id;
+    private Spinner list_item_status_spinner;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -71,14 +86,15 @@ public class EventDetails extends AppCompatActivity implements Listview_communic
         attendies_type_selection_status = 0;
         eventDetailIntent = getIntent();
         user_id = eventDetailIntent.getStringExtra("user_id");
+        post_id = eventDetailIntent.getStringExtra("post_id");
         intent_type = eventDetailIntent.getIntExtra("intent_type", 3);
         user_name = eventDetailIntent.getStringExtra("user_name");
-//        img_url = eventDetailIntent.getStringExtra("img_url").replace("\\n", "\n").replace("\\", "");
         img_url = eventDetailIntent.getStringExtra("img_url");
         comm_time = eventDetailIntent.getStringExtra("comm_time");
         user_comment = eventDetailIntent.getStringExtra("user_comment");
 
         merge_options_layout = (RelativeLayout) findViewById(R.id.merge_options_layout);
+        list_item_status_spinner = (Spinner) findViewById(R.id.list_item_status_spinner_textview);
         event_detail_user_name_text_view = (TextView) findViewById(R.id.event_detail_user_name_text_view);
         event_detail_user_post_dt_time_text_view = (TextView) findViewById(R.id.event_detail_user_post_dt_time_text_view);
         event_detail_user_comment_text_view = (TextView) findViewById(R.id.event_detail_user_comment_text_view);
@@ -88,6 +104,12 @@ public class EventDetails extends AppCompatActivity implements Listview_communic
 
         event_detail_attendies_text_view = (CardView) findViewById(R.id.event_detail_attendies_card_view);
         event_detail_event_image_image_view = (ImageView) findViewById(R.id.event_detail_event_image_image_view);
+
+        list_item_verify_iv = (ImageView) findViewById(R.id.list_item_verify_iv);
+//        list_item_deny_iv = (ImageView) findViewById(R.id.list_item_deny_iv);
+        list_item_spam_iv = (ImageView) findViewById(R.id.list_item_spam_iv);
+
+        fillAttendingSpinner();
 
         event_detail_user_name_text_view.setText(user_name);
         event_detail_user_post_dt_time_text_view.setText(comm_time);
@@ -137,6 +159,78 @@ public class EventDetails extends AppCompatActivity implements Listview_communic
             }
         });
 
+        list_item_verify_iv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+            }
+        });
+//        list_item_deny_iv = (ImageView) findViewById(R.id.list_item_deny_iv);
+//        list_item_spam_iv = (ImageView) findViewById(R.id.list_item_spam_iv);
+
+        list_item_status_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                System.out.println("Spinner position " + position);
+
+                executeAttendEventApi(1);
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+    }
+
+    private void fillAttendingSpinner() {
+
+        // Spinner Drop down elements
+        List<String> categories = new ArrayList<String>();
+        categories.add("Interested ?");
+        categories.add("Interested");
+        categories.add("Attending");
+        categories.add("Not attending");
+
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, categories);
+        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        list_item_status_spinner.setAdapter(dataAdapter);
+    }
+
+    private void executeAttendEventApi(int interested_status) {
+        JsonObject jsonObjectPostEventParameters = new JsonObject();
+
+
+        jsonObjectPostEventParameters.addProperty("code", interested_status);
+        jsonObjectPostEventParameters.addProperty("postId", post_id);
+        jsonObjectPostEventParameters.addProperty("userId", user_id);
+
+        final ProgressDialog mProgressDialog = new ProgressDialog(this);
+        mProgressDialog.setIndeterminate(true);
+        mProgressDialog.setMessage("Please wait...");
+
+        mProgressDialog.show();
+
+        final SettableFuture<JsonElement> resultFuture = SettableFuture.create();
+        ListenableFuture<JsonElement> serviceFilterFuture = MainActivity.mClient.invokeApi("attendies_req_handler_api", jsonObjectPostEventParameters);
+
+        Futures.addCallback(serviceFilterFuture, new FutureCallback<JsonElement>() {
+            @Override
+            public void onFailure(Throwable exception) {
+                resultFuture.setException(exception);
+                System.out.println(" attendies_req_handler_api exception    " + exception);
+                mProgressDialog.dismiss();
+            }
+
+            @Override
+            public void onSuccess(JsonElement response) {
+                resultFuture.set(response);
+                System.out.println(" attendies_req_handler_api success response    " + response);
+                mProgressDialog.dismiss();
+
+            }
+        });
     }
 
 

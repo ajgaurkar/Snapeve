@@ -131,16 +131,33 @@
         android:orientation="horizontal"
         android:weightSum="100">
 
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="8"
+            android:padding="3dp"
+            android:src="@drawable/attending_color_48" />
+
+        <Spinner
+            android:id="@+id/list_item_status_spinner_textview"
+            style="@style/spinner_style"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_weight="40"
+            android:gravity="center_vertical" />
+
         <View
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="5" />
+            android:layout_weight="1" />
 
         <ImageView
             android:id="@+id/list_item_verify_iv"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="10"
+            android:layout_weight="8"
             android:padding="3dp"
             android:src="@drawable/approve_blue_48" />
 
@@ -153,30 +170,30 @@
             android:text="Verify"
             android:textSize="12sp" />
 
-        <ImageView
-            android:id="@+id/list_item_deny_iv"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_below="@+id/card_bottom_seperator2"
-            android:layout_weight="10"
-            android:padding="3dp"
-            android:src="@drawable/deny_light_grey_48" />
+        <!--<ImageView-->
+        <!--android:id="@+id/list_item_deny_iv"-->
+        <!--android:layout_width="0dp"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:layout_below="@+id/card_bottom_seperator2"-->
+        <!--android:layout_weight="8"-->
+        <!--android:padding="3dp"-->
+        <!--android:src="@drawable/deny_light_grey_48" />-->
 
-        <TextView
-            android:id="@+id/list_item_deny_tv"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="25"
-            android:gravity="center_vertical"
-            android:text="Attending"
-            android:textSize="12sp" />
+        <!--<TextView-->
+        <!--android:id="@+id/list_item_deny_tv"-->
+        <!--android:layout_width="0dp"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:layout_weight="19"-->
+        <!--android:gravity="center_vertical"-->
+        <!--android:text="Attending"-->
+        <!--android:textSize="12sp" />-->
 
         <ImageView
             android:id="@+id/list_item_spam_iv"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_below="@+id/card_bottom_seperator2"
-            android:layout_weight="10"
+            android:layout_weight="8"
             android:padding="3dp"
             android:src="@drawable/spam_orange_48" />
 
