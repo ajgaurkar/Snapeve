@@ -136,16 +136,24 @@
             android:layout_height="match_parent"
             android:layout_weight="8"
             android:padding="3dp"
+            android:layout_marginStart="10dp"
             android:src="@drawable/attending_color_48" />
+
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="5"
+            android:padding="3dp"
+            android:src="@drawable/down_arrow_48" />
 
         <Spinner
             android:id="@+id/list_item_status_spinner_textview"
-            style="@style/spinner_style"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_marginBottom="10dp"
             android:layout_marginTop="10dp"
-            android:layout_weight="40"
+            android:layout_weight="35"
+            android:background="@drawable/blank_bg"
             android:gravity="center_vertical" />
 
         <View

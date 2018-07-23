@@ -74,7 +74,7 @@ public class EventDetails extends AppCompatActivity implements Listview_communic
     private TextView merge_event_merge_btn_text_view;
     private ImageView list_item_verify_iv;
     private ImageView list_item_spam_iv;
-//    private ImageView list_item_deny_iv;
+    //    private ImageView list_item_deny_iv;
     private String post_id;
     private Spinner list_item_status_spinner;
 
@@ -134,6 +134,7 @@ public class EventDetails extends AppCompatActivity implements Listview_communic
                 showAttendiesDialog();
             }
         });
+
         if (intent_type == 1) {
             merge_options_layout.setVisibility(View.VISIBLE);
         } else {
@@ -172,7 +173,13 @@ public class EventDetails extends AppCompatActivity implements Listview_communic
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 System.out.println("Spinner position " + position);
 
-                executeAttendEventApi(1);
+                if (position != 0) {
+                    executeAttendEventApi(position);
+
+                    if (position == 4) {
+                        list_item_status_spinner.setSelection(0);
+                    }
+                }
 
             }
 
@@ -184,18 +191,57 @@ public class EventDetails extends AppCompatActivity implements Listview_communic
 
     }
 
+    private void fetchAttendieslist() {
+
+        JsonObject jsonObjectPostEventParameters = new JsonObject();
+
+
+        jsonObjectPostEventParameters.addProperty("post_id", post_id);
+
+        final ProgressDialog mProgressDialog = new ProgressDialog(this);
+        mProgressDialog.setIndeterminate(true);
+        mProgressDialog.setMessage("Please wait...");
+        mProgressDialog.setCancelable(false);
+        mProgressDialog.setCanceledOnTouchOutside(false);
+        mProgressDialog.show();
+
+        final SettableFuture<JsonElement> resultFuture = SettableFuture.create();
+        ListenableFuture<JsonElement> serviceFilterFuture = MainActivity.mClient.invokeApi("fetch_attendies_list_api", jsonObjectPostEventParameters);
+
+        Futures.addCallback(serviceFilterFuture, new FutureCallback<JsonElement>() {
+            @Override
+            public void onFailure(Throwable exception) {
+                resultFuture.setException(exception);
+                System.out.println(" fetch_attendies_list exception    " + exception);
+                mProgressDialog.dismiss();
+            }
+
+            @Override
+            public void onSuccess(JsonElement response) {
+                resultFuture.set(response);
+                System.out.println(" fetch_attendies_list success response    " + response);
+                mProgressDialog.dismiss();
+
+            }
+        });
+    }
+
     private void fillAttendingSpinner() {
 
         // Spinner Drop down elements
         List<String> categories = new ArrayList<String>();
-        categories.add("Interested ?");
+        categories.add("");
         categories.add("Interested");
         categories.add("Attending");
-        categories.add("Not attending");
+        categories.add("Not Interested");
+        categories.add("Clear response");
 
-        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, categories);
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this, R.layout.blank_first_simple_spinner_item, categories);
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         list_item_status_spinner.setAdapter(dataAdapter);
+
+//        list_item_status_spinner.setPrompt("sdhv");
+
     }
 
     private void executeAttendEventApi(int interested_status) {
@@ -209,7 +255,8 @@ public class EventDetails extends AppCompatActivity implements Listview_communic
         final ProgressDialog mProgressDialog = new ProgressDialog(this);
         mProgressDialog.setIndeterminate(true);
         mProgressDialog.setMessage("Please wait...");
-
+        mProgressDialog.setCancelable(false);
+        mProgressDialog.setCanceledOnTouchOutside(false);
         mProgressDialog.show();
 
         final SettableFuture<JsonElement> resultFuture = SettableFuture.create();
@@ -235,6 +282,8 @@ public class EventDetails extends AppCompatActivity implements Listview_communic
 
 
     private void showAttendiesDialog() {
+        fetchAttendieslist();
+
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
 
 //        Dialog alertDialog = new Dialog(this);
