@@ -1,6 +1,7 @@
 package com.umbcapp.gaurk.snapeve;
 
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
@@ -13,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -72,6 +74,10 @@ public class EventDetails extends AppCompatActivity implements Listview_communic
     private ProgressBar attendies_dialog_layout_progressbar;
     private TextView list_item_spam_tv;
     private TextView list_item_verify_tv;
+    private TextView event_detail_individual_image_comment_textview;
+    private Spinner add_comment_dialog_user_name_spinner;
+    private EditText add_comment_dialog_comment_edittext;
+    private TextView add_comment_dialog_clear_textview;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -96,6 +102,7 @@ public class EventDetails extends AppCompatActivity implements Listview_communic
 
         merge_event_cancel_btn_text_view = (TextView) findViewById(R.id.merge_event_cancel_btn_text_view);
         merge_event_merge_btn_text_view = (TextView) findViewById(R.id.merge_event_merge_btn_text_view);
+        event_detail_individual_image_comment_textview = (TextView) findViewById(R.id.event_detail_individual_image_comment_textview);
 
         event_detail_attendies_text_view = (CardView) findViewById(R.id.event_detail_attendies_card_view);
         event_detail_event_image_image_view = (ImageView) findViewById(R.id.event_detail_event_image_image_view);
@@ -153,6 +160,12 @@ public class EventDetails extends AppCompatActivity implements Listview_communic
                 returnIntent.putExtra("Merge_action", "1");
                 setResult(RESULT_OK, returnIntent);
                 finish();
+            }
+        });
+        event_detail_individual_image_comment_textview.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openAddCommentDialog();
             }
         });
         merge_event_cancel_btn_text_view.setOnClickListener(new View.OnClickListener() {
@@ -221,6 +234,48 @@ public class EventDetails extends AppCompatActivity implements Listview_communic
             }
         });
 
+    }
+
+    private void openAddCommentDialog() {
+        //make api call and fetch attendies list
+        fetchAttendieslist();
+
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
+        LayoutInflater flater = this.getLayoutInflater();
+        View view = flater.inflate(R.layout.add_comment_dialog, null);
+        alertDialog.setView(view);
+        alertDialog.setTitle("Add comment");
+        alertDialog.setCancelable(false);
+
+        add_comment_dialog_user_name_spinner = (Spinner) view.findViewById(R.id.add_comment_dialog_user_name_spinner);
+
+        fillCommentsUserNameSpinner();
+
+        add_comment_dialog_clear_textview = (TextView) view.findViewById(R.id.add_comment_dialog_clear_textview);
+        add_comment_dialog_comment_edittext = (EditText) view.findViewById(R.id.add_comment_dialog_comment_edittext);
+
+        add_comment_dialog_clear_textview.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                add_comment_dialog_user_name_spinner.setSelection(0);
+            }
+        });
+
+        alertDialog.setPositiveButton("Comment", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+            }
+        });
+        alertDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+            }
+        });
+
+
+        alertDialog.show();
     }
 
     private void actionEvent(int currentstatus, int click_code, String userComment) {
@@ -344,6 +399,24 @@ public class EventDetails extends AppCompatActivity implements Listview_communic
         list_item_status_spinner.setAdapter(dataAdapter);
 
 //        list_item_status_spinner.setPrompt("sdhv");
+
+    }
+
+    private void fillCommentsUserNameSpinner() {
+
+        // Spinner Drop down elements
+        List<String> categories = new ArrayList<String>();
+        categories.add("");
+        categories.add("T_cruise");
+        categories.add("Aj_gaur");
+        categories.add("Amey_bawiskar");
+        categories.add("Neha_reddy");
+        categories.add("Kapil_k");
+        categories.add("Rushabh");
+
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this, R.layout.comments_blank_first_simple_spinner_item, categories);
+        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        add_comment_dialog_user_name_spinner.setAdapter(dataAdapter);
 
     }
 

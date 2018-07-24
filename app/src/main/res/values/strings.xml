@@ -49,5 +49,6 @@
     <string name="set_privilege_set_3">Set privilege - Read only</string>
     <string name="set_privilege_set_2">Set privilege\n
         - post and manage group members</string>
+    <string name="at_the_rate_string">\@</string>
 
 </resources>
