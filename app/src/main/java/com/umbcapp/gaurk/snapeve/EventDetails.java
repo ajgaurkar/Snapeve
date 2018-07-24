@@ -21,6 +21,7 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.common.util.concurrent.FutureCallback;
 import com.google.common.util.concurrent.Futures;
@@ -264,7 +265,7 @@ public class EventDetails extends AppCompatActivity implements Listview_communic
         alertDialog.setPositiveButton("Comment", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-
+                validateAndPostComment(add_comment_dialog_comment_edittext.getText().toString().trim(), add_comment_dialog_user_name_spinner.getSelectedItemPosition());
             }
         });
         alertDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -276,6 +277,52 @@ public class EventDetails extends AppCompatActivity implements Listview_communic
 
 
         alertDialog.show();
+    }
+
+    private void validateAndPostComment(String comment, int selectedItemPosition) {
+
+
+        if (!comment.equals("")) {
+            final ProgressDialog mProgressDialog = new ProgressDialog(this);
+            mProgressDialog.setIndeterminate(true);
+            mProgressDialog.setMessage("Commenting. Please wait...");
+            mProgressDialog.setCanceledOnTouchOutside(false);
+            mProgressDialog.setCancelable(false);
+            mProgressDialog.show();
+
+            JsonObject jsonObjectPostEventParameters = new JsonObject();
+
+            jsonObjectPostEventParameters.addProperty("source_user_id", new SessionManager(getApplicationContext()).getSpecificUserDetail(SessionManager.KEY_USER_ID));
+            jsonObjectPostEventParameters.addProperty("target_user_id", "");
+            jsonObjectPostEventParameters.addProperty("post_id", post_id);
+            jsonObjectPostEventParameters.addProperty("comment", comment);
+
+            final SettableFuture<JsonElement> resultFuture = SettableFuture.create();
+            ListenableFuture<JsonElement> serviceFilterFuture = MainActivity.mClient.invokeApi("image_comments_api", jsonObjectPostEventParameters);
+
+            Futures.addCallback(serviceFilterFuture, new FutureCallback<JsonElement>() {
+                @Override
+                public void onFailure(Throwable exception) {
+                    resultFuture.setException(exception);
+                    System.out.println(" image_comments_api exception    " + exception);
+                    mProgressDialog.dismiss();
+                }
+
+                @Override
+                public void onSuccess(JsonElement response) {
+                    resultFuture.set(response);
+                    System.out.println(" image_comments_api success response    " + response);
+                    validateCommentResponse(response);
+                    mProgressDialog.dismiss();
+                }
+            });
+        } else {
+            Toast.makeText(getApplicationContext(), "Comment field empty. Try again", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void validateCommentResponse(JsonElement response) {
+        System.out.println("validateCommentResponse : " + response);
     }
 
     private void actionEvent(int currentstatus, int click_code, String userComment) {
