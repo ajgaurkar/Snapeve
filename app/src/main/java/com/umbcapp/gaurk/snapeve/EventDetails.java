@@ -1,11 +1,9 @@
 package com.umbcapp.gaurk.snapeve;
 
-import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -13,11 +11,11 @@ import android.support.v7.widget.CardView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -26,6 +24,7 @@ import com.google.common.util.concurrent.FutureCallback;
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.SettableFuture;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.squareup.picasso.Picasso;
@@ -33,14 +32,10 @@ import com.umbcapp.gaurk.snapeve.Adapters.AttendiesAdapter;
 import com.umbcapp.gaurk.snapeve.Adapters.CommentsAdapter;
 import com.umbcapp.gaurk.snapeve.Controllers.AttendiesListItem;
 import com.umbcapp.gaurk.snapeve.Controllers.CommentsListItem;
+import com.umbcapp.gaurk.snapeve.Controllers.Event_dash_list_obj;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
-import java.util.ListIterator;
-import java.util.Map;
 
 public class EventDetails extends AppCompatActivity implements Listview_communicator {
 
@@ -60,10 +55,8 @@ public class EventDetails extends AppCompatActivity implements Listview_communic
     private TextView attendies_dialog_switch_group_textview;
     private TextView attendies_dialog_switch_all_textview;
     private ListView attendies_dialog_layout_attendies_listview;
-    private ArrayList<AttendiesListItem> attendiesClubbedArrayList;
-    private ArrayList<AttendiesListItem> attendiesAttendingArrayList;
-    private ArrayList<AttendiesListItem> attendiesNotAttendingRequestedArrayList;
-    private ArrayList<AttendiesListItem> attendiesNotAttendingArrayList;
+    private ArrayList<AttendiesListItem> attendiesGrpMemberArrayList;
+    private ArrayList<AttendiesListItem> attendiesOutGrpMemberArrayList;
     private int attendies_type_selection_status;
     private AttendiesAdapter attendiesAdapter;
     private int listViewVisiblePosition;
@@ -74,9 +67,11 @@ public class EventDetails extends AppCompatActivity implements Listview_communic
     private TextView merge_event_merge_btn_text_view;
     private ImageView list_item_verify_iv;
     private ImageView list_item_spam_iv;
-    //    private ImageView list_item_deny_iv;
     private String post_id;
     private Spinner list_item_status_spinner;
+    private ProgressBar attendies_dialog_layout_progressbar;
+    private TextView list_item_spam_tv;
+    private TextView list_item_verify_tv;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -106,8 +101,10 @@ public class EventDetails extends AppCompatActivity implements Listview_communic
         event_detail_event_image_image_view = (ImageView) findViewById(R.id.event_detail_event_image_image_view);
 
         list_item_verify_iv = (ImageView) findViewById(R.id.list_item_verify_iv);
+        list_item_verify_tv = (TextView) findViewById(R.id.list_item_verify_tv);
 //        list_item_deny_iv = (ImageView) findViewById(R.id.list_item_deny_iv);
         list_item_spam_iv = (ImageView) findViewById(R.id.list_item_spam_iv);
+        list_item_spam_tv = (TextView) findViewById(R.id.list_item_spam_tv);
 
         fillAttendingSpinner();
 
@@ -128,6 +125,14 @@ public class EventDetails extends AppCompatActivity implements Listview_communic
         CommentsAdapter commentsAdapter = new CommentsAdapter(getApplicationContext(), commentsList);
         eventDetailsCommentsListView.setAdapter(commentsAdapter);
 
+        event_detail_event_image_image_view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent imageDetailIntent = new Intent(getApplicationContext(), ImageFullscreenOpen.class);
+                imageDetailIntent.putExtra("img_url", img_url);
+                startActivity(imageDetailIntent);
+            }
+        });
         event_detail_attendies_text_view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -163,6 +168,33 @@ public class EventDetails extends AppCompatActivity implements Listview_communic
         list_item_verify_iv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                actionEvent(1, 1, "Test");
+
+            }
+        });
+        list_item_verify_tv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                actionEvent(1, 1, "Test");
+
+            }
+        });
+        list_item_spam_iv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                actionEvent(1, 3, "Test");
+
+            }
+        });
+        list_item_spam_tv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                actionEvent(1, 3, "Test");
+
             }
         });
 //        list_item_deny_iv = (ImageView) findViewById(R.id.list_item_deny_iv);
@@ -191,19 +223,61 @@ public class EventDetails extends AppCompatActivity implements Listview_communic
 
     }
 
+    private void actionEvent(int currentstatus, int click_code, String userComment) {
+        JsonObject jsonObjectPostEventParameters = new JsonObject();
+
+
+        if (click_code == 1) {
+            jsonObjectPostEventParameters.addProperty("verify_status", 1);
+            jsonObjectPostEventParameters.addProperty("spam_status", 0);
+        }
+        if (click_code == 2) {
+            jsonObjectPostEventParameters.addProperty("verify_status", 0);
+            jsonObjectPostEventParameters.addProperty("spam_status", 0);
+        }
+        if (click_code == 3) {
+            jsonObjectPostEventParameters.addProperty("verify_status", 0);
+            jsonObjectPostEventParameters.addProperty("spam_status", 1);
+        }
+
+        jsonObjectPostEventParameters.addProperty("userComment", userComment);
+        jsonObjectPostEventParameters.addProperty("user_id", user_id);
+        jsonObjectPostEventParameters.addProperty("post_id", post_id);
+        jsonObjectPostEventParameters.addProperty("click_code", click_code);
+
+
+        final ProgressDialog mProgressDialog = new ProgressDialog(this);
+        mProgressDialog.setIndeterminate(true);
+        mProgressDialog.setMessage("Posting. Please wait...");
+
+        mProgressDialog.show();
+
+        final SettableFuture<JsonElement> resultFuture = SettableFuture.create();
+        ListenableFuture<JsonElement> serviceFilterFuture = MainActivity.mClient.invokeApi("action_event_api", jsonObjectPostEventParameters);
+
+        Futures.addCallback(serviceFilterFuture, new FutureCallback<JsonElement>() {
+            @Override
+            public void onFailure(Throwable exception) {
+                resultFuture.setException(exception);
+                System.out.println(" actionEvent exception    " + exception);
+                mProgressDialog.dismiss();
+            }
+
+            @Override
+            public void onSuccess(JsonElement response) {
+                resultFuture.set(response);
+                System.out.println(" actionEvent success response    " + response);
+                mProgressDialog.dismiss();
+
+            }
+        });
+    }
+
     private void fetchAttendieslist() {
 
         JsonObject jsonObjectPostEventParameters = new JsonObject();
 
-
         jsonObjectPostEventParameters.addProperty("post_id", post_id);
-
-        final ProgressDialog mProgressDialog = new ProgressDialog(this);
-        mProgressDialog.setIndeterminate(true);
-        mProgressDialog.setMessage("Please wait...");
-        mProgressDialog.setCancelable(false);
-        mProgressDialog.setCanceledOnTouchOutside(false);
-        mProgressDialog.show();
 
         final SettableFuture<JsonElement> resultFuture = SettableFuture.create();
         ListenableFuture<JsonElement> serviceFilterFuture = MainActivity.mClient.invokeApi("fetch_attendies_list_api", jsonObjectPostEventParameters);
@@ -213,17 +287,46 @@ public class EventDetails extends AppCompatActivity implements Listview_communic
             public void onFailure(Throwable exception) {
                 resultFuture.setException(exception);
                 System.out.println(" fetch_attendies_list exception    " + exception);
-                mProgressDialog.dismiss();
+                attendies_dialog_layout_progressbar.setVisibility(View.GONE);
             }
 
             @Override
             public void onSuccess(JsonElement response) {
                 resultFuture.set(response);
                 System.out.println(" fetch_attendies_list success response    " + response);
-                mProgressDialog.dismiss();
-
+                parseAttendiesResponse(response);
+                attendies_dialog_layout_progressbar.setVisibility(View.GONE);
             }
         });
+    }
+
+    private void parseAttendiesResponse(JsonElement attendiesResponse) {
+        attendiesGrpMemberArrayList = new ArrayList<AttendiesListItem>();
+
+        System.out.println(" IN PARSE JASON");
+
+        JsonArray attendiesJsonArray = attendiesResponse.getAsJsonArray();
+
+        for (int j = 0; j < attendiesJsonArray.size(); j++) {
+            JsonObject attendies_list_object = attendiesJsonArray.get(j).getAsJsonObject();
+            System.out.println(" attendies_list_object  " + attendies_list_object);
+
+            String user_id = attendies_list_object.get("USER_ID").getAsString();
+            int attend_status = attendies_list_object.get("ATTEND_STATUS").getAsInt();
+            String img_dp_url = attendies_list_object.get("DP_URL").getAsString();
+            String user_name = attendies_list_object.get("USER_NAME").getAsString();
+            String first_name = attendies_list_object.get("FIRST_NAME").getAsString();
+            String last_name = attendies_list_object.get("LAST_NAME").getAsString();
+            String grp_id = attendies_list_object.get("GRP_ID").getAsString();
+
+            //MISSING GRP ID IN SESSION MANAGER. NEED TO ADD IT. NEED IT HERE
+//            if(grp_id.equals(new SessionManager(getApplicationContext()).getSpecificUserDetail(SessionManager.KEY)))
+
+            attendiesGrpMemberArrayList.add(0, new AttendiesListItem(user_id, user_name, 0, attend_status, img_dp_url));
+
+        }
+
+        populateAttendiesList(0);
     }
 
     private void fillAttendingSpinner() {
@@ -280,19 +383,18 @@ public class EventDetails extends AppCompatActivity implements Listview_communic
         });
     }
 
-
     private void showAttendiesDialog() {
+        //make api call and fetch attendies list
         fetchAttendieslist();
 
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
-
-//        Dialog alertDialog = new Dialog(this);
         LayoutInflater flater = this.getLayoutInflater();
         View view = flater.inflate(R.layout.attendies_dialog, null);
         alertDialog.setView(view);
         alertDialog.setCancelable(true);
 
         attendies_dialog_layout_attendies_count_textview = (TextView) view.findViewById(R.id.attendies_dialog_layout_attendies_count_textview);
+        attendies_dialog_layout_progressbar = (ProgressBar) view.findViewById(R.id.attendies_dialog_layout_progressbar);
         attendies_dialog_layout_attendies_listview = (ListView) view.findViewById(R.id.attendies_dialog_layout_attendies_listview);
         attendies_dialog_switch_group_textview = (TextView) view.findViewById(R.id.attendies_dialog_switch_group_textview);
         attendies_dialog_switch_all_textview = (TextView) view.findViewById(R.id.attendies_dialog_switch_all_textview);
@@ -303,7 +405,7 @@ public class EventDetails extends AppCompatActivity implements Listview_communic
                 attendies_dialog_switch_group_textview.setBackground(getResources().getDrawable(R.drawable.text_selection_left_seleted));
                 attendies_dialog_switch_all_textview.setBackground(getResources().getDrawable(R.drawable.text_selection_right_unseleted));
                 attendies_type_selection_status = 0;
-                fetchAndPopulateAttendiesList(attendies_type_selection_status);
+                populateAttendiesList(attendies_type_selection_status);
             }
         });
         attendies_dialog_switch_all_textview.setOnClickListener(new View.OnClickListener() {
@@ -312,55 +414,26 @@ public class EventDetails extends AppCompatActivity implements Listview_communic
                 attendies_dialog_switch_group_textview.setBackground(getResources().getDrawable(R.drawable.text_selection_left_unseleted));
                 attendies_dialog_switch_all_textview.setBackground(getResources().getDrawable(R.drawable.text_selection_right_seleted));
                 attendies_type_selection_status = 1;
-                fetchAndPopulateAttendiesList(attendies_type_selection_status);
+                populateAttendiesList(attendies_type_selection_status);
             }
         });
-
-        fetchAndPopulateAttendiesList(0);
 
         alertDialog.show();
     }
 
-    private void fetchAndPopulateAttendiesList(int attendies_type_selection_status) {
+    private void populateAttendiesList(int attendies_type_selection_status) {
 
-        attendiesClubbedArrayList = new ArrayList<AttendiesListItem>();
-        attendiesNotAttendingArrayList = new ArrayList<AttendiesListItem>();
-        attendiesAttendingArrayList = new ArrayList<AttendiesListItem>();
-        attendiesNotAttendingRequestedArrayList = new ArrayList<AttendiesListItem>();
-
-//        attendiesAttendingArrayList.add(new AttendiesListItem("uid1", "Ajinkya Gaurkar", 0, 1, "https://ais2017.umbc.edu/files/2017/09/umbc.jpg"));
-        attendiesNotAttendingArrayList.add(new AttendiesListItem("uid1", "Ajinkya Siddharth", 0, 0, "https://ais2017.umbc.edu/files/2017/09/umbc.jpg"));
-//        attendiesAttendingArrayList.add(new AttendiesListItem("uid1", "Neha Reddy", 0, 1, "https://ais2017.umbc.edu/files/2017/09/umbc.jpg"));
-        attendiesNotAttendingRequestedArrayList.add(new AttendiesListItem("uid1", "Neha Srinivas", 1, 0, "https://ais2017.umbc.edu/files/2017/09/umbc.jpg"));
-//        attendiesAttendingArrayList.add(new AttendiesListItem("uid1", "Ajinkya Gaurkar", 0, 1, "https://ais2017.umbc.edu/files/2017/09/umbc.jpg"));
-        attendiesNotAttendingArrayList.add(new AttendiesListItem("uid1", "Ajinkya Siddharth", 0, 0, "https://ais2017.umbc.edu/files/2017/09/umbc.jpg"));
-//        attendiesAttendingArrayList.add(new AttendiesListItem("uid1", "Neha Reddy", 0, 1, "https://ais2017.umbc.edu/files/2017/09/umbc.jpg"));
-        attendiesNotAttendingRequestedArrayList.add(new AttendiesListItem("uid1", "Neha Srinivas", 1, 0, "https://ais2017.umbc.edu/files/2017/09/umbc.jpg"));
-        attendiesAttendingArrayList.add(new AttendiesListItem("uid1", "Ajinkya Gaurkar", 0, 1, "https://ais2017.umbc.edu/files/2017/09/umbc.jpg"));
-        attendiesNotAttendingArrayList.add(new AttendiesListItem("uid1", "Ajinkya Siddharth", 0, 0, "https://ais2017.umbc.edu/files/2017/09/umbc.jpg"));
-        attendiesAttendingArrayList.add(new AttendiesListItem("uid1", "Neha Reddy", 0, 1, "https://ais2017.umbc.edu/files/2017/09/umbc.jpg"));
-        attendiesNotAttendingRequestedArrayList.add(new AttendiesListItem("uid1", "Neha Srinivas", 1, 0, "https://ais2017.umbc.edu/files/2017/09/umbc.jpg"));
-        attendiesAttendingArrayList.add(new AttendiesListItem("uid1", "Ajinkya Gaurkar", 0, 1, "https://ais2017.umbc.edu/files/2017/09/umbc.jpg"));
-        attendiesNotAttendingArrayList.add(new AttendiesListItem("uid1", "Ajinkya Siddharth", 0, 0, "https://ais2017.umbc.edu/files/2017/09/umbc.jpg"));
-        attendiesAttendingArrayList.add(new AttendiesListItem("uid1", "Neha Reddy", 0, 1, "https://ais2017.umbc.edu/files/2017/09/umbc.jpg"));
-        attendiesNotAttendingRequestedArrayList.add(new AttendiesListItem("uid1", "Neha Srinivas", 1, 0, "https://ais2017.umbc.edu/files/2017/09/umbc.jpg"));
-
-        attendiesClubbedArrayList.addAll(attendiesAttendingArrayList);
-        attendiesClubbedArrayList.addAll(attendiesNotAttendingRequestedArrayList);
-        attendiesClubbedArrayList.addAll(attendiesNotAttendingArrayList);
-        //attendiesAdapter = new AttendiesAdapter(getApplicationContext(), attendiesClubbedArrayList, attendies_type_selection_status);
-        //getApplicationContext not working for listview item click listener Interface, Hence EventDetails.this
-        attendiesAdapter = new AttendiesAdapter(EventDetails.this, attendiesClubbedArrayList, attendies_type_selection_status);
+        System.out.println(" attendiesGrpMemberArrayList " + attendiesGrpMemberArrayList.size());
+        attendiesAdapter = new AttendiesAdapter(EventDetails.this, attendiesGrpMemberArrayList, attendies_type_selection_status);
 
         attendies_dialog_layout_attendies_listview.setAdapter(attendiesAdapter);
 
         if (attendies_type_selection_status == 0) {
-            attendies_dialog_layout_attendies_count_textview.setText(attendiesAttendingArrayList.size() + " Group members attending");
+            attendies_dialog_layout_attendies_count_textview.setText(attendiesGrpMemberArrayList.size() + " Group members attending");
         }
         if (attendies_type_selection_status == 1) {
-            attendies_dialog_layout_attendies_count_textview.setText(attendiesClubbedArrayList.size() + " others attending");
+            attendies_dialog_layout_attendies_count_textview.setText(attendiesGrpMemberArrayList.size() + " others attending");
         }
-
 
     }
 
@@ -376,7 +449,7 @@ public class EventDetails extends AppCompatActivity implements Listview_communic
 
     private void modifyRequestStatus(int position) {
 
-        AttendiesListItem selectedAttendiesListItem = attendiesClubbedArrayList.get(position);
+        AttendiesListItem selectedAttendiesListItem = attendiesGrpMemberArrayList.get(position);
 
         int tempStatus = selectedAttendiesListItem.getRequest_status();
         Log.d("tempStatus before", tempStatus + "position " + position);
@@ -387,7 +460,7 @@ public class EventDetails extends AppCompatActivity implements Listview_communic
         if (tempStatus == 1) {
             selectedAttendiesListItem.setRequest_status(0);
         }
-        attendiesClubbedArrayList.set(position, selectedAttendiesListItem);
+        attendiesGrpMemberArrayList.set(position, selectedAttendiesListItem);
 
         //Update listview and set selection
         attendiesAdapter.notifyDataSetChanged();

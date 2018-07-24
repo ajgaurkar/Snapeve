@@ -166,6 +166,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="8"
+            android:foreground="?attr/selectableItemBackground"
             android:padding="3dp"
             android:src="@drawable/approve_blue_48" />
 
@@ -174,6 +175,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="20"
+            android:foreground="?attr/selectableItemBackground"
             android:gravity="center_vertical"
             android:text="Verify"
             android:textSize="12sp" />
@@ -199,6 +201,7 @@
         <ImageView
             android:id="@+id/list_item_spam_iv"
             android:layout_width="0dp"
+            android:foreground="?attr/selectableItemBackground"
             android:layout_height="match_parent"
             android:layout_below="@+id/card_bottom_seperator2"
             android:layout_weight="8"
@@ -208,6 +211,7 @@
         <TextView
             android:id="@+id/list_item_spam_tv"
             android:layout_width="0dp"
+            android:foreground="?attr/selectableItemBackground"
             android:layout_height="match_parent"
             android:layout_weight="15"
             android:gravity="center_vertical"

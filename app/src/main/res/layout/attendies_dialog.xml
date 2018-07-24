@@ -60,9 +60,15 @@
         android:layout_marginBottom="5dp"
         android:gravity="center"
         android:padding="2dp"
-        android:text="25 Group members attending"
         android:textColor="#fff"
         android:textStyle="bold" />
+
+    <ProgressBar
+        android:id="@+id/attendies_dialog_layout_progressbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/attendies_dialog_layout_attendies_count_textview"
+        android:layout_margin="15dp"></ProgressBar>
 
     <ListView
         android:id="@+id/attendies_dialog_layout_attendies_listview"
