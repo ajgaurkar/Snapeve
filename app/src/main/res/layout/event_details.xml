@@ -123,9 +123,9 @@
             android:layout_marginStart="8dp"
             android:layout_toStartOf="@+id/event_detail_attendies_text_view"
             android:background="@drawable/transparent_white_line_bg"
+            android:foreground="?attr/selectableItemBackground"
             android:hint="+ Add comment"
             android:padding="8dp"
-            android:foreground="?attr/selectableItemBackground"
             android:shadowColor="#000"
             android:shadowDx="1"
             android:shadowDy="1"
@@ -144,11 +144,11 @@
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
             android:background="@drawable/transparent_white_line_bg"
+            android:foreground="?attr/selectableItemBackground"
             android:gravity="center"
             android:padding="8dp"
             android:shadowColor="#000"
             android:shadowDx="1"
-            android:foreground="?attr/selectableItemBackground"
             android:shadowDy="1"
             android:shadowRadius="2"
             android:singleLine="true"
@@ -343,6 +343,13 @@
         android:layout_height="0dp"
         android:layout_weight="42">
 
+        <ProgressBar
+            android:id="@+id/event_details_comments_loading_progress_bar"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_centerInParent="true"
+            android:visibility="gone" />
+
         <View
             android:layout_width="match_parent"
             android:layout_height="0.5dp"
@@ -422,7 +429,8 @@
             android:layout_alignParentBottom="true"
             android:background="@color/colorAccent"
             android:paddingBottom="30dp"
-            android:paddingTop="10dp">
+            android:paddingTop="10dp"
+            android:visibility="gone">
 
             <View
                 android:id="@+id/merge_event_vertical_seprator"

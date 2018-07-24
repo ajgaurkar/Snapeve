@@ -38,6 +38,7 @@ import com.umbcapp.gaurk.snapeve.Controllers.CommentsListItem;
 import com.umbcapp.gaurk.snapeve.Controllers.Event_dash_list_obj;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 public class EventDetails extends AppCompatActivity implements Listview_communicator {
@@ -79,6 +80,10 @@ public class EventDetails extends AppCompatActivity implements Listview_communic
     private Spinner add_comment_dialog_user_name_spinner;
     private EditText add_comment_dialog_comment_edittext;
     private TextView add_comment_dialog_clear_textview;
+    private String tempCommentDescVar = "";
+    private int tempCommentSpinnerVar = 0;
+    private TextView event_details_comment_label_tv;
+    private ProgressBar event_details_comments_loading_progress_bar;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -100,6 +105,8 @@ public class EventDetails extends AppCompatActivity implements Listview_communic
         event_detail_user_name_text_view = (TextView) findViewById(R.id.event_detail_user_name_text_view);
         event_detail_user_post_dt_time_text_view = (TextView) findViewById(R.id.event_detail_user_post_dt_time_text_view);
         event_detail_user_comment_text_view = (TextView) findViewById(R.id.event_detail_user_comment_text_view);
+        event_details_comment_label_tv = (TextView) findViewById(R.id.event_details_comment_label_tv);
+        event_details_comments_loading_progress_bar = (ProgressBar) findViewById(R.id.event_details_comments_loading_progress_bar);
 
         merge_event_cancel_btn_text_view = (TextView) findViewById(R.id.merge_event_cancel_btn_text_view);
         merge_event_merge_btn_text_view = (TextView) findViewById(R.id.merge_event_merge_btn_text_view);
@@ -114,6 +121,7 @@ public class EventDetails extends AppCompatActivity implements Listview_communic
         list_item_spam_iv = (ImageView) findViewById(R.id.list_item_spam_iv);
         list_item_spam_tv = (TextView) findViewById(R.id.list_item_spam_tv);
 
+        fetchCommentsApi(post_id);
         fillAttendingSpinner();
 
         event_detail_user_name_text_view.setText(user_name);
@@ -237,6 +245,45 @@ public class EventDetails extends AppCompatActivity implements Listview_communic
 
     }
 
+    private void fetchCommentsApi(String post_id) {
+
+        System.out.println("IN fetch_post_comments_api");
+        event_details_comment_label_tv.setText("Loading comments ...");
+        event_details_comments_loading_progress_bar.setVisibility(View.VISIBLE);
+
+        JsonObject jsonObjectPostEventParameters = new JsonObject();
+
+        jsonObjectPostEventParameters.addProperty("post_id", post_id);
+
+        final SettableFuture<JsonElement> resultFuture = SettableFuture.create();
+        ListenableFuture<JsonElement> serviceFilterFuture = MainActivity.mClient.invokeApi("fetch_post_comments_api", jsonObjectPostEventParameters);
+
+        Futures.addCallback(serviceFilterFuture, new FutureCallback<JsonElement>() {
+            @Override
+            public void onFailure(Throwable exception) {
+                resultFuture.setException(exception);
+                Toast.makeText(getApplicationContext(), "Something went wrong. Try again", Toast.LENGTH_SHORT).show();
+
+                System.out.println(" fetch_post_comments_api exception    " + exception);
+                event_details_comments_loading_progress_bar.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onSuccess(JsonElement response) {
+                resultFuture.set(response);
+                System.out.println(" fetch_post_comments_api success response    " + response);
+                parsePostComments(response);
+                event_details_comments_loading_progress_bar.setVisibility(View.GONE);
+                event_details_comment_label_tv.setText("Comments");
+
+            }
+        });
+    }
+
+    private void parsePostComments(JsonElement commentsResponse) {
+
+    }
+
     private void openAddCommentDialog() {
         //make api call and fetch attendies list
         fetchAttendieslist();
@@ -254,6 +301,7 @@ public class EventDetails extends AppCompatActivity implements Listview_communic
 
         add_comment_dialog_clear_textview = (TextView) view.findViewById(R.id.add_comment_dialog_clear_textview);
         add_comment_dialog_comment_edittext = (EditText) view.findViewById(R.id.add_comment_dialog_comment_edittext);
+        add_comment_dialog_comment_edittext.setText(tempCommentDescVar);
 
         add_comment_dialog_clear_textview.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -275,12 +323,19 @@ public class EventDetails extends AppCompatActivity implements Listview_communic
             }
         });
 
-
         alertDialog.show();
     }
 
     private void validateAndPostComment(String comment, int selectedItemPosition) {
 
+        String[] userIdArray = {"", "13e2388c-5102-4e91-980d-fc97d044a483",
+                "ed77236d-0526-4019-b77e-9cdae29b9017",
+                "f034e41d-42e5-48c1-8b2e-9d5e79d1c7ed",
+                "1a4bb4a2-0afa-4c9e-9ea6-22b5789baad7",
+                "73d62c6f-1c32-420a-89c5-89c987ed5aa3"};
+
+        tempCommentDescVar = comment;
+        tempCommentSpinnerVar = selectedItemPosition;
 
         if (!comment.equals("")) {
             final ProgressDialog mProgressDialog = new ProgressDialog(this);
@@ -293,8 +348,9 @@ public class EventDetails extends AppCompatActivity implements Listview_communic
             JsonObject jsonObjectPostEventParameters = new JsonObject();
 
             jsonObjectPostEventParameters.addProperty("source_user_id", new SessionManager(getApplicationContext()).getSpecificUserDetail(SessionManager.KEY_USER_ID));
-            jsonObjectPostEventParameters.addProperty("target_user_id", "");
+            jsonObjectPostEventParameters.addProperty("target_user_id", userIdArray[selectedItemPosition]);
             jsonObjectPostEventParameters.addProperty("post_id", post_id);
+            jsonObjectPostEventParameters.addProperty("commentDate", Calendar.getInstance().getTimeInMillis());
             jsonObjectPostEventParameters.addProperty("comment", comment);
 
             final SettableFuture<JsonElement> resultFuture = SettableFuture.create();
@@ -304,6 +360,10 @@ public class EventDetails extends AppCompatActivity implements Listview_communic
                 @Override
                 public void onFailure(Throwable exception) {
                     resultFuture.setException(exception);
+                    Toast.makeText(getApplicationContext(), "Something went wrong. Try again", Toast.LENGTH_SHORT).show();
+
+                    openAddCommentDialog();
+
                     System.out.println(" image_comments_api exception    " + exception);
                     mProgressDialog.dismiss();
                 }
@@ -313,11 +373,17 @@ public class EventDetails extends AppCompatActivity implements Listview_communic
                     resultFuture.set(response);
                     System.out.println(" image_comments_api success response    " + response);
                     validateCommentResponse(response);
+
+                    //reset values if success otherwise need these values o repopulate dialog if api call or validation failed
+                    tempCommentSpinnerVar = 0;
+                    tempCommentDescVar = "";
                     mProgressDialog.dismiss();
                 }
             });
         } else {
             Toast.makeText(getApplicationContext(), "Comment field empty. Try again", Toast.LENGTH_SHORT).show();
+            openAddCommentDialog();
+
         }
     }
 
@@ -454,16 +520,17 @@ public class EventDetails extends AppCompatActivity implements Listview_communic
         // Spinner Drop down elements
         List<String> categories = new ArrayList<String>();
         categories.add("");
-        categories.add("T_cruise");
-        categories.add("Aj_gaur");
-        categories.add("Amey_bawiskar");
+        categories.add("meera1");
+        categories.add("ajgaur");
+        categories.add("ameybawiskar");
         categories.add("Neha_reddy");
-        categories.add("Kapil_k");
-        categories.add("Rushabh");
+        categories.add("ethel");
+        categories.add("rushab");
 
         ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this, R.layout.comments_blank_first_simple_spinner_item, categories);
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         add_comment_dialog_user_name_spinner.setAdapter(dataAdapter);
+        add_comment_dialog_user_name_spinner.setSelection(tempCommentSpinnerVar);
 
     }
 
