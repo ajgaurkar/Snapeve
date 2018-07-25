@@ -35,7 +35,6 @@ import com.umbcapp.gaurk.snapeve.Adapters.AttendiesAdapter;
 import com.umbcapp.gaurk.snapeve.Adapters.CommentsAdapter;
 import com.umbcapp.gaurk.snapeve.Controllers.AttendiesListItem;
 import com.umbcapp.gaurk.snapeve.Controllers.CommentsListItem;
-import com.umbcapp.gaurk.snapeve.Controllers.Event_dash_list_obj;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -85,6 +84,7 @@ public class EventDetails extends AppCompatActivity implements Listview_communic
     private TextView event_details_comment_label_tv;
     private ProgressBar event_details_comments_loading_progress_bar;
     private ListView eventDetailsCommentsListView;
+    private int server_attendance_status = 0;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -256,6 +256,7 @@ public class EventDetails extends AppCompatActivity implements Listview_communic
         JsonObject jsonObjectPostEventParameters = new JsonObject();
 
         jsonObjectPostEventParameters.addProperty("post_id", post_id);
+        jsonObjectPostEventParameters.addProperty("userId", user_id);
 
         final SettableFuture<JsonElement> resultFuture = SettableFuture.create();
         ListenableFuture<JsonElement> serviceFilterFuture = MainActivity.mClient.invokeApi("fetch_post_details_api", jsonObjectPostEventParameters);
@@ -274,7 +275,7 @@ public class EventDetails extends AppCompatActivity implements Listview_communic
             public void onSuccess(JsonElement response) {
                 resultFuture.set(response);
                 System.out.println(" fetch_post_comments_api success response    " + response);
-                parsePostComments(response);
+                parsePostDetails(response);
                 event_details_comments_loading_progress_bar.setVisibility(View.GONE);
                 event_details_comment_label_tv.setText("Comments");
 
@@ -282,12 +283,23 @@ public class EventDetails extends AppCompatActivity implements Listview_communic
         });
     }
 
-    private void parsePostComments(JsonElement commentsResponse) {
+    private void parsePostDetails(JsonElement commentsResponse) {
         commentsList = new ArrayList<CommentsListItem>();
 
         System.out.println(" IN PARSE JASON");
+        JsonArray commentsJsonArray = (JsonArray) commentsResponse.getAsJsonObject().get("post_comments");
+        JsonArray attendStatusJsonArray = (JsonArray) commentsResponse.getAsJsonObject().get("attendance");
+        System.out.println(" attendStatusJsonArray : " + attendStatusJsonArray);
+        System.out.println(" commentsJsonArray : " + commentsJsonArray);
+//        JsonArray commentsJsonArray = post_comments.getAsJsonArray();
 
-        JsonArray commentsJsonArray = commentsResponse.getAsJsonArray();
+        if (attendStatusJsonArray.size() == 1) {
+            System.out.println("attendStatusJsonArray.get(0) :" + attendStatusJsonArray.get(0).getAsJsonObject().get("attend_status").getAsInt());
+            server_attendance_status = attendStatusJsonArray.get(0).getAsJsonObject().get("attend_status").getAsInt();
+        } else {
+            System.out.println(" NO Attendance found");
+        }
+        fillAttendingSpinner();
 
         for (int j = 0; j < commentsJsonArray.size(); j++) {
             JsonObject comments_list_object = commentsJsonArray.get(j).getAsJsonObject();
@@ -542,8 +554,8 @@ public class EventDetails extends AppCompatActivity implements Listview_communic
         ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this, R.layout.blank_first_simple_spinner_item, categories);
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         list_item_status_spinner.setAdapter(dataAdapter);
+        list_item_status_spinner.setSelection(server_attendance_status);
 
-//        list_item_status_spinner.setPrompt("sdhv");
 
     }
 
