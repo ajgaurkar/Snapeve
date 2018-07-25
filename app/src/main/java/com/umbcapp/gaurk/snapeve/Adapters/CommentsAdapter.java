@@ -12,6 +12,10 @@ import com.squareup.picasso.Picasso;
 import com.umbcapp.gaurk.snapeve.Controllers.CommentsListItem;
 import com.umbcapp.gaurk.snapeve.R;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -66,16 +70,24 @@ public class CommentsAdapter extends BaseAdapter {
             viewHolder = (CommentsAdapter.ViewHolder) view.getTag();
 
         }
+        DateFormat commentsDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSX");
+        DateFormat displayDtFormat = new SimpleDateFormat("MMM dd HH:MM");
 
         CommentsListItem commentsListItem = comments_list.get(position);
 
+        Date commentDateTime = null;
+        try {
+            commentDateTime = commentsDateFormat.parse(commentsListItem.getComment_time());
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
         Picasso.get().load(commentsListItem.getImage_url())
                 .fit().centerCrop().into(viewHolder.comments_list_item_user_pic_img_view);
         viewHolder.comments_list_item_user_name_text_view.setText(commentsListItem.getSrc_user_name());
-        viewHolder.comments_list_item_user_time_text_view.setText(commentsListItem.getComment_time());
+        viewHolder.comments_list_item_user_time_text_view.setText(displayDtFormat.format(commentDateTime));
         viewHolder.comments_list_item_user_comment_text_view.setText(commentsListItem.getUser_comment());
         if (commentsListItem.getTrgt_user_name() != null) {
-            viewHolder.comments_list_item_trgt_user_name_text_view.setText(">>"+commentsListItem.getTrgt_user_name());
+            viewHolder.comments_list_item_trgt_user_name_text_view.setText(">>" + commentsListItem.getTrgt_user_name());
         } else {
             viewHolder.comments_list_item_trgt_user_name_text_view.setText("");
         }

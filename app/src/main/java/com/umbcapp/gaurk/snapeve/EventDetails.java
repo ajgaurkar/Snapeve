@@ -258,7 +258,7 @@ public class EventDetails extends AppCompatActivity implements Listview_communic
         jsonObjectPostEventParameters.addProperty("post_id", post_id);
 
         final SettableFuture<JsonElement> resultFuture = SettableFuture.create();
-        ListenableFuture<JsonElement> serviceFilterFuture = MainActivity.mClient.invokeApi("fetch_post_comments_api", jsonObjectPostEventParameters);
+        ListenableFuture<JsonElement> serviceFilterFuture = MainActivity.mClient.invokeApi("fetch_post_details_api", jsonObjectPostEventParameters);
 
         Futures.addCallback(serviceFilterFuture, new FutureCallback<JsonElement>() {
             @Override
@@ -297,6 +297,7 @@ public class EventDetails extends AppCompatActivity implements Listview_communic
             String source_user_id = comments_list_object.get("source_user_id").getAsString();
             String src_dp_url = comments_list_object.get("src_dp_url").getAsString();
             String src_U_name = comments_list_object.get("src_U_name").getAsString();
+            String date_time = comments_list_object.get("date_time").getAsString();
 
             String target_user_id = null;
             String trgt_U_name = null;
@@ -307,7 +308,7 @@ public class EventDetails extends AppCompatActivity implements Listview_communic
                 e.printStackTrace();
             }
 
-            commentsList.add(0, new CommentsListItem(source_user_id, target_user_id, src_U_name, trgt_U_name, comment, "Jan 05", src_dp_url));
+            commentsList.add(0, new CommentsListItem(source_user_id, target_user_id, src_U_name, trgt_U_name, comment, date_time, src_dp_url));
 
         }
 

@@ -37,10 +37,14 @@
         android:id="@+id/comments_list_item_user_time_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/comments_list_item_src_user_name_text_view"
         android:layout_alignParentEnd="true"
+        android:layout_alignTop="@+id/comments_list_item_src_user_name_text_view"
         android:paddingStart="2dp"
         android:singleLine="true"
-        android:text="21 hrs" />
+        android:text="21 hrs"
+        android:textSize="11sp"
+        android:textStyle="bold" />
 
     <TextView
         android:id="@+id/comments_list_item_user_comment_text_view"
