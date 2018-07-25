@@ -7,12 +7,9 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 import com.umbcapp.gaurk.snapeve.Controllers.CommentsListItem;
-import com.umbcapp.gaurk.snapeve.Controllers.Event_dash_list_obj;
-import com.umbcapp.gaurk.snapeve.Listview_communicator;
 import com.umbcapp.gaurk.snapeve.R;
 
 import java.util.List;
@@ -57,18 +54,12 @@ public class CommentsAdapter extends BaseAdapter {
             view = this.inflater.inflate(R.layout.comments_list_item, parent, false);
 
             viewHolder.comments_list_item_user_pic_img_view = (CircleImageView) view.findViewById(R.id.comments_list_item_user_pic_img_view);
-            viewHolder.comments_list_item_user_name_text_view = (TextView) view.findViewById(R.id.comments_list_item_user_name_text_view);
+            viewHolder.comments_list_item_user_name_text_view = (TextView) view.findViewById(R.id.comments_list_item_src_user_name_text_view);
             viewHolder.comments_list_item_user_time_text_view = (TextView) view.findViewById(R.id.comments_list_item_user_time_text_view);
             viewHolder.comments_list_item_user_comment_text_view = (TextView) view.findViewById(R.id.comments_list_item_user_comment_text_view);
-
+            viewHolder.comments_list_item_trgt_user_name_text_view = (TextView) view.findViewById(R.id.comments_list_item_trgt_user_name_text_view);
 
             view.setTag(viewHolder);
-
-//            Listview_communicator communicator;
-//            communicator = ((Listview_communicator)context).main_event_listview_element_clicked();
-//            communicator.main_event_listview_element_clicked();
-//
-
 
         } else {
 
@@ -80,10 +71,14 @@ public class CommentsAdapter extends BaseAdapter {
 
         Picasso.get().load(commentsListItem.getImage_url())
                 .fit().centerCrop().into(viewHolder.comments_list_item_user_pic_img_view);
-        viewHolder.comments_list_item_user_name_text_view.setText(commentsListItem.getUser_name());
+        viewHolder.comments_list_item_user_name_text_view.setText(commentsListItem.getSrc_user_name());
         viewHolder.comments_list_item_user_time_text_view.setText(commentsListItem.getComment_time());
         viewHolder.comments_list_item_user_comment_text_view.setText(commentsListItem.getUser_comment());
-
+        if (commentsListItem.getTrgt_user_name() != null) {
+            viewHolder.comments_list_item_trgt_user_name_text_view.setText(">>"+commentsListItem.getTrgt_user_name());
+        } else {
+            viewHolder.comments_list_item_trgt_user_name_text_view.setText("");
+        }
         //setting type face dynamically. Issues in setting through XML
 //        viewHolder.calendarTitleTextView.setText(event_dash_list_obj.getTitle());
 
@@ -97,6 +92,7 @@ public class CommentsAdapter extends BaseAdapter {
         private TextView comments_list_item_user_name_text_view;
         private TextView comments_list_item_user_time_text_view;
         private TextView comments_list_item_user_comment_text_view;
+        private TextView comments_list_item_trgt_user_name_text_view;
 
 
     }

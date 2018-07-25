@@ -12,16 +12,26 @@
         android:src="@drawable/my_pic" />
 
     <TextView
-        android:id="@+id/comments_list_item_user_name_text_view"
-        android:layout_width="match_parent"
+        android:id="@+id/comments_list_item_src_user_name_text_view"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="5dp"
         android:layout_toEndOf="@+id/comments_list_item_user_pic_img_view"
-        android:layout_toStartOf="@+id/comments_list_item_user_time_text_view"
         android:paddingStart="2dp"
         android:singleLine="true"
         android:text="Jhony Ive"
         android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/comments_list_item_trgt_user_name_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        android:layout_toEndOf="@+id/comments_list_item_src_user_name_text_view"
+        android:paddingStart="2dp"
+        android:singleLine="true"
+        android:text=">>kapil_m"
+        android:textColor="@color/colorPrimary" />
 
     <TextView
         android:id="@+id/comments_list_item_user_time_text_view"
@@ -36,8 +46,8 @@
         android:id="@+id/comments_list_item_user_comment_text_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignStart="@+id/comments_list_item_user_name_text_view"
-        android:layout_below="@+id/comments_list_item_user_name_text_view"
+        android:layout_alignStart="@+id/comments_list_item_src_user_name_text_view"
+        android:layout_below="@+id/comments_list_item_src_user_name_text_view"
         android:layout_toStartOf="@+id/comments_list_item_user_time_text_view"
         android:padding="2dp"
         android:text="It lloks good" />

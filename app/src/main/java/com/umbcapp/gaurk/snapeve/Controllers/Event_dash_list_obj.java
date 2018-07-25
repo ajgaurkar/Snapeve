@@ -4,13 +4,13 @@ public class Event_dash_list_obj {
 //
 //    String img_description;
 //    String img_url;
-//    String user_name;
+//    String src_user_name;
 //
 //
-//    public Event_dash_list_obj(String img_description, String img_url, String user_name) {
+//    public Event_dash_list_obj(String img_description, String img_url, String src_user_name) {
 //        this.img_description = img_description;
 //        this.img_url = img_url;
-//        this.user_name = user_name;
+//        this.src_user_name = src_user_name;
 //    }
 //
 //    public String getImg_url() {
@@ -29,12 +29,12 @@ public class Event_dash_list_obj {
 //        this.img_description = img_description;
 //    }
 //
-//    public String getUser_name() {
-//        return user_name;
+//    public String getSrc_user_name() {
+//        return src_user_name;
 //    }
 //
-//    public void setUser_name(String user_name) {
-//        this.user_name = user_name;
+//    public void setSrc_user_name(String src_user_name) {
+//        this.src_user_name = src_user_name;
 //    }
 
     String user_id;

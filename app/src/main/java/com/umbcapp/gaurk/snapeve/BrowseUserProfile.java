@@ -45,7 +45,7 @@ public class BrowseUserProfile extends AppCompatActivity {
         System.out.println("BrowseUserProfile user_id : " + user_id);
 
 
-        user_name_textview = (TextView) findViewById(R.id.user_name);
+        user_name_textview = (TextView) findViewById(R.id.browse_profile_user_name);
         user_full_name_textview = (TextView) findViewById(R.id.user_full_name);
         user_points_textview = (TextView) findViewById(R.id.user_points);
         profile_relative_layout = (RelativeLayout) findViewById(R.id.profile_relative_layout);

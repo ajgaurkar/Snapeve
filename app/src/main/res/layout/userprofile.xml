@@ -108,7 +108,7 @@
             app:civ_border_width="3dp" />
 
         <TextView
-            android:id="@+id/user_name"
+            android:id="@+id/_user_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignTop="@+id/profile_pic_image_view"
@@ -123,7 +123,7 @@
             android:id="@+id/user_status"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/user_name"
+            android:layout_below="@+id/_user_name"
             android:layout_toEndOf="@+id/profile_pic_image_view"
             android:padding="5dp"
             android:text="Contributor : Level 5"
@@ -135,7 +135,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignEnd="@+id/profile_progress_bar"
-            android:layout_below="@+id/user_name"
+            android:layout_below="@+id/_user_name"
             android:maxLength="4"
             android:padding="5dp"
             android:text="15"

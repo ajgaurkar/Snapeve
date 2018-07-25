@@ -84,6 +84,7 @@ public class EventDetails extends AppCompatActivity implements Listview_communic
     private int tempCommentSpinnerVar = 0;
     private TextView event_details_comment_label_tv;
     private ProgressBar event_details_comments_loading_progress_bar;
+    private ListView eventDetailsCommentsListView;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -121,6 +122,8 @@ public class EventDetails extends AppCompatActivity implements Listview_communic
         list_item_spam_iv = (ImageView) findViewById(R.id.list_item_spam_iv);
         list_item_spam_tv = (TextView) findViewById(R.id.list_item_spam_tv);
 
+        eventDetailsCommentsListView = (ListView) findViewById(R.id.event_detail_comments_list_view);
+
         fetchCommentsApi(post_id);
         fillAttendingSpinner();
 
@@ -129,17 +132,16 @@ public class EventDetails extends AppCompatActivity implements Listview_communic
         event_detail_user_comment_text_view.setText(user_comment);
         Picasso.get().load(img_url).fit().centerCrop().into(event_detail_event_image_image_view);
 
-        ListView eventDetailsCommentsListView = (ListView) findViewById(R.id.event_detail_comments_list_view);
-        commentsList.add(new CommentsListItem("u1", "Jhon Paul", "speaking to a a packed crowd at Sanders Theatre, a nobel laureate discussing her most recent scientific discovery, or the Harvard senior talent show, there’s always something happening at Harvard.", "Jan 05", "https://ais2017.umbc.edu/files/2017/09/umbc.jpg"));
-        commentsList.add(new CommentsListItem("u1", "Jhon Paul", "Good", "Jan 05", "https://ais2017.umbc.edu/files/2017/09/umbc.jpg"));
-        commentsList.add(new CommentsListItem("u1", "Jhon Paul", "Good", "Jan 05", "https://ais2017.umbc.edu/files/2017/09/umbc.jpg"));
-        commentsList.add(new CommentsListItem("u1", "Jhon Paul", "Whether you have meditated for a long time or have never meditated, come join us for this time of practice together. Come to relax, quiet your mind, learn how to experience less suffering and stress, explore Buddhist philosophy and psychology, just talk about what it means to live from compassion and awareness -- or come because you are curious. This group meets on Tuesdays from 5 - 6 p.m. in in Chapin Chapel, and is led by Mark Hart, Buddhist Advisor.", "Jan 05", "https://ais2017.umbc.edu/files/2017/09/umbc.jpg"));
-        commentsList.add(new CommentsListItem("u1", "Jhon Paul", "Good", "Jan 05", "https://ais2017.umbc.edu/files/2017/09/umbc.jpg"));
-        commentsList.add(new CommentsListItem("u1", "Jhon Paul", "Good", "Jan 05", "https://ais2017.umbc.edu/files/2017/09/umbc.jpg"));
-        commentsList.add(new CommentsListItem("u1", "Jhon Paul", "Good", "Jan 05", "https://ais2017.umbc.edu/files/2017/09/umbc.jpg"));
+//        commentsList.add(new CommentsListItem("u1", "Jhon Paul", "speaking to a a packed crowd at Sanders Theatre, a nobel laureate discussing her most recent scientific discovery, or the Harvard senior talent show, there’s always something happening at Harvard.", "Jan 05", "https://ais2017.umbc.edu/files/2017/09/umbc.jpg"));
+//        commentsList.add(new CommentsListItem("u1", "Jhon Paul", "Good", "Jan 05", "https://ais2017.umbc.edu/files/2017/09/umbc.jpg"));
+//        commentsList.add(new CommentsListItem("u1", "Jhon Paul", "Good", "Jan 05", "https://ais2017.umbc.edu/files/2017/09/umbc.jpg"));
+//        commentsList.add(new CommentsListItem("u1", "Jhon Paul", "Whether you have meditated for a long time or have never meditated, come join us for this time of practice together. Come to relax, quiet your mind, learn how to experience less suffering and stress, explore Buddhist philosophy and psychology, just talk about what it means to live from compassion and awareness -- or come because you are curious. This group meets on Tuesdays from 5 - 6 p.m. in in Chapin Chapel, and is led by Mark Hart, Buddhist Advisor.", "Jan 05", "https://ais2017.umbc.edu/files/2017/09/umbc.jpg"));
+//        commentsList.add(new CommentsListItem("u1", "Jhon Paul", "Good", "Jan 05", "https://ais2017.umbc.edu/files/2017/09/umbc.jpg"));
+//        commentsList.add(new CommentsListItem("u1", "Jhon Paul", "Good", "Jan 05", "https://ais2017.umbc.edu/files/2017/09/umbc.jpg"));
+//        commentsList.add(new CommentsListItem("u1", "Jhon Paul", "Good", "Jan 05", "https://ais2017.umbc.edu/files/2017/09/umbc.jpg"));
 
-        CommentsAdapter commentsAdapter = new CommentsAdapter(getApplicationContext(), commentsList);
-        eventDetailsCommentsListView.setAdapter(commentsAdapter);
+//        CommentsAdapter commentsAdapter = new CommentsAdapter(getApplicationContext(), commentsList);
+//        eventDetailsCommentsListView.setAdapter(commentsAdapter);
 
         event_detail_event_image_image_view.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -281,7 +283,36 @@ public class EventDetails extends AppCompatActivity implements Listview_communic
     }
 
     private void parsePostComments(JsonElement commentsResponse) {
+        commentsList = new ArrayList<CommentsListItem>();
 
+        System.out.println(" IN PARSE JASON");
+
+        JsonArray commentsJsonArray = commentsResponse.getAsJsonArray();
+
+        for (int j = 0; j < commentsJsonArray.size(); j++) {
+            JsonObject comments_list_object = commentsJsonArray.get(j).getAsJsonObject();
+            System.out.println(" comments_list_object " + comments_list_object);
+
+            String comment = comments_list_object.get("comment").getAsString();
+            String source_user_id = comments_list_object.get("source_user_id").getAsString();
+            String src_dp_url = comments_list_object.get("src_dp_url").getAsString();
+            String src_U_name = comments_list_object.get("src_U_name").getAsString();
+
+            String target_user_id = null;
+            String trgt_U_name = null;
+            try {
+                target_user_id = comments_list_object.get("target_user_id").getAsString();
+                trgt_U_name = comments_list_object.get("trgt_U_name").getAsString();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            commentsList.add(0, new CommentsListItem(source_user_id, target_user_id, src_U_name, trgt_U_name, comment, "Jan 05", src_dp_url));
+
+        }
+
+        CommentsAdapter commentsAdapter = new CommentsAdapter(getApplicationContext(), commentsList);
+        eventDetailsCommentsListView.setAdapter(commentsAdapter);
     }
 
     private void openAddCommentDialog() {
@@ -328,7 +359,7 @@ public class EventDetails extends AppCompatActivity implements Listview_communic
 
     private void validateAndPostComment(String comment, int selectedItemPosition) {
 
-        String[] userIdArray = {"", "13e2388c-5102-4e91-980d-fc97d044a483",
+        String[] userIdArray = {null, "13e2388c-5102-4e91-980d-fc97d044a483",
                 "ed77236d-0526-4019-b77e-9cdae29b9017",
                 "f034e41d-42e5-48c1-8b2e-9d5e79d1c7ed",
                 "1a4bb4a2-0afa-4c9e-9ea6-22b5789baad7",
