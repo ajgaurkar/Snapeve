@@ -85,6 +85,8 @@ public class EventDetails extends AppCompatActivity implements Listview_communic
     private ProgressBar event_details_comments_loading_progress_bar;
     private ListView eventDetailsCommentsListView;
     private int server_attendance_status = 0;
+    private int server_action_like = 0;
+    private int server_action_spam = 0;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -192,7 +194,8 @@ public class EventDetails extends AppCompatActivity implements Listview_communic
         list_item_verify_iv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+//0 : like btn 1 : spam btn
+                calculateAction(0);
                 actionEvent(1, 1, "Test");
 
             }
@@ -200,6 +203,7 @@ public class EventDetails extends AppCompatActivity implements Listview_communic
         list_item_verify_tv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                calculateAction(0);
 
                 actionEvent(1, 1, "Test");
 
@@ -208,6 +212,7 @@ public class EventDetails extends AppCompatActivity implements Listview_communic
         list_item_spam_iv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                calculateAction(1);
 
                 actionEvent(1, 3, "Test");
 
@@ -216,6 +221,7 @@ public class EventDetails extends AppCompatActivity implements Listview_communic
         list_item_spam_tv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                calculateAction(1);
 
                 actionEvent(1, 3, "Test");
 
@@ -245,6 +251,38 @@ public class EventDetails extends AppCompatActivity implements Listview_communic
             }
         });
 
+    }
+
+    private void calculateAction(int actn_btn) {
+        switch (actn_btn) {
+            case 0:
+                if (server_action_like + server_action_spam == 0) {
+                    System.out.println("ACTION ACTION : insert like");
+                }
+                if (server_action_like + server_action_spam == 1) {
+                    if (server_action_like == 1) {
+                        System.out.println("ACTION ACTION : delete like");
+                    }
+                    if (server_action_like == 0) {
+                        System.out.println("ACTION ACTION : show dialog - update SPAM -> LIKE ");
+                    }
+                }
+                break;
+
+            case 1:
+                if (server_action_like + server_action_spam == 0) {
+                    System.out.println("ACTION ACTION : insert spam");
+                }
+                if (server_action_like + server_action_spam == 1) {
+                    if (server_action_spam == 1) {
+                        System.out.println("ACTION ACTION : delete spam");
+                    }
+                    if (server_action_spam == 0) {
+                        System.out.println("ACTION ACTION : show dialog - update LIKE -> SPAM ");
+                    }
+                }
+                break;
+        }
     }
 
     private void fetchCommentsApi(String post_id) {
@@ -289,9 +327,32 @@ public class EventDetails extends AppCompatActivity implements Listview_communic
         System.out.println(" IN PARSE JASON");
         JsonArray commentsJsonArray = (JsonArray) commentsResponse.getAsJsonObject().get("post_comments");
         JsonArray attendStatusJsonArray = (JsonArray) commentsResponse.getAsJsonObject().get("attendance");
+        JsonArray actionJsonArray = (JsonArray) commentsResponse.getAsJsonObject().get("action_status");
+
         System.out.println(" attendStatusJsonArray : " + attendStatusJsonArray);
         System.out.println(" commentsJsonArray : " + commentsJsonArray);
+        System.out.println(" actionJsonArray : " + actionJsonArray);
 //        JsonArray commentsJsonArray = post_comments.getAsJsonArray();
+
+        if (actionJsonArray.size() == 1) {
+            System.out.println("actionJsonArray.get(0) :" + actionJsonArray.get(0).getAsJsonObject().get("action_like").getAsInt());
+            System.out.println("actionJsonArray.get(0) :" + actionJsonArray.get(0).getAsJsonObject().get("action_spam").getAsInt());
+            server_action_spam = actionJsonArray.get(0).getAsJsonObject().get("action_spam").getAsInt();
+            server_action_like = actionJsonArray.get(0).getAsJsonObject().get("action_like").getAsInt();
+        } else {
+            System.out.println(" NO Actions found");
+        }
+        if (server_action_like == 0) {
+            list_item_verify_iv.setImageResource(R.drawable.approve_light_grey_48);
+        } else {
+            list_item_verify_iv.setImageResource(R.drawable.approve_blue_48);
+        }
+        if (server_action_spam == 0) {
+            list_item_spam_iv.setImageResource(R.drawable.spam_light_grey_48);
+        } else {
+            list_item_spam_iv.setImageResource(R.drawable.spam_orange_48);
+        }
+
 
         if (attendStatusJsonArray.size() == 1) {
             System.out.println("attendStatusJsonArray.get(0) :" + attendStatusJsonArray.get(0).getAsJsonObject().get("attend_status").getAsInt());
@@ -300,6 +361,7 @@ public class EventDetails extends AppCompatActivity implements Listview_communic
             System.out.println(" NO Attendance found");
         }
         fillAttendingSpinner();
+
 
         for (int j = 0; j < commentsJsonArray.size(); j++) {
             JsonObject comments_list_object = commentsJsonArray.get(j).getAsJsonObject();
@@ -323,6 +385,7 @@ public class EventDetails extends AppCompatActivity implements Listview_communic
             commentsList.add(0, new CommentsListItem(source_user_id, target_user_id, src_U_name, trgt_U_name, comment, date_time, src_dp_url));
 
         }
+
 
         CommentsAdapter commentsAdapter = new CommentsAdapter(getApplicationContext(), commentsList);
         eventDetailsCommentsListView.setAdapter(commentsAdapter);
