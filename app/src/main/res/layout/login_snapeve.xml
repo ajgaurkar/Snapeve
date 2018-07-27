@@ -68,7 +68,7 @@
             android:layout_marginStart="50dp"
             android:background="@android:color/transparent"
             android:gravity="center_vertical"
-            android:hint="Email"
+            android:hint="User name"
             android:inputType="textEmailAddress"
             android:padding="5dp"
             android:textColor="#fff"

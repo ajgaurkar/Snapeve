@@ -191,39 +191,40 @@ public class EventDetails extends AppCompatActivity implements Listview_communic
             }
         });
 
+        //action_to_be_performed 1: insert , 2: delete , 3 : update from 1 to other
+        //click_code 1: like , 2:comment(not used here) 3: spam
         list_item_verify_iv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 //0 : like btn 1 : spam btn
-                calculateAction(0);
-                actionEvent(1, 1, "Test");
+                calculateAction(1);
 
             }
         });
         list_item_verify_tv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                calculateAction(0);
+                calculateAction(1);
 
-                actionEvent(1, 1, "Test");
+//                actionEvent(1, 1, "Test");
 
             }
         });
         list_item_spam_iv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                calculateAction(1);
+                calculateAction(3);
 
-                actionEvent(1, 3, "Test");
+//                actionEvent(1, 3, "Test");
 
             }
         });
         list_item_spam_tv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                calculateAction(1);
+                calculateAction(3);
 
-                actionEvent(1, 3, "Test");
+//                actionEvent(1, 3, "Test");
 
             }
         });
@@ -253,36 +254,93 @@ public class EventDetails extends AppCompatActivity implements Listview_communic
 
     }
 
-    private void calculateAction(int actn_btn) {
-        switch (actn_btn) {
-            case 0:
+    private void calculateAction(int click_code) {
+        //action_to_be_performed 1: insert , 2: delete , 3 : update from 1 to other
+        //click_code 1: like , 2:comment(not used here) 3:spam
+        switch (click_code) {
+            case 1:
                 if (server_action_like + server_action_spam == 0) {
                     System.out.println("ACTION ACTION : insert like");
+                    actionEvent(1, click_code, "Test");
+
                 }
                 if (server_action_like + server_action_spam == 1) {
                     if (server_action_like == 1) {
                         System.out.println("ACTION ACTION : delete like");
+                        actionEvent(2, click_code, "Test");
+
                     }
                     if (server_action_like == 0) {
                         System.out.println("ACTION ACTION : show dialog - update SPAM -> LIKE ");
+
+                        openLikeSpamConfirmationDialog(click_code);
+
+//                        actionEvent(3, 1, "Test");
+
                     }
                 }
                 break;
 
-            case 1:
+            case 3:
                 if (server_action_like + server_action_spam == 0) {
                     System.out.println("ACTION ACTION : insert spam");
+                    actionEvent(1, click_code, "Test");
+
                 }
                 if (server_action_like + server_action_spam == 1) {
                     if (server_action_spam == 1) {
                         System.out.println("ACTION ACTION : delete spam");
+                        actionEvent(2, click_code, "Test");
+
                     }
                     if (server_action_spam == 0) {
                         System.out.println("ACTION ACTION : show dialog - update LIKE -> SPAM ");
+                        openLikeSpamConfirmationDialog(click_code);
+
                     }
                 }
                 break;
         }
+    }
+
+    private void openLikeSpamConfirmationDialog(final int click_code) {
+        System.out.print("IN DIALOG");
+        AlertDialog.Builder builder1 = new AlertDialog.Builder(EventDetails.this);
+        builder1.setCancelable(false);
+
+        if (click_code == 1) {
+            System.out.println("Do you wish to UNSPAM and LIKE");
+            builder1.setMessage("Do you wish to UNSPAM and VERIFY");
+
+        }
+        if (click_code == 3) {
+            System.out.println("Do you wish to UNLIKE and SPAM");
+            builder1.setMessage("Do you wish to DISPROVE and SPAM");
+
+        }
+
+        builder1.setPositiveButton(
+                "CONFIRM",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+                        actionEvent(3, click_code, "Test");
+
+                    }
+                });
+
+        builder1.setNegativeButton(
+                "CANCLE",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+                    }
+                });
+
+        AlertDialog alertDialog = builder1.create();
+        alertDialog.show();
+
+
     }
 
     private void fetchCommentsApi(String post_id) {
@@ -342,17 +400,8 @@ public class EventDetails extends AppCompatActivity implements Listview_communic
         } else {
             System.out.println(" NO Actions found");
         }
-        if (server_action_like == 0) {
-            list_item_verify_iv.setImageResource(R.drawable.approve_light_grey_48);
-        } else {
-            list_item_verify_iv.setImageResource(R.drawable.approve_blue_48);
-        }
-        if (server_action_spam == 0) {
-            list_item_spam_iv.setImageResource(R.drawable.spam_light_grey_48);
-        } else {
-            list_item_spam_iv.setImageResource(R.drawable.spam_orange_48);
-        }
 
+        setLikeSpamImageFromServerValues();
 
         if (attendStatusJsonArray.size() == 1) {
             System.out.println("attendStatusJsonArray.get(0) :" + attendStatusJsonArray.get(0).getAsJsonObject().get("attend_status").getAsInt());
@@ -389,6 +438,20 @@ public class EventDetails extends AppCompatActivity implements Listview_communic
 
         CommentsAdapter commentsAdapter = new CommentsAdapter(getApplicationContext(), commentsList);
         eventDetailsCommentsListView.setAdapter(commentsAdapter);
+    }
+
+    private void setLikeSpamImageFromServerValues() {
+        if (server_action_like == 0) {
+            list_item_verify_iv.setImageResource(R.drawable.approve_light_grey_48);
+        } else {
+            list_item_verify_iv.setImageResource(R.drawable.approve_blue_48);
+        }
+        if (server_action_spam == 0) {
+            list_item_spam_iv.setImageResource(R.drawable.spam_light_grey_48);
+        } else {
+            list_item_spam_iv.setImageResource(R.drawable.spam_orange_48);
+        }
+
     }
 
     private void openAddCommentDialog() {
@@ -498,7 +561,9 @@ public class EventDetails extends AppCompatActivity implements Listview_communic
         System.out.println("validateCommentResponse : " + response);
     }
 
-    private void actionEvent(int currentstatus, int click_code, String userComment) {
+    //action_to_be_performed 1: insert , 2: delete , 3 : update from 1 to other
+    //click_code 1: like , 2:comment(not used here) 3:spam
+    private void actionEvent(int action_to_be_performed, int click_code, String userComment) {
         JsonObject jsonObjectPostEventParameters = new JsonObject();
 
 
@@ -519,11 +584,12 @@ public class EventDetails extends AppCompatActivity implements Listview_communic
         jsonObjectPostEventParameters.addProperty("user_id", user_id);
         jsonObjectPostEventParameters.addProperty("post_id", post_id);
         jsonObjectPostEventParameters.addProperty("click_code", click_code);
+        jsonObjectPostEventParameters.addProperty("action_to_be_performed", action_to_be_performed);
 
 
         final ProgressDialog mProgressDialog = new ProgressDialog(this);
         mProgressDialog.setIndeterminate(true);
-        mProgressDialog.setMessage("Posting. Please wait...");
+        mProgressDialog.setMessage("Updating. Please wait...");
 
         mProgressDialog.show();
 
@@ -542,10 +608,47 @@ public class EventDetails extends AppCompatActivity implements Listview_communic
             public void onSuccess(JsonElement response) {
                 resultFuture.set(response);
                 System.out.println(" actionEvent success response    " + response);
+
+                parseActionResponse(response);
                 mProgressDialog.dismiss();
 
             }
         });
+    }
+
+    private void parseActionResponse(JsonElement actionEventResponse) {
+
+        if (actionEventResponse.toString().contains("DELETE_LIKE_SPAM") && actionEventResponse.toString().contains("true")) {
+            System.out.println("CLEAR THE VALUES OF LIKES AND SPAM FROM LOCAL VARIABLES");
+            server_action_like = 0;
+            server_action_spam = 0;
+            setLikeSpamImageFromServerValues();
+        }
+        if (actionEventResponse.toString().contains("INSERT_LIKE") && actionEventResponse.toString().contains("true")) {
+            System.out.println("CHANGE THE VALUES OF LIKE TO 1 AND SPAM 0 TO LOCAL VARIABLES");
+            server_action_like = 1;
+            server_action_spam = 0;
+            setLikeSpamImageFromServerValues();
+        }
+        if (actionEventResponse.toString().contains("INSERT_SPAM") && actionEventResponse.toString().contains("true")) {
+            System.out.println("CHANGE THE VALUES OF LIKE TO 0 AND SPAM 1 TO LOCAL VARIABLES");
+            server_action_like = 0;
+            server_action_spam = 1;
+            setLikeSpamImageFromServerValues();
+        }
+        if (actionEventResponse.toString().contains("UPDATE_LIKE_TO_SPAM") && actionEventResponse.toString().contains("true")) {
+            System.out.println("CHANGE THE VALUES OF LIKE TO 0 AND SPAM 1 TO LOCAL VARIABLES");
+            server_action_like = 0;
+            server_action_spam = 1;
+            setLikeSpamImageFromServerValues();
+        }
+        if (actionEventResponse.toString().contains("UPDATE_SPAM_TO_LIKE") && actionEventResponse.toString().contains("true")) {
+            System.out.println("CHANGE THE VALUES OF LIKE TO 0 AND SPAM 1 TO LOCAL VARIABLES");
+            server_action_like = 1;
+            server_action_spam = 0;
+            setLikeSpamImageFromServerValues();
+        }
+
     }
 
     private void fetchAttendieslist() {
@@ -618,7 +721,6 @@ public class EventDetails extends AppCompatActivity implements Listview_communic
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         list_item_status_spinner.setAdapter(dataAdapter);
         list_item_status_spinner.setSelection(server_attendance_status);
-
 
     }
 
