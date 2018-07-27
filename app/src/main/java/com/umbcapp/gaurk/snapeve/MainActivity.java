@@ -295,7 +295,7 @@ public class MainActivity extends AppCompatActivity implements Listview_communic
             post_dt = displayDtFormat.format(date);
             System.out.println("Report Date: " + post_dt);
 
-            event_main_list.add(0, new Event_dash_list_obj(feed_user_id, dp_url, initializer_name, img_comment, "10 hrs ago", feed_img_url, post_id, post_dt, event_start_dt_time, event_end_dt_time, event_all_day_status));
+            event_main_list.add(0, new Event_dash_list_obj(feed_user_id, dp_url, initializer_name, img_comment, post_dt, feed_img_url, post_id, post_dt, event_start_dt_time, event_end_dt_time, event_all_day_status));
 
         }
         System.out.println(" event_main_list " + event_main_list.size());

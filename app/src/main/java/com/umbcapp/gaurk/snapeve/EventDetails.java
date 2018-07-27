@@ -14,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.CheckedTextView;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -47,13 +48,13 @@ public class EventDetails extends AppCompatActivity implements Listview_communic
     private Intent eventDetailIntent;
     private String user_id;
     private String img_url;
-    private String comm_time;
+    private String comm_dt_time;
     private String user_comment;
     private TextView event_detail_user_name_text_view;
     private TextView event_detail_user_post_dt_time_text_view;
     private TextView event_detail_user_comment_text_view;
     private String user_name;
-    private CardView event_detail_attendies_text_view;
+    private TextView event_detail_attendies_text_view;
     private TextView attendies_dialog_layout_attendies_count_textview;
     private TextView attendies_dialog_switch_group_textview;
     private TextView attendies_dialog_switch_all_textview;
@@ -87,6 +88,8 @@ public class EventDetails extends AppCompatActivity implements Listview_communic
     private int server_attendance_status = 0;
     private int server_action_like = 0;
     private int server_action_spam = 0;
+    private TextView event_details_comments_tap_to_load_textview;
+    private View event_detail_grey_view_panel;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -100,12 +103,14 @@ public class EventDetails extends AppCompatActivity implements Listview_communic
         intent_type = eventDetailIntent.getIntExtra("intent_type", 3);
         user_name = eventDetailIntent.getStringExtra("user_name");
         img_url = eventDetailIntent.getStringExtra("img_url");
-        comm_time = eventDetailIntent.getStringExtra("comm_time");
+        comm_dt_time = eventDetailIntent.getStringExtra("comm_time");
         user_comment = eventDetailIntent.getStringExtra("user_comment");
 
         merge_options_layout = (RelativeLayout) findViewById(R.id.merge_options_layout);
+        event_detail_grey_view_panel = (View) findViewById(R.id.event_detail_grey_view_panel);
         list_item_status_spinner = (Spinner) findViewById(R.id.list_item_status_spinner_textview);
         event_detail_user_name_text_view = (TextView) findViewById(R.id.event_detail_user_name_text_view);
+        event_details_comments_tap_to_load_textview = (TextView) findViewById(R.id.event_details_comments_tap_to_load_textview);
         event_detail_user_post_dt_time_text_view = (TextView) findViewById(R.id.event_detail_user_post_dt_time_text_view);
         event_detail_user_comment_text_view = (TextView) findViewById(R.id.event_detail_user_comment_text_view);
         event_details_comment_label_tv = (TextView) findViewById(R.id.event_details_comment_label_tv);
@@ -115,7 +120,7 @@ public class EventDetails extends AppCompatActivity implements Listview_communic
         merge_event_merge_btn_text_view = (TextView) findViewById(R.id.merge_event_merge_btn_text_view);
         event_detail_individual_image_comment_textview = (TextView) findViewById(R.id.event_detail_individual_image_comment_textview);
 
-        event_detail_attendies_text_view = (CardView) findViewById(R.id.event_detail_attendies_card_view);
+        event_detail_attendies_text_view = (TextView) findViewById(R.id.event_detail_attendies_text_view);
         event_detail_event_image_image_view = (ImageView) findViewById(R.id.event_detail_event_image_image_view);
 
         list_item_verify_iv = (ImageView) findViewById(R.id.list_item_verify_iv);
@@ -130,7 +135,7 @@ public class EventDetails extends AppCompatActivity implements Listview_communic
         fillAttendingSpinner();
 
         event_detail_user_name_text_view.setText(user_name);
-        event_detail_user_post_dt_time_text_view.setText(comm_time);
+        event_detail_user_post_dt_time_text_view.setText(comm_dt_time);
         event_detail_user_comment_text_view.setText(user_comment);
         Picasso.get().load(img_url).fit().centerCrop().into(event_detail_event_image_image_view);
 
@@ -159,6 +164,7 @@ public class EventDetails extends AppCompatActivity implements Listview_communic
                 showAttendiesDialog();
             }
         });
+
 
         if (intent_type == 1) {
             merge_options_layout.setVisibility(View.VISIBLE);
@@ -251,7 +257,12 @@ public class EventDetails extends AppCompatActivity implements Listview_communic
 
             }
         });
-
+        event_detail_grey_view_panel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //blank listener to override clicks
+            }
+        });
     }
 
     private void calculateAction(int click_code) {
@@ -365,6 +376,9 @@ public class EventDetails extends AppCompatActivity implements Listview_communic
 
                 System.out.println(" fetch_post_comments_api exception    " + exception);
                 event_details_comments_loading_progress_bar.setVisibility(View.GONE);
+                event_details_comments_tap_to_load_textview.setVisibility(View.VISIBLE);
+                event_details_comment_label_tv.setText("Coudnt load Comments. Tap to retry");
+
             }
 
             @Override
@@ -373,7 +387,7 @@ public class EventDetails extends AppCompatActivity implements Listview_communic
                 System.out.println(" fetch_post_comments_api success response    " + response);
                 parsePostDetails(response);
                 event_details_comments_loading_progress_bar.setVisibility(View.GONE);
-                event_details_comment_label_tv.setText("Comments");
+                event_details_comments_tap_to_load_textview.setVisibility(View.GONE);
 
             }
         });
@@ -435,9 +449,13 @@ public class EventDetails extends AppCompatActivity implements Listview_communic
 
         }
 
-
-        CommentsAdapter commentsAdapter = new CommentsAdapter(getApplicationContext(), commentsList);
-        eventDetailsCommentsListView.setAdapter(commentsAdapter);
+        if (commentsList.size() > 0) {
+            CommentsAdapter commentsAdapter = new CommentsAdapter(getApplicationContext(), commentsList);
+            eventDetailsCommentsListView.setAdapter(commentsAdapter);
+            event_details_comment_label_tv.setText("Comments");
+        } else {
+            event_details_comment_label_tv.setText("No comments");
+        }
     }
 
     private void setLikeSpamImageFromServerValues() {

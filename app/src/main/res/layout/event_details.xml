@@ -19,7 +19,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scaleType="centerCrop"
-            android:src="@drawable/my_pic" />
+            android:src="@drawable/user_96" />
 
         <View
             android:id="@+id/event_detail_grey_view_panel"
@@ -51,6 +51,7 @@
             android:layout_marginEnd="10dp"
             android:layout_marginRight="10dp"
             android:layout_toEndOf="@+id/event_detail_profile_pic_image_view"
+            android:layout_toStartOf="@+id/event_detail_user_post_dt_time_text_view"
             android:text="Jhony Ive"
             android:textStyle="bold" />
 
@@ -64,7 +65,8 @@
             android:layout_marginEnd="10dp"
             android:layout_marginRight="10dp"
             android:text="07 hrs ago"
-            android:textSize="12sp" />
+            android:textSize="12sp"
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/event_detail_user_comment_text_view"
@@ -74,35 +76,34 @@
             android:layout_marginEnd="10dp"
             android:layout_marginRight="10dp"
             android:layout_toEndOf="@+id/event_detail_profile_pic_image_view"
-            android:layout_toStartOf="@+id/event_detail_attendies_card_view"
             android:maxLines="4"
             android:minLines="2"
             android:text="Donut party at UMBC" />
 
-        <android.support.v7.widget.CardView
-            android:id="@+id/event_detail_attendies_card_view"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignEnd="@+id/event_detail_user_post_dt_time_text_view"
-            android:layout_alignTop="@+id/event_detail_user_comment_text_view"
-            android:layout_marginTop="5dp"
-            android:elevation="10dp"
-            android:gravity="center_vertical"
-            card_view:cardCornerRadius="3dp">
+        <!--<android.support.v7.widget.CardView-->
+        <!--android:id="@+id/event_detail_attendies_card_view"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_alignEnd="@+id/event_detail_user_post_dt_time_text_view"-->
+        <!--android:layout_alignTop="@+id/event_detail_user_comment_text_view"-->
+        <!--android:layout_marginTop="5dp"-->
+        <!--android:elevation="10dp"-->
+        <!--android:gravity="center_vertical"-->
+        <!--card_view:cardCornerRadius="3dp">-->
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="20dp"
-                android:layout_alignEnd="@+id/event_detail_user_post_dt_time_text_view"
-                android:layout_alignTop="@+id/event_detail_user_comment_text_view"
-                android:gravity="center_vertical"
-                android:paddingEnd="4dp"
-                android:paddingStart="4dp"
-                android:singleLine="true"
-                android:text="9 Attending"
-                android:textSize="12sp" />
+        <!--<TextView-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="20dp"-->
+        <!--android:layout_alignEnd="@+id/event_detail_user_post_dt_time_text_view"-->
+        <!--android:layout_alignTop="@+id/event_detail_user_comment_text_view"-->
+        <!--android:gravity="center_vertical"-->
+        <!--android:paddingEnd="4dp"-->
+        <!--android:paddingStart="4dp"-->
+        <!--android:singleLine="true"-->
+        <!--android:text="9 Attending"-->
+        <!--android:textSize="12sp" />-->
 
-        </android.support.v7.widget.CardView>
+        <!--</android.support.v7.widget.CardView>-->
 
         <!--<ImageView-->
         <!--android:layout_width="wrap_content"-->
@@ -121,10 +122,9 @@
             android:layout_marginBottom="20dp"
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
-            android:layout_toStartOf="@+id/event_detail_attendies_text_view"
             android:background="@drawable/transparent_white_line_bg"
             android:foreground="?attr/selectableItemBackground"
-            android:hint="+ Add comment"
+            android:hint="  +  Add comment"
             android:padding="8dp"
             android:shadowColor="#000"
             android:shadowDx="1"
@@ -138,15 +138,15 @@
             android:id="@+id/event_detail_attendies_text_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignBottom="@+id/event_detail_individual_image_comment_textview"
             android:layout_alignParentEnd="true"
-            android:layout_alignTop="@+id/event_detail_individual_image_comment_textview"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="8dp"
-            android:background="@drawable/transparent_white_line_bg"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/righ_side_btn_grey_bg"
             android:foreground="?attr/selectableItemBackground"
             android:gravity="center"
-            android:padding="8dp"
+            android:paddingBottom="8dp"
+            android:paddingEnd="12dp"
+            android:paddingStart="12dp"
+            android:paddingTop="8dp"
             android:shadowColor="#000"
             android:shadowDx="1"
             android:shadowDy="1"
@@ -348,6 +348,18 @@
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_centerInParent="true"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/event_details_comments_tap_to_load_textview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:background="@drawable/grey_border_rct_bg"
+            android:foreground="?attr/selectableItemBackground"
+            android:padding="8dp"
+            android:text="Reload"
+            android:textStyle="bold|italic"
             android:visibility="gone" />
 
         <View
