@@ -1085,7 +1085,7 @@ public class UserProfileFragment extends Fragment {
                 System.out.println("selectedImageName------- " + selectedCameraImageName);
                 System.out.println("getUriToSendAzure------- " + getUriToSendAzure);
                 mapForUploadingSelectedProfilePic.put(selectedCameraImageName, getUriToSendAzure);
-                uploadEventImage();
+                uploadProfileImage();
 
             } catch (Exception e) {
                 System.out.println("image not capture from camera " + e.getMessage());
@@ -1103,7 +1103,7 @@ public class UserProfileFragment extends Fragment {
     }
 
 
-    private void uploadEventImage() {
+    private void uploadProfileImage() {
 
 
         AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
