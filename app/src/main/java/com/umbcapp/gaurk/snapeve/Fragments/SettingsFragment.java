@@ -20,6 +20,7 @@ import com.google.gson.JsonObject;
 import com.umbcapp.gaurk.snapeve.Login_snapeve_activity;
 import com.umbcapp.gaurk.snapeve.MainActivity;
 import com.umbcapp.gaurk.snapeve.R;
+import com.umbcapp.gaurk.snapeve.ScheduledRewards;
 import com.umbcapp.gaurk.snapeve.SessionManager;
 import com.umbcapp.gaurk.snapeve.WelcomeActivity;
 
@@ -54,7 +55,14 @@ public class SettingsFragment extends Fragment {
         testlogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(getActivity(), Login_snapeve_activity.class));
+//              startActivity(new Intent(getActivity(), Login_snapeve_activity.class));
+
+                Intent scheduledRewardsIntent = new Intent(getActivity(), ScheduledRewards.class);
+
+                startActivity(scheduledRewardsIntent);
+
+
+
             }
         });
 //        startActivity(new Intent(getActivity(), WelcomeActivity.class));

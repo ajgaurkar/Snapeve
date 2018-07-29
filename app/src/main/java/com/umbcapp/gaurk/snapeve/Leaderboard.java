@@ -263,7 +263,6 @@ public class Leaderboard extends AppCompatActivity implements Listview_communica
         }
     }
 
-
     @Override
     public void main_event_listview_element_clicked(int position, int click_code) {
         System.out.println("position :" + position);

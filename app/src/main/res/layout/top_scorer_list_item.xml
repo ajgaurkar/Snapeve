@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/recycler_parent"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="3dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="3dp"
+        android:elevation="10dp"
+        card_view:cardCornerRadius="5dp"
+        card_view:cardUseCompatPadding="true">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="2dp">
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/topscorer_list_item_dp_imageview"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_margin="8dp"
+                android:src="@drawable/my_pic" />
+
+            <TextView
+                android:id="@+id/topscorer_list_item_name_textview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@+id/topscorer_list_item_dp_imageview"
+                android:layout_marginStart="10dp"
+                android:layout_toEndOf="@+id/topscorer_list_item_dp_imageview"
+                android:layout_toStartOf="@+id/topscorer_list_item_rank_textview"
+                android:padding="3dp"
+                android:singleLine="true"
+                android:text="Ajinkya Gaurkar"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/topscorer_list_item_rank_textview"
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignTop="@+id/topscorer_list_item_dp_imageview"
+                android:gravity="center"
+                android:padding="5dp"
+                android:text="58"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+        </RelativeLayout>
+    </android.support.v7.widget.CardView>
+</RelativeLayout>

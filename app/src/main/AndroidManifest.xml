@@ -73,6 +73,7 @@
         <activity android:name=".test_activity" />
         <activity android:name=".Login_snapeve_activity" />
         <activity android:name=".BrowseGroupProfile" />
+        <activity android:name=".ScheduledRewards" />
         <activity android:name=".BrowseUserProfile" />
         <activity android:name=".SignUp" />
         <activity

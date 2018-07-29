@@ -20,7 +20,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.microsoft.windowsazure.notifications.NotificationsManager;
-import com.scottyab.showhidepasswordedittext.ShowHidePasswordEditText;
+//import com.scottyab.showhidepasswordedittext.ShowHidePasswordEditText;
 import com.squareup.picasso.Picasso;
 
 
@@ -39,7 +39,7 @@ public class Login_snapeve_activity extends AppCompatActivity {
     String password;
     private TextView login_page_login_google_textview;
     private TextView login_page_login_btn_textview;
-    private ShowHidePasswordEditText login_page_pass_edittext;
+    private EditText login_page_pass_edittext;
     private TextView login_page_signup_btn_textview;
     private TextView forgot_pass_textview;
     private EditText login_page_email_edittext;
@@ -53,7 +53,7 @@ public class Login_snapeve_activity extends AppCompatActivity {
         setContentView(R.layout.login_snapeve);
 
         login_page_email_edittext = (EditText) findViewById(R.id.login_page_email_edittext);
-        login_page_pass_edittext = (ShowHidePasswordEditText) findViewById(R.id.login_page_pass_edittext);
+        login_page_pass_edittext = (EditText) findViewById(R.id.login_page_pass_edittext);
         login_page_login_btn_textview = (TextView) findViewById(R.id.login_page_login_btn_textview);
         login_btn_card = (CardView) findViewById(R.id.login_btn_card);
         login_page_signup_btn_textview = (TextView) findViewById(R.id.login_page_signup_btn_textview);
