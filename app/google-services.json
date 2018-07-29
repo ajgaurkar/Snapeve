@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "249087334030",
+    "firebase_url": "https://snapeve-bfc6e.firebaseio.com",
+    "project_id": "snapeve-bfc6e",
+    "storage_bucket": "snapeve-bfc6e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:249087334030:android:ce82820c1519e89c",
+        "android_client_info": {
+          "package_name": "com.umbcapp.gaurk.snapeve"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "249087334030-5dtsc3dgohrmpbmenrt2u2kdu63l5bb6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyADQ9VZTwsoNhmLrITlojXSdQv_iPizHJg"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

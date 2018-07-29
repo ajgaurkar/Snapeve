@@ -19,7 +19,13 @@ import com.google.common.util.concurrent.SettableFuture;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.microsoft.windowsazure.notifications.NotificationsManager;
+import com.scottyab.showhidepasswordedittext.ShowHidePasswordEditText;
 import com.squareup.picasso.Picasso;
+
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by SSSI Dev-1 on 6/1/2018.
@@ -33,11 +39,12 @@ public class Login_snapeve_activity extends AppCompatActivity {
     String password;
     private TextView login_page_login_google_textview;
     private TextView login_page_login_btn_textview;
-    private EditText login_page_pass_edittext;
+    private ShowHidePasswordEditText login_page_pass_edittext;
     private TextView login_page_signup_btn_textview;
     private TextView forgot_pass_textview;
     private EditText login_page_email_edittext;
     private CardView login_btn_card;
+    private ArrayList<String> notificationTagList = new ArrayList<>();
 
 
     @Override
@@ -46,12 +53,13 @@ public class Login_snapeve_activity extends AppCompatActivity {
         setContentView(R.layout.login_snapeve);
 
         login_page_email_edittext = (EditText) findViewById(R.id.login_page_email_edittext);
-        login_page_pass_edittext = (EditText) findViewById(R.id.login_page_pass_edittext);
+        login_page_pass_edittext = (ShowHidePasswordEditText) findViewById(R.id.login_page_pass_edittext);
         login_page_login_btn_textview = (TextView) findViewById(R.id.login_page_login_btn_textview);
         login_btn_card = (CardView) findViewById(R.id.login_btn_card);
         login_page_signup_btn_textview = (TextView) findViewById(R.id.login_page_signup_btn_textview);
         forgot_pass_textview = (TextView) findViewById(R.id.forgot_pass_textview);
         login_page_login_google_textview = (TextView) findViewById(R.id.login_page_login_google_textview);
+
 
         login_page_login_btn_textview.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -146,9 +154,14 @@ public class Login_snapeve_activity extends AppCompatActivity {
 
 
         if (new SessionManager(getApplicationContext()).createLoginSession(user_id, user_name, user_pass, first_name, last_name, email)) {
+            NotificationsManager.handleNotifications(Login_snapeve_activity.this, AzureConfiguration.SenderId, AppNotificationHandler.class);
+            registerWithNotificationHubs();
+
             startActivity(new Intent(getApplicationContext(), MainActivity.class));
         }
+
     }
+
 
     private String validateInputs() {
         System.out.println("IN VALIDATION");
@@ -182,5 +195,13 @@ public class Login_snapeve_activity extends AppCompatActivity {
         return response;
     }
 
+
+    private void registerWithNotificationHubs() {
+        System.out.println("check registerNotifcation hub called");
+        notificationTagList.add("snapeve_users");
+        Intent intent = new Intent(this, RegisterNotificationTags.class);
+        intent.putExtra("notificationTagList", notificationTagList);
+        startService(intent);
+    }
 
 }

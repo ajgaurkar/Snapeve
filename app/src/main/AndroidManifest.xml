@@ -81,14 +81,19 @@
             android:theme="@style/AppFullScreenTheme"></activity>
 
 
-        <activity android:name="me.iwf.photopicker.PhotoPickerActivity"
-            android:theme="@style/Theme.AppCompat.NoActionBar"
-            />
+        <activity
+            android:name="me.iwf.photopicker.PhotoPickerActivity"
+            android:theme="@style/Theme.AppCompat.NoActionBar" />
 
-        <activity android:name="me.iwf.photopicker.PhotoPagerActivity"
-            android:theme="@style/Theme.AppCompat.NoActionBar"/>
+        <activity
+            android:name="me.iwf.photopicker.PhotoPagerActivity"
+            android:theme="@style/Theme.AppCompat.NoActionBar" />
         <activity android:name=".MessageThread" />
         <activity android:name=".ImageFullscreenOpen" />
+
+        <service
+            android:name=".RegisterNotificationTags"
+            android:exported="false" />
 
 
         <provider
