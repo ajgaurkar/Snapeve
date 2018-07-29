@@ -41,6 +41,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 public class EventDetails extends AppCompatActivity implements Listview_communicator {
 
     ArrayList<CommentsListItem> commentsList = new ArrayList<CommentsListItem>();
@@ -90,6 +92,8 @@ public class EventDetails extends AppCompatActivity implements Listview_communic
     private int server_action_spam = 0;
     private TextView event_details_comments_tap_to_load_textview;
     private View event_detail_grey_view_panel;
+    private String user_dp_url;
+    private CircleImageView event_detail_profile_pic_image_view;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -105,6 +109,7 @@ public class EventDetails extends AppCompatActivity implements Listview_communic
         img_url = eventDetailIntent.getStringExtra("img_url");
         comm_dt_time = eventDetailIntent.getStringExtra("comm_time");
         user_comment = eventDetailIntent.getStringExtra("user_comment");
+        user_dp_url = eventDetailIntent.getStringExtra("user_dp_url");
 
         merge_options_layout = (RelativeLayout) findViewById(R.id.merge_options_layout);
         event_detail_grey_view_panel = (View) findViewById(R.id.event_detail_grey_view_panel);
@@ -114,6 +119,7 @@ public class EventDetails extends AppCompatActivity implements Listview_communic
         event_detail_user_post_dt_time_text_view = (TextView) findViewById(R.id.event_detail_user_post_dt_time_text_view);
         event_detail_user_comment_text_view = (TextView) findViewById(R.id.event_detail_user_comment_text_view);
         event_details_comment_label_tv = (TextView) findViewById(R.id.event_details_comment_label_tv);
+        event_detail_profile_pic_image_view = (CircleImageView) findViewById(R.id.event_detail_profile_pic_image_view);
         event_details_comments_loading_progress_bar = (ProgressBar) findViewById(R.id.event_details_comments_loading_progress_bar);
 
         merge_event_cancel_btn_text_view = (TextView) findViewById(R.id.merge_event_cancel_btn_text_view);
@@ -138,6 +144,7 @@ public class EventDetails extends AppCompatActivity implements Listview_communic
         event_detail_user_post_dt_time_text_view.setText(comm_dt_time);
         event_detail_user_comment_text_view.setText(user_comment);
         Picasso.get().load(img_url).fit().centerCrop().into(event_detail_event_image_image_view);
+        Picasso.get().load(user_dp_url).fit().centerCrop().into(event_detail_profile_pic_image_view);
 
 //        commentsList.add(new CommentsListItem("u1", "Jhon Paul", "speaking to a a packed crowd at Sanders Theatre, a nobel laureate discussing her most recent scientific discovery, or the Harvard senior talent show, there’s always something happening at Harvard.", "Jan 05", "https://ais2017.umbc.edu/files/2017/09/umbc.jpg"));
 //        commentsList.add(new CommentsListItem("u1", "Jhon Paul", "Good", "Jan 05", "https://ais2017.umbc.edu/files/2017/09/umbc.jpg"));
@@ -599,7 +606,7 @@ public class EventDetails extends AppCompatActivity implements Listview_communic
         }
 
         jsonObjectPostEventParameters.addProperty("userComment", userComment);
-        jsonObjectPostEventParameters.addProperty("user_id", user_id);
+        jsonObjectPostEventParameters.addProperty("user_id", new SessionManager(getApplicationContext()).getSpecificUserDetail(SessionManager.KEY_USER_ID));
         jsonObjectPostEventParameters.addProperty("post_id", post_id);
         jsonObjectPostEventParameters.addProperty("click_code", click_code);
         jsonObjectPostEventParameters.addProperty("action_to_be_performed", action_to_be_performed);
@@ -767,7 +774,7 @@ public class EventDetails extends AppCompatActivity implements Listview_communic
 
         jsonObjectPostEventParameters.addProperty("code", interested_status);
         jsonObjectPostEventParameters.addProperty("postId", post_id);
-        jsonObjectPostEventParameters.addProperty("userId", user_id);
+        jsonObjectPostEventParameters.addProperty("userId", new SessionManager(getApplicationContext()).getSpecificUserDetail(SessionManager.KEY_USER_ID));
 
         final ProgressDialog mProgressDialog = new ProgressDialog(this);
         mProgressDialog.setIndeterminate(true);

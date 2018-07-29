@@ -132,7 +132,7 @@ public class UserProfileFragment extends Fragment {
         progressDialog.show();
         JsonObject jsonObjectParameters = new JsonObject();
         jsonObjectParameters.addProperty("grp_id", grp_id);
-        jsonObjectParameters.addProperty("fetch_type_post_or_members", fetch_type_post_or_members);
+//        jsonObjectParameters.addProperty("fetch_type_post_or_members", fetch_type_post_or_members);
 
         final SettableFuture<JsonElement> resultFuture = SettableFuture.create();
         ListenableFuture<JsonElement> serviceFilterFuture = MainActivity.mClient.invokeApi("browse_grp_profile_api", jsonObjectParameters);
@@ -281,7 +281,7 @@ public class UserProfileFragment extends Fragment {
 
                 parseResponse(response);
                 fetchGrpPostAndMembers(grp_id, 0);
-                fetchGrpPostAndMembers(grp_id, 1);
+//                fetchGrpPostAndMembers(grp_id, 1);
             }
         });
     }

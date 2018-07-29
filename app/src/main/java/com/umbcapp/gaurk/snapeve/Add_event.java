@@ -113,6 +113,7 @@ public class Add_event extends AppCompatActivity implements LocationListener {
     private boolean all_day_status;
     private String eventLocation = "NULL";
     private int post_scope_radio_value;
+    private int post_as_radio_value;
     private int event_type_radio_value;
     private int location_type_radio_value;
     private int PICK_GALLERY_IMAGE = 1;
@@ -394,6 +395,27 @@ public class Add_event extends AppCompatActivity implements LocationListener {
                         System.out.println("Grp only");
                         post_scope_radio_value = 1;
 
+                        break;
+
+                }
+            }
+        });
+        post_as_radio_grp.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+
+                System.out.println("checkedId : " + checkedId);
+
+                switch (checkedId) {
+
+                    case R.id.post_as_self_radio:
+                        System.out.println("Public");
+                        post_as_radio_value = 0;
+                        break;
+
+                    case R.id.post_as_group_radio:
+                        System.out.println("Anonymous");
+                        post_as_radio_value = 1;
                         break;
 
                 }
@@ -1120,6 +1142,7 @@ public class Add_event extends AppCompatActivity implements LocationListener {
         jsonObjectPostEventParameters.addProperty("location_type", location_type_radio_value);
         jsonObjectPostEventParameters.addProperty("event_type", event_type_radio_value);
         jsonObjectPostEventParameters.addProperty("scope", post_scope_radio_value);
+        jsonObjectPostEventParameters.addProperty("post_as", post_as_radio_value);
         jsonObjectPostEventParameters.addProperty("description", postDescription);
         jsonObjectPostEventParameters.addProperty("all_day", all_day_status);
         jsonObjectPostEventParameters.addProperty("location_name", eventLocation);
