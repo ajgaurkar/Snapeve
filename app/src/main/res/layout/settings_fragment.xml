@@ -8,7 +8,8 @@
         android:id="@+id/settings_logout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/testlogin"
+        android:layout_centerInParent="true"
+        android:background="@drawable/grey_bg_five_corner_round"
         android:padding="8dp"
         android:text="Logout"
         android:textSize="18sp"
@@ -18,10 +19,35 @@
         android:id="@+id/testlogin"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_marginTop="20dp"
+        android:layout_below="@+id/settings_logout"
+        android:layout_marginTop="30dp"
+        android:background="@drawable/grey_bg_five_corner_round"
         android:padding="8dp"
         android:text="Test login"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/test_x"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/testlogin"
+        android:layout_marginTop="30dp"
+        android:background="@drawable/grey_bg_five_corner_round"
+        android:padding="8dp"
+        android:text="Test X"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/test_y"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/test_x"
+        android:layout_marginTop="30dp"
+        android:background="@drawable/grey_bg_five_corner_round"
+        android:padding="8dp"
+        android:text="Test Y"
         android:textSize="18sp"
         android:textStyle="bold" />
 
