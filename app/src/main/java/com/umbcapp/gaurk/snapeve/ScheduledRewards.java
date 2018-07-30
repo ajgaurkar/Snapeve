@@ -1,6 +1,7 @@
 package com.umbcapp.gaurk.snapeve;
 
 import android.app.ProgressDialog;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -10,6 +11,7 @@ import android.widget.ListView;
 import com.squareup.picasso.Picasso;
 
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -27,6 +29,9 @@ import com.umbcapp.gaurk.snapeve.Controllers.LeaderboardListItem;
 import java.util.ArrayList;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import nl.dionsegijn.konfetti.KonfettiView;
+import nl.dionsegijn.konfetti.models.Shape;
+import nl.dionsegijn.konfetti.models.Size;
 
 public class ScheduledRewards extends AppCompatActivity {
 
@@ -36,6 +41,9 @@ public class ScheduledRewards extends AppCompatActivity {
     private CircleImageView scheduled_rewards_profile_pic_image_view;
     private TextView scheduled_rewards_user_fullname_name_textview;
     private TextView scheduled_rewards_user_name_textview;
+    private RelativeLayout scheduled_rewards_main_layout;
+    private KonfettiView konfettiView;
+    private int width;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -44,10 +52,21 @@ public class ScheduledRewards extends AppCompatActivity {
 
         topScorerlistView = (ListView) findViewById(R.id.scheduled_rewards_scorer_list);
         scheduled_rewards_profile_pic_image_view = (CircleImageView) findViewById(R.id.scheduled_rewards_profile_pic_image_view);
+        scheduled_rewards_main_layout = (RelativeLayout) findViewById(R.id.scheduled_rewards_main_layout);
         scheduled_rewards_user_fullname_name_textview = (TextView) findViewById(R.id.scheduled_rewards_user_fullname_name_textview);
         scheduled_rewards_user_name_textview = (TextView) findViewById(R.id.scheduled_rewards_user_name_textview);
+        konfettiView = findViewById(R.id.viewKonfetti);
 
-        getTopScorers();
+        konfettiView.post(new Runnable() {
+            @Override
+            public void run() {
+                width = konfettiView.getMeasuredWidth();
+                getTopScorers();
+                //method called in runnable because width is calculated after view load. hence width come to 0 if confetti called before/directly
+            }
+        });
+        System.out.println("scheduled_rewards_main_layout width() " + width);
+
 
     }
 
@@ -82,6 +101,23 @@ public class ScheduledRewards extends AppCompatActivity {
                 parseTopScorerResponse(response);
             }
         });
+
+        setConfetti();
+    }
+
+    //method called in runnable because width is calculated after view load. hence width come to 0 if confetti called before/directly
+    private void setConfetti() {
+        konfettiView.build()
+                .addColors(Color.RED, Color.WHITE, Color.GREEN, Color.YELLOW)
+                .setDirection(0.0, 359.0)
+                .setSpeed(1f, 5f)
+                .setFadeOutEnabled(true)
+                .setTimeToLive(800L)
+                .addShapes(Shape.RECT, Shape.CIRCLE)
+                .addSizes(new Size(16, 5f))
+                .setPosition(0f, (float) width, 0f, 0f)
+                .streamFor(30, 50000L);
+
     }
 
     private void parseTopScorerResponse(JsonElement topScorerResponse) {
