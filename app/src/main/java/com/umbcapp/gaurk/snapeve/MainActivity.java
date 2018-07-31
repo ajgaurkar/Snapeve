@@ -60,6 +60,17 @@ public class MainActivity extends AppCompatActivity implements Listview_communic
     private ArrayList<Event_dash_list_obj> event_main_list;
     private FloatingActionButton main_img_pick_fab;
     private Dash_Event_ListAdapter dash_event_listAdapter;
+    private JsonObject jsonObjectUserProfileParameters;
+    private String dp_url = null;
+    private int user_total_pts;
+    private String last_name;
+    private String userName;
+    private String first_name;
+    private int admin_flag;
+    private String grp_id;
+    private String grp_name;
+    private String grp_dp_url;
+    private int grp_total_pts;
 //    private Button refreshBtn;
 
     @Override
@@ -244,6 +255,8 @@ public class MainActivity extends AppCompatActivity implements Listview_communic
                 System.out.println(" get_event_feeds_api exception    " + exception);
                 pullToRefresh.setRefreshing(false);
                 progressDialog.dismiss();
+                fetchUserDetails();
+
                 Toast.makeText(MainActivity.this, "Something went wrong try again", Toast.LENGTH_SHORT).show();
             }
 
@@ -252,12 +265,86 @@ public class MainActivity extends AppCompatActivity implements Listview_communic
                 resultFuture.set(response);
                 System.out.println(" get_event_feeds_api success response    " + response);
 
+                fetchUserDetails();
+
                 progressDialog.dismiss();
                 poupulateList(response);
                 pullToRefresh.setRefreshing(false);
 
             }
         });
+    }
+
+    private void fetchUserDetails() {
+        jsonObjectUserProfileParameters = new JsonObject();
+        //might need to change it to user id from user name
+        jsonObjectUserProfileParameters.addProperty("user_name", new SessionManager(getApplicationContext()).getSpecificUserDetail(SessionManager.KEY_USER_NAME));
+
+        final SettableFuture<JsonElement> resultFuture = SettableFuture.create();
+        ListenableFuture<JsonElement> serviceFilterFuture = MainActivity.mClient.invokeApi("fetch_user_details_api", jsonObjectUserProfileParameters);
+
+        Futures.addCallback(serviceFilterFuture, new FutureCallback<JsonElement>() {
+            @Override
+            public void onFailure(Throwable exception) {
+                resultFuture.setException(exception);
+                System.out.println(" fetch_user_details exception    " + exception);
+            }
+
+            @Override
+            public void onSuccess(JsonElement response) {
+                resultFuture.set(response);
+                System.out.println(" fetch_user_details success response    " + response);
+
+                parseResponse(response);
+            }
+        });
+    }
+
+    private void parseResponse(JsonElement response) {
+        JsonArray responseJsonArray = response.getAsJsonArray();
+
+        JsonObject userDetailsObj = responseJsonArray.get(0).getAsJsonObject();
+
+        userName = userDetailsObj.get("user_name").getAsString();
+        first_name = userDetailsObj.get("first_name").getAsString();
+        last_name = userDetailsObj.get("last_name").getAsString();
+        user_total_pts = Integer.parseInt(userDetailsObj.get("user_points").toString());
+
+        try {
+            dp_url = userDetailsObj.get("dp_url").getAsString();
+            System.out.println("userprofilefragment user dp_url : " + dp_url);
+        } catch (Exception e) {
+            e.printStackTrace();
+            dp_url = null;
+            System.out.println(" dp_url is null, set local image");
+        }
+
+
+        //time being untill admin flag is not 0 for all
+        try {
+            admin_flag = Integer.parseInt(userDetailsObj.get("group_admin_flag").toString());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
+        if (userDetailsObj.get("grp_id").toString().isEmpty() || userDetailsObj.get("grp_id").toString().equals("null") || userDetailsObj.get("grp_id") == null) {
+
+            grp_id = "xxxxx____xxxxx";
+            grp_name = "xxxxx_____xxxxx";
+            grp_dp_url = "xxxxx_____xxxxx";
+
+        } else {
+            grp_id = userDetailsObj.get("grp_id").getAsString();
+            grp_name = userDetailsObj.get("grp_name").getAsString();
+            grp_dp_url = userDetailsObj.get("grp_dp_url").getAsString();
+            grp_total_pts = userDetailsObj.get("total_pts").getAsInt();
+
+        }
+
+        new SessionManager(getApplicationContext()).setSpecificUserDetail(SessionManager.KEY_GRP_DP_URL, grp_dp_url);
+        new SessionManager(getApplicationContext()).setSpecificUserDetail(SessionManager.KEY_GRP_NAME, grp_name);
+        new SessionManager(getApplicationContext()).setSpecificUserDetail(SessionManager.KEY_GRP_ID, grp_id);
     }
 
     private void poupulateList(JsonElement response) {

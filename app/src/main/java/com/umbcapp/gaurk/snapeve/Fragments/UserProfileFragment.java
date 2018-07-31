@@ -65,6 +65,7 @@ import com.umbcapp.gaurk.snapeve.Leaderboard;
 import com.umbcapp.gaurk.snapeve.MainActivity;
 import com.umbcapp.gaurk.snapeve.ManageGroups;
 import com.umbcapp.gaurk.snapeve.R;
+import com.umbcapp.gaurk.snapeve.RewardCalcuator;
 import com.umbcapp.gaurk.snapeve.SessionManager;
 import com.umbcapp.gaurk.snapeve.Signup_grp_join;
 import com.umbcapp.gaurk.snapeve.Singleton;
@@ -340,6 +341,12 @@ public class UserProfileFragment extends Fragment {
         first_name = userDetailsObj.get("first_name").getAsString();
         last_name = userDetailsObj.get("last_name").getAsString();
         user_total_pts = Integer.parseInt(userDetailsObj.get("user_points").toString());
+
+        RewardCalcuator rewardCalcuator = new RewardCalcuator();
+        RewardCalcuator calculatedReward = rewardCalcuator.calculate(user_total_pts);
+        System.out.println("calculatedReward " + calculatedReward.getCurrent_points());
+        System.out.println("calculatedReward " + calculatedReward.getMin_range());
+        System.out.println("calculatedReward " + calculatedReward.getMax_range());
 
         try {
             dp_url = userDetailsObj.get("dp_url").getAsString();
@@ -1099,9 +1106,7 @@ public class UserProfileFragment extends Fragment {
 
         }
 
-
     }
-
 
     private void uploadProfileImage() {
 
@@ -1130,7 +1135,7 @@ public class UserProfileFragment extends Fragment {
                     }
                     System.out.println("beofre update user Tabele");
                     System.out.println(AzureConfiguration.Storage_url + ImageFileName);
-                    user_table=new user_table();
+                    user_table = new user_table();
                     System.out.println("user_id------------ " + new SessionManager(getActivity()).getSpecificUserDetail(SessionManager.KEY_USER_ID));
                     user_table.setId(new SessionManager(getActivity()).getSpecificUserDetail(SessionManager.KEY_USER_ID));
                     user_table.setDp_url(AzureConfiguration.Storage_url + ImageFileName);

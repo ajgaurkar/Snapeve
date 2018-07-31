@@ -370,7 +370,7 @@ public class EventDetails extends AppCompatActivity implements Listview_communic
         JsonObject jsonObjectPostEventParameters = new JsonObject();
 
         jsonObjectPostEventParameters.addProperty("post_id", post_id);
-        jsonObjectPostEventParameters.addProperty("userId", user_id);
+        jsonObjectPostEventParameters.addProperty("userId", new SessionManager(getApplicationContext()).getSpecificUserDetail(SessionManager.KEY_USER_ID));
 
         final SettableFuture<JsonElement> resultFuture = SettableFuture.create();
         ListenableFuture<JsonElement> serviceFilterFuture = MainActivity.mClient.invokeApi("fetch_post_details_api", jsonObjectPostEventParameters);
@@ -681,6 +681,7 @@ public class EventDetails extends AppCompatActivity implements Listview_communic
         JsonObject jsonObjectPostEventParameters = new JsonObject();
 
         jsonObjectPostEventParameters.addProperty("post_id", post_id);
+        jsonObjectPostEventParameters.addProperty("user_id", new SessionManager(getApplicationContext()).getSpecificUserDetail(SessionManager.KEY_USER_ID));
 
         final SettableFuture<JsonElement> resultFuture = SettableFuture.create();
         ListenableFuture<JsonElement> serviceFilterFuture = MainActivity.mClient.invokeApi("fetch_attendies_list_api", jsonObjectPostEventParameters);
@@ -705,6 +706,7 @@ public class EventDetails extends AppCompatActivity implements Listview_communic
 
     private void parseAttendiesResponse(JsonElement attendiesResponse) {
         attendiesGrpMemberArrayList = new ArrayList<AttendiesListItem>();
+        attendiesOutGrpMemberArrayList = new ArrayList<AttendiesListItem>();
 
         System.out.println(" IN PARSE JASON");
 
@@ -720,13 +722,21 @@ public class EventDetails extends AppCompatActivity implements Listview_communic
             String user_name = attendies_list_object.get("USER_NAME").getAsString();
             String first_name = attendies_list_object.get("FIRST_NAME").getAsString();
             String last_name = attendies_list_object.get("LAST_NAME").getAsString();
-            String grp_id = attendies_list_object.get("GRP_ID").getAsString();
+            String grp_id = null;
+            try {
+                grp_id = attendies_list_object.get("GRP_ID").getAsString();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
 
             //MISSING GRP ID IN SESSION MANAGER. NEED TO ADD IT. NEED IT HERE
 //            if(grp_id.equals(new SessionManager(getApplicationContext()).getSpecificUserDetail(SessionManager.KEY)))
-
-            attendiesGrpMemberArrayList.add(0, new AttendiesListItem(user_id, user_name, 0, attend_status, img_dp_url));
-
+            if (grp_id == null || !(grp_id.equals("fbcc3d0a-15ba-4200-89ce-5c1bb97c7e99"))) {
+                attendiesOutGrpMemberArrayList.add(0, new AttendiesListItem(user_id, user_name, 0, attend_status, img_dp_url));
+            } else {
+                attendiesGrpMemberArrayList.add(0, new AttendiesListItem(user_id, user_name, 0, attend_status, img_dp_url));
+            }
         }
 
         populateAttendiesList(0);
@@ -844,16 +854,20 @@ public class EventDetails extends AppCompatActivity implements Listview_communic
 
     private void populateAttendiesList(int attendies_type_selection_status) {
 
-        System.out.println(" attendiesGrpMemberArrayList " + attendiesGrpMemberArrayList.size());
-        attendiesAdapter = new AttendiesAdapter(EventDetails.this, attendiesGrpMemberArrayList, attendies_type_selection_status);
-
-        attendies_dialog_layout_attendies_listview.setAdapter(attendiesAdapter);
 
         if (attendies_type_selection_status == 0) {
             attendies_dialog_layout_attendies_count_textview.setText(attendiesGrpMemberArrayList.size() + " Group members attending");
+            System.out.println(" attendiesGrpMemberArrayList " + attendiesGrpMemberArrayList.size());
+            attendiesAdapter = new AttendiesAdapter(EventDetails.this, attendiesGrpMemberArrayList, attendies_type_selection_status);
+            attendies_dialog_layout_attendies_listview.setAdapter(attendiesAdapter);
+
         }
         if (attendies_type_selection_status == 1) {
-            attendies_dialog_layout_attendies_count_textview.setText(attendiesGrpMemberArrayList.size() + " others attending");
+            attendies_dialog_layout_attendies_count_textview.setText(attendiesOutGrpMemberArrayList.size() + " others attending");
+            System.out.println(" attendiesGrpMemberArrayList " + attendiesOutGrpMemberArrayList.size());
+            attendiesAdapter = new AttendiesAdapter(EventDetails.this, attendiesOutGrpMemberArrayList, attendies_type_selection_status);
+            attendies_dialog_layout_attendies_listview.setAdapter(attendiesAdapter);
+
         }
 
     }
