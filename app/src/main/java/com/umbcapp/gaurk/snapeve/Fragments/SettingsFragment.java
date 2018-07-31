@@ -44,6 +44,8 @@ public class SettingsFragment extends Fragment {
 
         TextView logout_textview = (TextView) rootView.findViewById(R.id.settings_logout);
         TextView testlogin = (TextView) rootView.findViewById(R.id.testlogin);
+        TextView test_y = (TextView) rootView.findViewById(R.id.test_y);
+        TextView test_x = (TextView) rootView.findViewById(R.id.test_x);
 
         logout_textview.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -51,17 +53,24 @@ public class SettingsFragment extends Fragment {
                 new SessionManager(getActivity()).logoutUser();
             }
         });
+        test_x.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getActivity(), WelcomeActivity.class));
+            }
+        });
+        test_y.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent scheduledRewardsIntent = new Intent(getActivity(), ScheduledRewards.class);
+                startActivity(scheduledRewardsIntent);
+            }
+        });
 
         testlogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//              startActivity(new Intent(getActivity(), Login_snapeve_activity.class));
-
-                Intent scheduledRewardsIntent = new Intent(getActivity(), ScheduledRewards.class);
-
-                startActivity(scheduledRewardsIntent);
-
-
+                startActivity(new Intent(getActivity(), Login_snapeve_activity.class));
 
             }
         });
