@@ -21,6 +21,7 @@ import android.support.v4.content.FileProvider;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
+import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.PopupMenu;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -52,7 +53,9 @@ import com.microsoft.azure.storage.blob.CloudBlockBlob;
 import com.microsoft.windowsazure.mobileservices.MobileServiceClient;
 import com.microsoft.windowsazure.mobileservices.table.MobileServiceTable;
 import com.squareup.picasso.Picasso;
+import com.umbcapp.gaurk.snapeve.Adapters.GroupMembersAdapter;
 import com.umbcapp.gaurk.snapeve.Adapters.SignupGrpAdapter;
+import com.umbcapp.gaurk.snapeve.Adapters.TeamMatesAdapter;
 import com.umbcapp.gaurk.snapeve.Adapters.UserContributionAdapter;
 import com.umbcapp.gaurk.snapeve.Add_event;
 import com.umbcapp.gaurk.snapeve.AzureConfiguration;
@@ -60,6 +63,7 @@ import com.umbcapp.gaurk.snapeve.BrowseUserProfile;
 import com.umbcapp.gaurk.snapeve.Controllers.CommentsListItem;
 import com.umbcapp.gaurk.snapeve.Controllers.LeaderboardListItem;
 import com.umbcapp.gaurk.snapeve.Controllers.SignUpGrpListItem;
+import com.umbcapp.gaurk.snapeve.Controllers.TeammatesListItem;
 import com.umbcapp.gaurk.snapeve.EventDetails;
 import com.umbcapp.gaurk.snapeve.Leaderboard;
 import com.umbcapp.gaurk.snapeve.MainActivity;
@@ -130,7 +134,7 @@ public class UserProfileFragment extends Fragment {
     private ImageView user_profile_member_count_text_view_icon;
     private JsonElement bkupPostResponse;
     private JsonElement bkupMemberResponse;
-    private ArrayList<LeaderboardListItem> userProfileList;
+    private ArrayList<TeammatesListItem> userProfileList = new ArrayList<>();
     private ProgressBar show_pending_req_dialog_progressBar;
     private TextView show_pending_req_dialog_progressBar_label;
     private RelativeLayout show_accept_invitation_dialog_invitations_layout;
@@ -148,6 +152,7 @@ public class UserProfileFragment extends Fragment {
     private MobileServiceTable<user_table> mUserTable;
     private MobileServiceClient mClient;
     private String user_id;
+    private boolean memberListOpenFlag = false;
 
 
     public UserProfileFragment() {
@@ -200,66 +205,75 @@ public class UserProfileFragment extends Fragment {
                 progressDialog.dismiss();
 
                 System.out.println(" browse_grp_profile_api success response    " + response);
+                divideGrpAndPostData(response);
 
-                if (fetch_type_post_or_members == 0) {
-                    bkupPostResponse = response;
-                    parseGrpPostData(bkupPostResponse);
-                }
-                if (fetch_type_post_or_members == 1) {
-                    bkupMemberResponse = response;
-                    parseMemberdata(bkupMemberResponse);
-                }
+//                if (fetch_type_post_or_members == 0) {
+//                    bkupPostResponse = response;
+//                    parseGrpPostData(bkupPostResponse);
+//                }
+//                if (fetch_type_post_or_members == 1) {
+//                    bkupMemberResponse = response;
+//                    parseMemberdata(bkupMemberResponse);
+//                }
             }
         });
     }
 
-    private void parseGrpPostData(JsonElement response) {
+    private void divideGrpAndPostData(JsonElement response) {
+
+        JsonObject grpInfoResponse = response.getAsJsonObject();
+        JsonArray grpMembers = grpInfoResponse.getAsJsonArray("grp_members");
+        JsonArray grpPost = grpInfoResponse.getAsJsonArray("grp_post");
+
+        System.out.println("grpMembers" + grpMembers);
+        if (grpMembers.size() > 0) {
+            parseMemberdata(grpMembers);
+        }
+
+        System.out.println("grpPost " + grpPost);
+        if (grpPost.size() > 0) {
+            parsePostdata(grpPost);
+        }
+    }
+
+    private void parsePostdata(JsonArray grpPost) {
 
     }
 
-    private void parseMemberdata(JsonElement response) {
+    private void parseMemberdata(JsonArray grpMembers) {
         System.out.println(" IN PARSE JASON");
 
         userProfileList = new ArrayList<>();
-        JsonArray userDataJSONArray = response.getAsJsonArray();
         int max_user_points = 0;
-        for (int i = 0; i < userDataJSONArray.size(); i++) {
-            JsonObject userData_list_object = userDataJSONArray.get(i).getAsJsonObject();
+        for (int i = 0; i < grpMembers.size(); i++) {
+            JsonObject userData_list_object = grpMembers.get(i).getAsJsonObject();
 
             System.out.println(" userData_list_object  " + userData_list_object);
 
             user_id = userData_list_object.get("user_id").toString();
 
-            if (user_id == null || user_id.length() == 0 || user_id.equals("null")) {
-//            if (TextUtils.isEmpty(user_id)) {
-                System.out.println("user_id NULL : " + user_id);
+            System.out.println("user_id NOT NULL : " + user_id);
+            String user_name = userData_list_object.get("user_name").getAsString();
+            String dp_url = userData_list_object.get("dp_url").getAsString();
+            String user_id = userData_list_object.get("user_id").getAsString();
+            String first_name = userData_list_object.get("first_name").getAsString();
+            String last_name = userData_list_object.get("last_name").getAsString();
+            int user_points = userData_list_object.get("user_points").getAsInt();
+
+
+            System.out.println(" user_name " + user_name);
+            System.out.println(" user_points " + user_points);
+            System.out.println(" dp_url " + dp_url);
+            System.out.println(" first_name " + first_name);
+            System.out.println(" last_name " + last_name);
+
+            if (user_points > max_user_points) {
+                max_user_points = user_points;
+                userProfileList.add(0, new TeammatesListItem(user_id, user_name, user_points, first_name + " " + last_name, dp_url));
             } else {
-
-                System.out.println("user_id NOT NULL : " + user_id);
-                String user_name = userData_list_object.get("user_name").toString();
-                String dp_url = userData_list_object.get("dp_url").toString();
-                String first_name = userData_list_object.get("first_name").toString();
-                String last_name = userData_list_object.get("last_name").toString();
-                int user_points = Integer.parseInt(userData_list_object.get("user_points").toString());
-                if (user_points > max_user_points) {
-                    max_user_points = user_points;
-                }
-
-                System.out.println(" user_name " + user_name);
-                System.out.println(" user_points " + user_points);
-                System.out.println(" dp_url " + dp_url);
-                System.out.println(" first_name " + first_name);
-                System.out.println(" last_name " + last_name);
-
-                //Remove " from start and end from every string
-                user_name = user_name.substring(1, user_name.length() - 1);
-                first_name = first_name.substring(1, first_name.length() - 1);
-                last_name = last_name.substring(1, last_name.length() - 1);
-                dp_url = dp_url.substring(1, dp_url.length() - 1);
-                user_id = user_id.substring(1, user_id.length() - 1);
-                userProfileList.add(new LeaderboardListItem(user_id, user_name, user_points, "", dp_url));
-
+                userProfileList.add(new TeammatesListItem(user_id, user_name, user_points, first_name + " " + last_name, dp_url));
             }
+
         }
 
 
@@ -270,16 +284,16 @@ public class UserProfileFragment extends Fragment {
 //        user_profile_contribution_rec_view.setItemAnimator(new DefaultItemAnimator());
 //        user_profile_contribution_rec_view.setAdapter(groupMembersAdapter);
 //
-        if (userProfileList.size() == 0) {
-            user_profile_member_count_text_view.setVisibility(View.VISIBLE);
-            user_profile_member_count_text_view.setText(userProfileList.size() + " Members");
-        } else if (userProfileList.size() == 1) {
-            user_profile_member_count_text_view.setVisibility(View.GONE);
-            user_profile_member_count_text_view.setText(userProfileList.size() + " Member");
-        } else {
-            user_profile_member_count_text_view.setVisibility(View.GONE);
-            user_profile_member_count_text_view.setText(userProfileList.size() + " Members");
-        }
+//        if (userProfileList.size() == 0) {
+//            user_profile_member_count_text_view.setVisibility(View.VISIBLE);
+//            user_profile_member_count_text_view.setText(userProfileList.size() + " Members");
+//        } else if (userProfileList.size() == 1) {
+//            user_profile_member_count_text_view.setVisibility(View.GONE);
+//            user_profile_member_count_text_view.setText(userProfileList.size() + " Member");
+//        } else {
+//            user_profile_member_count_text_view.setVisibility(View.GONE);
+//            user_profile_member_count_text_view.setText(userProfileList.size() + " Members");
+//        }
 
     }
 
@@ -436,6 +450,25 @@ public class UserProfileFragment extends Fragment {
             }
         });
 
+        user_profile_member_count_text_view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if (!memberListOpenFlag) {
+                    loadContributionList(2);
+                    memberListOpenFlag = true;
+                    user_profile_member_count_text_view_icon.setImageResource(R.drawable.up_arrow_white_24);
+
+                } else {
+                    loadContributionList(1);
+                    user_profile_member_count_text_view_icon.setImageResource(R.drawable.down_arrow_white_24);
+                    memberListOpenFlag = false;
+                }
+
+
+            }
+        });
+
         profile_relative_layout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -450,7 +483,6 @@ public class UserProfileFragment extends Fragment {
 
                     openSettingsMenu();
                 }
-
             }
         });
 
@@ -509,6 +541,7 @@ public class UserProfileFragment extends Fragment {
                     user_points.setText(String.valueOf(grp_total_pts));
 
                 }
+                memberListOpenFlag = false;
             }
         });
         profile_pic_image_view.setOnClickListener(new View.OnClickListener() {
@@ -759,7 +792,6 @@ public class UserProfileFragment extends Fragment {
         alertDialog.show();
     }
 
-
     private void openLeaveGroupDialog() {
         final Dialog alertDialog = new Dialog(getActivity());
         LayoutInflater flater = getActivity().getLayoutInflater();
@@ -894,6 +926,7 @@ public class UserProfileFragment extends Fragment {
     private void loadContributionList(int user_type_selection_status) {
 
         if (user_type_selection_status == 0) {
+            memberListOpenFlag = false;
             contributionList = new ArrayList<>();
             contributionList.add(new CommentsListItem("u1", "", "Jhon Paul", "", "speaking to a a packed crowd at Sanders Theatre, a nobel laureate discussing her most recent scientific discovery, or the Harvard senior talent show, there’s always something happening at Harvard.", "Jan 05", "https://www.goldenglobes.com/sites/default/files/styles/portrait_medium/public/gallery_images/17-tomcruiseag.jpg?itok=qNj0cQGV&c=c9a73b7bdf609d72214d226ab9ea015e"));
             contributionList.add(new CommentsListItem("u1", "", "Jhon Paul", "", "Good", "Jan 05", "https://www.goldenglobes.com/sites/default/files/styles/portrait_medium/public/gallery_images/17-tomcruiseag.jpg?itok=qNj0cQGV&c=c9a73b7bdf609d72214d226ab9ea015e"));
@@ -908,7 +941,7 @@ public class UserProfileFragment extends Fragment {
 
         }
         if (user_type_selection_status == 1) {
-
+            memberListOpenFlag = false;
             contributionList = new ArrayList<>();
             contributionList.add(new CommentsListItem("u1", "", "Kevin Ryan", "", "speaking to a a packed crowd at Sanders Theatre, a nobel laureate discussing her most recent scientific discovery, or the Harvard senior talent show, there’s always something happening at Harvard.", "Jan 05", "https://ais2017.umbc.edu/files/2017/09/umbc.jpg"));
             contributionList.add(new CommentsListItem("u1", "", "Jhon Paul", "", "Good", "Jan 05", "http://keenthemes.com/preview/metronic/theme/assets/pages/media/profile/profile_user.jpg"));
@@ -920,6 +953,34 @@ public class UserProfileFragment extends Fragment {
             userContributionAdapter = new UserContributionAdapter(getActivity(), contributionList);
 
             user_profile_contribution_list_view.setAdapter(userContributionAdapter);
+
+            if (userProfileList.size() == 0) {
+                user_profile_member_count_text_view.setVisibility(View.GONE);
+//                user_profile_member_count_text_view.setText(userProfileList.size() + " Members");
+            } else if (userProfileList.size() == 1) {
+                user_profile_member_count_text_view.setVisibility(View.VISIBLE);
+                user_profile_member_count_text_view.setText(userProfileList.size() + " Member");
+            } else {
+                user_profile_member_count_text_view.setVisibility(View.VISIBLE);
+                user_profile_member_count_text_view.setText(userProfileList.size() + " Members");
+            }
+
+        }
+        if (user_type_selection_status == 2) {
+
+            TeamMatesAdapter teamMatesAdapter = new TeamMatesAdapter(getActivity(), userProfileList);
+            user_profile_contribution_list_view.setAdapter(teamMatesAdapter);
+
+//            if (userProfileList.size() == 0) {
+//                user_profile_member_count_text_view.setVisibility(View.GONE);
+////                user_profile_member_count_text_view.setText(userProfileList.size() + " Members");
+//            } else if (userProfileList.size() == 1) {
+//                user_profile_member_count_text_view.setVisibility(View.VISIBLE);
+//                user_profile_member_count_text_view.setText(userProfileList.size() + " Member");
+//            } else {
+//                user_profile_member_count_text_view.setVisibility(View.VISIBLE);
+//                user_profile_member_count_text_view.setText(userProfileList.size() + " Members");
+//            }
 
         }
     }
