@@ -45,5 +45,8 @@
     <string name="play_again">Play Again</string>
     <string name="title_activity_signup_grp_join">Signup_grp_join</string>
     <string name="folderName">Snapeve</string>
+    <string name="notification_setting">Notification</string>
+    <string name="notiofcation_summary">Notification On/OFF</string>
+
 
 </resources>

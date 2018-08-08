@@ -62,6 +62,7 @@
             android:name=".MapsActivityFragment"
             android:label="@string/title_activity_maps_fragment" />
         <activity android:name=".Add_event" />
+        <activity android:name=".SnapeveFeedback" />
         <activity android:name=".EventDetails" />
         <activity android:name=".Leaderboard" />
         <activity android:name=".DropPinMapsActivity" />

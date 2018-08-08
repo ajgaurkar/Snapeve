@@ -1,33 +1,28 @@
 package com.umbcapp.gaurk.snapeve.Fragments;
 
-import android.app.Fragment;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.preference.Preference;
+import android.preference.PreferenceFragment;
+import android.preference.PreferenceScreen;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
-import com.google.common.util.concurrent.FutureCallback;
-import com.google.common.util.concurrent.Futures;
-import com.google.common.util.concurrent.ListenableFuture;
-import com.google.common.util.concurrent.SettableFuture;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.umbcapp.gaurk.snapeve.Login_snapeve_activity;
-import com.umbcapp.gaurk.snapeve.MainActivity;
 import com.umbcapp.gaurk.snapeve.R;
-import com.umbcapp.gaurk.snapeve.ScheduledRewards;
-import com.umbcapp.gaurk.snapeve.SessionManager;
-import com.umbcapp.gaurk.snapeve.WelcomeActivity;
+import com.umbcapp.gaurk.snapeve.SnapeveFeedback;
 
-public class SettingsFragment extends Fragment {
+public class SettingsFragment extends PreferenceFragment {
 
 
     private JsonObject jsonObjectUserProfileFragParameters;
+    private UserProfileFragment userProfileFragment;
 
     public SettingsFragment() {
     }
@@ -35,46 +30,17 @@ public class SettingsFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        addPreferencesFromResource(R.xml.snapeve_setting);
+
 
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.settings_fragment, container, false);
+        //   View rootView = inflater.inflate(R.layout.settings_fragment, container, false);
+        View rootView = super.onCreateView(inflater, container, savedInstanceState);
+        rootView.setBackgroundColor(getResources().getColor(android.R.color.white));
 
-        TextView logout_textview = (TextView) rootView.findViewById(R.id.settings_logout);
-        TextView testlogin = (TextView) rootView.findViewById(R.id.testlogin);
-        TextView test_y = (TextView) rootView.findViewById(R.id.test_y);
-        TextView test_x = (TextView) rootView.findViewById(R.id.test_x);
-
-        logout_textview.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                new SessionManager(getActivity()).logoutUser();
-            }
-        });
-        test_x.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(getActivity(), WelcomeActivity.class));
-            }
-        });
-        test_y.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent scheduledRewardsIntent = new Intent(getActivity(), ScheduledRewards.class);
-                startActivity(scheduledRewardsIntent);
-            }
-        });
-
-        testlogin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(getActivity(), Login_snapeve_activity.class));
-
-            }
-        });
-//        startActivity(new Intent(getActivity(), WelcomeActivity.class));
 
         return rootView;
     }
@@ -82,5 +48,39 @@ public class SettingsFragment extends Fragment {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onPreferenceTreeClick(PreferenceScreen preferenceScreen, Preference preference) {
+        switch (preference.getKey()) {
+            case "userAccountPreferenceKey":
+                break;
+            case "notificationPreferenceKey":
+
+                break;
+            case "rateusPreferenceKey":
+
+
+                Uri uri = Uri.parse("market://details?id=" + getActivity().getPackageName());
+                Intent goToMarket = new Intent(Intent.ACTION_VIEW, uri);
+                startActivity(goToMarket);
+
+                break;
+            case "inviteFriendsPreferenceKey":
+                Intent nav_share_Intent = new Intent(android.content.Intent.ACTION_SEND);
+                nav_share_Intent.setType("text/plain");
+                nav_share_Intent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Snapeve");
+                nav_share_Intent.putExtra(android.content.Intent.EXTRA_TEXT, "Random Text About your app");
+                nav_share_Intent.putExtra(Intent.EXTRA_EMAIL, new String[]{"umbcsnapeve@gmail.com"});
+                startActivity(Intent.createChooser(nav_share_Intent, "Share via :"));
+                break;
+            case "logoutPreferenceKey":
+                startActivity(new Intent(getActivity(), Login_snapeve_activity.class));
+                break;
+            case "snapeveFeedbackPreferenceKey":
+                startActivity(new Intent(getActivity(), SnapeveFeedback.class));
+                break;
+        }
+        return super.onPreferenceTreeClick(preferenceScreen, preference);
     }
 }
