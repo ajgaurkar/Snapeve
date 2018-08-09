@@ -32,7 +32,6 @@ public class SettingsFragment extends PreferenceFragment {
         super.onCreate(savedInstanceState);
         addPreferencesFromResource(R.xml.snapeve_setting);
 
-
     }
 
     @Override
@@ -40,7 +39,6 @@ public class SettingsFragment extends PreferenceFragment {
         //   View rootView = inflater.inflate(R.layout.settings_fragment, container, false);
         View rootView = super.onCreateView(inflater, container, savedInstanceState);
         rootView.setBackgroundColor(getResources().getColor(android.R.color.white));
-
 
         return rootView;
     }
@@ -55,17 +53,16 @@ public class SettingsFragment extends PreferenceFragment {
         switch (preference.getKey()) {
             case "userAccountPreferenceKey":
                 break;
+
             case "notificationPreferenceKey":
-
                 break;
+
             case "rateusPreferenceKey":
-
-
                 Uri uri = Uri.parse("market://details?id=" + getActivity().getPackageName());
                 Intent goToMarket = new Intent(Intent.ACTION_VIEW, uri);
                 startActivity(goToMarket);
-
                 break;
+
             case "inviteFriendsPreferenceKey":
                 Intent nav_share_Intent = new Intent(android.content.Intent.ACTION_SEND);
                 nav_share_Intent.setType("text/plain");
@@ -74,9 +71,11 @@ public class SettingsFragment extends PreferenceFragment {
                 nav_share_Intent.putExtra(Intent.EXTRA_EMAIL, new String[]{"umbcsnapeve@gmail.com"});
                 startActivity(Intent.createChooser(nav_share_Intent, "Share via :"));
                 break;
+
             case "logoutPreferenceKey":
                 startActivity(new Intent(getActivity(), Login_snapeve_activity.class));
                 break;
+
             case "snapeveFeedbackPreferenceKey":
                 startActivity(new Intent(getActivity(), SnapeveFeedback.class));
                 break;

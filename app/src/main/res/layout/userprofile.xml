@@ -126,7 +126,7 @@
             android:layout_below="@+id/_user_name"
             android:layout_toEndOf="@+id/profile_pic_image_view"
             android:padding="5dp"
-            android:text="Contributor : Level 5"
+            android:text="Contributor Level ::"
             android:textColor="#fff"
             android:textStyle="bold" />
 
@@ -164,17 +164,16 @@
             android:textStyle="bold" />
 
         <TextView
+            android:id="@+id/user_profile_posts_count_text_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignBottom="@+id/leaderboard_text_view"
-            android:layout_alignStart="@+id/profile_pic_image_view"
-            android:layout_alignTop="@+id/leaderboard_text_view"
+            android:layout_alignBottom="@+id/header_bg"
+            android:layout_marginStart="10dp"
             android:gravity="center_vertical"
-            android:padding="5dp"
+            android:padding="3dp"
             android:singleLine="true"
-            android:text="17 posts"
+            android:text=""
             android:textColor="#fff"
-            android:textSize="15sp"
             android:textStyle="bold" />
 
         <TextView
@@ -224,7 +223,7 @@
             app:rcProgressColor="#7cffffff"
             app:rcRadius="10dp"
             app:rcReverse="false"
-            app:rcSecondaryProgress="5"
+            app:rcSecondaryProgress="0"
             app:rcSecondaryProgressColor="#ebf7ff" />
 
         <ListView

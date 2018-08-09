@@ -68,7 +68,9 @@ public class UserContributionAdapter extends BaseAdapter {
 
         Picasso.get().load(userContributionListItem.getImage_url())
                 .fit().centerCrop().into(viewHolder.user_contri_list_item_user_pic_img_view);
+
         viewHolder.user_contri_list_item_user_time_text_view.setText(userContributionListItem.getComment_time());
+
         viewHolder.user_contri_list_item_description_text_view.setText(userContributionListItem.getUser_comment());
         viewHolder.user_contri_list_item_user_name_text_view.setText(userContributionListItem.getSrc_user_name());
         viewHolder.user_contri_list_item_like_status_text_view.setText("12 Likes  24 Comments  3 Spam");

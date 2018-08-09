@@ -1,6 +1,5 @@
 package com.umbcapp.gaurk.snapeve.Fragments;
 
-import android.app.Activity;
 import android.app.Dialog;
 import android.app.Fragment;
 import android.app.ProgressDialog;
@@ -8,7 +7,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.media.Image;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -21,7 +19,6 @@ import android.support.v4.content.FileProvider;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
-import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.PopupMenu;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -41,6 +38,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.akexorcist.roundcornerprogressbar.RoundCornerProgressBar;
 import com.google.common.util.concurrent.FutureCallback;
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
@@ -53,15 +51,11 @@ import com.microsoft.azure.storage.blob.CloudBlockBlob;
 import com.microsoft.windowsazure.mobileservices.MobileServiceClient;
 import com.microsoft.windowsazure.mobileservices.table.MobileServiceTable;
 import com.squareup.picasso.Picasso;
-import com.umbcapp.gaurk.snapeve.Adapters.GroupMembersAdapter;
 import com.umbcapp.gaurk.snapeve.Adapters.SignupGrpAdapter;
 import com.umbcapp.gaurk.snapeve.Adapters.TeamMatesAdapter;
 import com.umbcapp.gaurk.snapeve.Adapters.UserContributionAdapter;
-import com.umbcapp.gaurk.snapeve.Add_event;
 import com.umbcapp.gaurk.snapeve.AzureConfiguration;
-import com.umbcapp.gaurk.snapeve.BrowseUserProfile;
 import com.umbcapp.gaurk.snapeve.Controllers.CommentsListItem;
-import com.umbcapp.gaurk.snapeve.Controllers.LeaderboardListItem;
 import com.umbcapp.gaurk.snapeve.Controllers.SignUpGrpListItem;
 import com.umbcapp.gaurk.snapeve.Controllers.TeammatesListItem;
 import com.umbcapp.gaurk.snapeve.EventDetails;
@@ -80,10 +74,12 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Random;
@@ -153,6 +149,10 @@ public class UserProfileFragment extends Fragment {
     private MobileServiceClient mClient;
     private String user_id;
     private boolean memberListOpenFlag = false;
+    private List<CommentsListItem> grpContributionList;
+    private TextView user_profile_posts_count_text_view;
+    private RoundCornerProgressBar profile_progress_bar;
+    private TextView user_status;
 
 
     public UserProfileFragment() {
@@ -176,7 +176,7 @@ public class UserProfileFragment extends Fragment {
 
     }
 
-    private void fetchGrpPostAndMembers(String grp_id, final int fetch_type_post_or_members) {
+    private void fetchGrpPostAndMembers(String grp_id) {
         final ProgressDialog progressDialog = new ProgressDialog(getActivity());
         progressDialog.setTitle("Loading, Please wait...");
         progressDialog.create();
@@ -189,7 +189,6 @@ public class UserProfileFragment extends Fragment {
         ListenableFuture<JsonElement> serviceFilterFuture = MainActivity.mClient.invokeApi("browse_grp_profile_api", jsonObjectParameters);
 
         Futures.addCallback(serviceFilterFuture, new FutureCallback<JsonElement>() {
-
 
             @Override
             public void onFailure(Throwable exception) {
@@ -207,14 +206,6 @@ public class UserProfileFragment extends Fragment {
                 System.out.println(" browse_grp_profile_api success response    " + response);
                 divideGrpAndPostData(response);
 
-//                if (fetch_type_post_or_members == 0) {
-//                    bkupPostResponse = response;
-//                    parseGrpPostData(bkupPostResponse);
-//                }
-//                if (fetch_type_post_or_members == 1) {
-//                    bkupMemberResponse = response;
-//                    parseMemberdata(bkupMemberResponse);
-//                }
             }
         });
     }
@@ -237,6 +228,37 @@ public class UserProfileFragment extends Fragment {
     }
 
     private void parsePostdata(JsonArray grpPost) {
+
+        System.out.println("parsePostdata " + grpPost);
+        grpContributionList = new ArrayList<>();
+
+        for (int i = 0; i < grpPost.size(); i++) {
+            JsonObject grpPost_Data_list_object = grpPost.get(i).getAsJsonObject();
+
+            System.out.println(" grpPost_Data_list_object  " + grpPost_Data_list_object);
+
+            String member_id = grpPost_Data_list_object.get("member_id").getAsString();
+            String first_name = grpPost_Data_list_object.get("first_name").getAsString();
+            String last_name = grpPost_Data_list_object.get("last_name").getAsString();
+            String user_name = grpPost_Data_list_object.get("user_name").getAsString();
+            String post_id = grpPost_Data_list_object.get("post_id").getAsString();
+            String post_date = grpPost_Data_list_object.get("createdAt").getAsString();
+            String description = grpPost_Data_list_object.get("description").getAsString();
+            String dp_url = grpPost_Data_list_object.get("dp_url").getAsString();
+
+            DateFormat srcDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSX");
+            DateFormat displayDtFormat = new SimpleDateFormat("MMM dd");
+
+            Date postDate = null;
+            try {
+                postDate = srcDateFormat.parse(grpPost_Data_list_object.get("createdAt").getAsString());
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+
+            grpContributionList.add(0, new CommentsListItem(member_id, "", user_name, "", description, displayDtFormat.format(postDate), dp_url));
+
+        }
 
     }
 
@@ -278,22 +300,6 @@ public class UserProfileFragment extends Fragment {
 
 
         System.out.println("userProfileList size after parsing : " + userProfileList.size());
-
-//        GroupMembersAdapter groupMembersAdapter = new GroupMembersAdapter(BrowseGroupProfile.this, userProfileList, max_user_points);
-//        user_profile_contribution_rec_view.setLayoutManager(mLayoutManager);
-//        user_profile_contribution_rec_view.setItemAnimator(new DefaultItemAnimator());
-//        user_profile_contribution_rec_view.setAdapter(groupMembersAdapter);
-//
-//        if (userProfileList.size() == 0) {
-//            user_profile_member_count_text_view.setVisibility(View.VISIBLE);
-//            user_profile_member_count_text_view.setText(userProfileList.size() + " Members");
-//        } else if (userProfileList.size() == 1) {
-//            user_profile_member_count_text_view.setVisibility(View.GONE);
-//            user_profile_member_count_text_view.setText(userProfileList.size() + " Member");
-//        } else {
-//            user_profile_member_count_text_view.setVisibility(View.GONE);
-//            user_profile_member_count_text_view.setText(userProfileList.size() + " Members");
-//        }
 
     }
 
@@ -339,17 +345,69 @@ public class UserProfileFragment extends Fragment {
                 resultFuture.set(response);
                 System.out.println(" fetch_user_details success response    " + response);
 
-                parseResponse(response);
-                fetchGrpPostAndMembers(grp_id, 0);
+                parseAndDivideUserInfo(response);
+                fetchGrpPostAndMembers(grp_id);
 //                fetchGrpPostAndMembers(grp_id, 1);
             }
         });
     }
 
-    private void parseResponse(JsonElement response) {
-        JsonArray responseJsonArray = response.getAsJsonArray();
+    private void parseAndDivideUserInfo(JsonElement response) {
 
-        JsonObject userDetailsObj = responseJsonArray.get(0).getAsJsonObject();
+        JsonObject userInfoResponse = response.getAsJsonObject();
+        JsonArray userDetails = userInfoResponse.getAsJsonArray("userDetails");
+        JsonArray userActivity = userInfoResponse.getAsJsonArray("userActivity");
+
+        parseUserDetails(userDetails);
+
+        System.out.println("userDetails " + userDetails);
+        System.out.println("userActivity " + userActivity);
+
+        if (userActivity.size() > 0) {
+            parseUserPostdata(userActivity);
+        }
+
+    }
+
+    private void parseUserPostdata(JsonArray userActivity) {
+
+        System.out.println("parsePostdata " + userActivity);
+        grpContributionList = new ArrayList<>();
+
+        for (int i = 0; i < userActivity.size(); i++) {
+            JsonObject user_activity_list_object = userActivity.get(i).getAsJsonObject();
+
+            System.out.println(" user_activity_list_object  " + user_activity_list_object);
+
+            String user_name = user_activity_list_object.get("user_name").getAsString();
+            String first_name = user_activity_list_object.get("first_name").getAsString();
+            String last_name = user_activity_list_object.get("last_name").getAsString();
+            String dp_url = user_activity_list_object.get("dp_url").getAsString();
+            String description = user_activity_list_object.get("description").getAsString();
+            String post_id = user_activity_list_object.get("post_id").getAsString();
+            String user_id = user_activity_list_object.get("user_id").getAsString();
+
+            DateFormat srcDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSX");
+            DateFormat displayDtFormat = new SimpleDateFormat("MMM dd");
+
+            Date postDate = null;
+            try {
+                postDate = srcDateFormat.parse(user_activity_list_object.get("createdAt").getAsString());
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+
+            contributionList.add(0, new CommentsListItem(user_id, "", user_name, "", description, displayDtFormat.format(postDate), dp_url));
+
+            loadContributionList(0);
+
+        }
+
+    }
+
+    private void parseUserDetails(JsonArray userDetails) {
+
+        JsonObject userDetailsObj = userDetails.get(0).getAsJsonObject();
 
         userName = userDetailsObj.get("user_name").getAsString();
         first_name = userDetailsObj.get("first_name").getAsString();
@@ -357,10 +415,23 @@ public class UserProfileFragment extends Fragment {
         user_total_pts = Integer.parseInt(userDetailsObj.get("user_points").toString());
 
         RewardCalcuator rewardCalcuator = new RewardCalcuator();
-        RewardCalcuator calculatedReward = rewardCalcuator.calculate(user_total_pts);
+        RewardCalcuator calculatedReward = rewardCalcuator.calculate((float) user_total_pts);
         System.out.println("calculatedReward " + calculatedReward.getCurrent_points());
         System.out.println("calculatedReward " + calculatedReward.getMin_range());
         System.out.println("calculatedReward " + calculatedReward.getMax_range());
+        System.out.println("calculatedReward " + calculatedReward.getRelativerewardsValue());
+        System.out.println("calculatedReward " + calculatedReward.getLevel());
+
+        user_status.setText("Contributor Level " + calculatedReward.getLevel());
+
+        profile_progress_bar.setSecondaryProgress(calculatedReward.getRelativerewardsValue());
+//        profile_progress_bar.setMax((float) calculatedReward.getMax_range());
+//        profile_progress_bar.setProgress((float) calculatedReward.getMax_range());
+
+//        profile_progress_bar.setSecondaryProgress(200f);
+        profile_progress_bar.setMax(100f);
+        profile_progress_bar.setProgress(100f);
+
 
         try {
             dp_url = userDetailsObj.get("dp_url").getAsString();
@@ -412,6 +483,8 @@ public class UserProfileFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.userprofile, container, false);
 
         grp_profile_btn = (TextView) rootView.findViewById(R.id.profile_switch_grp_textview);
+        user_profile_posts_count_text_view = (TextView) rootView.findViewById(R.id.user_profile_posts_count_text_view);
+        user_status = (TextView) rootView.findViewById(R.id.user_status);
         user_name_textview = (TextView) rootView.findViewById(R.id._user_name);
         user_profile_btn = (TextView) rootView.findViewById(R.id.profile_switch_you_textview);
         user_points = (TextView) rootView.findViewById(R.id.user_points);
@@ -422,6 +495,7 @@ public class UserProfileFragment extends Fragment {
         leaderboard_text_view = (TextView) rootView.findViewById(R.id.leaderboard_text_view);
         profile_pic_image_view = (CircleImageView) rootView.findViewById(R.id.profile_pic_image_view);
         user_profile_settings_imageview = (ImageView) rootView.findViewById(R.id.user_profile_settings_imageview);
+        profile_progress_bar = (RoundCornerProgressBar) rootView.findViewById(R.id.profile_progress_bar);
 
         user_profile_member_count_text_view = (TextView) rootView.findViewById(R.id.user_profile_member_count_text_view);
         user_profile_member_count_text_view_icon = (ImageView) rootView.findViewById(R.id.user_profile_member_count_text_view_icon);
@@ -432,7 +506,7 @@ public class UserProfileFragment extends Fragment {
 //        Picasso.get().load("https://www.goldenglobes.com/sites/default/files/styles/portrait_medium/public/gallery_images/17-tomcruiseag.jpg?itok=qNj0cQGV&c=c9a73b7bdf609d72214d226ab9ea015e")
 //                .fit().centerCrop().into(profile_pic_image_view);
 
-        loadContributionList(0);
+//        loadContributionList(0);
 
         user_profile_contribution_list_view.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -561,9 +635,7 @@ public class UserProfileFragment extends Fragment {
         alertDialog.setView(view);
         alertDialog.setCancelable(true);
 
-
         final AlertDialog dissmissAlertDialog = alertDialog.show();
-
 
         final ArrayList<String> memJoinedOptionsList = new ArrayList<>();
         memJoinedOptionsList.add("View Profile Pic");
@@ -697,7 +769,6 @@ public class UserProfileFragment extends Fragment {
 
     }
 
-
     private void populateUserInfo() {
 
         user_type_selection_status = 0;
@@ -715,18 +786,6 @@ public class UserProfileFragment extends Fragment {
     }
 
     private void openSettingsMenu() {
-
-//        if (userPermission == P0 || P1) {
-//            open leave group dialog
-//        }
-//
-//        if (userPermission == P2) {
-//            open 2 options settings menu
-//        }
-//
-//        if (userPermission == P3) {
-//            open 3 options settings menu
-//        }
 
         PopupMenu popup = new PopupMenu(getActivity(), user_profile_settings_imageview);
         popup.getMenuInflater().inflate(R.menu.user_profile_3_settings_popup_menu, popup.getMenu());
@@ -927,30 +986,22 @@ public class UserProfileFragment extends Fragment {
 
         if (user_type_selection_status == 0) {
             memberListOpenFlag = false;
-            contributionList = new ArrayList<>();
-            contributionList.add(new CommentsListItem("u1", "", "Jhon Paul", "", "speaking to a a packed crowd at Sanders Theatre, a nobel laureate discussing her most recent scientific discovery, or the Harvard senior talent show, there’s always something happening at Harvard.", "Jan 05", "https://www.goldenglobes.com/sites/default/files/styles/portrait_medium/public/gallery_images/17-tomcruiseag.jpg?itok=qNj0cQGV&c=c9a73b7bdf609d72214d226ab9ea015e"));
-            contributionList.add(new CommentsListItem("u1", "", "Jhon Paul", "", "Good", "Jan 05", "https://www.goldenglobes.com/sites/default/files/styles/portrait_medium/public/gallery_images/17-tomcruiseag.jpg?itok=qNj0cQGV&c=c9a73b7bdf609d72214d226ab9ea015e"));
-            contributionList.add(new CommentsListItem("u1", "", "Jhon Paul", "", "Good", "Jan 05", "https://www.goldenglobes.com/sites/default/files/styles/portrait_medium/public/gallery_images/17-tomcruiseag.jpg?itok=qNj0cQGV&c=c9a73b7bdf609d72214d226ab9ea015e"));
-            contributionList.add(new CommentsListItem("u1", "", "Jhon Paul", "", "Whether you have meditated for a long time or have never meditated, come join us for this time of practice together. Come to relax, quiet your mind, learn how to experience less suffering and stress, explore Buddhist philosophy and psychology, just talk about what it means to live from compassion and awareness -- or come because you are curious. This group meets on Tuesdays from 5 - 6 p.m. in in Chapin Chapel, and is led by Mark Hart, Buddhist Advisor.", "Jan 05", "https://www.goldenglobes.com/sites/default/files/styles/portrait_medium/public/gallery_images/17-tomcruiseag.jpg?itok=qNj0cQGV&c=c9a73b7bdf609d72214d226ab9ea015e"));
-            contributionList.add(new CommentsListItem("u1", "", "Jhon Paul", "", "Good", "Jan 05", "https://www.goldenglobes.com/sites/default/files/styles/portrait_medium/public/gallery_images/17-tomcruiseag.jpg?itok=qNj0cQGV&c=c9a73b7bdf609d72214d226ab9ea015e"));
-            contributionList.add(new CommentsListItem("u1", "", "Jhon Paul", "", "Good", "Jan 05", "https://www.goldenglobes.com/sites/default/files/styles/portrait_medium/public/gallery_images/17-tomcruiseag.jpg?itok=qNj0cQGV&c=c9a73b7bdf609d72214d226ab9ea015e"));
-            contributionList.add(new CommentsListItem("u1", "", "Jhon Paul", "", "Good", "Jan 05", "https://www.goldenglobes.com/sites/default/files/styles/portrait_medium/public/gallery_images/17-tomcruiseag.jpg?itok=qNj0cQGV&c=c9a73b7bdf609d72214d226ab9ea015e"));
             userContributionAdapter = new UserContributionAdapter(getActivity(), contributionList);
-
             user_profile_contribution_list_view.setAdapter(userContributionAdapter);
+
+            user_profile_posts_count_text_view.setVisibility(View.VISIBLE);
+            if (contributionList.size() == 0) {
+                user_profile_posts_count_text_view.setText("No Posts Found");
+            } else if (contributionList.size() == 1) {
+                user_profile_posts_count_text_view.setText("1 Post");
+            } else {
+                user_profile_posts_count_text_view.setText(contributionList.size() + " Posts");
+            }
 
         }
         if (user_type_selection_status == 1) {
             memberListOpenFlag = false;
-            contributionList = new ArrayList<>();
-            contributionList.add(new CommentsListItem("u1", "", "Kevin Ryan", "", "speaking to a a packed crowd at Sanders Theatre, a nobel laureate discussing her most recent scientific discovery, or the Harvard senior talent show, there’s always something happening at Harvard.", "Jan 05", "https://ais2017.umbc.edu/files/2017/09/umbc.jpg"));
-            contributionList.add(new CommentsListItem("u1", "", "Jhon Paul", "", "Good", "Jan 05", "http://keenthemes.com/preview/metronic/theme/assets/pages/media/profile/profile_user.jpg"));
-            contributionList.add(new CommentsListItem("u1", "", "Srini Hari", "", "Good", "Jan 05", "http://www.dast.biz/wp-content/uploads/2016/11/John_Doe.jpg"));
-            contributionList.add(new CommentsListItem("u1", "", "Sam ken", "", "Whether you have meditated for a long time or have never meditated, come join us for this time of practice together. Come to relax, quiet your mind, learn how to experience less suffering and stress, explore Buddhist philosophy and psychology, just talk about what it means to live from compassion and awareness -- or come because you are curious. This group meets on Tuesdays from 5 - 6 p.m. in in Chapin Chapel, and is led by Mark Hart, Buddhist Advisor.", "Jan 05", "https://a0.muscache.com/im/pictures/fe062a6a-6e30-4d64-bca5-69b037b6bff4.jpg?aki_policy=profile_x_medium"));
-            contributionList.add(new CommentsListItem("u1", "", "Neha Josh", "", "Good", "Jan 05", "https://www.bnl.gov/today/body_pics/2017/06/stephanhruszkewycz-355px.jpg"));
-            contributionList.add(new CommentsListItem("u1", "", "Sid Patro", "", "Good", "Jan 05", "http://www.medicine20congress.com/ocs/public/profiles/3141.jpg"));
-            contributionList.add(new CommentsListItem("u1", "", "Nayab Sidi", "", "Good", "Jan 05", "https://cdn.earthdata.nasa.gov/conduit/upload/6072/Glenn_headshot_resize.jpg"));
-            userContributionAdapter = new UserContributionAdapter(getActivity(), contributionList);
+            userContributionAdapter = new UserContributionAdapter(getActivity(), grpContributionList);
 
             user_profile_contribution_list_view.setAdapter(userContributionAdapter);
 
@@ -965,22 +1016,21 @@ public class UserProfileFragment extends Fragment {
                 user_profile_member_count_text_view.setText(userProfileList.size() + " Members");
             }
 
+            user_profile_posts_count_text_view.setVisibility(View.VISIBLE);
+            if (grpContributionList.size() == 0) {
+                user_profile_posts_count_text_view.setText("No Posts Found");
+            } else if (grpContributionList.size() == 1) {
+                user_profile_posts_count_text_view.setText("1 Post");
+            } else {
+                user_profile_posts_count_text_view.setText(grpContributionList.size() + " Posts");
+            }
+
         }
         if (user_type_selection_status == 2) {
 
             TeamMatesAdapter teamMatesAdapter = new TeamMatesAdapter(getActivity(), userProfileList);
             user_profile_contribution_list_view.setAdapter(teamMatesAdapter);
-
-//            if (userProfileList.size() == 0) {
-//                user_profile_member_count_text_view.setVisibility(View.GONE);
-////                user_profile_member_count_text_view.setText(userProfileList.size() + " Members");
-//            } else if (userProfileList.size() == 1) {
-//                user_profile_member_count_text_view.setVisibility(View.VISIBLE);
-//                user_profile_member_count_text_view.setText(userProfileList.size() + " Member");
-//            } else {
-//                user_profile_member_count_text_view.setVisibility(View.VISIBLE);
-//                user_profile_member_count_text_view.setText(userProfileList.size() + " Members");
-//            }
+            user_profile_posts_count_text_view.setVisibility(View.GONE);
 
         }
     }
