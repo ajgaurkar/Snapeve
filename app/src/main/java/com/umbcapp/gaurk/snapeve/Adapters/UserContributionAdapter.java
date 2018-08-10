@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 import com.umbcapp.gaurk.snapeve.Controllers.CommentsListItem;
+import com.umbcapp.gaurk.snapeve.Controllers.UserContributionListItem;
 import com.umbcapp.gaurk.snapeve.R;
 
 import java.util.List;
@@ -18,10 +19,10 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class UserContributionAdapter extends BaseAdapter {
     LayoutInflater inflater;
     Context context;
-    List<CommentsListItem> contribution_list;
+    List<UserContributionListItem> contribution_list;
     String entryDate = null;
 
-    public UserContributionAdapter(Context context, List<CommentsListItem> contribution_list) {
+    public UserContributionAdapter(Context context, List<UserContributionListItem> contribution_list) {
         this.contribution_list = contribution_list;
         this.context = context;
         this.inflater = LayoutInflater.from(context);
@@ -33,7 +34,7 @@ public class UserContributionAdapter extends BaseAdapter {
     }
 
     @Override
-    public CommentsListItem getItem(int position) {
+    public UserContributionListItem getItem(int position) {
         return contribution_list.get(position);
     }
 
@@ -64,15 +65,23 @@ public class UserContributionAdapter extends BaseAdapter {
 
         }
 
-        CommentsListItem userContributionListItem = contribution_list.get(position);
+        UserContributionListItem selectedUserContributionListItem = contribution_list.get(position);
 
-        Picasso.get().load(userContributionListItem.getImage_url())
-                .fit().centerCrop().into(viewHolder.user_contri_list_item_user_pic_img_view);
 
-        viewHolder.user_contri_list_item_user_time_text_view.setText(userContributionListItem.getComment_time());
+//        Picasso.get().load(userContributionListItem.getImage_url())
+//                .fit().centerCrop().into(viewHolder.user_contri_list_item_user_pic_img_view);
 
-        viewHolder.user_contri_list_item_description_text_view.setText(userContributionListItem.getUser_comment());
-        viewHolder.user_contri_list_item_user_name_text_view.setText(userContributionListItem.getSrc_user_name());
+        if (selectedUserContributionListItem.getDp_url() == null) {
+            viewHolder.user_contri_list_item_user_pic_img_view.setImageResource(R.drawable.avatar_100_3);
+        } else {
+            Picasso.get().load(selectedUserContributionListItem.getDp_url())
+                    .fit().centerCrop().into(viewHolder.user_contri_list_item_user_pic_img_view);
+        }
+
+        viewHolder.user_contri_list_item_user_time_text_view.setText(selectedUserContributionListItem.getCreated_at_dt_time());
+
+        viewHolder.user_contri_list_item_description_text_view.setText(selectedUserContributionListItem.getDescription());
+        viewHolder.user_contri_list_item_user_name_text_view.setText(selectedUserContributionListItem.getUser_name());
         viewHolder.user_contri_list_item_like_status_text_view.setText("12 Likes  24 Comments  3 Spam");
 
         return view;

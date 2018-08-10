@@ -83,8 +83,12 @@ public class AttendiesAdapter extends BaseAdapter {
 
         AttendiesListItem selectedAttendiesListItem = attendies_List.get(position);
 
-        Picasso.get().load(selectedAttendiesListItem.getImage_url())
-                .fit().centerCrop().into(viewHolder.attendies_list_item_user_pic_img_view);
+        if (selectedAttendiesListItem.getImage_url() == null) {
+            viewHolder.attendies_list_item_user_pic_img_view.setImageResource(R.drawable.avatar_100_3);
+        } else {
+            Picasso.get().load(selectedAttendiesListItem.getImage_url()).fit().centerCrop().into(viewHolder.attendies_list_item_user_pic_img_view);
+        }
+
         viewHolder.attendies_list_item_user_name_text_view.setText(selectedAttendiesListItem.getUser_name());
 
         if (attendies_type == 1) {

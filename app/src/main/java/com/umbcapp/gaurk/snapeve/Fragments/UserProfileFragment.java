@@ -55,9 +55,9 @@ import com.umbcapp.gaurk.snapeve.Adapters.SignupGrpAdapter;
 import com.umbcapp.gaurk.snapeve.Adapters.TeamMatesAdapter;
 import com.umbcapp.gaurk.snapeve.Adapters.UserContributionAdapter;
 import com.umbcapp.gaurk.snapeve.AzureConfiguration;
-import com.umbcapp.gaurk.snapeve.Controllers.CommentsListItem;
 import com.umbcapp.gaurk.snapeve.Controllers.SignUpGrpListItem;
 import com.umbcapp.gaurk.snapeve.Controllers.TeammatesListItem;
+import com.umbcapp.gaurk.snapeve.Controllers.UserContributionListItem;
 import com.umbcapp.gaurk.snapeve.EventDetails;
 import com.umbcapp.gaurk.snapeve.Leaderboard;
 import com.umbcapp.gaurk.snapeve.MainActivity;
@@ -102,7 +102,8 @@ public class UserProfileFragment extends Fragment {
     private TextView grp_profile_btn;
     private TextView user_profile_btn;
     private RelativeLayout profile_relative_layout;
-    private ArrayList<CommentsListItem> contributionList;
+    //    private ArrayList<CommentsListItem> userContributionList;
+    private ArrayList<UserContributionListItem> userContributionList;
     int user_type_selection_status = 0;
     private ListView user_profile_contribution_list_view;
     private UserContributionAdapter userContributionAdapter;
@@ -149,10 +150,14 @@ public class UserProfileFragment extends Fragment {
     private MobileServiceClient mClient;
     private String user_id;
     private boolean memberListOpenFlag = false;
-    private List<CommentsListItem> grpContributionList;
+    //    private List<CommentsListItem> grpContributionList;
+    private List<UserContributionListItem> grpContributionList;
     private TextView user_profile_posts_count_text_view;
     private RoundCornerProgressBar profile_progress_bar;
     private TextView user_status;
+
+    //1 : user tab, 2 : grp tab
+    private int currentActiveTab = 1;
 
 
     public UserProfileFragment() {
@@ -162,9 +167,8 @@ public class UserProfileFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        contributionList = new ArrayList<>();
+        userContributionList = new ArrayList<>();
         fetch_user_details();
-//        fetch_group_details();
 
         sessionCounter = System.currentTimeMillis();
         DateFormat formatter = new SimpleDateFormat("HH:mm:ss", Locale.US);
@@ -176,11 +180,19 @@ public class UserProfileFragment extends Fragment {
 
     }
 
+    @Override
+    public void onResume() {
+        fetch_user_details();
+
+        super.onResume();
+    }
+
     private void fetchGrpPostAndMembers(String grp_id) {
         final ProgressDialog progressDialog = new ProgressDialog(getActivity());
         progressDialog.setTitle("Loading, Please wait...");
         progressDialog.create();
         progressDialog.show();
+        progressDialog.setCancelable(false);
         JsonObject jsonObjectParameters = new JsonObject();
         jsonObjectParameters.addProperty("grp_id", grp_id);
 //        jsonObjectParameters.addProperty("fetch_type_post_or_members", fetch_type_post_or_members);
@@ -217,11 +229,15 @@ public class UserProfileFragment extends Fragment {
         JsonArray grpPost = grpInfoResponse.getAsJsonArray("grp_post");
 
         System.out.println("grpMembers" + grpMembers);
+        //initialize list before(just in case data is 0)
+        userProfileList = new ArrayList<>();
         if (grpMembers.size() > 0) {
             parseMemberdata(grpMembers);
         }
 
         System.out.println("grpPost " + grpPost);
+        //initialize list before(just in case data is 0)
+        grpContributionList = new ArrayList<>();
         if (grpPost.size() > 0) {
             parsePostdata(grpPost);
         }
@@ -230,7 +246,6 @@ public class UserProfileFragment extends Fragment {
     private void parsePostdata(JsonArray grpPost) {
 
         System.out.println("parsePostdata " + grpPost);
-        grpContributionList = new ArrayList<>();
 
         for (int i = 0; i < grpPost.size(); i++) {
             JsonObject grpPost_Data_list_object = grpPost.get(i).getAsJsonObject();
@@ -244,10 +259,21 @@ public class UserProfileFragment extends Fragment {
             String post_id = grpPost_Data_list_object.get("post_id").getAsString();
             String post_date = grpPost_Data_list_object.get("createdAt").getAsString();
             String description = grpPost_Data_list_object.get("description").getAsString();
-            String dp_url = grpPost_Data_list_object.get("dp_url").getAsString();
+            String img_url = grpPost_Data_list_object.get("img_url").getAsString();
+
+            String dp_url = null;
+            try {
+                dp_url = grpPost_Data_list_object.get("dp_url").getAsString();
+                System.out.println("userprofilefragment user dp_url : " + dp_url);
+            } catch (Exception e) {
+                e.printStackTrace();
+                dp_url = null;
+                System.out.println(" dp_url is null, set local image");
+            }
+
 
             DateFormat srcDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSX");
-            DateFormat displayDtFormat = new SimpleDateFormat("MMM dd");
+            DateFormat displayDtFormat = new SimpleDateFormat("MMM dd HH:mm");
 
             Date postDate = null;
             try {
@@ -256,7 +282,7 @@ public class UserProfileFragment extends Fragment {
                 e.printStackTrace();
             }
 
-            grpContributionList.add(0, new CommentsListItem(member_id, "", user_name, "", description, displayDtFormat.format(postDate), dp_url));
+            grpContributionList.add(0, new UserContributionListItem(post_id, member_id, user_name, first_name, last_name, displayDtFormat.format(postDate), img_url, dp_url, description));
 
         }
 
@@ -276,12 +302,20 @@ public class UserProfileFragment extends Fragment {
 
             System.out.println("user_id NOT NULL : " + user_id);
             String user_name = userData_list_object.get("user_name").getAsString();
-            String dp_url = userData_list_object.get("dp_url").getAsString();
             String user_id = userData_list_object.get("user_id").getAsString();
             String first_name = userData_list_object.get("first_name").getAsString();
             String last_name = userData_list_object.get("last_name").getAsString();
             int user_points = userData_list_object.get("user_points").getAsInt();
 
+            String dp_url = null;
+            try {
+                dp_url = userData_list_object.get("dp_url").getAsString();
+                System.out.println("userprofilefragment user dp_url : " + dp_url);
+            } catch (Exception e) {
+                e.printStackTrace();
+                dp_url = null;
+                System.out.println(" dp_url is null, set local image");
+            }
 
             System.out.println(" user_name " + user_name);
             System.out.println(" user_points " + user_points);
@@ -326,6 +360,12 @@ public class UserProfileFragment extends Fragment {
     }
 
     private void fetch_user_details() {
+        final ProgressDialog progressDialog = new ProgressDialog(getActivity());
+        progressDialog.setTitle("Loading, Please wait...");
+        progressDialog.create();
+        progressDialog.show();
+        progressDialog.setCanceledOnTouchOutside(false);
+        progressDialog.setCancelable(false);
         jsonObjectUserProfileFragParameters = new JsonObject();
         //might need to change it to user id from user name
         jsonObjectUserProfileFragParameters.addProperty("user_name", new SessionManager(getActivity()).getSpecificUserDetail(SessionManager.KEY_USER_NAME));
@@ -337,6 +377,7 @@ public class UserProfileFragment extends Fragment {
             @Override
             public void onFailure(Throwable exception) {
                 resultFuture.setException(exception);
+                progressDialog.dismiss();
                 System.out.println(" fetch_user_details exception    " + exception);
             }
 
@@ -344,7 +385,7 @@ public class UserProfileFragment extends Fragment {
             public void onSuccess(JsonElement response) {
                 resultFuture.set(response);
                 System.out.println(" fetch_user_details success response    " + response);
-
+                progressDialog.dismiss();
                 parseAndDivideUserInfo(response);
                 fetchGrpPostAndMembers(grp_id);
 //                fetchGrpPostAndMembers(grp_id, 1);
@@ -371,8 +412,8 @@ public class UserProfileFragment extends Fragment {
 
     private void parseUserPostdata(JsonArray userActivity) {
 
-        System.out.println("parsePostdata " + userActivity);
-        grpContributionList = new ArrayList<>();
+        System.out.println("parseUserPostdata " + userActivity);
+        userContributionList = new ArrayList<>();
 
         for (int i = 0; i < userActivity.size(); i++) {
             JsonObject user_activity_list_object = userActivity.get(i).getAsJsonObject();
@@ -382,13 +423,24 @@ public class UserProfileFragment extends Fragment {
             String user_name = user_activity_list_object.get("user_name").getAsString();
             String first_name = user_activity_list_object.get("first_name").getAsString();
             String last_name = user_activity_list_object.get("last_name").getAsString();
-            String dp_url = user_activity_list_object.get("dp_url").getAsString();
             String description = user_activity_list_object.get("description").getAsString();
             String post_id = user_activity_list_object.get("post_id").getAsString();
             String user_id = user_activity_list_object.get("user_id").getAsString();
+            String img_url = user_activity_list_object.get("img_url").getAsString();
+
+            String dp_url = null;
+            try {
+                dp_url = user_activity_list_object.get("dp_url").getAsString();
+                System.out.println("userprofilefragment user dp_url : " + dp_url);
+            } catch (Exception e) {
+                e.printStackTrace();
+                dp_url = null;
+                System.out.println(" dp_url is null, set local image");
+            }
+
 
             DateFormat srcDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSX");
-            DateFormat displayDtFormat = new SimpleDateFormat("MMM dd");
+            DateFormat displayDtFormat = new SimpleDateFormat("MMM dd HH:mm");
 
             Date postDate = null;
             try {
@@ -397,7 +449,8 @@ public class UserProfileFragment extends Fragment {
                 e.printStackTrace();
             }
 
-            contributionList.add(0, new CommentsListItem(user_id, "", user_name, "", description, displayDtFormat.format(postDate), dp_url));
+//            userContributionList.add(0, new CommentsListItem(user_id, "", user_name, "", description, displayDtFormat.format(postDate), dp_url));
+            userContributionList.add(0, new UserContributionListItem(post_id, user_id, user_name, first_name, last_name, displayDtFormat.format(postDate), img_url, dp_url, description));
 
             loadContributionList(0);
 
@@ -414,24 +467,7 @@ public class UserProfileFragment extends Fragment {
         last_name = userDetailsObj.get("last_name").getAsString();
         user_total_pts = Integer.parseInt(userDetailsObj.get("user_points").toString());
 
-        RewardCalcuator rewardCalcuator = new RewardCalcuator();
-        RewardCalcuator calculatedReward = rewardCalcuator.calculate((float) user_total_pts);
-        System.out.println("calculatedReward " + calculatedReward.getCurrent_points());
-        System.out.println("calculatedReward " + calculatedReward.getMin_range());
-        System.out.println("calculatedReward " + calculatedReward.getMax_range());
-        System.out.println("calculatedReward " + calculatedReward.getRelativerewardsValue());
-        System.out.println("calculatedReward " + calculatedReward.getLevel());
-
-        user_status.setText("Contributor Level " + calculatedReward.getLevel());
-
-        profile_progress_bar.setSecondaryProgress(calculatedReward.getRelativerewardsValue());
-//        profile_progress_bar.setMax((float) calculatedReward.getMax_range());
-//        profile_progress_bar.setProgress((float) calculatedReward.getMax_range());
-
-//        profile_progress_bar.setSecondaryProgress(200f);
-        profile_progress_bar.setMax(100f);
-        profile_progress_bar.setProgress(100f);
-
+        setRewardProgress(user_total_pts, 0);
 
         try {
             dp_url = userDetailsObj.get("dp_url").getAsString();
@@ -512,15 +548,30 @@ public class UserProfileFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                CommentsListItem selectedCommentsListItem = contributionList.get(position);
-                Intent eventDetailIntent = new Intent(getActivity(), EventDetails.class);
-                eventDetailIntent.putExtra("user_id", selectedCommentsListItem.getSrc_user_id());
-                eventDetailIntent.putExtra("user_name", selectedCommentsListItem.getSrc_user_name());
-                eventDetailIntent.putExtra("img_url", selectedCommentsListItem.getImage_url());
-                eventDetailIntent.putExtra("comm_time", selectedCommentsListItem.getComment_time());
-                eventDetailIntent.putExtra("user_comment", selectedCommentsListItem.getUser_comment());
-                startActivity(eventDetailIntent);
+                if (!memberListOpenFlag) {
+                    UserContributionListItem selectedContributionListItem = null;
 
+                    //Select object depending on type of tab active
+                    switch (currentActiveTab) {
+                        case 1:
+                            selectedContributionListItem = userContributionList.get(position);
+                            break;
+                        case 2:
+                            selectedContributionListItem = grpContributionList.get(position);
+                            break;
+                    }
+
+                    Intent eventDetailIntent = new Intent(getActivity(), EventDetails.class);
+                    eventDetailIntent.putExtra("user_id", selectedContributionListItem.getUser_id());
+                    eventDetailIntent.putExtra("user_name", selectedContributionListItem.getUser_name());
+                    eventDetailIntent.putExtra("img_url", selectedContributionListItem.getImage_url());
+                    eventDetailIntent.putExtra("comm_time", selectedContributionListItem.getCreated_at_dt_time());
+                    eventDetailIntent.putExtra("user_comment", selectedContributionListItem.getDescription());
+                    eventDetailIntent.putExtra("post_id", selectedContributionListItem.getPost_id());
+                    eventDetailIntent.putExtra("user_dp_url", selectedContributionListItem.getDp_url());
+                    eventDetailIntent.putExtra("intent_type", 0);
+                    startActivity(eventDetailIntent);
+                }
             }
         });
 
@@ -574,15 +625,19 @@ public class UserProfileFragment extends Fragment {
         user_profile_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                currentActiveTab = 1;
                 user_profile_btn.setBackground(getResources().getDrawable(R.drawable.text_selection_left_seleted));
                 grp_profile_btn.setBackground(getResources().getDrawable(R.drawable.text_selection_right_unseleted));
                 populateUserInfo();
+
             }
         });
 
         grp_profile_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 if (grp_id.equals("xxxxx____xxxxx")) {
                     checkForGroupRequest();
                     Toast.makeText(getActivity(), "No group info found", Toast.LENGTH_SHORT).show();
@@ -598,6 +653,8 @@ public class UserProfileFragment extends Fragment {
                         startActivity(joinGrpIntent);
                     }
                 } else {
+                    currentActiveTab = 2;
+
                     user_profile_member_count_text_view.setVisibility(View.VISIBLE);
                     user_profile_member_count_text_view_icon.setVisibility(View.VISIBLE);
                     grp_profile_btn.setBackground(getResources().getDrawable(R.drawable.text_selection_right_seleted));
@@ -614,6 +671,10 @@ public class UserProfileFragment extends Fragment {
                     user_name_textview.setText(grp_name);
                     user_points.setText(String.valueOf(grp_total_pts));
 
+                    user_profile_member_count_text_view_icon.setImageResource(R.drawable.down_arrow_white_24);
+
+                    setRewardProgress(grp_total_pts, 1);
+
                 }
                 memberListOpenFlag = false;
             }
@@ -625,6 +686,39 @@ public class UserProfileFragment extends Fragment {
             }
         });
         return rootView;
+    }
+
+    private void setRewardProgress(int reward_points, int tab_code) {
+        RewardCalcuator rewardCalcuator = new RewardCalcuator();
+        RewardCalcuator calculatedReward = null;
+
+        calculatedReward = rewardCalcuator.calculate((float) reward_points);
+        System.out.println("calculatedReward " + calculatedReward.getCurrent_points());
+        System.out.println("calculatedReward " + calculatedReward.getMin_range());
+        System.out.println("calculatedReward " + calculatedReward.getMax_range());
+        System.out.println("calculatedReward " + calculatedReward.getRelativerewardsValue());
+        System.out.println("calculatedReward " + calculatedReward.getLevel());
+
+        if (reward_points == 0) {
+            profile_progress_bar.setSecondaryProgress(0f);
+        } else {
+            profile_progress_bar.setSecondaryProgress(calculatedReward.getRelativerewardsValue());
+        }
+        profile_progress_bar.setMax(100f);
+        profile_progress_bar.setProgress(100f);
+
+
+        switch (tab_code) {
+            case 0:
+                user_status.setText("Contributor Level " + calculatedReward.getLevel());
+                break;
+
+            case 1:
+                user_status.setText("Group Contribution Level " + calculatedReward.getLevel());
+                break;
+        }
+
+
     }
 
     private void openImageOptionsDialog() {
@@ -780,6 +874,7 @@ public class UserProfileFragment extends Fragment {
         loadContributionList(user_type_selection_status);
         user_name_textview.setText(userName);
         user_points.setText(String.valueOf(user_total_pts));
+        setRewardProgress(user_total_pts, 0);
 
         user_profile_member_count_text_view.setVisibility(View.GONE);
         user_profile_member_count_text_view_icon.setVisibility(View.GONE);
@@ -911,7 +1006,9 @@ public class UserProfileFragment extends Fragment {
         show_pending_req_dialog_progressBar.setVisibility(View.VISIBLE);
         show_pending_req_dialog_progressBar_label.setVisibility(View.VISIBLE);
 
-        show_pending_req_dialog_btn_grp_name_textView.setText("Pending request for : " + new SessionManager(getActivity()).getSpecificUserDetail(SessionManager.KEY_REQ_PENDING_GRP_NAME));
+        System.out.println("PENDING " + new SessionManager(getActivity()).getSpecificUserDetail(SessionManager.KEY_REQ_PENDING_GRP_NAME));
+
+        show_pending_req_dialog_btn_grp_name_textView.setText("Pending request : " + new SessionManager(getActivity()).getSpecificUserDetail(SessionManager.KEY_REQ_PENDING_GRP_NAME));
 
         show_pending_req_dialog_ok_btn_card_view.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -986,16 +1083,16 @@ public class UserProfileFragment extends Fragment {
 
         if (user_type_selection_status == 0) {
             memberListOpenFlag = false;
-            userContributionAdapter = new UserContributionAdapter(getActivity(), contributionList);
+            userContributionAdapter = new UserContributionAdapter(getActivity(), userContributionList);
             user_profile_contribution_list_view.setAdapter(userContributionAdapter);
 
             user_profile_posts_count_text_view.setVisibility(View.VISIBLE);
-            if (contributionList.size() == 0) {
+            if (userContributionList.size() == 0) {
                 user_profile_posts_count_text_view.setText("No Posts Found");
-            } else if (contributionList.size() == 1) {
+            } else if (userContributionList.size() == 1) {
                 user_profile_posts_count_text_view.setText("1 Post");
             } else {
-                user_profile_posts_count_text_view.setText(contributionList.size() + " Posts");
+                user_profile_posts_count_text_view.setText(userContributionList.size() + " Posts");
             }
 
         }

@@ -81,11 +81,18 @@ public class CommentsAdapter extends BaseAdapter {
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        Picasso.get().load(commentsListItem.getImage_url())
-                .fit().centerCrop().into(viewHolder.comments_list_item_user_pic_img_view);
+
+        if (commentsListItem.getImage_url() == null) {
+            viewHolder.comments_list_item_user_pic_img_view.setImageResource(R.drawable.avatar_100_3);
+        } else {
+            Picasso.get().load(commentsListItem.getImage_url()).fit().centerCrop().into(viewHolder.comments_list_item_user_pic_img_view);
+        }
+
+
         viewHolder.comments_list_item_user_name_text_view.setText(commentsListItem.getSrc_user_name());
         viewHolder.comments_list_item_user_time_text_view.setText(displayDtFormat.format(commentDateTime));
         viewHolder.comments_list_item_user_comment_text_view.setText(commentsListItem.getUser_comment());
+
         if (commentsListItem.getTrgt_user_name() != null) {
             viewHolder.comments_list_item_trgt_user_name_text_view.setText(">>" + commentsListItem.getTrgt_user_name());
         } else {

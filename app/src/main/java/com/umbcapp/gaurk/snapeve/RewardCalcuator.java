@@ -21,9 +21,6 @@ public class RewardCalcuator {
         calculatedReward.min_range = minCalculatedRange;
         calculatedReward.level = calculatedLevel;
 
-        System.out.println("(this.current_points - this.min_range) " + (calculatedReward.current_points - calculatedReward.min_range));
-        System.out.println("(this.max_range - this.min_range) " + (calculatedReward.max_range - calculatedReward.min_range));
-        System.out.println("((this.max_range - this.min_range) / 100) " + ((calculatedReward.max_range - calculatedReward.min_range) / 100));
         calculatedReward.relativerewardsValue = (calculatedReward.current_points - calculatedReward.min_range) / ((calculatedReward.max_range - calculatedReward.min_range) / 100);
 
         return calculatedReward;
@@ -32,53 +29,53 @@ public class RewardCalcuator {
     private void getRange(float current_points) {
 
         if (current_points < 10) {
-            float minCalculatedRange = 0;
-            float maxCalculatedRange = 9;
+            minCalculatedRange = 0;
+            maxCalculatedRange = 9;
             calculatedLevel = 1;
 
         } else if (current_points >= 10 && current_points < 50) {
-            float minCalculatedRange = 10;
-            float maxCalculatedRange = 49;
+            minCalculatedRange = 10;
+            maxCalculatedRange = 49;
             calculatedLevel = 2;
 
         } else if (current_points >= 50 && current_points < 200) {
-            float minCalculatedRange = 50;
-            float maxCalculatedRange = 199;
+            minCalculatedRange = 50;
+            maxCalculatedRange = 199;
             calculatedLevel = 3;
 
         } else if (current_points >= 200 && current_points < 500) {
-            float minCalculatedRange = 200;
-            float maxCalculatedRange = 499;
+            minCalculatedRange = 200;
+            maxCalculatedRange = 499;
             calculatedLevel = 4;
 
         } else if (current_points >= 500 && current_points < 1000) {
-            float minCalculatedRange = 500;
-            float maxCalculatedRange = 999;
+            minCalculatedRange = 500;
+            maxCalculatedRange = 999;
             calculatedLevel = 5;
 
         } else if (current_points >= 1000 && current_points < 2000) {
-            float minCalculatedRange = 1000;
-            float maxCalculatedRange = 1999;
+            minCalculatedRange = 1000;
+            maxCalculatedRange = 1999;
             calculatedLevel = 6;
 
         } else if (current_points >= 2000 && current_points < 5000) {
-            float minCalculatedRange = 2000;
-            float maxCalculatedRange = 4999;
+            minCalculatedRange = 2000;
+            maxCalculatedRange = 4999;
             calculatedLevel = 7;
 
         } else if (current_points >= 5000 && current_points < 10000) {
-            float minCalculatedRange = 5000;
-            float maxCalculatedRange = 9999;
+            minCalculatedRange = 5000;
+            maxCalculatedRange = 9999;
             calculatedLevel = 8;
 
         } else if (current_points >= 10000 && current_points < 50000) {
-            float minCalculatedRange = 10000;
-            float maxCalculatedRange = 49999;
+            minCalculatedRange = 10000;
+            maxCalculatedRange = 49999;
             calculatedLevel = 9;
 
         } else {
-            float minCalculatedRange = 50000;
-            float maxCalculatedRange = 100000;
+            minCalculatedRange = 50000;
+            maxCalculatedRange = 100000;
             calculatedLevel = 10;
 
         }

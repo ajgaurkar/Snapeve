@@ -23,7 +23,7 @@
         android:gravity="center_vertical"
         android:padding="5dp"
         android:singleLine="true"
-        android:text="Pending request for : Math dept"
+        android:text="Pending request :"
         android:textSize="16sp"
         android:textStyle="bold" />
 

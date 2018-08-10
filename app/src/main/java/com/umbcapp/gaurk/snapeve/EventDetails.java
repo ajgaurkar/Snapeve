@@ -111,6 +111,17 @@ public class EventDetails extends AppCompatActivity implements Listview_communic
         user_comment = eventDetailIntent.getStringExtra("user_comment");
         user_dp_url = eventDetailIntent.getStringExtra("user_dp_url");
 
+        System.out.println("EVENT DETAILS ----------");
+        System.out.println("user_id : " + user_id);
+        System.out.println("post_id : " + post_id);
+        System.out.println("intent_type: " + intent_type);
+        System.out.println("user_name : " + user_name);
+        System.out.println("img_url : " + img_url);
+        System.out.println("comm_dt_time : " + comm_dt_time);
+        System.out.println("user_comment : " + user_comment);
+        System.out.println("user_dp_url : " + user_dp_url);
+        System.out.println("EVENT DETAILS ----------");
+
         merge_options_layout = (RelativeLayout) findViewById(R.id.merge_options_layout);
         event_detail_grey_view_panel = (View) findViewById(R.id.event_detail_grey_view_panel);
         list_item_status_spinner = (Spinner) findViewById(R.id.list_item_status_spinner_textview);
@@ -144,7 +155,12 @@ public class EventDetails extends AppCompatActivity implements Listview_communic
         event_detail_user_post_dt_time_text_view.setText(comm_dt_time);
         event_detail_user_comment_text_view.setText(user_comment);
         Picasso.get().load(img_url).fit().centerCrop().into(event_detail_event_image_image_view);
-        Picasso.get().load(user_dp_url).fit().centerCrop().into(event_detail_profile_pic_image_view);
+
+        if (user_dp_url == null) {
+            event_detail_profile_pic_image_view.setImageResource(R.drawable.avatar_100_3);
+        } else {
+            Picasso.get().load(user_dp_url).fit().centerCrop().into(event_detail_profile_pic_image_view);
+        }
 
 //        commentsList.add(new CommentsListItem("u1", "Jhon Paul", "speaking to a a packed crowd at Sanders Theatre, a nobel laureate discussing her most recent scientific discovery, or the Harvard senior talent show, there’s always something happening at Harvard.", "Jan 05", "https://ais2017.umbc.edu/files/2017/09/umbc.jpg"));
 //        commentsList.add(new CommentsListItem("u1", "Jhon Paul", "Good", "Jan 05", "https://ais2017.umbc.edu/files/2017/09/umbc.jpg"));
@@ -439,9 +455,15 @@ public class EventDetails extends AppCompatActivity implements Listview_communic
 
             String comment = comments_list_object.get("comment").getAsString();
             String source_user_id = comments_list_object.get("source_user_id").getAsString();
-            String src_dp_url = comments_list_object.get("src_dp_url").getAsString();
             String src_U_name = comments_list_object.get("src_U_name").getAsString();
             String date_time = comments_list_object.get("date_time").getAsString();
+
+            String src_dp_url = null;
+            try {
+                src_dp_url = comments_list_object.get("src_dp_url").getAsString();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
 
             String target_user_id = null;
             String trgt_U_name = null;
@@ -718,7 +740,6 @@ public class EventDetails extends AppCompatActivity implements Listview_communic
 
             String user_id = attendies_list_object.get("USER_ID").getAsString();
             int attend_status = attendies_list_object.get("ATTEND_STATUS").getAsInt();
-            String img_dp_url = attendies_list_object.get("DP_URL").getAsString();
             String user_name = attendies_list_object.get("USER_NAME").getAsString();
             String first_name = attendies_list_object.get("FIRST_NAME").getAsString();
             String last_name = attendies_list_object.get("LAST_NAME").getAsString();
@@ -729,6 +750,12 @@ public class EventDetails extends AppCompatActivity implements Listview_communic
                 e.printStackTrace();
             }
 
+            String img_dp_url = null;
+            try {
+                img_dp_url = attendies_list_object.get("DP_URL").getAsString();
+            } catch (Exception e) {
+
+            }
 
             //MISSING GRP ID IN SESSION MANAGER. NEED TO ADD IT. NEED IT HERE
 //            if(grp_id.equals(new SessionManager(getApplicationContext()).getSpecificUserDetail(SessionManager.KEY)))

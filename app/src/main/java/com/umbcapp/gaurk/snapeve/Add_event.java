@@ -995,6 +995,10 @@ public class Add_event extends AppCompatActivity implements LocationListener {
                     System.out.println(" post_event success response    " + response);
                     mProgressDialog.dismiss();
 
+                    if (response.toString().equals("true")) {
+                        finish();
+                    }
+
                 }
             });
         }

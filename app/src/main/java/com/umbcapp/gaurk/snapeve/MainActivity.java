@@ -89,12 +89,10 @@ public class MainActivity extends AppCompatActivity implements Listview_communic
         testNotification();
 
         event_main_list = new ArrayList<Event_dash_list_obj>();
-
         main_event_list_view = (ListView) findViewById(R.id.dashboard_event_listview);
         pullToRefresh = (SwipeRefreshLayout) findViewById(R.id.dashboard_pull_refresh_layout);
 
         main_img_pick_fab = (FloatingActionButton) findViewById(R.id.main_img_pick_fab);
-//        refreshBtn = (Button) findViewById(R.id.button2);
 
         userProfileFragment = new UserProfileFragment();
         settingsFragment = new SettingsFragment();
@@ -102,7 +100,6 @@ public class MainActivity extends AppCompatActivity implements Listview_communic
         notificationFragment = new NotificationFragment();
 
         // Mobile Service URL and key
-
         //Old access url(aj account)
         try {
             //New access url(amey account)
@@ -112,19 +109,15 @@ public class MainActivity extends AppCompatActivity implements Listview_communic
             e.printStackTrace();
         }
 
-//        startActivity(new Intent(getApplicationContext(), LoginActivity.class));
-
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
-//        navigation.
 
+        executeGetFeedsApi();
 
         main_img_pick_fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 startActivity(new Intent(getApplicationContext(), Add_event.class));
-
             }
         });
 
@@ -134,16 +127,6 @@ public class MainActivity extends AppCompatActivity implements Listview_communic
                 executeGetFeedsApi();
             }
         });
-
-        executeGetFeedsApi();
-
-//        refreshBtn.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                executeGetFeedsApi();
-//            }
-//        });
-
     }
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
@@ -363,7 +346,6 @@ public class MainActivity extends AppCompatActivity implements Listview_communic
 
             String img_comment = feeds_list_object.get("img_comment").getAsString();
             String feed_img_url = feeds_list_object.get("img_url").getAsString();
-            String dp_url = feeds_list_object.get("dp_url").getAsString();
             String feed_user_id = feeds_list_object.get("initializer_id").getAsString();
             String post_id = feeds_list_object.get("post_id").getAsString();
             String post_dt = feeds_list_object.get("post_date").getAsString();
@@ -371,6 +353,16 @@ public class MainActivity extends AppCompatActivity implements Listview_communic
             String event_end_dt_time = feeds_list_object.get("event_end_dt_time").getAsString();
             boolean event_all_day_status = feeds_list_object.get("all_day").getAsBoolean();
             String initializer_name = feeds_list_object.get("initializer_name").getAsString();
+
+            String dp_url = null;
+
+            try {
+                dp_url = feeds_list_object.get("dp_url").getAsString();
+                System.out.println("Main activity feeds user dp_url : " + dp_url);
+            } catch (Exception e) {
+                e.printStackTrace();
+                dp_url = null;
+            }
 
             Date date = null;
             try {
@@ -505,4 +497,10 @@ public class MainActivity extends AppCompatActivity implements Listview_communic
         System.out.println("MAINACTIVITY sessionCounter : " + minutes + "m " + seconds + "s");
     }
 
+    @Override
+    public void onResume() {
+        executeGetFeedsApi();
+
+        super.onResume();
+    }
 }

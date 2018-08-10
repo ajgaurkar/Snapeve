@@ -205,7 +205,6 @@
             android:padding="3dp"
             android:src="@drawable/down_arrow_white_24" />
 
-
         <com.akexorcist.roundcornerprogressbar.RoundCornerProgressBar
             android:id="@+id/profile_progress_bar"
             android:layout_width="match_parent"
@@ -218,8 +217,8 @@
             android:layout_toEndOf="@+id/profile_pic_image_view"
             app:rcBackgroundColor="#00ffffff"
             app:rcBackgroundPadding="10dp"
-            app:rcMax="10"
-            app:rcProgress="10"
+            app:rcMax="100"
+            app:rcProgress="100"
             app:rcProgressColor="#7cffffff"
             app:rcRadius="10dp"
             app:rcReverse="false"
