@@ -112,15 +112,39 @@ public class Dash_Event_ListAdapter extends BaseAdapter {
         }
         Picasso.get().load(event_dash_list_obj.getImage_url()).fit().centerCrop().into(viewHolder.main_card_imageview);
         viewHolder.list_item_event_title.setText(event_dash_list_obj.getUser_comment());
-        viewHolder.list_item_user_name.setText(event_dash_list_obj.getUser_name());
         viewHolder.list_item_post_dt_time.setText(event_dash_list_obj.getPost_dt());
 
-        if (event_dash_list_obj.getUser_dp_url() == null) {
-            viewHolder.list_item_user_img.setImageResource(R.drawable.avatar_100_3);
-        } else {
-            Picasso.get().load(event_dash_list_obj.getUser_dp_url())
-                    .fit().centerCrop().into(viewHolder.list_item_user_img);
+        switch (event_dash_list_obj.getPost_as()) {
+            //0: individual
+            //1: group
+            //2: anonymous
+            case 0:
+                viewHolder.list_item_user_name.setText(event_dash_list_obj.getUser_name());
+
+                if (event_dash_list_obj.getUser_dp_url() == null) {
+                    viewHolder.list_item_user_img.setImageResource(R.drawable.avatar_100_3);
+                } else {
+                    Picasso.get().load(event_dash_list_obj.getUser_dp_url())
+                            .fit().centerCrop().into(viewHolder.list_item_user_img);
+                }
+                break;
+            case 1:
+                viewHolder.list_item_user_name.setText(event_dash_list_obj.getGrp_name());
+
+                if (event_dash_list_obj.getGrp_dp_url() == null) {
+                    viewHolder.list_item_user_img.setImageResource(R.drawable.avatar_100_3);
+                } else {
+                    Picasso.get().load(event_dash_list_obj.getGrp_dp_url())
+                            .fit().centerCrop().into(viewHolder.list_item_user_img);
+                }
+                break;
+            case 2:
+                viewHolder.list_item_user_name.setText("Anonymous");
+
+                viewHolder.list_item_user_img.setImageResource(R.drawable.anonymous_dark_100);
+                break;
         }
+
 
         viewHolder.main_card_imageview.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -41,6 +41,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
@@ -152,6 +153,8 @@ public class Add_event extends AppCompatActivity implements LocationListener {
     private Calendar eventStartDateTime;
     private Calendar eventEndDateTime;
     private boolean allDayEvent;
+    private RadioButton post_as_group_radio;
+    private View post_as_group_radio_divider_view;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -164,6 +167,7 @@ public class Add_event extends AppCompatActivity implements LocationListener {
         setNotification();
         // find_similar_posts
         mClient = Singleton.Instance().mClientMethod(this);
+
 
         decimalFormat = new DecimalFormat("#.#######");
         decimalFormat.setRoundingMode(RoundingMode.CEILING);
@@ -195,6 +199,9 @@ public class Add_event extends AppCompatActivity implements LocationListener {
         post_location_radio_grp = (RadioGroup) findViewById(R.id.post_location_radio_grp);
         post_event_type_radio_grp = (RadioGroup) findViewById(R.id.post_event_type_radio_grp);
         post_as_radio_grp = (RadioGroup) findViewById(R.id.post_as_radio_grp);
+        post_as_group_radio_divider_view = (View) findViewById(R.id.post_as_group_radio_divider_view);
+
+        post_as_group_radio = (RadioButton) findViewById(R.id.post_as_group_radio);
 
         similar_posts_list_cardview = (CardView) findViewById(R.id.similar_posts_list_cardview);
         submit_button_cardview = (CardView) findViewById(R.id.submit_button_cardview);
@@ -204,6 +211,17 @@ public class Add_event extends AppCompatActivity implements LocationListener {
         add_event_card_4 = (CardView) findViewById(R.id.add_event_card_4);
         similar_button_cardview = (CardView) findViewById(R.id.similar_button_cardview);
         add_event_card_5_rel_layout = (RelativeLayout) findViewById(R.id.add_event_card_5_rel_layout);
+
+        if (new SessionManager(getApplicationContext()).getSpecificUserDetail(SessionManager.KEY_GRP_ID).equals("xxxxx____xxxxx")) {
+            //disable post as grp radio btn
+            post_as_group_radio.setVisibility(View.GONE);
+            post_as_group_radio_divider_view.setVisibility(View.GONE);
+        } else {
+            //enable post as grp radio btn
+            post_as_group_radio.setVisibility(View.VISIBLE);
+            post_as_group_radio_divider_view.setVisibility(View.VISIBLE);
+//            post_as_group_radio.setText(userDetailsObj.get("grp_name").getAsString());
+        }
 
         setStartEndDateTime(eventStartDateTime, eventEndDateTime);
 
@@ -217,9 +235,7 @@ public class Add_event extends AppCompatActivity implements LocationListener {
         all_day_switch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-//                LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(0, 260);
-//                lp.weight = 100;
-//                pointer.setLayoutParams(lp);
+
                 LinearLayout.LayoutParams dateFieldParam = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
                 LinearLayout.LayoutParams timeFieldParam = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
 
@@ -386,11 +402,11 @@ public class Add_event extends AppCompatActivity implements LocationListener {
                         post_scope_radio_value = 0;
 
                         break;
-                    case R.id.post_scope_anonymous_radio:
-                        System.out.println("Anonymous");
-                        post_scope_radio_value = 2;
-
-                        break;
+//                    case R.id.post_scope_anonymous_radio:
+//                        System.out.println("Anonymous");
+//                        post_scope_radio_value = 2;
+//
+//                        break;
                     case R.id.post_scope_grponly_radio:
                         System.out.println("Grp only");
                         post_scope_radio_value = 1;
@@ -412,9 +428,12 @@ public class Add_event extends AppCompatActivity implements LocationListener {
                         System.out.println("Public");
                         post_as_radio_value = 0;
                         break;
-
-                    case R.id.post_as_group_radio:
+                    case R.id.post_as_anonymous_radio:
                         System.out.println("Anonymous");
+                        post_as_radio_value = 2;
+                        break;
+                    case R.id.post_as_group_radio:
+                        System.out.println("Group");
                         post_as_radio_value = 1;
                         break;
 

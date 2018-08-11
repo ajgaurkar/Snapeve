@@ -94,6 +94,10 @@ public class EventDetails extends AppCompatActivity implements Listview_communic
     private View event_detail_grey_view_panel;
     private String user_dp_url;
     private CircleImageView event_detail_profile_pic_image_view;
+    private String grp_dp_url;
+    private int post_as;
+    private String grp_id;
+    private String grp_name;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -111,6 +115,11 @@ public class EventDetails extends AppCompatActivity implements Listview_communic
         user_comment = eventDetailIntent.getStringExtra("user_comment");
         user_dp_url = eventDetailIntent.getStringExtra("user_dp_url");
 
+        grp_dp_url = eventDetailIntent.getStringExtra("grp_dp_url");
+        grp_name = eventDetailIntent.getStringExtra("grp_name");
+        grp_id = eventDetailIntent.getStringExtra("grp_id");
+        post_as = eventDetailIntent.getIntExtra("post_as", 0);
+
         System.out.println("EVENT DETAILS ----------");
         System.out.println("user_id : " + user_id);
         System.out.println("post_id : " + post_id);
@@ -120,6 +129,10 @@ public class EventDetails extends AppCompatActivity implements Listview_communic
         System.out.println("comm_dt_time : " + comm_dt_time);
         System.out.println("user_comment : " + user_comment);
         System.out.println("user_dp_url : " + user_dp_url);
+        System.out.println("grp_dp_url : " + grp_dp_url);
+        System.out.println("grp_name : " + grp_name);
+        System.out.println("grp_id : " + grp_id);
+        System.out.println("post_as : " + post_as);
         System.out.println("EVENT DETAILS ----------");
 
         merge_options_layout = (RelativeLayout) findViewById(R.id.merge_options_layout);
@@ -151,16 +164,42 @@ public class EventDetails extends AppCompatActivity implements Listview_communic
         fetchCommentsApi(post_id);
         fillAttendingSpinner();
 
-        event_detail_user_name_text_view.setText(user_name);
         event_detail_user_post_dt_time_text_view.setText(comm_dt_time);
         event_detail_user_comment_text_view.setText(user_comment);
         Picasso.get().load(img_url).fit().centerCrop().into(event_detail_event_image_image_view);
 
-        if (user_dp_url == null) {
-            event_detail_profile_pic_image_view.setImageResource(R.drawable.avatar_100_3);
-        } else {
-            Picasso.get().load(user_dp_url).fit().centerCrop().into(event_detail_profile_pic_image_view);
+        switch (post_as) {
+            case 0://User
+                System.out.println("CASE 1 ");
+                event_detail_user_name_text_view.setText(user_name);
+
+                if (user_dp_url == null) {
+                    System.out.println("CASE 1 IF");
+                    event_detail_profile_pic_image_view.setImageResource(R.drawable.avatar_100_3);
+                } else {
+                    System.out.println("CASE 1 ELSE");
+                    Picasso.get().load(user_dp_url).fit().centerCrop().into(event_detail_profile_pic_image_view);
+                }
+                break;
+            case 1://Group
+                event_detail_user_name_text_view.setText(grp_name);
+                System.out.println("CASE 2 ");
+
+                if (grp_dp_url == null || grp_dp_url.equals("xxxxx____xxxxx")) {
+                    System.out.println("CASE 2 IF");
+                    event_detail_profile_pic_image_view.setImageResource(R.drawable.avatar_100_3);
+                } else {
+                    System.out.println("CASE 2 ELSE");
+                    Picasso.get().load(grp_dp_url).fit().centerCrop().into(event_detail_profile_pic_image_view);
+                }
+                break;
+            case 2://Anonymous
+                event_detail_user_name_text_view.setText("Anonymous");
+                event_detail_profile_pic_image_view.setImageResource(R.drawable.anonymous_dark_100);
+                System.out.println("CASE 3 ");
+                break;
         }
+
 
 //        commentsList.add(new CommentsListItem("u1", "Jhon Paul", "speaking to a a packed crowd at Sanders Theatre, a nobel laureate discussing her most recent scientific discovery, or the Harvard senior talent show, there’s always something happening at Harvard.", "Jan 05", "https://ais2017.umbc.edu/files/2017/09/umbc.jpg"));
 //        commentsList.add(new CommentsListItem("u1", "Jhon Paul", "Good", "Jan 05", "https://ais2017.umbc.edu/files/2017/09/umbc.jpg"));

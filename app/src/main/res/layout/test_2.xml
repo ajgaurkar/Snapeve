@@ -175,7 +175,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="-5dp"
                 android:padding="5dp"
-                android:text="Post as" />
+                android:text="Post by" />
 
             <RadioGroup
                 android:id="@+id/post_as_radio_grp"
@@ -190,7 +190,7 @@
                     android:id="@+id/post_as_self_radio"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="45"
+                    android:layout_weight="33"
                     android:checked="true"
                     android:text="T_cruise" />
 
@@ -203,9 +203,11 @@
 
 
                 <View
+                    android:id="@+id/post_as_group_radio_divider_view"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="10" />
+                    android:visibility="gone"
+                    android:layout_weight="5" />
                 <!--<View-->
                 <!--android:layout_width="0dp"-->
                 <!--android:layout_height="match_parent"-->
@@ -214,9 +216,33 @@
                 <RadioButton
                     android:id="@+id/post_as_group_radio"
                     android:layout_width="0dp"
+                    android:visibility="gone"
                     android:layout_height="wrap_content"
-                    android:layout_weight="45"
-                    android:text="Common Vision" />
+                    android:layout_weight="25"
+                    android:text="Group" />
+
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginTop="5dp"
+                    android:background="#cecece" />
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="5" />
+                <!--<View-->
+                <!--android:layout_width="0dp"-->
+                <!--android:layout_height="match_parent"-->
+                <!--android:layout_weight="10" />-->
+
+                <RadioButton
+                    android:id="@+id/post_as_anonymous_radio"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="33"
+                    android:text="Anonymous" />
 
 
             </RadioGroup>
@@ -275,36 +301,36 @@
                     android:layout_marginTop="5dp"
                     android:background="#cecece" />
 
-                <!--<View-->
-                <!--android:layout_width="0dp"-->
-                <!--android:layout_height="match_parent"-->
-                <!--android:layout_weight="10" />-->
+                <View
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="5" />
 
                 <RadioButton
                     android:id="@+id/post_scope_grponly_radio"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="33"
+                    android:layout_weight="50"
                     android:text="Group only" />
 
-                <View
-                    android:layout_width="1dp"
-                    android:layout_height="match_parent"
-                    android:layout_marginBottom="5dp"
-                    android:layout_marginTop="5dp"
-                    android:background="#cecece" />
+                <!--<View-->
+                <!--android:layout_width="1dp"-->
+                <!--android:layout_height="match_parent"-->
+                <!--android:layout_marginBottom="5dp"-->
+                <!--android:layout_marginTop="5dp"-->
+                <!--android:background="#cecece" />-->
 
                 <!--<View-->
                 <!--android:layout_width="0dp"-->
                 <!--android:layout_height="match_parent"-->
                 <!--android:layout_weight="10" />-->
 
-                <RadioButton
-                    android:id="@+id/post_scope_anonymous_radio"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="33"
-                    android:text="Anonymous" />
+                <!--<RadioButton-->
+                <!--android:id="@+id/post_scope_anonymous_radio"-->
+                <!--android:layout_width="0dp"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_weight="33"-->
+                <!--android:text="Anonymous" />-->
 
             </RadioGroup>
 
@@ -349,7 +375,7 @@
                     android:id="@+id/post_location_current_radio"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="27"
+                    android:layout_weight="33"
                     android:checked="true"
                     android:text="Current" />
 

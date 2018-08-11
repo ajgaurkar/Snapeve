@@ -755,8 +755,24 @@ public class UserProfileFragment extends Fragment {
                 switch (position) {
                     case 0:
                         dissmissAlertDialog.dismiss();
-                        full_screen_imageview_layout.setVisibility(View.VISIBLE);
-                        Picasso.get().load(dp_url).fit().centerInside().into(full_screen_imageview);
+                        switch (currentActiveTab) {
+                            case 1:
+                                if (dp_url == null) {
+                                    Toast.makeText(getActivity(), "No Image found", Toast.LENGTH_SHORT).show();
+                                } else {
+                                    full_screen_imageview_layout.setVisibility(View.VISIBLE);
+                                    Picasso.get().load(dp_url).fit().centerInside().into(full_screen_imageview);
+                                }
+                                break;
+                            case 2:
+                                if (grp_dp_url == null || grp_dp_url.equals("xxxxx____xxxxx") ) {
+                                    Toast.makeText(getActivity(), "No Image found", Toast.LENGTH_SHORT).show();
+                                } else {
+                                    full_screen_imageview_layout.setVisibility(View.VISIBLE);
+                                    Picasso.get().load(grp_dp_url).fit().centerInside().into(full_screen_imageview);
+                                }
+                                break;
+                        }
                         break;
 
                     case 1:

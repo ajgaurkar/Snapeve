@@ -1,41 +1,6 @@
 package com.umbcapp.gaurk.snapeve.Controllers;
 
 public class Event_dash_list_obj {
-//
-//    String img_description;
-//    String img_url;
-//    String src_user_name;
-//
-//
-//    public Event_dash_list_obj(String img_description, String img_url, String src_user_name) {
-//        this.img_description = img_description;
-//        this.img_url = img_url;
-//        this.src_user_name = src_user_name;
-//    }
-//
-//    public String getImg_url() {
-//        return img_url;
-//    }
-//
-//    public void setImg_url(String img_url) {
-//        this.img_url = img_url;
-//    }
-//
-//    public String getImg_description() {
-//        return img_description;
-//    }
-//
-//    public void setImg_description(String img_description) {
-//        this.img_description = img_description;
-//    }
-//
-//    public String getSrc_user_name() {
-//        return src_user_name;
-//    }
-//
-//    public void setSrc_user_name(String src_user_name) {
-//        this.src_user_name = src_user_name;
-//    }
 
     String user_id;
     String user_dp_url;
@@ -48,8 +13,15 @@ public class Event_dash_list_obj {
     String post_start_dt_time;
     String post_end_dt_time;
     Boolean all_day_status;
+    int post_as;
+    int scope;
+    int location_type;
+    int event_type;
+    String grp_name;
+    String grp_id;
+    String grp_dp_url;
 
-    public Event_dash_list_obj(String user_id, String user_dp_url, String user_name, String user_comment, String comment_time, String image_url, String post_id, String post_dt, String post_start_dt_time, String post_end_dt_time, Boolean all_day_status) {
+    public Event_dash_list_obj(String user_id, String user_dp_url, String user_name, String user_comment, String comment_time, String image_url, String post_id, String post_dt, String post_start_dt_time, String post_end_dt_time, Boolean all_day_status, int post_as, int scope, int location_type, int event_type, String grp_name, String grp_id, String grp_dp_url) {
         this.user_id = user_id;
         this.user_dp_url = user_dp_url;
         this.user_name = user_name;
@@ -61,6 +33,83 @@ public class Event_dash_list_obj {
         this.post_start_dt_time = post_start_dt_time;
         this.post_end_dt_time = post_end_dt_time;
         this.all_day_status = all_day_status;
+        this.post_as = post_as;
+        this.scope = scope;
+        this.location_type = location_type;
+        this.event_type = event_type;
+        this.grp_name = grp_name;
+        this.grp_id = grp_id;
+        this.grp_dp_url = grp_dp_url;
+    }
+
+//    public Event_dash_list_obj(String user_id, String user_dp_url, String user_name, String user_comment, String comment_time, String image_url, String post_id, String post_dt, String post_start_dt_time, String post_end_dt_time, Boolean all_day_status) {
+//        this.user_id = user_id;
+//        this.user_dp_url = user_dp_url;
+//        this.user_name = user_name;
+//        this.user_comment = user_comment;
+//        this.comment_time = comment_time;
+//        this.image_url = image_url;
+//        this.post_id = post_id;
+//        this.post_dt = post_dt;
+//        this.post_start_dt_time = post_start_dt_time;
+//        this.post_end_dt_time = post_end_dt_time;
+//        this.all_day_status = all_day_status;
+//    }
+
+    public int getPost_as() {
+        return post_as;
+    }
+
+    public void setPost_as(int post_as) {
+        this.post_as = post_as;
+    }
+
+    public int getScope() {
+        return scope;
+    }
+
+    public void setScope(int scope) {
+        this.scope = scope;
+    }
+
+    public int getLocation_type() {
+        return location_type;
+    }
+
+    public void setLocation_type(int location_type) {
+        this.location_type = location_type;
+    }
+
+    public int getEvent_type() {
+        return event_type;
+    }
+
+    public void setEvent_type(int event_type) {
+        this.event_type = event_type;
+    }
+
+    public String getGrp_name() {
+        return grp_name;
+    }
+
+    public void setGrp_name(String grp_name) {
+        this.grp_name = grp_name;
+    }
+
+    public String getGrp_id() {
+        return grp_id;
+    }
+
+    public void setGrp_id(String grp_id) {
+        this.grp_id = grp_id;
+    }
+
+    public String getGrp_dp_url() {
+        return grp_dp_url;
+    }
+
+    public void setGrp_dp_url(String grp_dp_url) {
+        this.grp_dp_url = grp_dp_url;
     }
 
     public String getUser_dp_url() {

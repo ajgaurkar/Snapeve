@@ -51,16 +51,29 @@ public class SettingsFragment extends PreferenceFragment {
     @Override
     public boolean onPreferenceTreeClick(PreferenceScreen preferenceScreen, Preference preference) {
         switch (preference.getKey()) {
-            case "userAccountPreferenceKey":
+            case "snapeveFeedbackPreferenceKey":
+                startActivity(new Intent(getActivity(), SnapeveFeedback.class));
                 break;
 
             case "notificationPreferenceKey":
+                break;
+
+            case "helpPreferenceKey":
                 break;
 
             case "rateusPreferenceKey":
                 Uri uri = Uri.parse("market://details?id=" + getActivity().getPackageName());
                 Intent goToMarket = new Intent(Intent.ACTION_VIEW, uri);
                 startActivity(goToMarket);
+                break;
+
+            case "appInfoPreferenceKey":
+                break;
+
+            case "termsAndPolicyInfoPreferenceKey":
+                break;
+
+            case "fAQPreferenceKey":
                 break;
 
             case "inviteFriendsPreferenceKey":
@@ -76,9 +89,6 @@ public class SettingsFragment extends PreferenceFragment {
                 startActivity(new Intent(getActivity(), Login_snapeve_activity.class));
                 break;
 
-            case "snapeveFeedbackPreferenceKey":
-                startActivity(new Intent(getActivity(), SnapeveFeedback.class));
-                break;
         }
         return super.onPreferenceTreeClick(preferenceScreen, preference);
     }

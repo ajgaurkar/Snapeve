@@ -1,20 +1,20 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
 
-    <Preference
-        android:icon="@drawable/ic_account_circle_grey_600_24dp"
-        android:key="userAccountPreferenceKey"
-        android:title="Account">
+    <!--<Preference-->
+        <!--android:icon="@drawable/ic_account_circle_grey_600_24dp"-->
+        <!--android:key="userAccountPreferenceKey"-->
+        <!--android:title="Account">-->
 
-    </Preference>
+    <!--</Preference>-->
 
     <Preference
         android:icon="@drawable/ic_feedback_grey_600_24dp"
         android:key="snapeveFeedbackPreferenceKey"
-        android:summary="Click to start an feedback"
         android:title="Feedback">
         
     </Preference>
+
     <SwitchPreference
         android:defaultValue="false"
         android:icon="@drawable/ic_notifications_grey_600_24dp"
@@ -23,10 +23,12 @@
         android:title="@string/notification_setting" />
 
     <Preference
+        android:key="helpPreferenceKey"
         android:icon="@drawable/ic_help_grey_600_24dp"
         android:title="Help">
 
     </Preference>
+
     <Preference
         android:icon="@drawable/ic_assistant_grey_600_24dp"
         android:key="rateusPreferenceKey"
@@ -35,6 +37,7 @@
     </Preference>
 
     <Preference
+        android:key="appInfoPreferenceKey"
         android:icon="@drawable/ic_info_grey_600_24dp"
         android:title="App info">
         <intent
@@ -43,13 +46,16 @@
     </Preference>
 
     <Preference
+        android:key="termsAndPolicyInfoPreferenceKey"
         android:icon="@drawable/ic_description_grey_600_24dp"
         android:title="Terms and Policy">
         <intent
             android:action="android.intent.action.VIEW"
             android:data="http://www.example.com" />
     </Preference>
+
     <Preference
+        android:key="fAQPreferenceKey"
         android:icon="@drawable/ic_question_answer_grey_600_24dp"
         android:title="FAQ">
         <intent
@@ -70,4 +76,5 @@
         android:title="Logout">
 
     </Preference>
+
 </PreferenceScreen>

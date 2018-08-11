@@ -51,7 +51,7 @@
         - post and manage group members</string>
     <string name="at_the_rate_string">\@</string>
     <string name="notification_setting">Notification</string>
-    <string name="notiofcation_summary">Notification On/OFF</string>
+    <string name="notiofcation_summary">Notification ON/OFF</string>
 
 
 </resources>

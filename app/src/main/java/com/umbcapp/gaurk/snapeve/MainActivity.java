@@ -278,15 +278,14 @@ public class MainActivity extends AppCompatActivity implements Listview_communic
                 resultFuture.set(response);
                 System.out.println(" fetch_user_details success response    " + response);
 
-                parseResponse(response);
+                parseResponse(response.getAsJsonObject().getAsJsonArray("userDetails"));
+
             }
         });
     }
 
-    private void parseResponse(JsonElement response) {
-        JsonArray responseJsonArray = response.getAsJsonArray();
-
-        JsonObject userDetailsObj = responseJsonArray.get(0).getAsJsonObject();
+    private void parseResponse(JsonArray userDetails) {
+        JsonObject userDetailsObj = userDetails.get(0).getAsJsonObject();
 
         userName = userDetailsObj.get("user_name").getAsString();
         first_name = userDetailsObj.get("first_name").getAsString();
@@ -301,7 +300,6 @@ public class MainActivity extends AppCompatActivity implements Listview_communic
             dp_url = null;
             System.out.println(" dp_url is null, set local image");
         }
-
 
         //time being untill admin flag is not 0 for all
         try {
@@ -344,24 +342,45 @@ public class MainActivity extends AppCompatActivity implements Listview_communic
             JsonObject feeds_list_object = feedsJsonArray.get(j).getAsJsonObject();
             System.out.println(" feeds_list_object  " + feeds_list_object);
 
-            String img_comment = feeds_list_object.get("img_comment").getAsString();
-            String feed_img_url = feeds_list_object.get("img_url").getAsString();
-            String feed_user_id = feeds_list_object.get("initializer_id").getAsString();
+            String post_img_url = feeds_list_object.get("img_url").getAsString();
+            String post_user_id = feeds_list_object.get("initializer_id").getAsString();
             String post_id = feeds_list_object.get("post_id").getAsString();
             String post_dt = feeds_list_object.get("post_date").getAsString();
             String event_start_dt_time = feeds_list_object.get("event_start_dt_time").getAsString();
             String event_end_dt_time = feeds_list_object.get("event_end_dt_time").getAsString();
             boolean event_all_day_status = feeds_list_object.get("all_day").getAsBoolean();
             String initializer_name = feeds_list_object.get("initializer_name").getAsString();
+            int post_as = feeds_list_object.get("post_as").getAsInt();
+            int event_type = feeds_list_object.get("event_type").getAsInt();
+            int scope = feeds_list_object.get("scope").getAsInt();
+            int location_type = feeds_list_object.get("location_type").getAsInt();
 
-            String dp_url = null;
-
+            String img_comment = null;
             try {
-                dp_url = feeds_list_object.get("dp_url").getAsString();
-                System.out.println("Main activity feeds user dp_url : " + dp_url);
+                img_comment = feeds_list_object.get("img_comment").getAsString();
             } catch (Exception e) {
                 e.printStackTrace();
-                dp_url = null;
+                img_comment = "";
+            }
+
+            String post_grp_id = null;
+            String post_grp_dp_url = null;
+            String post_grp_name = null;
+            try {
+                post_grp_id = feeds_list_object.get("grp_id").getAsString();
+                post_grp_dp_url = feeds_list_object.get("grp_dp_url").getAsString();
+                post_grp_name = feeds_list_object.get("grp_name").getAsString();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            String post_dp_url = null;
+            try {
+                post_dp_url = feeds_list_object.get("dp_url").getAsString();
+                System.out.println("Main activity feeds user dp_url : " + post_dp_url);
+            } catch (Exception e) {
+                e.printStackTrace();
+                post_dp_url = null;
             }
 
             Date date = null;
@@ -374,7 +393,7 @@ public class MainActivity extends AppCompatActivity implements Listview_communic
             post_dt = displayDtFormat.format(date);
             System.out.println("Report Date: " + post_dt);
 
-            event_main_list.add(0, new Event_dash_list_obj(feed_user_id, dp_url, initializer_name, img_comment, post_dt, feed_img_url, post_id, post_dt, event_start_dt_time, event_end_dt_time, event_all_day_status));
+            event_main_list.add(0, new Event_dash_list_obj(post_user_id, post_dp_url, initializer_name, img_comment, post_dt, post_img_url, post_id, post_dt, event_start_dt_time, event_end_dt_time, event_all_day_status, post_as, event_type, location_type, scope, post_grp_name, post_grp_id, post_grp_dp_url));
 
         }
         System.out.println(" event_main_list " + event_main_list.size());
@@ -482,6 +501,12 @@ public class MainActivity extends AppCompatActivity implements Listview_communic
         eventDetailIntent.putExtra("intent_type", 0);
         eventDetailIntent.putExtra("post_id", selectedEvent_dash_list_obj.getPost_id());
         eventDetailIntent.putExtra("user_dp_url", selectedEvent_dash_list_obj.getUser_dp_url());
+
+        eventDetailIntent.putExtra("grp_dp_url", selectedEvent_dash_list_obj.getGrp_dp_url());
+        eventDetailIntent.putExtra("grp_name", selectedEvent_dash_list_obj.getGrp_name());
+        eventDetailIntent.putExtra("grp_id", selectedEvent_dash_list_obj.getGrp_id());
+        eventDetailIntent.putExtra("post_as", selectedEvent_dash_list_obj.getPost_as());
+
         startActivity(eventDetailIntent);
 
     }
