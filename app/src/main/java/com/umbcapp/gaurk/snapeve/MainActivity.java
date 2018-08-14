@@ -86,6 +86,12 @@ public class MainActivity extends AppCompatActivity implements Listview_communic
 
         new SessionManager(getApplicationContext()).checkLogin();
 
+        System.out.println("2 LOGIN USER ID " + new SessionManager(getApplicationContext()).getSpecificUserDetail(SessionManager.KEY_USER_ID));
+        System.out.println("2 LOGIN GRP ID " + new SessionManager(getApplicationContext()).getSpecificUserDetail(SessionManager.KEY_GRP_ID));
+        System.out.println("2 LOGIN KEY_GRP_NAME " + new SessionManager(getApplicationContext()).getSpecificUserDetail(SessionManager.KEY_GRP_NAME));
+        System.out.println("2 LOGIN KEY_REQ_PENDING_GRP_ID " + new SessionManager(getApplicationContext()).getSpecificUserDetail(SessionManager.KEY_REQ_PENDING_GRP_ID));
+
+
         testNotification();
 
         event_main_list = new ArrayList<Event_dash_list_obj>();
@@ -127,6 +133,10 @@ public class MainActivity extends AppCompatActivity implements Listview_communic
                 executeGetFeedsApi();
             }
         });
+
+        System.out.println("GRPP ID " + new SessionManager(getApplicationContext()).getSpecificUserDetail(SessionManager.KEY_GRP_ID));
+
+
     }
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
@@ -294,7 +304,7 @@ public class MainActivity extends AppCompatActivity implements Listview_communic
 
         try {
             dp_url = userDetailsObj.get("dp_url").getAsString();
-            System.out.println("userprofilefragment user dp_url : " + dp_url);
+            System.out.println("Main activity user dp_url : " + dp_url);
         } catch (Exception e) {
             e.printStackTrace();
             dp_url = null;
@@ -318,14 +328,27 @@ public class MainActivity extends AppCompatActivity implements Listview_communic
         } else {
             grp_id = userDetailsObj.get("grp_id").getAsString();
             grp_name = userDetailsObj.get("grp_name").getAsString();
-            grp_dp_url = userDetailsObj.get("grp_dp_url").getAsString();
-            grp_total_pts = userDetailsObj.get("total_pts").getAsInt();
 
+            try {
+                grp_dp_url = userDetailsObj.get("grp_dp_url").getAsString();
+                grp_total_pts = userDetailsObj.get("total_pts").getAsInt();
+                System.out.println("Main activity grp_dp_url : " + grp_dp_url);
+            } catch (Exception e) {
+                e.printStackTrace();
+                grp_dp_url = null;
+                grp_total_pts = 0;
+                System.out.println(" grp_dp_url is null, set local image");
+            }
         }
 
+        System.out.println("SESSION MANAGER 1");
+        System.out.println(grp_dp_url);
+        System.out.println(grp_name);
+        System.out.println(grp_id);
         new SessionManager(getApplicationContext()).setSpecificUserDetail(SessionManager.KEY_GRP_DP_URL, grp_dp_url);
         new SessionManager(getApplicationContext()).setSpecificUserDetail(SessionManager.KEY_GRP_NAME, grp_name);
         new SessionManager(getApplicationContext()).setSpecificUserDetail(SessionManager.KEY_GRP_ID, grp_id);
+        System.out.println("SESSION MANAGER 2");
     }
 
     private void poupulateList(JsonElement response) {
@@ -367,9 +390,13 @@ public class MainActivity extends AppCompatActivity implements Listview_communic
             String post_grp_dp_url = null;
             String post_grp_name = null;
             try {
+                //sequence of these 3 thing sis importatnt
+                //if id is null then everything should be null
+                //if id is present then name will be definatly present but dp_url may or may not be present so it can be kepy last for exception
                 post_grp_id = feeds_list_object.get("grp_id").getAsString();
-                post_grp_dp_url = feeds_list_object.get("grp_dp_url").getAsString();
                 post_grp_name = feeds_list_object.get("grp_name").getAsString();
+
+                post_grp_dp_url = feeds_list_object.get("grp_dp_url").getAsString();
             } catch (Exception e) {
                 e.printStackTrace();
             }

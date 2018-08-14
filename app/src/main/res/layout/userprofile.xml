@@ -114,7 +114,6 @@
             android:layout_alignTop="@+id/profile_pic_image_view"
             android:layout_toEndOf="@+id/profile_pic_image_view"
             android:padding="5dp"
-            android:text="Horacio Pagani"
             android:textColor="#fff"
             android:textSize="18sp"
             android:textStyle="bold" />
@@ -126,7 +125,6 @@
             android:layout_below="@+id/_user_name"
             android:layout_toEndOf="@+id/profile_pic_image_view"
             android:padding="5dp"
-            android:text="Contributor Level ::"
             android:textColor="#fff"
             android:textStyle="bold" />
 
@@ -138,11 +136,9 @@
             android:layout_below="@+id/_user_name"
             android:maxLength="4"
             android:padding="5dp"
-            android:text="15"
             android:textColor="#fff"
             android:textSize="18sp"
             android:textStyle="bold" />
-
 
         <TextView
             android:id="@+id/leaderboard_text_view"

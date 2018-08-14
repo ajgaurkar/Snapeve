@@ -16,6 +16,8 @@ import android.view.ViewGroup;
 import com.google.gson.JsonObject;
 import com.umbcapp.gaurk.snapeve.Login_snapeve_activity;
 import com.umbcapp.gaurk.snapeve.R;
+import com.umbcapp.gaurk.snapeve.ScheduledRewards;
+import com.umbcapp.gaurk.snapeve.SessionManager;
 import com.umbcapp.gaurk.snapeve.SnapeveFeedback;
 
 public class SettingsFragment extends PreferenceFragment {
@@ -59,6 +61,8 @@ public class SettingsFragment extends PreferenceFragment {
                 break;
 
             case "helpPreferenceKey":
+                startActivity(new Intent(getActivity(), ScheduledRewards.class));
+
                 break;
 
             case "rateusPreferenceKey":
@@ -86,7 +90,8 @@ public class SettingsFragment extends PreferenceFragment {
                 break;
 
             case "logoutPreferenceKey":
-                startActivity(new Intent(getActivity(), Login_snapeve_activity.class));
+                new SessionManager(getActivity()).logoutUser();
+//                startActivity(new Intent(getActivity(), Login_snapeve_activity.class));
                 break;
 
         }

@@ -114,7 +114,7 @@ public class SessionManager {
 
     public String getSpecificUserDetail(String dataKEY) {
 
-        String itemValue = pref.getString(dataKEY, "T_cruise");
+        String itemValue = pref.getString(dataKEY, "default_str_value");
 
         return itemValue;
     }

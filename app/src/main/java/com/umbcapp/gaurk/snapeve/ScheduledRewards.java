@@ -3,14 +3,15 @@ package com.umbcapp.gaurk.snapeve;
 import android.app.ProgressDialog;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
-import android.view.View;
+import android.view.MenuItem;
 import android.widget.ListView;
 
 import com.squareup.picasso.Picasso;
 
-import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -22,7 +23,6 @@ import com.google.common.util.concurrent.SettableFuture;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.umbcapp.gaurk.snapeve.Adapters.CommentsAdapter;
 import com.umbcapp.gaurk.snapeve.Adapters.TopScorerAdapter;
 import com.umbcapp.gaurk.snapeve.Controllers.LeaderboardListItem;
 
@@ -36,7 +36,6 @@ import nl.dionsegijn.konfetti.models.Size;
 public class ScheduledRewards extends AppCompatActivity {
 
     private ProgressDialog progressDialog;
-    private ArrayList<LeaderboardListItem> scorerList;
     private ListView topScorerlistView;
     private CircleImageView scheduled_rewards_profile_pic_image_view;
     private TextView scheduled_rewards_user_fullname_name_textview;
@@ -44,6 +43,10 @@ public class ScheduledRewards extends AppCompatActivity {
     private RelativeLayout scheduled_rewards_main_layout;
     private KonfettiView konfettiView;
     private int width;
+    private ArrayList<LeaderboardListItem> individualScorerList;
+    private ArrayList<LeaderboardListItem> grpScorerList;
+    private ArrayList<LeaderboardListItem> teamMembersList;
+    private TextView scheduled_rewards_runnerup_label;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -55,7 +58,11 @@ public class ScheduledRewards extends AppCompatActivity {
         scheduled_rewards_main_layout = (RelativeLayout) findViewById(R.id.scheduled_rewards_main_layout);
         scheduled_rewards_user_fullname_name_textview = (TextView) findViewById(R.id.scheduled_rewards_user_fullname_name_textview);
         scheduled_rewards_user_name_textview = (TextView) findViewById(R.id.scheduled_rewards_user_name_textview);
+        scheduled_rewards_runnerup_label = (TextView) findViewById(R.id.scheduled_rewards_runnerup_label);
         konfettiView = findViewById(R.id.viewKonfetti);
+
+        BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.scheduled_rewards_bottom_navigation);
+        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
         konfettiView.post(new Runnable() {
             @Override
@@ -67,6 +74,118 @@ public class ScheduledRewards extends AppCompatActivity {
         });
         System.out.println("scheduled_rewards_main_layout width() " + width);
 
+    }
+
+    private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
+            = new BottomNavigationView.OnNavigationItemSelectedListener() {
+
+        public int currentSelectedTab;
+
+        @Override
+        public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+            switch (item.getItemId()) {
+                case R.id.rewards_navigation_user:
+                    System.out.print("rewards_navigation_group");
+                    currentSelectedTab = 1;
+                    showWinners(currentSelectedTab);
+                    return true;
+
+                case R.id.rewards_navigation_group:
+                    currentSelectedTab = 2;
+                    showWinners(currentSelectedTab);
+                    System.out.print("rewards_navigation_group");
+                    return true;
+
+                case R.id.rewards_navigation_team:
+                    currentSelectedTab = 3;
+                    showWinners(currentSelectedTab);
+                    System.out.print("rewards_navigation_team");
+                    return true;
+            }
+            return false;
+        }
+    };
+
+    private void showWinners(int winnerType) {
+        TopScorerAdapter topScorerAdapter = null;
+        ArrayList<LeaderboardListItem> tempList = null;
+        switch (winnerType) {
+            case 1:
+                System.out.println("IN 1");
+
+                tempList = new ArrayList<>(individualScorerList);
+                //setting top person values
+                if (tempList.get(0).getUserPicUrl() == null) {
+                    scheduled_rewards_profile_pic_image_view.setImageResource(R.drawable.avatar_100_3);
+
+                } else {
+                    Picasso.get().load(tempList.get(0).getUserPicUrl()).fit().centerCrop().into(scheduled_rewards_profile_pic_image_view);
+                }
+                scheduled_rewards_user_fullname_name_textview.setText(tempList.get(0).getUserName());
+                scheduled_rewards_user_name_textview.setText("Score this week : " + tempList.get(0).getUserRank());
+
+                //removing top person from list
+                tempList.remove(0);
+
+                if (tempList.size() > 0) {
+                    topScorerAdapter = new TopScorerAdapter(getApplicationContext(), tempList);
+                    scheduled_rewards_runnerup_label.setText("Runner Ups");
+
+                } else {
+                    scheduled_rewards_runnerup_label.setText("No Runner Ups");
+                    System.out.println("NO USER RUNNER UP TO SHOW");
+                }
+
+                break;
+            case 2:
+                System.out.println("IN 2");
+                tempList = new ArrayList<>(grpScorerList);
+                //setting top person values
+                if (tempList.get(0).getUserPicUrl() == null) {
+                    scheduled_rewards_profile_pic_image_view.setImageResource(R.drawable.avatar_100_3);
+                } else {
+                    Picasso.get().load(tempList.get(0).getUserPicUrl()).fit().centerCrop().into(scheduled_rewards_profile_pic_image_view);
+                }
+                scheduled_rewards_user_fullname_name_textview.setText(tempList.get(0).getUserName());
+                scheduled_rewards_user_name_textview.setText("Score this week : " + tempList.get(0).getUserRank());
+
+                //removing top person from list
+                tempList.remove(0);
+
+                if (tempList.size() > 0) {
+                    topScorerAdapter = new TopScorerAdapter(getApplicationContext(), tempList);
+                    scheduled_rewards_runnerup_label.setText("Runner Ups");
+                } else {
+                    scheduled_rewards_runnerup_label.setText("No Runner Ups");
+                    System.out.println("NO GRP RUNNER UP TO SHOW");
+                }
+                break;
+            case 3:
+                System.out.println("IN 3");
+                tempList = new ArrayList<>(teamMembersList);
+                //setting top person values
+                if (tempList.get(0).getUserPicUrl() == null) {
+                    scheduled_rewards_profile_pic_image_view.setImageResource(R.drawable.avatar_100_3);
+                } else {
+                    Picasso.get().load(tempList.get(0).getUserPicUrl()).fit().centerCrop().into(scheduled_rewards_profile_pic_image_view);
+                }
+                scheduled_rewards_user_fullname_name_textview.setText(tempList.get(0).getUserName());
+                scheduled_rewards_user_name_textview.setText("Score this week : " + tempList.get(0).getUserRank());
+
+                //removing top person from list
+                tempList.remove(0);
+
+                if (tempList.size() > 0) {
+                    topScorerAdapter = new TopScorerAdapter(getApplicationContext(), tempList);
+                    scheduled_rewards_runnerup_label.setText("Runner Ups");
+                } else {
+                    scheduled_rewards_runnerup_label.setText("No Runner Ups");
+                    System.out.println("NO TEAM MEMBER RUNNER UP TO SHOW");
+                }
+                break;
+        }
+
+        topScorerlistView.setAdapter(topScorerAdapter);
 
     }
 
@@ -79,6 +198,13 @@ public class ScheduledRewards extends AppCompatActivity {
         progressDialog.create();
 
         JsonObject jsonObjectPostEventParameters = new JsonObject();
+
+        //setting grp_id_param to "NULL" for api
+        String grp_id_param = new SessionManager(getApplicationContext()).getSpecificUserDetail(SessionManager.KEY_GRP_ID);
+        if (grp_id_param == null || grp_id_param.isEmpty() || grp_id_param.equals("null") || grp_id_param.equals("xxxxx____xxxxx")) {
+            grp_id_param = "NULL";
+        }
+        jsonObjectPostEventParameters.addProperty("grp_id", grp_id_param);
 
         final SettableFuture<JsonElement> resultFuture = SettableFuture.create();
         ListenableFuture<JsonElement> serviceFilterFuture = MainActivity.mClient.invokeApi("Fetch_weekly_winners_api", jsonObjectPostEventParameters);
@@ -98,7 +224,7 @@ public class ScheduledRewards extends AppCompatActivity {
                 resultFuture.set(response);
                 System.out.println(" Fetch_weekly_winners_api success response    " + response);
                 progressDialog.dismiss();
-                parseTopScorerResponse(response);
+                divideRewardsData(response);
             }
         });
 
@@ -120,9 +246,176 @@ public class ScheduledRewards extends AppCompatActivity {
 
     }
 
+    private void divideRewardsData(JsonElement response) {
+
+        JsonObject rewardsResponse = response.getAsJsonObject();
+
+        JsonArray individuals = null;
+        individualScorerList = new ArrayList<>();
+        try {
+            individuals = rewardsResponse.getAsJsonArray("individualList");
+            System.out.println("individuals" + individuals);
+            //initialize list before(just in case data is 0)
+            if (individuals.size() > 0) {
+                parseIndividuals(individuals);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        JsonArray groups = null;
+        grpScorerList = new ArrayList<>();
+        try {
+            groups = rewardsResponse.getAsJsonArray("groupList");
+            System.out.println("groups " + groups);
+            //initialize list before(just in case data is 0)
+            if (groups.size() > 0) {
+                parseGroups(groups);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        JsonArray teamMems = null;
+        //initialize list before(just in case data is 0)
+        teamMembersList = new ArrayList<>();
+        try {
+            teamMems = rewardsResponse.getAsJsonArray("teamMembers");
+            System.out.println("teamMems " + teamMems);
+            if (teamMems.size() > 0) {
+                parseTeamMems(teamMems);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        showWinners(1);
+
+    }
+
+    private void parseTeamMems(JsonArray teamMems) {
+        teamMembersList = new ArrayList<LeaderboardListItem>();
+
+        for (int j = 0; j < teamMems.size(); j++) {
+            JsonObject topscorer_list_object = teamMems.get(j).getAsJsonObject();
+            System.out.println(" topscorer_list_object " + topscorer_list_object);
+
+            String dp_url = null;
+            String userId = topscorer_list_object.get("user_id").getAsString();
+            String userName = topscorer_list_object.get("user_name").getAsString();
+            String first_name = topscorer_list_object.get("first_name").getAsString();
+            String last_name = topscorer_list_object.get("last_name").getAsString();
+            String userGroup = "XX";
+            int userRank = topscorer_list_object.get("user_points").getAsInt();
+
+            try {
+                dp_url = topscorer_list_object.get("dp_url").getAsString();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+//            if (j == 0) {
+//
+//                if (dp_url == null) {
+//                    scheduled_rewards_profile_pic_image_view.setImageResource(R.drawable.avatar_100_3);
+//
+//                } else {
+//                    Picasso.get().load(dp_url).fit().centerCrop().into(scheduled_rewards_profile_pic_image_view);
+//                }
+//                scheduled_rewards_user_fullname_name_textview.setText(first_name + " " + last_name);
+//                scheduled_rewards_user_name_textview.setText(userName);
+//
+//            } else {
+            teamMembersList.add(new LeaderboardListItem(userId, userName, userRank, userGroup, dp_url));
+//
+//            }
+
+        }
+
+    }
+
+    private void parseGroups(JsonArray groups) {
+        grpScorerList = new ArrayList<LeaderboardListItem>();
+
+        for (int j = 0; j < groups.size(); j++) {
+            JsonObject topscorer_list_object = groups.get(j).getAsJsonObject();
+            System.out.println(" topscorer_list_object " + topscorer_list_object);
+
+            String grp_dp_url = null;
+            String grp_id = topscorer_list_object.get("grp_id").getAsString();
+            String grp_name = topscorer_list_object.get("grp_name").getAsString();
+
+            //redundant and useless field
+            String userGroup = "XX";
+
+            int grp_points = topscorer_list_object.get("grp_points").getAsInt();
+
+            try {
+                grp_dp_url = topscorer_list_object.get("grp_dp_url").getAsString();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+//            if (j == 0) {
+//
+//                if (dp_url == null) {
+//                    scheduled_rewards_profile_pic_image_view.setImageResource(R.drawable.avatar_100_3);
+//
+//                } else {
+//                    Picasso.get().load(dp_url).fit().centerCrop().into(scheduled_rewards_profile_pic_image_view);
+//                }
+//                scheduled_rewards_user_fullname_name_textview.setText(first_name + " " + last_name);
+//                scheduled_rewards_user_name_textview.setText(userName);
+//
+//            } else {
+            grpScorerList.add(new LeaderboardListItem(grp_id, grp_name, grp_points, userGroup, grp_dp_url));
+//
+//            }
+
+        }
+    }
+
+    private void parseIndividuals(JsonArray individuals) {
+        individualScorerList = new ArrayList<LeaderboardListItem>();
+
+        for (int j = 0; j < individuals.size(); j++) {
+            JsonObject topscorer_list_object = individuals.get(j).getAsJsonObject();
+            System.out.println(" topscorer_list_object " + topscorer_list_object);
+
+            String dp_url = null;
+            String userId = topscorer_list_object.get("user_id").getAsString();
+            String userName = topscorer_list_object.get("user_name").getAsString();
+            String first_name = topscorer_list_object.get("first_name").getAsString();
+            String last_name = topscorer_list_object.get("last_name").getAsString();
+            String userGroup = "XX";
+            int userRank = topscorer_list_object.get("user_points").getAsInt();
+
+            try {
+                dp_url = topscorer_list_object.get("dp_url").getAsString();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+//            if (j == 0) {
+//
+//                if (dp_url == null) {
+//                    scheduled_rewards_profile_pic_image_view.setImageResource(R.drawable.avatar_100_3);
+//
+//                } else {
+//                    Picasso.get().load(dp_url).fit().centerCrop().into(scheduled_rewards_profile_pic_image_view);
+//                }
+//                scheduled_rewards_user_fullname_name_textview.setText(first_name + " " + last_name);
+//                scheduled_rewards_user_name_textview.setText(userName);
+//
+//            } else {
+            individualScorerList.add(new LeaderboardListItem(userId, userName, userRank, userGroup, dp_url));
+//
+//            }
+
+        }
+
+    }
+
     private void parseTopScorerResponse(JsonElement topScorerResponse) {
 
-        scorerList = new ArrayList<LeaderboardListItem>();
+        individualScorerList = new ArrayList<LeaderboardListItem>();
 
         System.out.println(" IN PARSE JASON");
         JsonArray topScorerJSONArray = topScorerResponse.getAsJsonArray();
@@ -156,13 +449,12 @@ public class ScheduledRewards extends AppCompatActivity {
                 scheduled_rewards_user_name_textview.setText(userName);
 
             } else {
-                scorerList.add(new LeaderboardListItem(userId, userName, userRank, userGroup, dp_url));
+                individualScorerList.add(new LeaderboardListItem(userId, userName, userRank, userGroup, dp_url));
 
             }
 
         }
-        TopScorerAdapter topScorerAdapter = new TopScorerAdapter(getApplicationContext(), scorerList);
-        topScorerlistView.setAdapter(topScorerAdapter);
+
 
     }
 }

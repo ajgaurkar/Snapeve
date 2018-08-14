@@ -52,6 +52,11 @@ public class Login_snapeve_activity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login_snapeve);
 
+        System.out.println("1 LOGIN USER ID " + new SessionManager(getApplicationContext()).getSpecificUserDetail(SessionManager.KEY_USER_ID));
+        System.out.println("1 LOGIN GRP ID " + new SessionManager(getApplicationContext()).getSpecificUserDetail(SessionManager.KEY_GRP_ID));
+        System.out.println("1 LOGIN KEY_GRP_NAME " + new SessionManager(getApplicationContext()).getSpecificUserDetail(SessionManager.KEY_GRP_NAME));
+        System.out.println("1 LOGIN KEY_REQ_PENDING_GRP_ID " + new SessionManager(getApplicationContext()).getSpecificUserDetail(SessionManager.KEY_REQ_PENDING_GRP_ID));
+
         login_page_email_edittext = (EditText) findViewById(R.id.login_page_email_edittext);
         login_page_pass_edittext = (EditText) findViewById(R.id.login_page_pass_edittext);
         login_page_login_btn_textview = (TextView) findViewById(R.id.login_page_login_btn_textview);

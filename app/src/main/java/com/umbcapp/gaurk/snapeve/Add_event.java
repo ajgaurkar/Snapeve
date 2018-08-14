@@ -212,6 +212,11 @@ public class Add_event extends AppCompatActivity implements LocationListener {
         similar_button_cardview = (CardView) findViewById(R.id.similar_button_cardview);
         add_event_card_5_rel_layout = (RelativeLayout) findViewById(R.id.add_event_card_5_rel_layout);
 
+        System.out.println("3 LOGIN USER ID " + new SessionManager(getApplicationContext()).getSpecificUserDetail(SessionManager.KEY_USER_ID));
+        System.out.println("3 LOGIN GRP ID " + new SessionManager(getApplicationContext()).getSpecificUserDetail(SessionManager.KEY_GRP_ID));
+        System.out.println("3 LOGIN KEY_GRP_NAME " + new SessionManager(getApplicationContext()).getSpecificUserDetail(SessionManager.KEY_GRP_NAME));
+        System.out.println("3 LOGIN KEY_REQ_PENDING_GRP_ID " + new SessionManager(getApplicationContext()).getSpecificUserDetail(SessionManager.KEY_REQ_PENDING_GRP_ID));
+
         if (new SessionManager(getApplicationContext()).getSpecificUserDetail(SessionManager.KEY_GRP_ID).equals("xxxxx____xxxxx")) {
             //disable post as grp radio btn
             post_as_group_radio.setVisibility(View.GONE);
@@ -222,6 +227,7 @@ public class Add_event extends AppCompatActivity implements LocationListener {
             post_as_group_radio_divider_view.setVisibility(View.VISIBLE);
 //            post_as_group_radio.setText(userDetailsObj.get("grp_name").getAsString());
         }
+
 
         setStartEndDateTime(eventStartDateTime, eventEndDateTime);
 
@@ -1162,6 +1168,8 @@ public class Add_event extends AppCompatActivity implements LocationListener {
         }
 
         jsonObjectPostEventParameters.addProperty("user_id", new SessionManager(getApplicationContext()).getSpecificUserDetail(SessionManager.KEY_USER_ID));
+        //might be xxx__xxx sometimes
+        jsonObjectPostEventParameters.addProperty("user_grp_id", new SessionManager(getApplicationContext()).getSpecificUserDetail(SessionManager.KEY_GRP_ID));
         jsonObjectPostEventParameters.addProperty("location_type", location_type_radio_value);
         jsonObjectPostEventParameters.addProperty("event_type", event_type_radio_value);
         jsonObjectPostEventParameters.addProperty("scope", post_scope_radio_value);

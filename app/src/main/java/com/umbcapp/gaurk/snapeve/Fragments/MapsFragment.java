@@ -102,7 +102,7 @@ public class MapsFragment extends Fragment {
 
         mMapView = (MapView) rootView.findViewById(R.id.mapView);
         maps_loading_events_cardview = (CardView) rootView.findViewById(R.id.maps_loading_events_cardview);
-        FloatingActionButton maps_frag_filter_fab = (FloatingActionButton) rootView.findViewById(R.id.maps_frag_filter_fab);
+//        FloatingActionButton maps_frag_filter_fab = (FloatingActionButton) rootView.findViewById(R.id.maps_frag_filter_fab);
 
         mMapView.onCreate(savedInstanceState);
 
@@ -144,12 +144,12 @@ public class MapsFragment extends Fragment {
             }
         });
 
-        maps_frag_filter_fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showFilterDialog();
-            }
-        });
+//        maps_frag_filter_fab.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                showFilterDialog();
+//            }
+//        });
 
         return rootView;
     }

@@ -130,7 +130,7 @@ public class Dash_Event_ListAdapter extends BaseAdapter {
                 break;
             case 1:
                 viewHolder.list_item_user_name.setText(event_dash_list_obj.getGrp_name());
-
+                System.out.println("ADAPTER " + event_dash_list_obj.getGrp_name());
                 if (event_dash_list_obj.getGrp_dp_url() == null) {
                     viewHolder.list_item_user_img.setImageResource(R.drawable.avatar_100_3);
                 } else {

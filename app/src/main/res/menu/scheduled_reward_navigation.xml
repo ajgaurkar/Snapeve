@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/rewards_navigation_user"
+        android:icon="@drawable/home_96"
+        android:title="All" />
+    <item
+        android:id="@+id/rewards_navigation_group"
+        android:icon="@drawable/geo_points_96"
+        android:title="Groups" />
+    <item
+        android:id="@+id/rewards_navigation_team"
+        android:icon="@drawable/geo_points_96"
+        android:title="My Group" />
+
+</menu>
