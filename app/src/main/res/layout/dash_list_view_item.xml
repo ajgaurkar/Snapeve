@@ -27,7 +27,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="300dp"
                 android:scaleType="centerCrop"
-                android:src="@drawable/my_pic" />
+                android:src="@drawable/login_gradient_bg" />
 
             <!--<TextView-->
             <!--android:id="@+id/textetx"-->
@@ -46,23 +46,23 @@
                 android:layout_height="match_parent"
                 android:layout_alignParentBottom="true"
                 android:layout_below="@+id/dash_list_item_vert_seprtr"
-                android:background="#e6ffffff">
+                android:background="#ffffff">
 
                 <View
                     android:id="@+id/card_bottom_seperator1"
                     android:layout_width="match_parent"
-                    android:layout_height="20dp"
+                    android:layout_height="0dp"
                     android:layout_centerVertical="true" />
 
                 <de.hdodenhof.circleimageview.CircleImageView
                     android:id="@+id/list_item_user_img"
                     android:layout_width="50dp"
                     android:layout_height="match_parent"
-                    android:layout_above="@+id/likes_status_textview"
+                    android:layout_above="@+id/card_bottom_seperator2"
                     android:layout_marginBottom="5dp"
                     android:layout_marginTop="5dp"
                     android:padding="5dp"
-                    android:src="@drawable/my_pic"
+                    android:src="@drawable/avatar_100_3"
                     app:civ_border_color="@color/colorPrimaryDark"
                     app:civ_border_width="2dp" />
 
@@ -95,9 +95,9 @@
                     android:layout_height="wrap_content"
                     android:layout_alignBottom="@+id/list_item_event_statr_end_dt_time_textview"
                     android:layout_alignTop="@+id/list_item_event_statr_end_dt_time_textview"
+                    android:layout_marginStart="-4dp"
                     android:layout_toEndOf="@+id/list_item_user_img"
                     android:padding="2dp"
-                    android:layout_marginStart="-3dp"
                     android:src="@drawable/clock_24" />
 
                 <TextView
@@ -126,9 +126,8 @@
                     android:id="@+id/likes_status_textview"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignBottom="@+id/card_bottom_seperator1"
                     android:layout_alignParentStart="true"
-                    android:layout_alignTop="@+id/card_bottom_seperator1"
+                    android:layout_below="@+id/card_bottom_seperator2"
                     android:layout_marginEnd="5dp"
                     android:layout_marginStart="10dp"
                     android:layout_toStartOf="@+id/post_dt_time_textview"
@@ -141,9 +140,9 @@
                     android:id="@+id/post_dt_time_textview"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignBottom="@+id/card_bottom_seperator1"
+                    android:layout_alignBottom="@+id/list_item_event_statr_end_dt_time_textview"
                     android:layout_alignParentEnd="true"
-                    android:layout_alignTop="@+id/card_bottom_seperator1"
+                    android:layout_alignTop="@+id/list_item_event_statr_end_dt_time_textview"
                     android:layout_marginEnd="10dp"
                     android:layout_marginStart="5dp"
                     android:padding="2dp"
@@ -155,7 +154,8 @@
                     android:id="@+id/list_item_actions_linear_layout"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_below="@+id/card_bottom_seperator2"
+                    android:layout_marginTop="-5dp"
+                    android:layout_below="@+id/likes_status_textview"
                     android:layout_marginEnd="10dp"
                     android:layout_marginStart="10dp"
                     android:orientation="horizontal"

@@ -20,8 +20,13 @@ public class Event_dash_list_obj {
     String grp_name;
     String grp_id;
     String grp_dp_url;
+    int user_like;
+    int user_spam;
+    int total_likes;
+    int total_spam;
+    int total_comments;
 
-    public Event_dash_list_obj(String user_id, String user_dp_url, String user_name, String user_comment, String comment_time, String image_url, String post_id, String post_dt, String post_start_dt_time, String post_end_dt_time, Boolean all_day_status, int post_as, int scope, int location_type, int event_type, String grp_name, String grp_id, String grp_dp_url) {
+    public Event_dash_list_obj(String user_id, String user_dp_url, String user_name, String user_comment, String comment_time, String image_url, String post_id, String post_dt, String post_start_dt_time, String post_end_dt_time, Boolean all_day_status, int post_as, int scope, int location_type, int event_type, String grp_name, String grp_id, String grp_dp_url, int user_like, int user_spam, int total_likes, int total_spam, int total_comments) {
         this.user_id = user_id;
         this.user_dp_url = user_dp_url;
         this.user_name = user_name;
@@ -40,21 +45,12 @@ public class Event_dash_list_obj {
         this.grp_name = grp_name;
         this.grp_id = grp_id;
         this.grp_dp_url = grp_dp_url;
+        this.user_like = user_like;
+        this.user_spam = user_spam;
+        this.total_likes = total_likes;
+        this.total_spam = total_spam;
+        this.total_comments = total_comments;
     }
-
-//    public Event_dash_list_obj(String user_id, String user_dp_url, String user_name, String user_comment, String comment_time, String image_url, String post_id, String post_dt, String post_start_dt_time, String post_end_dt_time, Boolean all_day_status) {
-//        this.user_id = user_id;
-//        this.user_dp_url = user_dp_url;
-//        this.user_name = user_name;
-//        this.user_comment = user_comment;
-//        this.comment_time = comment_time;
-//        this.image_url = image_url;
-//        this.post_id = post_id;
-//        this.post_dt = post_dt;
-//        this.post_start_dt_time = post_start_dt_time;
-//        this.post_end_dt_time = post_end_dt_time;
-//        this.all_day_status = all_day_status;
-//    }
 
     public int getPost_as() {
         return post_as;
@@ -198,5 +194,45 @@ public class Event_dash_list_obj {
 
     public void setImage_url(String image_url) {
         this.image_url = image_url;
+    }
+
+    public int getUser_like() {
+        return user_like;
+    }
+
+    public void setUser_like(int user_like) {
+        this.user_like = user_like;
+    }
+
+    public int getUser_spam() {
+        return user_spam;
+    }
+
+    public void setUser_spam(int user_spam) {
+        this.user_spam = user_spam;
+    }
+
+    public int getTotal_likes() {
+        return total_likes;
+    }
+
+    public void setTotal_likes(int total_likes) {
+        this.total_likes = total_likes;
+    }
+
+    public int getTotal_spam() {
+        return total_spam;
+    }
+
+    public void setTotal_spam(int total_spam) {
+        this.total_spam = total_spam;
+    }
+
+    public int getTotal_comments() {
+        return total_comments;
+    }
+
+    public void setTotal_comments(int total_comments) {
+        this.total_comments = total_comments;
     }
 }

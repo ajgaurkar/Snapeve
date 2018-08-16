@@ -64,6 +64,7 @@ public class Dash_Event_ListAdapter extends BaseAdapter {
             viewHolder.list_item_comment_iv = (ImageView) view.findViewById(R.id.list_item_comment_iv);
             viewHolder.list_item_spam_iv = (ImageView) view.findViewById(R.id.list_item_spam_iv);
             viewHolder.list_item_verify_tv = (TextView) view.findViewById(R.id.list_item_verify_tv);
+            viewHolder.likes_status_textview = (TextView) view.findViewById(R.id.likes_status_textview);
             viewHolder.list_item_post_dt_time = (TextView) view.findViewById(R.id.post_dt_time_textview);
             viewHolder.list_item_event_statr_end_dt_time_textview = (TextView) view.findViewById(R.id.list_item_event_statr_end_dt_time_textview);
             viewHolder.list_item_comment_tv = (TextView) view.findViewById(R.id.list_item_comment_tv);
@@ -78,7 +79,6 @@ public class Dash_Event_ListAdapter extends BaseAdapter {
             viewHolder = (ViewHolder) view.getTag();
         }
         Event_dash_list_obj event_dash_list_obj = event_dash_list.get(position);
-
 
         DateFormat feedsDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSX");
 
@@ -113,6 +113,50 @@ public class Dash_Event_ListAdapter extends BaseAdapter {
         Picasso.get().load(event_dash_list_obj.getImage_url()).fit().centerCrop().into(viewHolder.main_card_imageview);
         viewHolder.list_item_event_title.setText(event_dash_list_obj.getUser_comment());
         viewHolder.list_item_post_dt_time.setText(event_dash_list_obj.getPost_dt());
+
+        System.out.println("event_dash_list_obj.getUser_likes() " + event_dash_list_obj.getUser_like());
+        System.out.println("event_dash_list_obj.getUser_spam() " + event_dash_list_obj.getUser_spam());
+        System.out.println("event_dash_list_obj.getTotal_likes() " + event_dash_list_obj.getTotal_likes());
+        System.out.println("event_dash_list_obj.getTotal_spam() " + event_dash_list_obj.getTotal_spam());
+        System.out.println("event_dash_list_obj.getTotal_comments() " + event_dash_list_obj.getTotal_comments());
+
+        //set count of likes/spam/comments
+        String actionCountString = "";
+        if (event_dash_list_obj.getTotal_likes() > 0) {
+            actionCountString = "• " + event_dash_list_obj.getTotal_likes() + " Verified ";
+        }
+        if (event_dash_list_obj.getTotal_spam() > 0) {
+            actionCountString = actionCountString + " • " + event_dash_list_obj.getTotal_spam() + " Marked Spam";
+        }
+        if (event_dash_list_obj.getTotal_comments() > 0) {
+            actionCountString = actionCountString + " • " + event_dash_list_obj.getTotal_comments() + " Commented";
+        }
+        if (actionCountString.equals("")) {
+            viewHolder.likes_status_textview.setVisibility(View.GONE);
+        } else {
+            viewHolder.likes_status_textview.setVisibility(View.VISIBLE);
+            viewHolder.likes_status_textview.setText(actionCountString);
+        }
+        //set user like/spam icons
+
+        switch (event_dash_list_obj.getUser_like()) {
+            case 0:
+                viewHolder.list_item_verify_iv.setImageResource(R.drawable.approve_light_grey_48);
+                break;
+
+            case 1:
+                viewHolder.list_item_verify_iv.setImageResource(R.drawable.approve_blue_48);
+                break;
+        }
+        switch (event_dash_list_obj.getUser_spam()) {
+            case 0:
+                viewHolder.list_item_spam_iv.setImageResource(R.drawable.spam_light_grey_48);
+                break;
+
+            case 1:
+                viewHolder.list_item_spam_iv.setImageResource(R.drawable.spam_orange_48);
+                break;
+        }
 
         switch (event_dash_list_obj.getPost_as()) {
             //0: individual
@@ -251,5 +295,6 @@ public class Dash_Event_ListAdapter extends BaseAdapter {
         private TextView list_item_event_statr_end_dt_time_textview;
         private TextView list_item_user_name;
         private TextView list_item_post_dt_time;
+        private TextView likes_status_textview;
     }
 }

@@ -235,7 +235,7 @@ public class MainActivity extends AppCompatActivity implements Listview_communic
         progressDialog.create();
         progressDialog.show();
         jsonObjectLoginParameters = new JsonObject();
-        jsonObjectLoginParameters.addProperty("studentId", "check123");
+        jsonObjectLoginParameters.addProperty("logged_in_user_id", new SessionManager(getApplicationContext()).getSpecificUserDetail(SessionManager.KEY_USER_ID));
 
         final SettableFuture<JsonElement> resultFuture = SettableFuture.create();
 //        ListenableFuture<JsonElement> serviceFilterFuture = mClient.invokeApi("Login_api", jsonObjectLoginParameters);
@@ -378,6 +378,40 @@ public class MainActivity extends AppCompatActivity implements Listview_communic
             int scope = feeds_list_object.get("scope").getAsInt();
             int location_type = feeds_list_object.get("location_type").getAsInt();
 
+
+            //getting likes and spam data/count. replace null with 0
+            //5 attributes
+            int total_likes = 0;
+            try {
+                total_likes = feeds_list_object.get("total_likes").getAsInt();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            int total_spam = 0;
+            try {
+                total_spam = feeds_list_object.get("total_spam").getAsInt();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            int user_spam = 0;
+            try {
+                user_spam = feeds_list_object.get("user_spam").getAsInt();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            int user_likes = 0;
+            try {
+                user_likes = feeds_list_object.get("user_likes").getAsInt();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            int total_comments = 0;
+            try {
+                total_comments = feeds_list_object.get("total_comments").getAsInt();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
             String img_comment = null;
             try {
                 img_comment = feeds_list_object.get("img_comment").getAsString();
@@ -420,7 +454,10 @@ public class MainActivity extends AppCompatActivity implements Listview_communic
             post_dt = displayDtFormat.format(date);
             System.out.println("Report Date: " + post_dt);
 
-            event_main_list.add(0, new Event_dash_list_obj(post_user_id, post_dp_url, initializer_name, img_comment, post_dt, post_img_url, post_id, post_dt, event_start_dt_time, event_end_dt_time, event_all_day_status, post_as, event_type, location_type, scope, post_grp_name, post_grp_id, post_grp_dp_url));
+            event_main_list.add(0, new Event_dash_list_obj(post_user_id, post_dp_url, initializer_name, img_comment,
+                    post_dt, post_img_url, post_id, post_dt, event_start_dt_time, event_end_dt_time,
+                    event_all_day_status, post_as, event_type, location_type, scope, post_grp_name, post_grp_id, post_grp_dp_url,
+                    user_likes, user_spam, total_likes, total_spam, total_comments));
 
         }
         System.out.println(" event_main_list " + event_main_list.size());

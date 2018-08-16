@@ -777,21 +777,38 @@ public class EventDetails extends AppCompatActivity implements Listview_communic
             JsonObject attendies_list_object = attendiesJsonArray.get(j).getAsJsonObject();
             System.out.println(" attendies_list_object  " + attendies_list_object);
 
-            String user_id = attendies_list_object.get("USER_ID").getAsString();
-            int attend_status = attendies_list_object.get("ATTEND_STATUS").getAsInt();
-            String user_name = attendies_list_object.get("USER_NAME").getAsString();
-            String first_name = attendies_list_object.get("FIRST_NAME").getAsString();
-            String last_name = attendies_list_object.get("LAST_NAME").getAsString();
+            String user_id = attendies_list_object.get("user_id").getAsString();
+            String user_name = attendies_list_object.get("user_name").getAsString();
+            String first_name = attendies_list_object.get("first_name").getAsString();
+            String last_name = attendies_list_object.get("last_name").getAsString();
+
+
+            // -1 is null
+            // 1 to 3 are statuses
+            int attend_status = -1;
+            try {
+                attend_status = attendies_list_object.get("attend_status").getAsInt();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
             String grp_id = null;
             try {
-                grp_id = attendies_list_object.get("GRP_ID").getAsString();
+                grp_id = attendies_list_object.get("grp_id").getAsString();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            String post_or_event_id = null;
+            try {
+                post_or_event_id = attendies_list_object.get("post_or_event_id").getAsString();
             } catch (Exception e) {
                 e.printStackTrace();
             }
 
             String img_dp_url = null;
             try {
-                img_dp_url = attendies_list_object.get("DP_URL").getAsString();
+                img_dp_url = attendies_list_object.get("dp_url").getAsString();
             } catch (Exception e) {
 
             }
@@ -803,6 +820,7 @@ public class EventDetails extends AppCompatActivity implements Listview_communic
             } else {
                 attendiesGrpMemberArrayList.add(0, new AttendiesListItem(user_id, user_name, 0, attend_status, img_dp_url));
             }
+
         }
 
         populateAttendiesList(0);
