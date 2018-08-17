@@ -4,12 +4,6 @@
     android:layout_height="wrap_content"
     android:padding="10dp">
 
-    <!--<LinearLayout-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:orientation="horizontal"-->
-    <!--android:weightSum="30"-->
-    <!--android:layout_height="wrap_content">-->
-
     <RelativeLayout
         android:id="@+id/add_comment_rel_layout_1"
         android:layout_width="wrap_content"
@@ -17,7 +11,8 @@
         android:layout_marginStart="10dp"
         android:layout_toStartOf="@+id/add_comment_dialog_clear_textview"
         android:background="@drawable/grey_bg_five_corner_round"
-        android:padding="5dp">
+        android:padding="5dp"
+        android:visibility="gone">
 
         <TextView
             android:id="@+id/at_the_rate_lable_textview"
@@ -47,7 +42,8 @@
         android:layout_below="@+id/add_comment_rel_layout_1"
         android:padding="2dp"
         android:text="Optional"
-        android:textSize="11sp" />
+        android:textSize="11sp"
+        android:visibility="gone" />
 
     <TextView
         android:id="@+id/add_comment_dialog_clear_textview"
@@ -61,7 +57,8 @@
         android:gravity="center"
         android:padding="5dp"
         android:text="CLEAR"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        android:visibility="gone" />
 
     <EditText
         android:id="@+id/add_comment_dialog_comment_edittext"
@@ -70,7 +67,7 @@
         android:layout_below="@+id/add_comment_rel_layout_1"
         android:layout_marginEnd="10dp"
         android:layout_marginStart="10dp"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="10dp"
         android:background="@drawable/grey_bg_five_corner_round"
         android:gravity="start"
         android:hint="Add comment"
@@ -78,5 +75,4 @@
         android:minHeight="80dp"
         android:padding="5dp" />
 
-    <!--</LinearLayout>-->
 </RelativeLayout>

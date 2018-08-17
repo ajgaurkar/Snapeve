@@ -97,6 +97,7 @@ public class EventDetails extends AppCompatActivity implements Listview_communic
     private String grp_dp_url;
     private int post_as;
     private String grp_id;
+    private String logged_in_user_grp_id;
     private String grp_name;
 
     @Override
@@ -119,6 +120,8 @@ public class EventDetails extends AppCompatActivity implements Listview_communic
         grp_name = eventDetailIntent.getStringExtra("grp_name");
         grp_id = eventDetailIntent.getStringExtra("grp_id");
         post_as = eventDetailIntent.getIntExtra("post_as", 0);
+
+        logged_in_user_grp_id = new SessionManager(getApplicationContext()).getSpecificUserDetail(SessionManager.KEY_GRP_ID);
 
         System.out.println("EVENT DETAILS ----------");
         System.out.println("user_id : " + user_id);
@@ -645,6 +648,11 @@ public class EventDetails extends AppCompatActivity implements Listview_communic
 
     private void validateCommentResponse(JsonElement response) {
         System.out.println("validateCommentResponse : " + response);
+        if (!response.toString().contains("true")) {
+            Toast.makeText(getApplicationContext(), "Something went wrong. Try again", Toast.LENGTH_SHORT).show();
+            openAddCommentDialog();
+
+        }
     }
 
     //action_to_be_performed 1: insert , 2: delete , 3 : update from 1 to other
@@ -813,13 +821,32 @@ public class EventDetails extends AppCompatActivity implements Listview_communic
 
             }
 
+            if (attend_status == -1) {
+                if (logged_in_user_grp_id.equals(grp_id)) {
+                    attendiesGrpMemberArrayList.add(0, new AttendiesListItem(user_id, user_name, 0, attend_status, img_dp_url));
+                }
+            } else {
+
+                if (grp_id == null) {
+                    attendiesOutGrpMemberArrayList.add(0, new AttendiesListItem(user_id, user_name, 0, attend_status, img_dp_url));
+                } else {
+                    if (logged_in_user_grp_id.equals(grp_id)) {
+                        attendiesGrpMemberArrayList.add(0, new AttendiesListItem(user_id, user_name, 0, attend_status, img_dp_url));
+                    } else {
+                        attendiesOutGrpMemberArrayList.add(0, new AttendiesListItem(user_id, user_name, 0, attend_status, img_dp_url));
+                    }
+                }
+
+            }
+
+
             //MISSING GRP ID IN SESSION MANAGER. NEED TO ADD IT. NEED IT HERE
 //            if(grp_id.equals(new SessionManager(getApplicationContext()).getSpecificUserDetail(SessionManager.KEY)))
-            if (grp_id == null || !(grp_id.equals("fbcc3d0a-15ba-4200-89ce-5c1bb97c7e99"))) {
-                attendiesOutGrpMemberArrayList.add(0, new AttendiesListItem(user_id, user_name, 0, attend_status, img_dp_url));
-            } else {
-                attendiesGrpMemberArrayList.add(0, new AttendiesListItem(user_id, user_name, 0, attend_status, img_dp_url));
-            }
+//            if (grp_id == null || !(grp_id.equals("fbcc3d0a-15ba-4200-89ce-5c1bb97c7e99"))) {
+//                attendiesOutGrpMemberArrayList.add(0, new AttendiesListItem(user_id, user_name, 0, attend_status, img_dp_url));
+//            } else {
+//                attendiesGrpMemberArrayList.add(0, new AttendiesListItem(user_id, user_name, 0, attend_status, img_dp_url));
+//            }
 
         }
 

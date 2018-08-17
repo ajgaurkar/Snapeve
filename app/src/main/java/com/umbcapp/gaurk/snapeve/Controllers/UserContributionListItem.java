@@ -11,8 +11,12 @@ public class UserContributionListItem {
     String image_url;
     String dp_url;
     String description;
+    int total_likes;
+    int total_spam;
+    int total_comments;
+    int post_as;
 
-    public UserContributionListItem(String post_id, String user_id, String user_name, String first_name, String last_name, String created_at_dt_time, String image_url, String dp_url, String description) {
+    public UserContributionListItem(String post_id, String user_id, String user_name, String first_name, String last_name, String created_at_dt_time, String image_url, String dp_url, String description, int total_likes, int total_spam, int total_comments, int post_as) {
         this.post_id = post_id;
         this.user_id = user_id;
         this.user_name = user_name;
@@ -22,6 +26,42 @@ public class UserContributionListItem {
         this.image_url = image_url;
         this.dp_url = dp_url;
         this.description = description;
+        this.total_likes = total_likes;
+        this.total_spam = total_spam;
+        this.total_comments = total_comments;
+        this.post_as = post_as;
+    }
+
+    public int getPost_as() {
+        return post_as;
+    }
+
+    public void setPost_as(int post_as) {
+        this.post_as = post_as;
+    }
+
+    public int getTotal_likes() {
+        return total_likes;
+    }
+
+    public void setTotal_likes(int total_likes) {
+        this.total_likes = total_likes;
+    }
+
+    public int getTotal_spam() {
+        return total_spam;
+    }
+
+    public void setTotal_spam(int total_spam) {
+        this.total_spam = total_spam;
+    }
+
+    public int getTotal_comments() {
+        return total_comments;
+    }
+
+    public void setTotal_comments(int total_comments) {
+        this.total_comments = total_comments;
     }
 
     public String getPost_id() {

@@ -5,6 +5,7 @@ import android.app.FragmentTransaction;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -12,12 +13,17 @@ import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.text.DateFormat;
@@ -71,6 +77,13 @@ public class MainActivity extends AppCompatActivity implements Listview_communic
     private String grp_name;
     private String grp_dp_url;
     private int grp_total_pts;
+    private Spinner add_comment_dialog_user_name_spinner;
+    private TextView add_comment_dialog_clear_textview;
+    private EditText add_comment_dialog_comment_edittext;
+    private String tempCommentDescVar;
+    private int server_action_like = 0;
+    private int server_action_spam = 0;
+    int selcted_item_position = -1;
 //    private Button refreshBtn;
 
     @Override
@@ -465,13 +478,122 @@ public class MainActivity extends AppCompatActivity implements Listview_communic
         main_event_list_view.setAdapter(dash_event_listAdapter);
     }
 
+    private void openAddCommentDialog(final int selectedItemPosition) {
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
+        LayoutInflater flater = this.getLayoutInflater();
+        View view = flater.inflate(R.layout.add_comment_dialog, null);
+        alertDialog.setView(view);
+        alertDialog.setTitle("Add comment");
+        alertDialog.setCancelable(false);
+
+
+        add_comment_dialog_user_name_spinner = (Spinner) view.findViewById(R.id.add_comment_dialog_user_name_spinner);
+
+//        add_comment_dialog_clear_textview = (TextView) view.findViewById(R.id.add_comment_dialog_clear_textview);
+        add_comment_dialog_comment_edittext = (EditText) view.findViewById(R.id.add_comment_dialog_comment_edittext);
+        add_comment_dialog_comment_edittext.setText(tempCommentDescVar);
+
+//        add_comment_dialog_clear_textview.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                add_comment_dialog_user_name_spinner.setSelection(0);
+//            }
+//        });
+
+        alertDialog.setPositiveButton("Comment", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                validateAndPostComment(add_comment_dialog_comment_edittext.getText().toString().trim(), selectedItemPosition);
+            }
+        });
+        alertDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+            }
+        });
+
+        alertDialog.show();
+    }
+
+    private void validateAndPostComment(String comment, final int selectedItemPosition) {
+
+        String[] userIdArray = {null, "13e2388c-5102-4e91-980d-fc97d044a483",
+                "ed77236d-0526-4019-b77e-9cdae29b9017",
+                "f034e41d-42e5-48c1-8b2e-9d5e79d1c7ed",
+                "1a4bb4a2-0afa-4c9e-9ea6-22b5789baad7",
+                "73d62c6f-1c32-420a-89c5-89c987ed5aa3"};
+
+        tempCommentDescVar = comment;
+//        tempCommentSpinnerVar = selectedItemPosition;
+
+        if (!comment.equals("")) {
+            final ProgressDialog mProgressDialog = new ProgressDialog(this);
+            mProgressDialog.setIndeterminate(true);
+            mProgressDialog.setMessage("Commenting. Please wait...");
+            mProgressDialog.setCanceledOnTouchOutside(false);
+            mProgressDialog.setCancelable(false);
+            mProgressDialog.show();
+
+            JsonObject jsonObjectPostEventParameters = new JsonObject();
+
+            jsonObjectPostEventParameters.addProperty("source_user_id", new SessionManager(getApplicationContext()).getSpecificUserDetail(SessionManager.KEY_USER_ID));
+//            jsonObjectPostEventParameters.addProperty("target_user_id", userIdArray[selectedItemPosition]);
+            jsonObjectPostEventParameters.addProperty("target_user_id", userIdArray[0]);
+            jsonObjectPostEventParameters.addProperty("post_id", event_main_list.get(selectedItemPosition).getPost_id());
+            jsonObjectPostEventParameters.addProperty("commentDate", Calendar.getInstance().getTimeInMillis());
+            jsonObjectPostEventParameters.addProperty("comment", comment);
+
+            final SettableFuture<JsonElement> resultFuture = SettableFuture.create();
+            ListenableFuture<JsonElement> serviceFilterFuture = MainActivity.mClient.invokeApi("image_comments_api", jsonObjectPostEventParameters);
+
+            Futures.addCallback(serviceFilterFuture, new FutureCallback<JsonElement>() {
+                @Override
+                public void onFailure(Throwable exception) {
+                    resultFuture.setException(exception);
+                    Toast.makeText(getApplicationContext(), "Something went wrong. Try again", Toast.LENGTH_SHORT).show();
+
+                    openAddCommentDialog(selectedItemPosition);
+
+                    System.out.println(" image_comments_api exception    " + exception);
+                    mProgressDialog.dismiss();
+                }
+
+                @Override
+                public void onSuccess(JsonElement response) {
+                    resultFuture.set(response);
+                    System.out.println(" image_comments_api success response    " + response);
+                    validateCommentResponse(response, selectedItemPosition);
+
+                    //reset values if success otherwise need these values o repopulate dialog if api call or validation failed
+//                    tempCommentSpinnerVar = 0;
+                    tempCommentDescVar = "";
+                    mProgressDialog.dismiss();
+                }
+            });
+        } else {
+            Toast.makeText(getApplicationContext(), "Comment field empty. Try again", Toast.LENGTH_SHORT).show();
+            openAddCommentDialog(selectedItemPosition);
+
+        }
+    }
+
+    private void validateCommentResponse(JsonElement response, int selectedItemPosition) {
+
+        System.out.println("validateCommentResponse : " + response);
+        if (!response.toString().contains("true")) {
+            Toast.makeText(getApplicationContext(), "Something went wrong. Try again", Toast.LENGTH_SHORT).show();
+            openAddCommentDialog(selectedItemPosition);
+
+        }
+    }
 
     @Override
     public void main_event_listview_element_clicked(int position, int click_code) {
 
-        System.out.print("position " + position);
+        selcted_item_position = position;
+        System.out.print("position " + selcted_item_position);
         System.out.print("click_code " + click_code);
-//        Toast.makeText(getApplicationContext(),""+position,Toast.LENGTH_SHORT).show();
 
         int currentstatus = 0;
         String userComment = "";
@@ -479,29 +601,127 @@ public class MainActivity extends AppCompatActivity implements Listview_communic
 
 
             case 0:
-                Log.d("click_code ", +position + " " + click_code);
-                openEventDetails(position);
+                Log.d("click_code ", +selcted_item_position + " " + click_code);
+                openEventDetails(selcted_item_position);
                 break;
             case 1:
-                Log.d("click_code ", +position + " " + click_code);
+                Log.d("click_code ", +selcted_item_position + " " + click_code);
+                calculateAction(selcted_item_position, click_code);
 
-                actionEvent(event_main_list.get(position).getPost_id(), event_main_list.get(position).getUser_id(), currentstatus, click_code, userComment);
+//                actionEvent(event_main_list.get(position).getPost_id(), event_main_list.get(position).getUser_id(), currentstatus, click_code, userComment);
+
                 break;
             case 2:
                 userComment = "Test comment";
-                Log.d("click_code ", +position + " " + click_code);
-                actionEvent(event_main_list.get(position).getPost_id(), event_main_list.get(position).getUser_id(), currentstatus, click_code, userComment);
-
+                Log.d("click_code ", +selcted_item_position + " " + click_code);
+//                actionEvent(event_main_list.get(position).getPost_id(), event_main_list.get(position).getUser_id(), currentstatus, click_code, userComment);
+                openAddCommentDialog(selcted_item_position);
                 break;
             case 3:
-                System.out.print("click_code " + position + " " + click_code);
-                actionEvent(event_main_list.get(position).getPost_id(), event_main_list.get(position).getUser_id(), currentstatus, click_code, userComment);
+                calculateAction(selcted_item_position, click_code);
+
+                System.out.print("click_code " + selcted_item_position + " " + click_code);
+//                actionEvent(event_main_list.get(position).getPost_id(), event_main_list.get(position).getUser_id(), currentstatus, click_code, userComment);
                 break;
         }
 
     }
 
-    private void actionEvent(String post_id, String user_id, int currentstatus, int click_code, String userComment) {
+    private void calculateAction(int selcted_item_position, int click_code) {
+        //action_to_be_performed 1: insert , 2: delete , 3 : update from 1 to other
+        //click_code 1: like , 2:comment(not used here) 3:spam
+
+        //get Server values of likes and spam for action
+        server_action_like = event_main_list.get(selcted_item_position).getUser_like();
+        server_action_spam = event_main_list.get(selcted_item_position).getUser_spam();
+
+        switch (click_code) {
+            case 1:
+                if (server_action_like + server_action_spam == 0) {
+                    System.out.println("ACTION ACTION : insert like");
+                    actionEvent(1, click_code, "Test");
+
+                }
+                if (server_action_like + server_action_spam == 1) {
+                    if (server_action_like == 1) {
+                        System.out.println("ACTION ACTION : delete like");
+                        actionEvent(2, click_code, "Test");
+
+                    }
+                    if (server_action_like == 0) {
+                        System.out.println("ACTION ACTION : show dialog - update SPAM -> LIKE ");
+
+                        openLikeSpamConfirmationDialog(click_code, selcted_item_position);
+
+                    }
+                }
+                break;
+
+            case 3:
+                if (server_action_like + server_action_spam == 0) {
+                    System.out.println("ACTION ACTION : insert spam");
+                    actionEvent(1, click_code, "Test");
+
+                }
+                if (server_action_like + server_action_spam == 1) {
+                    if (server_action_spam == 1) {
+                        System.out.println("ACTION ACTION : delete spam");
+                        actionEvent(2, click_code, "Test");
+
+                    }
+                    if (server_action_spam == 0) {
+                        System.out.println("ACTION ACTION : show dialog - update LIKE -> SPAM ");
+                        openLikeSpamConfirmationDialog(click_code, selcted_item_position);
+
+                    }
+                }
+                break;
+        }
+    }
+
+    private void openLikeSpamConfirmationDialog(final int click_code, int selcted_position) {
+        System.out.print("IN DIALOG");
+        AlertDialog.Builder builder1 = new AlertDialog.Builder(MainActivity.this);
+        builder1.setCancelable(false);
+
+        if (click_code == 1) {
+            System.out.println("Do you wish to UNSPAM and LIKE");
+            builder1.setMessage("Do you wish to UNSPAM and VERIFY");
+
+        }
+        if (click_code == 3) {
+            System.out.println("Do you wish to UNLIKE and SPAM");
+            builder1.setMessage("Do you wish to DISPROVE and SPAM");
+
+        }
+
+        builder1.setPositiveButton(
+                "CONFIRM",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+                        actionEvent(3, click_code, "Test");
+
+                    }
+                });
+
+        builder1.setNegativeButton(
+                "CANCLE",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+                    }
+                });
+
+        AlertDialog alertDialog = builder1.create();
+        alertDialog.show();
+
+
+    }
+
+    //action_to_be_performed 1: insert , 2: delete , 3 : update from 1 to other
+    //click_code 1: like , 2:comment(not used here) 3:spam
+    private void actionEvent(int action_to_be_performed, int click_code, String userComment) {
         JsonObject jsonObjectPostEventParameters = new JsonObject();
 
 
@@ -519,15 +739,15 @@ public class MainActivity extends AppCompatActivity implements Listview_communic
         }
 
         jsonObjectPostEventParameters.addProperty("userComment", userComment);
-        jsonObjectPostEventParameters.addProperty("user_id", user_id);
-        jsonObjectPostEventParameters.addProperty("post_id", post_id);
+        jsonObjectPostEventParameters.addProperty("user_id", new SessionManager(getApplicationContext()).getSpecificUserDetail(SessionManager.KEY_USER_ID));
+        jsonObjectPostEventParameters.addProperty("post_id", event_main_list.get(selcted_item_position).getPost_id());
         jsonObjectPostEventParameters.addProperty("click_code", click_code);
+        jsonObjectPostEventParameters.addProperty("action_to_be_performed", action_to_be_performed);
 
 
         final ProgressDialog mProgressDialog = new ProgressDialog(this);
         mProgressDialog.setIndeterminate(true);
-        mProgressDialog.setMessage("Posting. Please wait...");
-
+        mProgressDialog.setMessage("Updating. Please wait...");
 
         mProgressDialog.show();
 
@@ -546,16 +766,28 @@ public class MainActivity extends AppCompatActivity implements Listview_communic
             public void onSuccess(JsonElement response) {
                 resultFuture.set(response);
                 System.out.println(" actionEvent success response    " + response);
+
+                parseActionResponse(response);
                 mProgressDialog.dismiss();
 
             }
         });
     }
 
-    private void openEventDetails(int position) {
+    private void parseActionResponse(JsonElement response) {
+        System.out.println("validateActionResponse : " + response);
+        if (!response.toString().contains("true")) {
+            Toast.makeText(getApplicationContext(), "Something went wrong. Try again", Toast.LENGTH_SHORT).show();
+
+        } else {
+            executeGetFeedsApi();
+        }
+    }
+
+    private void openEventDetails(int selcted_item_position) {
 
 
-        Event_dash_list_obj selectedEvent_dash_list_obj = event_main_list.get(position);
+        Event_dash_list_obj selectedEvent_dash_list_obj = event_main_list.get(selcted_item_position);
         Intent eventDetailIntent = new Intent(getApplicationContext(), EventDetails.class);
         eventDetailIntent.putExtra("user_id", selectedEvent_dash_list_obj.getUser_id());
         eventDetailIntent.putExtra("user_name", selectedEvent_dash_list_obj.getUser_name());

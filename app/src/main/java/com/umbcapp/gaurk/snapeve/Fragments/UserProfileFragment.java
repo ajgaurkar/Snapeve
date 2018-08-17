@@ -123,7 +123,7 @@ public class UserProfileFragment extends Fragment {
     private String grp_dp_url;
     private String temp_total_pts;
     private TextView user_name_textview;
-    private int grp_total_pts;
+    private int grp_total_pts = 0;
     private int user_total_pts;
     private TextView user_points;
     private int admin_flag = 0;
@@ -260,6 +260,28 @@ public class UserProfileFragment extends Fragment {
             String post_date = grpPost_Data_list_object.get("createdAt").getAsString();
             String description = grpPost_Data_list_object.get("description").getAsString();
             String img_url = grpPost_Data_list_object.get("img_url").getAsString();
+            int post_as = grpPost_Data_list_object.get("post_as").getAsInt();
+
+            //getting likes and spam data/count. replace null with 0
+            //3 attributes
+            int total_likes = 0;
+            try {
+                total_likes = grpPost_Data_list_object.get("total_likes").getAsInt();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            int total_spam = 0;
+            try {
+                total_spam = grpPost_Data_list_object.get("total_spam").getAsInt();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            int total_comments = 0;
+            try {
+                total_comments = grpPost_Data_list_object.get("total_comments").getAsInt();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
 
             String dp_url = null;
             try {
@@ -282,7 +304,10 @@ public class UserProfileFragment extends Fragment {
                 e.printStackTrace();
             }
 
-            grpContributionList.add(0, new UserContributionListItem(post_id, member_id, user_name, first_name, last_name, displayDtFormat.format(postDate), img_url, dp_url, description));
+            //skip adding tem to list if post_as = 2 (anonymous post)
+            if (post_as != 2) {
+                grpContributionList.add(0, new UserContributionListItem(post_id, member_id, user_name, first_name, last_name, displayDtFormat.format(postDate), img_url, dp_url, description, total_likes, total_spam, total_comments, post_as));
+            }
 
         }
 
@@ -427,6 +452,29 @@ public class UserProfileFragment extends Fragment {
             String post_id = user_activity_list_object.get("post_id").getAsString();
             String user_id = user_activity_list_object.get("user_id").getAsString();
             String img_url = user_activity_list_object.get("img_url").getAsString();
+            int post_as = user_activity_list_object.get("post_as").getAsInt();
+
+
+            //getting likes and spam data/count. replace null with 0
+            //3 attributes
+            int total_likes = 0;
+            try {
+                total_likes = user_activity_list_object.get("total_likes").getAsInt();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            int total_spam = 0;
+            try {
+                total_spam = user_activity_list_object.get("total_spam").getAsInt();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            int total_comments = 0;
+            try {
+                total_comments = user_activity_list_object.get("total_comments").getAsInt();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
 
             String dp_url = null;
             try {
@@ -448,8 +496,10 @@ public class UserProfileFragment extends Fragment {
                 e.printStackTrace();
             }
 
-//            userContributionList.add(0, new CommentsListItem(user_id, "", user_name, "", description, displayDtFormat.format(postDate), dp_url));
-            userContributionList.add(0, new UserContributionListItem(post_id, user_id, user_name, first_name, last_name, displayDtFormat.format(postDate), img_url, dp_url, description));
+            //skip adding tem to list if post_as = 2 (anonymous post)
+            if (post_as != 2) {
+                userContributionList.add(0, new UserContributionListItem(post_id, user_id, user_name, first_name, last_name, displayDtFormat.format(postDate), img_url, dp_url, description, total_likes, total_spam, total_comments, post_as));
+            }
 
             loadContributionList(0);
 
@@ -478,7 +528,6 @@ public class UserProfileFragment extends Fragment {
             profile_pic_image_view.setImageResource(R.drawable.avatar_100_3);
         }
 
-
         //time being untill admin flag is not 0 for all
         try {
             admin_flag = Integer.parseInt(userDetailsObj.get("group_admin_flag").toString());
@@ -494,14 +543,17 @@ public class UserProfileFragment extends Fragment {
             grp_dp_url = "xxxxx_____xxxxx";
 
         } else {
-            grp_id = userDetailsObj.get("grp_id").toString();
-            grp_name = userDetailsObj.get("grp_name").toString();
-            grp_dp_url = userDetailsObj.get("grp_dp_url").toString();
+            grp_id = userDetailsObj.get("grp_id").getAsString();
+            grp_name = userDetailsObj.get("grp_name").getAsString();
+//            grp_dp_url = userDetailsObj.get("grp_dp_url").getAsString();
             grp_total_pts = Integer.parseInt(userDetailsObj.get("total_pts").toString());
 
-            grp_id = grp_id.substring(1, grp_id.length() - 1);
-            grp_name = grp_name.substring(1, grp_name.length() - 1);
-            grp_dp_url = grp_dp_url.substring(1, grp_dp_url.length() - 1);
+            grp_dp_url = null;
+            try {
+                grp_dp_url = userDetailsObj.get("grp_dp_url").getAsString();
+            } catch (Exception e) {
+
+            }
         }
 
         if (admin_flag == 1) {
@@ -659,6 +711,8 @@ public class UserProfileFragment extends Fragment {
                     grp_profile_btn.setBackground(getResources().getDrawable(R.drawable.text_selection_right_seleted));
                     user_profile_btn.setBackground(getResources().getDrawable(R.drawable.text_selection_left_unseleted));
                     user_type_selection_status = 1;
+
+                    System.out.println("XXXXX grp_dp_url " + grp_dp_url);
                     if (grp_dp_url == null) {
                         profile_pic_image_view.setImageResource(R.drawable.avatar_100_3);
                     } else {
@@ -756,6 +810,8 @@ public class UserProfileFragment extends Fragment {
                         dissmissAlertDialog.dismiss();
                         switch (currentActiveTab) {
                             case 1:
+                                System.out.println("check dp url " + dp_url);
+
                                 if (dp_url == null) {
                                     Toast.makeText(getActivity(), "No Image found", Toast.LENGTH_SHORT).show();
                                 } else {
@@ -764,7 +820,7 @@ public class UserProfileFragment extends Fragment {
                                 }
                                 break;
                             case 2:
-                                if (grp_dp_url == null || grp_dp_url.equals("xxxxx____xxxxx") ) {
+                                if (grp_dp_url == null || grp_dp_url.equals("xxxxx____xxxxx")) {
                                     Toast.makeText(getActivity(), "No Image found", Toast.LENGTH_SHORT).show();
                                 } else {
                                     full_screen_imageview_layout.setVisibility(View.VISIBLE);

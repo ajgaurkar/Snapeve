@@ -103,25 +103,26 @@ public class Leaderboard extends AppCompatActivity implements Listview_communica
 
         mLayoutManager = new LinearLayoutManager(getApplicationContext());
 
-        leader_board_recyclerview.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                if (user_type_selection_status == 0) {
-
-                    int selectedItemPosition = leader_board_recyclerview.getChildLayoutPosition(v);
-//                    leaderBoardIndList.get(selectedItemPosition).getUserId();
-                    System.out.println(leaderBoardIndList.get(selectedItemPosition).getUserId());
-
-                }
-                if (user_type_selection_status == 1) {
-
-                    int selectedItemPosition = leader_board_recyclerview.getChildLayoutPosition(v);
-//                    leaderBoardGrpList.get(selectedItemPosition).getUserId();
-                    System.out.println(leaderBoardGrpList.get(selectedItemPosition).getUserId());
-                }
-            }
-        });
+        //COMMENTED AS OF NOW TO STOP REDIRECTION TO ANOTHER PAGE (also commented listviewcommunicator method)
+//        leader_board_recyclerview.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//
+//                if (user_type_selection_status == 0) {
+//
+//                    int selectedItemPosition = leader_board_recyclerview.getChildLayoutPosition(v);
+////                    leaderBoardIndList.get(selectedItemPosition).getUserId();
+//                    System.out.println(leaderBoardIndList.get(selectedItemPosition).getUserId());
+//
+//                }
+//                if (user_type_selection_status == 1) {
+//
+//                    int selectedItemPosition = leader_board_recyclerview.getChildLayoutPosition(v);
+////                    leaderBoardGrpList.get(selectedItemPosition).getUserId();
+//                    System.out.println(leaderBoardGrpList.get(selectedItemPosition).getUserId());
+//                }
+//            }
+//        });
 
 
     }
@@ -178,10 +179,17 @@ public class Leaderboard extends AppCompatActivity implements Listview_communica
             JsonObject ranking_list_object = rankingJSONArray.get(j).getAsJsonObject();
             System.out.println(" ranking_list_object  " + ranking_list_object);
 
-            String user_id = ranking_list_object.get("id").toString();
-            String user_name = ranking_list_object.get("user_name").toString();
+            String user_id = ranking_list_object.get("id").getAsString();
+            String user_name = ranking_list_object.get("user_name").getAsString();
             int user_points = Integer.parseInt(ranking_list_object.get("user_points").toString());
-            String dp_url = ranking_list_object.get("dp_url").toString();
+
+            String dp_url = null;
+            try {
+                dp_url = ranking_list_object.get("dp_url").getAsString();
+                System.out.println("userprofilefragment user dp_url : " + dp_url);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
 
             if (user_points > maxIndividualRank) {
                 maxIndividualRank = user_points;
@@ -191,11 +199,6 @@ public class Leaderboard extends AppCompatActivity implements Listview_communica
             System.out.println(" user_name " + user_name);
             System.out.println(" user_points " + user_points);
             System.out.println(" dp_url " + dp_url);
-
-            //Remove " from start and end from every string
-            user_id = user_id.substring(1, user_id.length() - 1);
-            user_name = user_name.substring(1, user_name.length() - 1);
-            dp_url = dp_url.substring(1, dp_url.length() - 1);
 
             leaderBoardIndList.add(new LeaderboardListItem(user_id, user_name, user_points, "Grp UMBC", dp_url));
 
@@ -218,10 +221,16 @@ public class Leaderboard extends AppCompatActivity implements Listview_communica
             JsonObject ranking_list_object = rankingJSONArray.get(j).getAsJsonObject();
             System.out.println(" ranking_list_object  " + ranking_list_object);
 
-            String grp_id = ranking_list_object.get("id").toString();
-            String grp_name = ranking_list_object.get("grp_name").toString();
+            String grp_id = ranking_list_object.get("id").getAsString();
+            String grp_name = ranking_list_object.get("grp_name").getAsString();
             int grp_points = Integer.parseInt(ranking_list_object.get("total_pts").toString());
-            String grp_dp_url = ranking_list_object.get("grp_dp_url").toString();
+
+            String grp_dp_url = null;
+            try {
+                grp_dp_url = ranking_list_object.get("grp_dp_url").toString();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
 
             if (grp_points > maxGrpRank) {
                 maxGrpRank = grp_points;
@@ -231,11 +240,6 @@ public class Leaderboard extends AppCompatActivity implements Listview_communica
             System.out.println(" grp_name " + grp_name);
             System.out.println(" grp_points " + grp_points);
             System.out.println(" grp_dp_url " + grp_dp_url);
-
-            //Remove " from start and end from every string
-            grp_id = grp_id.substring(1, grp_id.length() - 1);
-            grp_name = grp_name.substring(1, grp_name.length() - 1);
-            grp_dp_url = grp_dp_url.substring(1, grp_dp_url.length() - 1);
 
             leaderBoardGrpList.add(new LeaderboardListItem(grp_id, "place holder", grp_points, grp_name, grp_dp_url));
 
@@ -267,26 +271,26 @@ public class Leaderboard extends AppCompatActivity implements Listview_communica
     public void main_event_listview_element_clicked(int position, int click_code) {
         System.out.println("position :" + position);
 
+        //COMMENTED AS OF NOW TO STOP REDIRECTION TO ANOTHER PAGE
 
-
-        if (user_type_selection_status == 0) {
-            leaderBoardIndList.get(position);
-            System.out.println(leaderBoardIndList.get(position).getUserId());
-
-
-            Intent browseUserIntent = new Intent(getApplicationContext(), BrowseUserProfile.class);
-            browseUserIntent.putExtra("user_id",leaderBoardIndList.get(position).getUserId());
-            startActivity(browseUserIntent);
-        }
-        if (user_type_selection_status == 1) {
-            leaderBoardGrpList.get(position);
-            System.out.println(leaderBoardGrpList.get(position).getUserId());
-
-            Intent browseGrpIntent = new Intent(getApplicationContext(), BrowseGroupProfile.class);
-            browseGrpIntent.putExtra("grp_id",leaderBoardGrpList.get(position).getUserId());
-            startActivity(browseGrpIntent);
-
-        }
+//        if (user_type_selection_status == 0) {
+//            leaderBoardIndList.get(position);
+//            System.out.println(leaderBoardIndList.get(position).getUserId());
+//
+//
+//            Intent browseUserIntent = new Intent(getApplicationContext(), BrowseUserProfile.class);
+//            browseUserIntent.putExtra("user_id", leaderBoardIndList.get(position).getUserId());
+//            startActivity(browseUserIntent);
+//        }
+//        if (user_type_selection_status == 1) {
+//            leaderBoardGrpList.get(position);
+//            System.out.println(leaderBoardGrpList.get(position).getUserId());
+//
+//            Intent browseGrpIntent = new Intent(getApplicationContext(), BrowseGroupProfile.class);
+//            browseGrpIntent.putExtra("grp_id", leaderBoardGrpList.get(position).getUserId());
+//            startActivity(browseGrpIntent);
+//
+//        }
 
     }
 

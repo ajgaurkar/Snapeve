@@ -87,9 +87,16 @@ public class LeaderBoardAdapter extends RecyclerView.Adapter<LeaderBoardAdapter.
         }
 
         holder.userRank.setText(String.valueOf(selectedLeaderboardListItem.getUserRank()));
-        Picasso.get().load(selectedLeaderboardListItem.getUserPicUrl())
-                .fit().centerCrop().into(holder.userPic);
-        System.out.println("INSIDE LeaderBoardAdapter");
+
+        System.out.println("LEADERBOARD DP URL " + selectedLeaderboardListItem.getUserPicUrl());
+
+        if (selectedLeaderboardListItem.getUserPicUrl() == null) {
+            System.out.println("LEADERBOARD DP URL IF");
+            holder.userPic.setImageResource(R.drawable.avatar_100_3);
+        } else {
+            System.out.println("LEADERBOARD DP URL ELSE");
+            Picasso.get().load(selectedLeaderboardListItem.getUserPicUrl()).fit().centerCrop().into(holder.userPic);
+        }
 
         holder.recycler_parent.setOnClickListener(new View.OnClickListener() {
 

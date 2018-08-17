@@ -78,11 +78,28 @@ public class UserContributionAdapter extends BaseAdapter {
                     .fit().centerCrop().into(viewHolder.user_contri_list_item_user_pic_img_view);
         }
 
+        //set count of likes/spam/comments
+        String actionCountString = "";
+        if (selectedUserContributionListItem.getTotal_likes() > 0) {
+            actionCountString = "• " + selectedUserContributionListItem.getTotal_likes() + " Verified ";
+        }
+        if (selectedUserContributionListItem.getTotal_spam() > 0) {
+            actionCountString = actionCountString + " • " + selectedUserContributionListItem.getTotal_spam() + " Marked Spam";
+        }
+        if (selectedUserContributionListItem.getTotal_comments() > 0) {
+            actionCountString = actionCountString + " • " + selectedUserContributionListItem.getTotal_comments() + " Commented";
+        }
+        if (actionCountString.equals("")) {
+            viewHolder.user_contri_list_item_like_status_text_view.setVisibility(View.GONE);
+        } else {
+            viewHolder.user_contri_list_item_like_status_text_view.setVisibility(View.VISIBLE);
+            viewHolder.user_contri_list_item_like_status_text_view.setText(actionCountString);
+        }
+
         viewHolder.user_contri_list_item_user_time_text_view.setText(selectedUserContributionListItem.getCreated_at_dt_time());
 
         viewHolder.user_contri_list_item_description_text_view.setText(selectedUserContributionListItem.getDescription());
         viewHolder.user_contri_list_item_user_name_text_view.setText(selectedUserContributionListItem.getUser_name());
-        viewHolder.user_contri_list_item_like_status_text_view.setText("12 Likes  24 Comments  3 Spam");
 
         return view;
     }
