@@ -158,6 +158,8 @@ public class UserProfileFragment extends Fragment {
 
     //1 : user tab, 2 : grp tab
     private int currentActiveTab = 1;
+    private int user_admin_flag = 0;
+    private int privilege_type = 1;
 
 
     public UserProfileFragment() {
@@ -516,6 +518,20 @@ public class UserProfileFragment extends Fragment {
         last_name = userDetailsObj.get("last_name").getAsString();
         user_total_pts = Integer.parseInt(userDetailsObj.get("user_points").toString());
 
+        privilege_type = 0;
+        try {
+            privilege_type = Integer.parseInt(userDetailsObj.get("privilege_type").toString());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        user_admin_flag = 0;
+        try {
+            user_admin_flag = Integer.parseInt(userDetailsObj.get("group_admin_flag").toString());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         setRewardProgress(user_total_pts, 0);
 
         try {
@@ -556,7 +572,7 @@ public class UserProfileFragment extends Fragment {
             }
         }
 
-        if (admin_flag == 1) {
+        if (privilege_type == 3) {
             user_profile_settings_imageview.setVisibility(View.VISIBLE);
         } else {
             user_profile_settings_imageview.setVisibility(View.INVISIBLE);
@@ -655,9 +671,8 @@ public class UserProfileFragment extends Fragment {
         user_profile_settings_imageview.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (admin_flag == 1) {
-
-                    openSettingsMenu();
+                if (privilege_type == 3) {
+                    openSettingsMenu(admin_flag);
                 }
             }
         });
@@ -951,10 +966,14 @@ public class UserProfileFragment extends Fragment {
         user_profile_member_count_text_view_icon.setVisibility(View.GONE);
     }
 
-    private void openSettingsMenu() {
+    private void openSettingsMenu(int admin_flag) {
 
         PopupMenu popup = new PopupMenu(getActivity(), user_profile_settings_imageview);
-        popup.getMenuInflater().inflate(R.menu.user_profile_3_settings_popup_menu, popup.getMenu());
+        if (admin_flag == 1) {
+            popup.getMenuInflater().inflate(R.menu.user_profile_3_settings_popup_menu, popup.getMenu());
+        } else {
+            popup.getMenuInflater().inflate(R.menu.user_profile_2_settings_popup_menu, popup.getMenu());
+        }
         popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
@@ -965,6 +984,7 @@ public class UserProfileFragment extends Fragment {
                     manageMembersIntent.putExtra("Grp_id", grp_id);
                     manageMembersIntent.putExtra("Grp_name", grp_name);
                     manageMembersIntent.putExtra("Grp_dp_url", grp_dp_url);
+                    manageMembersIntent.putExtra("user_admin_flag", user_admin_flag);
                     startActivity(manageMembersIntent);
 
                 } else if (item.getTitle().equals("Leave Group")) {

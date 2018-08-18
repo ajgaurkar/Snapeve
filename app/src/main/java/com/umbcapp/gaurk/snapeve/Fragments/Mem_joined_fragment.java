@@ -50,6 +50,7 @@ public class Mem_joined_fragment extends Fragment {
     private int selectedMemberPosition = -1;
     private String grp_id;
     private AlertDialog close_Dialog_temp_obj;
+    private int user_admin_flag = 0;
 
     public Mem_joined_fragment() {
     }
@@ -68,6 +69,8 @@ public class Mem_joined_fragment extends Fragment {
 
         String mem_joined_response = getArguments().getString("mem_joined_response");
         grp_id = getArguments().getString("grp_id");
+        user_admin_flag = getArguments().getInt("user_admin_flag");
+        System.out.println("mem_joined_response " + mem_joined_response);
 
         mem_joined_frag_listview = (ListView) rootView.findViewById(R.id.mem_joined_frag_listview);
 
@@ -111,6 +114,15 @@ public class Mem_joined_fragment extends Fragment {
             } catch (Exception e) {
                 e.printStackTrace();
             }
+
+            int group_admin_flag = 0;
+            try {
+                group_admin_flag = Integer.parseInt(grpDetails_list_object.get("group_admin_flag").toString());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+
 //            System.out.println(" user_id " + user_id);
 //            System.out.println(" user_name " + user_name);
 //            System.out.println(" first_name " + first_name);
@@ -120,7 +132,7 @@ public class Mem_joined_fragment extends Fragment {
             if (!user_id.equals(new SessionManager(getActivity()).getSpecificUserDetail(SessionManager.KEY_USER_ID))) {
                 //req status is sent like privilege type
                 //this is mem_joined frag hence req_status is not present. instead privilege_type is needed that will tell the privilege_type of joined user
-                groupList.add(new CreateGroupListItem(user_name, first_name, last_name, user_id, privilege_type, email, dp_url));
+                groupList.add(new CreateGroupListItem(user_name, first_name, last_name, user_id, privilege_type, email, dp_url, group_admin_flag));
             } else {
                 System.out.println("List item skipped : item same as admin");
             }
@@ -149,11 +161,33 @@ public class Mem_joined_fragment extends Fragment {
 
         final ArrayList<String> memJoinedOptionsList = new ArrayList<>();
         memJoinedOptionsList.add("View Profile");
-        memJoinedOptionsList.add(getString(R.string.set_privilege_set_3));
-        memJoinedOptionsList.add(getString(R.string.set_privilege_set_1));
-        memJoinedOptionsList.add(getString(R.string.set_privilege_set_2));
-        memJoinedOptionsList.add("Make admin");
-        memJoinedOptionsList.add("Remove from group");
+
+        if (groupList.get(memebr_position).getGrpAdminFlag() == 0) {
+            memJoinedOptionsList.add("Modify user Privilege to:");
+            memJoinedOptionsList.add("          " + getString(R.string.set_privilege_set_3));
+            memJoinedOptionsList.add("          " + getString(R.string.set_privilege_set_1));
+            memJoinedOptionsList.add("          " + getString(R.string.set_privilege_set_2));
+            memJoinedOptionsList.add("Remove from group");
+
+            //set pointr showing current user privileges
+            switch (groupList.get(memebr_position).getUserReqStatus()) {
+
+                case 1:
+                    memJoinedOptionsList.set(2, "  -->   " + getString(R.string.set_privilege_set_3));
+                    break;
+                case 2:
+                    memJoinedOptionsList.set(3, "  -->   " + getString(R.string.set_privilege_set_1));
+                    break;
+                case 3:
+                    memJoinedOptionsList.set(4, "  -->   " + getString(R.string.set_privilege_set_2));
+                    break;
+
+            }
+        }
+        if (user_admin_flag == 1) {
+            memJoinedOptionsList.add("Make admin");
+        }
+
 
         ListView mem_joined_frag_options_listview = (ListView) view.findViewById(R.id.mem_joined_frag_options_listview);
         ArrayAdapter adapter = new ArrayAdapter<String>(getActivity(), R.layout.members_joined_options_list_item, memJoinedOptionsList);
@@ -201,21 +235,29 @@ public class Mem_joined_fragment extends Fragment {
                         startActivity(userProfileIntent);
 
                         break;
-
                     case 1:
+//                        System.out.println(memJoinedOptionsList.get(position));
+//                        mem_joined_dialog_selected_option = position;
+
+                        //dummy list element. used as header for privilege list indented items
+
+                        Toast.makeText(getActivity(), "Select any privilege type below", Toast.LENGTH_SHORT).show();
+                        break;
+
+                    case 2:
                         //req status I.E. privilege type in this frag
                         if (groupList.get(memebr_position).getUserReqStatus() == 1) {
                             Toast.makeText(getActivity(), "Already existing privilege", Toast.LENGTH_SHORT).show();
                         } else {
                             System.out.println(memJoinedOptionsList.get(position));
-                            mem_joined_frag_confirm_textview.setText("Confirm granting privileges only to READ");
+                            mem_joined_frag_confirm_textview.setText("Confirm granting privileges only to READ group posts");
                             mem_joined_frag_confirm_textview.setVisibility(View.VISIBLE);
                             mem_joined_frag_btn_lin_layout.setVisibility(View.VISIBLE);
                             mem_joined_dialog_selected_option = position;
                         }
                         break;
 
-                    case 2:
+                    case 3:
                         if (groupList.get(memebr_position).getUserReqStatus() == 2) {
                             Toast.makeText(getActivity(), "Already existing privilege", Toast.LENGTH_SHORT).show();
                         } else {
@@ -227,7 +269,7 @@ public class Mem_joined_fragment extends Fragment {
                         }
                         break;
 
-                    case 3:
+                    case 4:
                         if (groupList.get(memebr_position).getUserReqStatus() == 3) {
                             Toast.makeText(getActivity(), "Already existing privilege", Toast.LENGTH_SHORT).show();
                         } else {
@@ -239,15 +281,6 @@ public class Mem_joined_fragment extends Fragment {
                         }
                         break;
 
-                    case 4:
-                        mem_joined_frag_confirm_textview.setText("Confirm giving rights of admin. Doing this will result in your admin rights to get revoked");
-                        mem_joined_frag_btn_lin_layout.setVisibility(View.VISIBLE);
-                        mem_joined_frag_confirm_textview.setVisibility(View.VISIBLE);
-                        System.out.println(memJoinedOptionsList.get(position));
-                        mem_joined_dialog_selected_option = position;
-
-                        break;
-
                     case 5:
                         mem_joined_frag_confirm_textview.setText("Confirm removing the user from this group");
                         mem_joined_frag_btn_lin_layout.setVisibility(View.VISIBLE);
@@ -256,6 +289,16 @@ public class Mem_joined_fragment extends Fragment {
                         mem_joined_dialog_selected_option = position;
 
                         break;
+
+                    case 6:
+                        mem_joined_frag_confirm_textview.setText("Confirm giving rights of admin. Doing this will result in your admin rights to get revoked");
+                        mem_joined_frag_btn_lin_layout.setVisibility(View.VISIBLE);
+                        mem_joined_frag_confirm_textview.setVisibility(View.VISIBLE);
+                        System.out.println(memJoinedOptionsList.get(position));
+                        mem_joined_dialog_selected_option = position;
+
+                        break;
+
                 }
             }
         });
@@ -268,25 +311,69 @@ public class Mem_joined_fragment extends Fragment {
     private void takeAction(int mem_joined_dialog_selected_option) {
 
         switch (mem_joined_dialog_selected_option) {
-            case 1:
+
+            case 2:
                 modifyUserPrivileges(groupList.get(selectedMemberPosition).getUserId(), grp_id, 1);
                 break;
-            case 2:
-                modifyUserPrivileges(groupList.get(selectedMemberPosition).getUserId(), grp_id, 2);
-                break;
             case 3:
-                modifyUserPrivileges(groupList.get(selectedMemberPosition).getUserId(), grp_id, 3);
+                modifyUserPrivileges(groupList.get(selectedMemberPosition).getUserId(), grp_id, 2);
 
                 break;
             case 4:
-//                modifyUserPrivileges(groupList.get(selectedMemberPosition).getUserId(), grp_id, 4);
+                modifyUserPrivileges(groupList.get(selectedMemberPosition).getUserId(), grp_id, 3);
 
                 break;
             case 5:
+                //                modifyUserPrivileges(groupList.get(selectedMemberPosition).getUserId(), grp_id, 4);
+                break;
+            case 6:
+                updateAdminRights(grp_id,groupList.get(selectedMemberPosition).getUserId(), new SessionManager(getActivity()).getSpecificUserDetail(SessionManager.KEY_USER_ID));
 //                modifyUserPrivileges(groupList.get(selectedMemberPosition).getUserId(), grp_id, 5);
-
                 break;
         }
+    }
+
+    private void updateAdminRights(String grp_id, String newAdminId, String oldAdminId) {
+        final ProgressDialog progressDialog = new ProgressDialog(getActivity());
+        progressDialog.setTitle("Updating, Please wait...");
+        progressDialog.create();
+        progressDialog.show();
+        progressDialog.setCanceledOnTouchOutside(false);
+        progressDialog.setCancelable(false);
+        JsonObject jsonObjectParameters = new JsonObject();
+        jsonObjectParameters.addProperty("newAdminId", newAdminId);
+        jsonObjectParameters.addProperty("grpId", grp_id);
+        jsonObjectParameters.addProperty("oldAdminId", oldAdminId);
+
+        final SettableFuture<JsonElement> resultFuture = SettableFuture.create();
+        ListenableFuture<JsonElement> serviceFilterFuture = MainActivity.mClient.invokeApi("make_other_user_admin_api", jsonObjectParameters);
+
+        Futures.addCallback(serviceFilterFuture, new FutureCallback<JsonElement>() {
+            @Override
+            public void onFailure(Throwable exception) {
+                resultFuture.setException(exception);
+                progressDialog.dismiss();
+                System.out.println(" make_other_user_admin_api exception    " + exception);
+
+            }
+
+            @Override
+            public void onSuccess(JsonElement response) {
+                resultFuture.set(response);
+                progressDialog.dismiss();
+                System.out.println(" make_other_user_admin_api success response    " + response);
+
+                Toast.makeText(getActivity(), response.toString(), Toast.LENGTH_SHORT).show();
+
+                if (response.toString().contains("true")) {
+                    System.out.println("response OK");
+                    ((ManageGroups) getActivity()).fetchAllMemberData(1);
+
+                }
+
+            }
+        });
+
     }
 
     private void modifyUserPrivileges(String userId, String grpId, int modify_code) {
@@ -323,7 +410,7 @@ public class Mem_joined_fragment extends Fragment {
 
                 if (response.toString().contains("true")) {
                     System.out.println("response OK");
-                    ((ManageGroups) getActivity()).fetchAllFragsData();
+                    ((ManageGroups) getActivity()).fetchAllMemberData(1);
 
                 }
 

@@ -110,7 +110,7 @@ public class RequestPendingFragment extends Fragment {
 //            System.out.println(" last_name " + last_name);
 //            System.out.println(" dp_url " + dp_url);
 
-                groupList.add(new CreateGroupListItem(user_name, first_name, last_name, user_id, 0, email, dp_url));
+                groupList.add(new CreateGroupListItem(user_name, first_name, last_name, user_id, 0, email, dp_url, 0));
             }
         }
         manageGroupAdapter = new ManageGroupAdapter(getActivity(), groupList);
@@ -176,7 +176,7 @@ public class RequestPendingFragment extends Fragment {
 
                 if (response.toString().contains("true")) {
                     System.out.println("response OK");
-                    ((ManageGroups) getActivity()).fetchAllFragsData();
+                    ((ManageGroups) getActivity()).fetchAllMemberData(3);
 
                 }
 

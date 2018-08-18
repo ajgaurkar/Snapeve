@@ -45,10 +45,13 @@
     <string name="play_again">Play Again</string>
     <string name="title_activity_signup_grp_join">Signup_grp_join</string>
 
-    <string name="set_privilege_set_1">Set privilege - Read and Post</string>
-    <string name="set_privilege_set_3">Set privilege - Read only</string>
-    <string name="set_privilege_set_2">Set privilege\n
-        - post and manage group members</string>
+    <string name="set_privilege_set_1">Read and Post</string>
+    <string name="set_privilege_set_3">Read only</string>
+    <string name="set_privilege_set_2">post and manage group members</string>
+    <!--<string name="set_privilege_set_1">Set privilege - Read and Post</string>-->
+    <!--<string name="set_privilege_set_3">Set privilege - Read only</string>-->
+    <!--<string name="set_privilege_set_2">Set privilege\n-->
+    <!-- - post and manage group members</string>-->
     <string name="at_the_rate_string">\@</string>
     <string name="notification_setting">Notification</string>
     <string name="notiofcation_summary">Notification ON/OFF</string>

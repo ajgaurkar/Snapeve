@@ -15,6 +15,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -48,6 +49,7 @@ import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import com.google.common.util.concurrent.FutureCallback;
 import com.google.common.util.concurrent.Futures;
@@ -59,6 +61,10 @@ import com.google.gson.JsonObject;
 import com.microsoft.azure.storage.blob.CloudBlobContainer;
 import com.microsoft.azure.storage.blob.CloudBlockBlob;
 import com.microsoft.windowsazure.mobileservices.MobileServiceClient;
+import com.shashank.sony.fancydialoglib.Animation;
+import com.shashank.sony.fancydialoglib.FancyAlertDialog;
+import com.shashank.sony.fancydialoglib.FancyAlertDialogListener;
+import com.shashank.sony.fancydialoglib.Icon;
 import com.umbcapp.gaurk.snapeve.Adapters.SimilarPostsAdapter;
 import com.umbcapp.gaurk.snapeve.Controllers.SimilarPostsListItem;
 
@@ -1021,8 +1027,34 @@ public class Add_event extends AppCompatActivity implements LocationListener {
                     mProgressDialog.dismiss();
 
                     if (response.toString().equals("true")) {
-                        finish();
+
+
+                        new FancyAlertDialog.Builder(Add_event.this)
+                                .setTitle("Thank You for Your contribution")
+                                .setBackgroundColor(Color.parseColor("#3F51B5"))  //Don't pass R.color.colorvalue
+                                .setMessage("Would you like to share your achievement with your friends")
+                                .setNegativeBtnText("No thanks!")
+                                .setAnimation(Animation.POP)
+                                .isCancellable(false)
+                                .setIcon(R.drawable.achievement_100, Icon.Visible)
+                                .OnNegativeClicked(new FancyAlertDialogListener() {
+                                    @Override
+                                    public void OnClick() {
+//                                        onBackPressed();
+                                        finish();
+                                    }
+                                })
+                                .setPositiveBtnText("Sure")
+                                .setPositiveBtnBackground(Color.parseColor("#303F9F"))//Don't pass R.color.colorvalue
+                                .OnPositiveClicked(new FancyAlertDialogListener() {
+                                    @Override
+                                    public void OnClick() {
+                                        Toast.makeText(Add_event.this,"Ok", Toast.LENGTH_SHORT).show();
+                                    }
+                                })
+                                .build();
                     }
+
 
                 }
             });
