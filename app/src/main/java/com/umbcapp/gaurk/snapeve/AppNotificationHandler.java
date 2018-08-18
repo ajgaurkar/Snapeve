@@ -25,8 +25,8 @@ public class AppNotificationHandler extends NotificationsHandler {
     @Override
     public void onReceive(Context context, Bundle bundle) {
         ctx = context;
-        String nhMessage = bundle.getString("message");
-        System.out.println("in onReceive");
+        String nhMessage = bundle.getString("notification_message");
+        System.out.println("in Notoification on Recive ");
         sendNotification(nhMessage);
     }
 
@@ -45,7 +45,7 @@ public class AppNotificationHandler extends NotificationsHandler {
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(ctx)
                         .setSmallIcon(R.mipmap.ic_launcher)
-                        .setContentTitle("Notification Hub Demo")
+                        .setContentTitle("Snapeve Notification")
                         .setStyle(new NotificationCompat.BigTextStyle()
                                 .bigText(msg))
                         .setSound(defaultSoundUri)

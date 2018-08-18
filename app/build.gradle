@@ -49,6 +49,8 @@ dependencies {
     implementation 'nl.dionsegijn:konfetti:1.1.2'
     implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.2.51'
     implementation 'com.github.Shashank02051997:FancyAlertDialog-Android:0.1'
+    implementation 'com.google.firebase:firebase-inappmessaging-display:17.0.0'
+
 
 }
 apply plugin: 'com.google.gms.google-services'
