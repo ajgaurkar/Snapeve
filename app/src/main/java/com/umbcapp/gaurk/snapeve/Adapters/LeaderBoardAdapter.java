@@ -35,7 +35,6 @@ public class LeaderBoardAdapter extends RecyclerView.Adapter<LeaderBoardAdapter.
         this.user_type_selection_status = user_type_selection_status;
     }
 
-
     public class MyViewHolder extends RecyclerView.ViewHolder {
         public TextView userName;
         public TextView userRank;

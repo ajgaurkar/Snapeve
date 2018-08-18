@@ -109,7 +109,7 @@ public class ApprovalPendingFragment extends Fragment {
                     e.printStackTrace();
                 }
 
-                groupList.add(new CreateGroupListItem(user_name, first_name, last_name, user_id, 0, email, dp_url));
+                groupList.add(new CreateGroupListItem(user_name, first_name, last_name, user_id, 0, email, dp_url,0));
             }
         }
         manageGroupAdapter = new ManageGroupAdapter(getActivity(), groupList);
@@ -175,7 +175,7 @@ public class ApprovalPendingFragment extends Fragment {
 
                 if (response.toString().contains("true")) {
                     System.out.println("response OK");
-                    ((ManageGroups) getActivity()).fetchAllFragsData();
+                    ((ManageGroups) getActivity()).fetchAllMemberData(2);
 
                 }
 

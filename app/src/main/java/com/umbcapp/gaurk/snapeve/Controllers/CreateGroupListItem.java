@@ -9,9 +9,9 @@ public class CreateGroupListItem {
     int userReqStatus;
     String userEmail;
     String userPicUrl;
+    int grpAdminFlag;
 
-
-    public CreateGroupListItem(String userName, String userFirstName, String userLastName, String userId, int userReqStatus, String userEmail, String userPicUrl) {
+    public CreateGroupListItem(String userName, String userFirstName, String userLastName, String userId, int userReqStatus, String userEmail, String userPicUrl, int grpAdminFlag) {
         this.userName = userName;
         this.userFirstName = userFirstName;
         this.userLastName = userLastName;
@@ -19,6 +19,25 @@ public class CreateGroupListItem {
         this.userReqStatus = userReqStatus;
         this.userEmail = userEmail;
         this.userPicUrl = userPicUrl;
+        this.grpAdminFlag = grpAdminFlag;
+    }
+
+//    public CreateGroupListItem(String userName, String userFirstName, String userLastName, String userId, int userReqStatus, String userEmail, String userPicUrl) {
+//        this.userName = userName;
+//        this.userFirstName = userFirstName;
+//        this.userLastName = userLastName;
+//        this.userId = userId;
+//        this.userReqStatus = userReqStatus;
+//        this.userEmail = userEmail;
+//        this.userPicUrl = userPicUrl;
+//    }
+
+    public int getGrpAdminFlag() {
+        return grpAdminFlag;
+    }
+
+    public void setGrpAdminFlag(int grpAdminFlag) {
+        this.grpAdminFlag = grpAdminFlag;
     }
 
     public String getUserFirstName() {

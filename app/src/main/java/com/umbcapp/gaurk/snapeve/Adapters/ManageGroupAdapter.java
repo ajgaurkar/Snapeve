@@ -84,7 +84,11 @@ public class ManageGroupAdapter extends BaseAdapter {
                     .fit().centerCrop().into(viewHolder.create_grp_list_item_user_pic_img_view);
         }
 
-        viewHolder.create_grp_list_item_user_name_text_view.setText(selectedCreateGroupListItem.getUserName());
+        if (selectedCreateGroupListItem.getGrpAdminFlag() == 1) {
+            viewHolder.create_grp_list_item_user_name_text_view.setText(selectedCreateGroupListItem.getUserName() + " (Admin)");
+        } else {
+            viewHolder.create_grp_list_item_user_name_text_view.setText(selectedCreateGroupListItem.getUserName());
+        }
         viewHolder.create_grp_list_item_user_email_text_view.setText(selectedCreateGroupListItem.getUserFirstName() + " " + selectedCreateGroupListItem.getUserLastName());
 
 //        switch (selectedCreateGroupListItem.getUserReqStatus()) {

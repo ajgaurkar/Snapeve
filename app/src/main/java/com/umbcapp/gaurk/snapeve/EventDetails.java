@@ -99,6 +99,10 @@ public class EventDetails extends AppCompatActivity implements Listview_communic
     private String grp_id;
     private String logged_in_user_grp_id;
     private String grp_name;
+    private int server_like_count = 0;
+    private int server_spam_count = 0;
+    private int server_comment_count = 0;
+    private TextView event_details_actions_count_textview;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -146,6 +150,7 @@ public class EventDetails extends AppCompatActivity implements Listview_communic
         event_detail_user_post_dt_time_text_view = (TextView) findViewById(R.id.event_detail_user_post_dt_time_text_view);
         event_detail_user_comment_text_view = (TextView) findViewById(R.id.event_detail_user_comment_text_view);
         event_details_comment_label_tv = (TextView) findViewById(R.id.event_details_comment_label_tv);
+        event_details_actions_count_textview = (TextView) findViewById(R.id.event_details_actions_count_textview);
         event_detail_profile_pic_image_view = (CircleImageView) findViewById(R.id.event_detail_profile_pic_image_view);
         event_details_comments_loading_progress_bar = (ProgressBar) findViewById(R.id.event_details_comments_loading_progress_bar);
 
@@ -203,6 +208,12 @@ public class EventDetails extends AppCompatActivity implements Listview_communic
                 break;
         }
 
+        event_details_comments_tap_to_load_textview.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                fetchCommentsApi(post_id);
+            }
+        });
 
 //        commentsList.add(new CommentsListItem("u1", "Jhon Paul", "speaking to a a packed crowd at Sanders Theatre, a nobel laureate discussing her most recent scientific discovery, or the Harvard senior talent show, there’s always something happening at Harvard.", "Jan 05", "https://ais2017.umbc.edu/files/2017/09/umbc.jpg"));
 //        commentsList.add(new CommentsListItem("u1", "Jhon Paul", "Good", "Jan 05", "https://ais2017.umbc.edu/files/2017/09/umbc.jpg"));
@@ -476,6 +487,28 @@ public class EventDetails extends AppCompatActivity implements Listview_communic
             System.out.println("actionJsonArray.get(0) :" + actionJsonArray.get(0).getAsJsonObject().get("action_spam").getAsInt());
             server_action_spam = actionJsonArray.get(0).getAsJsonObject().get("action_spam").getAsInt();
             server_action_like = actionJsonArray.get(0).getAsJsonObject().get("action_like").getAsInt();
+
+            //getting likes and spam data/count. replace null with 0
+            //5 attributes
+            server_like_count = 0;
+            try {
+                server_like_count = actionJsonArray.get(0).getAsJsonObject().get("like_count").getAsInt();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            server_spam_count = 0;
+            try {
+                server_spam_count = actionJsonArray.get(0).getAsJsonObject().get("action_spam").getAsInt();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            server_comment_count = 0;
+            try {
+                server_comment_count = actionJsonArray.get(0).getAsJsonObject().get("total_comments").getAsInt();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
         } else {
             System.out.println(" NO Actions found");
         }
@@ -540,6 +573,27 @@ public class EventDetails extends AppCompatActivity implements Listview_communic
         } else {
             list_item_spam_iv.setImageResource(R.drawable.spam_orange_48);
         }
+
+
+        //set count of likes/spam/comments
+        String actionCountString = "";
+        if (server_like_count > 0) {
+            actionCountString = "• " + server_like_count + " Verified ";
+        }
+        if (server_spam_count > 0) {
+            actionCountString = actionCountString + " • " + server_spam_count + " Marked Spam";
+        }
+        if (server_comment_count > 0) {
+            actionCountString = actionCountString + " • " + server_comment_count + " Commented";
+        }
+        event_details_actions_count_textview.setText(actionCountString);
+
+//        if (actionCountString.equals("")) {
+//            event_details_actions_count_textview.setVisibility(View.GONE);
+//        } else {
+//            event_details_actions_count_textview.setVisibility(View.VISIBLE);
+//            event_details_actions_count_textview.setText(actionCountString);
+//        }
 
     }
 
@@ -652,6 +706,9 @@ public class EventDetails extends AppCompatActivity implements Listview_communic
             Toast.makeText(getApplicationContext(), "Something went wrong. Try again", Toast.LENGTH_SHORT).show();
             openAddCommentDialog();
 
+        } else {
+            Toast.makeText(getApplicationContext(), "Comment Added", Toast.LENGTH_SHORT).show();
+            fetchCommentsApi(post_id);
         }
     }
 

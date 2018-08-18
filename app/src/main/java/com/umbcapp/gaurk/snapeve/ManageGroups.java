@@ -24,6 +24,8 @@ import com.umbcapp.gaurk.snapeve.Fragments.ApprovalPendingFragment;
 import com.umbcapp.gaurk.snapeve.Fragments.Mem_joined_fragment;
 import com.umbcapp.gaurk.snapeve.Fragments.RequestPendingFragment;
 
+import java.util.ArrayList;
+
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class ManageGroups extends Activity {
@@ -52,6 +54,8 @@ public class ManageGroups extends Activity {
     private TextView create_group_cardview_req_pending_mem_textview;
     private TextView create_group_cardview_req_sent_mem_textview;
     private int currentFragPosition;
+    private int desiredFragPosition = 1;
+    private int user_admin_flag;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -62,6 +66,7 @@ public class ManageGroups extends Activity {
         grp_id = intent.getStringExtra("Grp_id");
         grp_name = intent.getStringExtra("Grp_name");
         grp_dp_url = intent.getStringExtra("Grp_dp_url");
+        user_admin_flag = intent.getIntExtra("user_admin_flag",0);
 
         fragmentManager = getFragmentManager();
         add_mem_fragment = new Add_mem_fragment();
@@ -75,7 +80,8 @@ public class ManageGroups extends Activity {
         progressDialog.setCanceledOnTouchOutside(false);
         progressDialog.setCancelable(false);
 
-        fetchAllFragsData();
+//        fetchAllFragsData(0);
+        fetchAllMemberData(1);
 
         add_mem_layout = (RelativeLayout) findViewById(R.id.add_mem_add_mem_layout);
         mem_joined_layout = (RelativeLayout) findViewById(R.id.add_mem_joined_mem_layout);
@@ -94,99 +100,36 @@ public class ManageGroups extends Activity {
         create_group_cardview_req_sent_bottom_view = (View) findViewById(R.id.create_group_cardview_req_sent_bottom_view);
         create_group_cardview_add_mem_bottom_view = (View) findViewById(R.id.create_group_cardview_add_mem_bottom_view);
 
-//        Picasso.get().load("https://thumbs.dreamstime.com/b/group-friends-having-fun-beach-summer-holidays-vacation-happy-people-concept-34394694.jpg")
-//                .fit().centerCrop().into(create_group_profile_pic_image_view);
-
         create_group_user_name_text_view.setText(grp_name);
-        Picasso.get().load(grp_dp_url).fit().centerCrop().into(create_group_profile_pic_image_view);
+        if (grp_dp_url == null || grp_dp_url.equals("")) {
+            create_group_profile_pic_image_view.setImageResource(R.drawable.avatar_100_3);
 
-        //first fragment to be loaded at startup
-//        fragmentTransaction = fragmentManager.beginTransaction();
-//        fragmentTransaction.replace(R.id.create_group_list_layout, mem_joined_fragment);
-//        fragmentTransaction.commit();
+        } else {
+            Picasso.get().load(grp_dp_url).fit().centerCrop().into(create_group_profile_pic_image_view);
+        }
 
         add_mem_layout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 modifyViews(4);
-
-//                create_group_cardview_bottom_view.setVisibility(View.INVISIBLE);
-//                create_group_cardview_req_pending_bottom_view.setVisibility(View.INVISIBLE);
-//                create_group_cardview_req_sent_bottom_view.setVisibility(View.INVISIBLE);
-//                create_group_cardview_add_mem_bottom_view.setVisibility(View.VISIBLE);
-//
-//
-//                fragmentTransaction = fragmentManager.beginTransaction();
-//                fragmentTransaction.remove(mem_joined_fragment);
-//                fragmentTransaction.remove(req_pending_fragment);
-//                fragmentTransaction.remove(approval_pending_fragment);
-//
-//                fragmentTransaction.replace(R.id.create_group_list_layout, add_mem_fragment);
-//                fragmentTransaction.commit();
-
             }
         });
         mem_joined_layout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 modifyViews(1);
-
-//                create_group_cardview_bottom_view.setVisibility(View.VISIBLE);
-//                create_group_cardview_req_pending_bottom_view.setVisibility(View.INVISIBLE);
-//                create_group_cardview_req_sent_bottom_view.setVisibility(View.INVISIBLE);
-//                create_group_cardview_add_mem_bottom_view.setVisibility(View.INVISIBLE);
-//
-//                fragmentTransaction = fragmentManager.beginTransaction();
-//                fragmentTransaction.remove(add_mem_fragment);
-//                fragmentTransaction.remove(req_pending_fragment);
-//                fragmentTransaction.remove(approval_pending_fragment);
-//
-//                fragmentTransaction.replace(R.id.create_group_list_layout, mem_joined_fragment);
-//                fragmentTransaction.commit();
-
             }
         });
         req_pend_layout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 modifyViews(3);
-
-//                create_group_cardview_bottom_view.setVisibility(View.INVISIBLE);
-//                create_group_cardview_req_pending_bottom_view.setVisibility(View.INVISIBLE);
-//                create_group_cardview_req_sent_bottom_view.setVisibility(View.VISIBLE);
-//                create_group_cardview_add_mem_bottom_view.setVisibility(View.INVISIBLE);
-//
-//                fragmentTransaction = fragmentManager.beginTransaction();
-//                fragmentTransaction.remove(mem_joined_fragment);
-//                fragmentTransaction.remove(add_mem_fragment);
-//                fragmentTransaction.remove(approval_pending_fragment);
-//
-//                fragmentTransaction.replace(R.id.create_group_list_layout, req_pending_fragment);
-//                fragmentTransaction.commit();
-
             }
         });
         appr_pend_layout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 modifyViews(2);
-
-//                create_group_cardview_bottom_view.setVisibility(View.INVISIBLE);
-//                create_group_cardview_req_pending_bottom_view.setVisibility(View.VISIBLE);
-//                create_group_cardview_req_sent_bottom_view.setVisibility(View.INVISIBLE);
-//                create_group_cardview_add_mem_bottom_view.setVisibility(View.INVISIBLE);
-//
-//                fragmentTransaction = fragmentManager.beginTransaction();
-//
-//                fragmentTransaction.remove(mem_joined_fragment);
-//                fragmentTransaction.remove(add_mem_fragment);
-//                fragmentTransaction.remove(req_pending_fragment);
-//
-//                fragmentTransaction.replace(R.id.create_group_list_layout, approval_pending_fragment);
-//                fragmentTransaction.commit();
-
             }
         });
 
@@ -264,115 +207,17 @@ public class ManageGroups extends Activity {
         }
     }
 
-    public void fetchAllFragsData() {
-
-        String userId = new SessionManager(getApplicationContext()).getSpecificUserDetail(SessionManager.KEY_USER_ID);
-        fetchJoinedMembers(userId);
-        fetchAvailableMembers("DUMMY_PLACEHOLDER_ID");
-        fetchGroupRequestDetails(userId);
-//        fetchGroupReqDetails(new SessionManager(getApplicationContext()).getSpecificUserDetail(SessionManager.KEY_USER_ID));
-    }
-
-    private void fetchGroupRequestDetails(String admin_id) {
+    public void fetchAllMemberData(int position) {
+        desiredFragPosition = position;
         progressDialog.create();
         progressDialog.show();
 
         JsonObject jsonObjectParameters = new JsonObject();
-        jsonObjectParameters.addProperty("req_code", 11);
-        jsonObjectParameters.addProperty("admin_id", admin_id);
+//        jsonObjectParameters.addProperty("admin_id", new SessionManager(getApplicationContext()).getSpecificUserDetail(SessionManager.KEY_USER_ID));
+        jsonObjectParameters.addProperty("grp_id", grp_id);
 
         final SettableFuture<JsonElement> resultFuture = SettableFuture.create();
-        ListenableFuture<JsonElement> serviceFilterFuture = MainActivity.mClient.invokeApi("group_mgmt_details_fetch_api", jsonObjectParameters);
-
-        Futures.addCallback(serviceFilterFuture, new FutureCallback<JsonElement>() {
-            @Override
-            public void onFailure(Throwable exception) {
-                resultFuture.setException(exception);
-                progressDialog.dismiss();
-                System.out.println(" fetchGroupRequestDetails exception    " + exception);
-
-            }
-
-            @Override
-            public void onSuccess(JsonElement response) {
-                resultFuture.set(response);
-                progressDialog.dismiss();
-                System.out.println(" fetchGroupRequestDetails success response    " + response);
-//                parseFetchGroupDetailsResponse(response);
-
-                //set data to fragment bundel
-                Bundle bundle = new Bundle();
-                bundle.putString("grp_req_response", response.toString());
-                bundle.putString("grp_id", grp_id);
-                req_pending_fragment.setArguments(bundle);
-                approval_pending_fragment.setArguments(bundle);
-
-
-                //2 frag called just to set mem count value on main screen
-//                fragmentTransaction = fragmentManager.beginTransaction();
-//                fragmentTransaction.replace(R.id.create_group_list_layout, approval_pending_fragment);
-//                fragmentTransaction.commit();
-//
-//                fragmentTransaction.replace(R.id.create_group_list_layout, req_pending_fragment);
-//                fragmentTransaction.commit();
-
-            }
-        });
-
-    }
-
-    private void fetchAvailableMembers(String admin_id) {
-        progressDialog.create();
-        progressDialog.show();
-        System.out.println("IN fetchAvailableMembers");
-        JsonObject jsonObjectParameters = new JsonObject();
-        jsonObjectParameters.addProperty("req_code", 12);
-        //admin_id not needed. just placeholder for method signature
-        jsonObjectParameters.addProperty("admin_id", admin_id);
-//        jsonObjectParameters.addProperty("userId", new SessionManager(getApplicationContext()).getSpecificUserDetail(SessionManager.KEY_USER_ID));
-
-        final SettableFuture<JsonElement> resultFuture = SettableFuture.create();
-        ListenableFuture<JsonElement> serviceFilterFuture = MainActivity.mClient.invokeApi("group_mgmt_details_fetch_api", jsonObjectParameters);
-
-        Futures.addCallback(serviceFilterFuture, new FutureCallback<JsonElement>() {
-            @Override
-            public void onFailure(Throwable exception) {
-                resultFuture.setException(exception);
-                progressDialog.dismiss();
-                System.out.println(" fetchAvailableMembers exception    " + exception);
-
-            }
-
-            @Override
-            public void onSuccess(JsonElement response) {
-                resultFuture.set(response);
-                progressDialog.dismiss();
-                System.out.println(" fetchAvailableMembers success response    " + response);
-//                parseFetchGroupDetailsResponse(response);
-
-                //set data to fragment bundel
-                Bundle bundle = new Bundle();
-                bundle.putString("add_mem_response", response.toString());
-                bundle.putString("grp_id", grp_id);
-                add_mem_fragment.setArguments(bundle);
-
-            }
-        });
-
-    }
-
-    private void fetchJoinedMembers(String admin_id) {
-
-        progressDialog.create();
-        progressDialog.show();
-
-        JsonObject jsonObjectParameters = new JsonObject();
-        jsonObjectParameters.addProperty("req_code", 10);
-        jsonObjectParameters.addProperty("admin_id", admin_id);
-//        jsonObjectParameters.addProperty("userId", new SessionManager(getApplicationContext()).getSpecificUserDetail(SessionManager.KEY_USER_ID));
-
-        final SettableFuture<JsonElement> resultFuture = SettableFuture.create();
-        ListenableFuture<JsonElement> serviceFilterFuture = MainActivity.mClient.invokeApi("group_mgmt_details_fetch_api", jsonObjectParameters);
+        ListenableFuture<JsonElement> serviceFilterFuture = MainActivity.mClient.invokeApi("group_management_data_fetch_api", jsonObjectParameters);
 
         Futures.addCallback(serviceFilterFuture, new FutureCallback<JsonElement>() {
             @Override
@@ -387,131 +232,51 @@ public class ManageGroups extends Activity {
             public void onSuccess(JsonElement response) {
                 resultFuture.set(response);
                 progressDialog.dismiss();
-                System.out.println(" fetchJoinedMemberss success response    " + response);
-//                parseFetchGroupDetailsResponse(response);
+                System.out.println(" group_management_data_fetch_api success response    " + response);
 
-                //set data to fragment bundel
-                Bundle bundle = new Bundle();
-                bundle.putString("mem_joined_response", response.toString());
-                bundle.putString("grp_id", grp_id);
-                mem_joined_fragment.setArguments(bundle);
+                divideAndSendData(response);
 
-                modifyViews(1);
-                //first fragment to be loaded at startup
-//                fragmentTransaction = fragmentManager.beginTransaction();
-//                fragmentTransaction.replace(R.id.create_group_list_layout, mem_joined_fragment);
-//                fragmentTransaction.commit();
             }
         });
 
-
     }
 
-    private void parseFetchGroupDetailsResponse(JsonElement fetchGroupDetailsResponse) {
+    private void divideAndSendData(JsonElement response) {
+        JsonObject membersResponse = response.getAsJsonObject();
+        JsonArray joinedMembers = membersResponse.getAsJsonArray("joinedMembers");
+        JsonArray availableMembers = membersResponse.getAsJsonArray("availableMembers");
+        JsonArray pendingMembers = membersResponse.getAsJsonArray("pendingMembers");
 
-        JsonArray grpDetailsJSONArray = fetchGroupDetailsResponse.getAsJsonArray();
+        System.out.println("joinedMembers" + joinedMembers);
+        System.out.println("pendingMembers" + pendingMembers);
+        System.out.println("availableMembers " + availableMembers);
 
-        for (int i = 0; i < grpDetailsJSONArray.size(); i++) {
+        //set data to fragment bundel
+        Bundle bundle = new Bundle();
 
-            JsonObject grpDetails_list_object = grpDetailsJSONArray.get(i).getAsJsonObject();
+        bundle = new Bundle();
+        bundle.putString("mem_joined_response", joinedMembers.toString());
+        bundle.putString("grp_id", grp_id);
+        bundle.putInt("user_admin_flag", user_admin_flag);
+        mem_joined_fragment.setArguments(bundle);
+        modifyViews(1);
 
+        bundle = new Bundle();
+        bundle.putString("grp_req_response", pendingMembers.toString());
+        bundle.putString("grp_id", grp_id);
+        approval_pending_fragment.setArguments(bundle);
+        modifyViews(2);
+        req_pending_fragment.setArguments(bundle);
+        modifyViews(3);
 
-            System.out.println(" grpDetails_list_object  " + grpDetails_list_object);
+        bundle = new Bundle();
+        bundle.putString("add_mem_response", availableMembers.toString());
+        bundle.putString("grp_id", grp_id);
+        add_mem_fragment.setArguments(bundle);
+        modifyViews(4);
 
-            String grp_id = grpDetails_list_object.get("grp_id").toString();
-            String grp_name = grpDetails_list_object.get("GRP_NAME").toString();
-            String grp_dp_url = grpDetails_list_object.get("GRP_DP_URL").toString();
-            String user_id = grpDetails_list_object.get("user_id").toString();
-
-            System.out.println(" grp_id " + grp_id);
-            System.out.println(" grp_name " + grp_name);
-            System.out.println(" user_id " + user_id);
-            System.out.println(" grp_dp_url " + grp_dp_url);
-
-            //Remove " from start and end from every string
-            grp_id = grp_id.substring(1, grp_id.length() - 1);
-            grp_dp_url = grp_dp_url.substring(1, grp_dp_url.length() - 1);
-            user_id = user_id.substring(1, user_id.length() - 1);
-            grp_name = grp_name.substring(1, grp_name.length() - 1);
-
-        }
+        modifyViews(desiredFragPosition);
     }
-
-    private void parseFetchGroupReqDetailsResponse(JsonElement fetchGroupDetailsResponse) {
-
-        JsonArray grpDetailsJSONArray = fetchGroupDetailsResponse.getAsJsonArray();
-
-        for (int i = 0; i < grpDetailsJSONArray.size(); i++) {
-
-            JsonObject grpDetails_list_object = grpDetailsJSONArray.get(i).getAsJsonObject();
-
-            System.out.println(" grpDetails_list_object  " + grpDetails_list_object);
-
-            String user_id = grpDetails_list_object.get("USER_ID").toString();
-            String user_name = grpDetails_list_object.get("USER_NAME").toString();
-            String user_f_name = grpDetails_list_object.get("FIRST_NAME").toString();
-            String user_l_name = grpDetails_list_object.get("LAST_NAME").toString();
-            int req_code = Integer.parseInt(grpDetails_list_object.get("REQ_CODE").toString());
-            Boolean req_settled = Boolean.valueOf(grpDetails_list_object.get("REQ_SETTLED").toString());
-
-            System.out.println(" user_id " + user_id);
-            System.out.println(" req_code " + req_code);
-            System.out.println(" user_name " + user_name);
-            System.out.println(" user_f_name " + user_f_name);
-            System.out.println(" user_l_name " + user_l_name);
-
-            try {
-                String user_dp_url = grpDetails_list_object.get("DP_URL").toString();
-                System.out.println(" user_dp_url " + user_dp_url);
-                user_dp_url = user_dp_url.substring(1, user_dp_url.length() - 1);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            //Remove " from start and end from every string
-            user_id = user_id.substring(1, user_id.length() - 1);
-            user_name = user_name.substring(1, user_name.length() - 1);
-            user_f_name = user_f_name.substring(1, user_f_name.length() - 1);
-            user_l_name = user_l_name.substring(1, user_l_name.length() - 1);
-
-        }
-    }
-
-    private void fetchGroupReqDetails(String admin_id) {
-
-        final ProgressDialog progressDialog = new ProgressDialog(ManageGroups.this);
-        progressDialog.setTitle("Fetching details, Please wait...");
-        progressDialog.create();
-        progressDialog.show();
-        progressDialog.setCanceledOnTouchOutside(false);
-        progressDialog.setCancelable(false);
-        JsonObject jsonObjectParameters = new JsonObject();
-        jsonObjectParameters.addProperty("req_code", 11);
-        jsonObjectParameters.addProperty("admin_id", admin_id);
-
-        final SettableFuture<JsonElement> resultFuture = SettableFuture.create();
-        ListenableFuture<JsonElement> serviceFilterFuture = MainActivity.mClient.invokeApi("group_mgmt_details_fetch_api", jsonObjectParameters);
-
-        Futures.addCallback(serviceFilterFuture, new FutureCallback<JsonElement>() {
-            @Override
-            public void onFailure(Throwable exception) {
-                resultFuture.setException(exception);
-                progressDialog.dismiss();
-                System.out.println(" group_mgmt_details_fetch_api exception    " + exception);
-
-            }
-
-            @Override
-            public void onSuccess(JsonElement response) {
-                resultFuture.set(response);
-                progressDialog.dismiss();
-                System.out.println(" group_mgmt_details_fetch_api success response    " + response);
-                parseFetchGroupReqDetailsResponse(response);
-            }
-        });
-
-
-    }
-
 
     public void takeNumbers(int frag_position, int member_count) {
         System.out.println("frag_position" + frag_position);
