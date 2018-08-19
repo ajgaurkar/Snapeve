@@ -33,9 +33,11 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -44,6 +46,7 @@ import com.google.common.util.concurrent.FutureCallback;
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.SettableFuture;
+import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -59,9 +62,11 @@ import com.umbcapp.gaurk.snapeve.Adapters.SignupGrpAdapter;
 import com.umbcapp.gaurk.snapeve.Adapters.TeamMatesAdapter;
 import com.umbcapp.gaurk.snapeve.Adapters.UserContributionAdapter;
 import com.umbcapp.gaurk.snapeve.AzureConfiguration;
+import com.umbcapp.gaurk.snapeve.Controllers.Event_dash_list_obj;
 import com.umbcapp.gaurk.snapeve.Controllers.SignUpGrpListItem;
 import com.umbcapp.gaurk.snapeve.Controllers.TeammatesListItem;
 import com.umbcapp.gaurk.snapeve.Controllers.UserContributionListItem;
+import com.umbcapp.gaurk.snapeve.Controllers.AdminLeaveGroupMemberListItem;
 import com.umbcapp.gaurk.snapeve.EventDetails;
 import com.umbcapp.gaurk.snapeve.Leaderboard;
 import com.umbcapp.gaurk.snapeve.MainActivity;
@@ -164,6 +169,12 @@ public class UserProfileFragment extends Fragment {
     private int currentActiveTab = 1;
     private int user_admin_flag = 0;
     private int privilege_type = 1;
+    private Spinner leave_grp_dialog_member_switch_spinner;
+    private ProgressBar leave_grp_dialog_member_switch_spinner_progressbar;
+    private ArrayList<AdminLeaveGroupMemberListItem> memberList = new ArrayList<AdminLeaveGroupMemberListItem>();
+    private String selected_new_admin_id;
+    private TextView leave_grp_dialog_header_textView;
+    private CardView leave_grp_dialog_member_switch_spinner_card_view;
 
 
     public UserProfileFragment() {
@@ -399,7 +410,7 @@ public class UserProfileFragment extends Fragment {
         progressDialog.setCancelable(false);
         jsonObjectUserProfileFragParameters = new JsonObject();
         //might need to change it to user id from user name
-        jsonObjectUserProfileFragParameters.addProperty("user_name", new SessionManager(getActivity()).getSpecificUserDetail(SessionManager.KEY_USER_NAME));
+        jsonObjectUserProfileFragParameters.addProperty("user_id", new SessionManager(getActivity()).getSpecificUserDetail(SessionManager.KEY_USER_ID));
 
         final SettableFuture<JsonElement> resultFuture = SettableFuture.create();
         ListenableFuture<JsonElement> serviceFilterFuture = MainActivity.mClient.invokeApi("fetch_user_details_api", jsonObjectUserProfileFragParameters);
@@ -596,7 +607,7 @@ public class UserProfileFragment extends Fragment {
             }
         }
 
-        if (privilege_type == 3) {
+        if (privilege_type == 3 || privilege_type == 2) {
             user_profile_settings_imageview.setVisibility(View.VISIBLE);
         } else {
             user_profile_settings_imageview.setVisibility(View.INVISIBLE);
@@ -695,9 +706,9 @@ public class UserProfileFragment extends Fragment {
         user_profile_settings_imageview.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (privilege_type == 3) {
-                    openSettingsMenu(admin_flag);
-                }
+//                if (privilege_type == 3) {
+                openSettingsMenu(admin_flag, privilege_type);
+//                }
             }
         });
 
@@ -990,13 +1001,18 @@ public class UserProfileFragment extends Fragment {
         user_profile_member_count_text_view_icon.setVisibility(View.GONE);
     }
 
-    private void openSettingsMenu(int admin_flag) {
+    private void openSettingsMenu(int admin_flag, final int privilege_type) {
 
         PopupMenu popup = new PopupMenu(getActivity(), user_profile_settings_imageview);
-        if (admin_flag == 1) {
-            popup.getMenuInflater().inflate(R.menu.user_profile_3_settings_popup_menu, popup.getMenu());
-        } else {
-            popup.getMenuInflater().inflate(R.menu.user_profile_2_settings_popup_menu, popup.getMenu());
+        if (privilege_type == 3) {
+            if (admin_flag == 1) {
+                popup.getMenuInflater().inflate(R.menu.user_profile_3_settings_popup_menu, popup.getMenu());
+            } else {
+                popup.getMenuInflater().inflate(R.menu.user_profile_2_settings_popup_menu, popup.getMenu());
+            }
+        }
+        if (privilege_type == 2) {
+            popup.getMenuInflater().inflate(R.menu.user_profile_1_settings_popup_menu, popup.getMenu());
         }
         popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
             @Override
@@ -1070,8 +1086,12 @@ public class UserProfileFragment extends Fragment {
         alertDialog.setCancelable(true);
         alertDialog.setCanceledOnTouchOutside(false);
 
-        CardView leave_grp_dialog_confirm_btn_card_view = (CardView) view.findViewById(R.id.leave_grp_dialog_confirm_btn_card_view);
+        final CardView leave_grp_dialog_confirm_btn_card_view = (CardView) view.findViewById(R.id.leave_grp_dialog_confirm_btn_card_view);
         CardView leave_grp_dialog_cancel_btn_card_view = (CardView) view.findViewById(R.id.leave_grp_dialog_cancel_btn_card_view);
+        leave_grp_dialog_member_switch_spinner_card_view = (CardView) view.findViewById(R.id.leave_grp_dialog_member_switch_spinner_card_view);
+        leave_grp_dialog_member_switch_spinner = (Spinner) view.findViewById(R.id.leave_grp_dialog_member_switch_spinner);
+        leave_grp_dialog_header_textView = (TextView) view.findViewById(R.id.leave_grp_dialog_header_textView);
+        leave_grp_dialog_member_switch_spinner_progressbar = (ProgressBar) view.findViewById(R.id.leave_grp_dialog_member_switch_spinner_progressbar);
 
         leave_grp_dialog_cancel_btn_card_view.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -1079,21 +1099,192 @@ public class UserProfileFragment extends Fragment {
                 alertDialog.dismiss();
             }
         });
-        leave_grp_dialog_confirm_btn_card_view.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                alertDialog.dismiss();
-                executeLeaveGroupApi();
-            }
-        });
+
+        if (user_admin_flag == 1) {
+
+            adminLeavesGroupTwoSteppedAPI(1, "");
+
+            leave_grp_dialog_header_textView.setText("Do you really wish to leave this group? You need to pass on your admin rights to another group member before you leave");
+            leave_grp_dialog_member_switch_spinner_card_view.setVisibility(View.VISIBLE);
+            leave_grp_dialog_confirm_btn_card_view.setVisibility(View.INVISIBLE);
+
+            leave_grp_dialog_confirm_btn_card_view.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    alertDialog.dismiss();
+                    adminLeavesGroupTwoSteppedAPI(2, selected_new_admin_id);
+
+//                    executeLeaveGroupApi(new SessionManager(getActivity()).getSpecificUserDetail(SessionManager.KEY_USER_ID), new SessionManager(getActivity()).getSpecificUserDetail(SessionManager.KEY_GRP_ID), 4);
+                }
+            });
+        } else {
+            leave_grp_dialog_header_textView.setText("Do you really wish to leave this group?");
+            leave_grp_dialog_member_switch_spinner_card_view.setVisibility(View.GONE);
+            leave_grp_dialog_member_switch_spinner_progressbar.setVisibility(View.GONE);
+            leave_grp_dialog_confirm_btn_card_view.setVisibility(View.VISIBLE);
+
+            leave_grp_dialog_confirm_btn_card_view.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    alertDialog.dismiss();
+                    executeLeaveGroupApi(new SessionManager(getActivity()).getSpecificUserDetail(SessionManager.KEY_USER_ID), new SessionManager(getActivity()).getSpecificUserDetail(SessionManager.KEY_GRP_ID), 4);
+                }
+            });
+
+        }
+
         alertDialog.setCanceledOnTouchOutside(false);
         alertDialog.setCancelable(false);
         alertDialog.show();
+
+        leave_grp_dialog_member_switch_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if (position != 0) {
+                    leave_grp_dialog_confirm_btn_card_view.setVisibility(View.VISIBLE);
+                    selected_new_admin_id = memberList.get(position - 1).getUserId();
+                } else {
+                    leave_grp_dialog_confirm_btn_card_view.setVisibility(View.INVISIBLE);
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
     }
 
-    private void executeLeaveGroupApi() {
-        //execute leave group api and if response success, delete all data related to group from SP
-        Toast.makeText(getActivity(), "executeLeaveGroupApi", Toast.LENGTH_SHORT).show();
+    private void adminLeavesGroupTwoSteppedAPI(final int step_code, String new_admin_id) {
+
+        leave_grp_dialog_member_switch_spinner_progressbar.setVisibility(View.VISIBLE);
+        JsonObject jsonObjectParameters = new JsonObject();
+        final ProgressDialog progressDialog = new ProgressDialog(getActivity());
+
+        if (step_code == 2) {
+            progressDialog.setMessage("Updating, Please wait...");
+            progressDialog.setCancelable(false);
+            progressDialog.setCanceledOnTouchOutside(false);
+            progressDialog.create();
+            progressDialog.show();
+
+            jsonObjectParameters.addProperty("new_admin_code", new_admin_id);
+        }
+
+        jsonObjectParameters.addProperty("old_admin_code", new SessionManager(getActivity()).getSpecificUserDetail(SessionManager.KEY_USER_ID));
+        jsonObjectParameters.addProperty("step_code", step_code);
+        jsonObjectParameters.addProperty("grpId", new SessionManager(getActivity()).getSpecificUserDetail(SessionManager.KEY_GRP_ID));
+        final SettableFuture<JsonElement> resultFuture = SettableFuture.create();
+        ListenableFuture<JsonElement> serviceFilterFuture = MainActivity.mClient.invokeApi("admin_leaves_group_two_stepped_API", jsonObjectParameters);
+
+        Futures.addCallback(serviceFilterFuture, new FutureCallback<JsonElement>() {
+            @Override
+            public void onFailure(Throwable exception) {
+                resultFuture.setException(exception);
+                leave_grp_dialog_member_switch_spinner_progressbar.setVisibility(View.INVISIBLE);
+                System.out.println(" admin_leaves_group_two_stepped_API exception    " + exception);
+                if (step_code == 2) {
+                    progressDialog.dismiss();
+                }
+            }
+
+            @Override
+            public void onSuccess(JsonElement response) {
+                resultFuture.set(response);
+                leave_grp_dialog_member_switch_spinner_progressbar.setVisibility(View.INVISIBLE);
+                System.out.println(" admin_leaves_group_two_stepped_API success response    " + response);
+
+
+                if (step_code == 1) {
+                    parseMemberList(response);
+                }
+                if (step_code == 2) {
+                    progressDialog.dismiss();
+                    if (response.toString().contains("true")) {
+                        System.out.println("response OK");
+
+                    }
+                }
+
+            }
+        });
+
+
+    }
+
+    private void parseMemberList(JsonElement response) {
+
+        memberList = new ArrayList<AdminLeaveGroupMemberListItem>();
+        JsonArray grpMembers = response.getAsJsonArray();
+
+        if (grpMembers.size() != 0) {
+
+            List<String> members = new ArrayList<String>();
+            members.add("[ Select a member ]");
+
+            for (int j = 0; j < grpMembers.size(); j++) {
+
+                JsonObject grpMembers_list_object = grpMembers.get(j).getAsJsonObject();
+                memberList.add(new AdminLeaveGroupMemberListItem(grpMembers_list_object.get("user_name").getAsString(), grpMembers_list_object.get("user_id").getAsString()));
+
+                //fill spinner list
+                members.add(grpMembers_list_object.get("user_name").getAsString());
+            }
+
+            ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getActivity(), R.layout.blank_first_simple_spinner_item, members);
+            dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            leave_grp_dialog_member_switch_spinner_card_view.setVisibility(View.VISIBLE);
+            leave_grp_dialog_member_switch_spinner.setAdapter(dataAdapter);
+        } else {
+
+//            Toast.makeText(getActivity(), "No members left. Delete group instead", Toast.LENGTH_SHORT).show();
+            leave_grp_dialog_header_textView.setText("No members left. Delete group instead");
+            leave_grp_dialog_member_switch_spinner_card_view.setVisibility(View.INVISIBLE);
+        }
+    }
+
+    private void executeLeaveGroupApi(String userId, String grpId, int modify_code) {
+        final ProgressDialog progressDialog = new ProgressDialog(getActivity());
+        progressDialog.setTitle("Updating, Please wait...");
+        progressDialog.create();
+        progressDialog.show();
+        progressDialog.setCanceledOnTouchOutside(false);
+        progressDialog.setCancelable(false);
+        JsonObject jsonObjectParameters = new JsonObject();
+        jsonObjectParameters.addProperty("modify_code", modify_code);
+        jsonObjectParameters.addProperty("grpId", grpId);
+        jsonObjectParameters.addProperty("userId", userId);
+
+        final SettableFuture<JsonElement> resultFuture = SettableFuture.create();
+        ListenableFuture<JsonElement> serviceFilterFuture = MainActivity.mClient.invokeApi("modify_privileges_api", jsonObjectParameters);
+
+        Futures.addCallback(serviceFilterFuture, new FutureCallback<JsonElement>() {
+            @Override
+            public void onFailure(Throwable exception) {
+                resultFuture.setException(exception);
+                progressDialog.dismiss();
+                System.out.println(" modify_privileges_api exception    " + exception);
+
+            }
+
+            @Override
+            public void onSuccess(JsonElement response) {
+                resultFuture.set(response);
+                progressDialog.dismiss();
+                System.out.println(" modify_privileges_api success response    " + response);
+
+                Toast.makeText(getActivity(), response.toString(), Toast.LENGTH_SHORT).show();
+
+                if (response.toString().contains("true")) {
+                    System.out.println("response OK");
+                    fetch_user_details();
+
+                }
+
+            }
+        });
+
+
     }
 
     private void executeDeleteGroupApi() {

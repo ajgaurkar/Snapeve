@@ -311,6 +311,7 @@ public class MainActivity extends AppCompatActivity implements Listview_communic
         jsonObjectUserProfileParameters = new JsonObject();
         //might need to change it to user id from user name
         jsonObjectUserProfileParameters.addProperty("user_name", new SessionManager(getApplicationContext()).getSpecificUserDetail(SessionManager.KEY_USER_NAME));
+        jsonObjectUserProfileParameters.addProperty("user_id", new SessionManager(getApplicationContext()).getSpecificUserDetail(SessionManager.KEY_USER_ID));
 
         final SettableFuture<JsonElement> resultFuture = SettableFuture.create();
         ListenableFuture<JsonElement> serviceFilterFuture = MainActivity.mClient.invokeApi("fetch_user_details_api", jsonObjectUserProfileParameters);

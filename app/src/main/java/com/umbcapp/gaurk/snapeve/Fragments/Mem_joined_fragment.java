@@ -324,11 +324,11 @@ public class Mem_joined_fragment extends Fragment {
 
                 break;
             case 5:
-                //                modifyUserPrivileges(groupList.get(selectedMemberPosition).getUserId(), grp_id, 4);
+                modifyUserPrivileges(groupList.get(selectedMemberPosition).getUserId(), grp_id, 4);
+
                 break;
             case 6:
-                updateAdminRights(grp_id,groupList.get(selectedMemberPosition).getUserId(), new SessionManager(getActivity()).getSpecificUserDetail(SessionManager.KEY_USER_ID));
-//                modifyUserPrivileges(groupList.get(selectedMemberPosition).getUserId(), grp_id, 5);
+                updateAdminRights(grp_id, groupList.get(selectedMemberPosition).getUserId(), new SessionManager(getActivity()).getSpecificUserDetail(SessionManager.KEY_USER_ID));
                 break;
         }
     }
