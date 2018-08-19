@@ -14,6 +14,10 @@
         <item name="android:background">@drawable/spinner_left_icon_bg</item>
     </style>
 
+    <style name="ToggleSwitchTheme" parent="ThemeOverlay.AppCompat.Light">
+        <item name="colorAccent">@color/cardview_light_background</item>
+    </style>
+
     <style name="TransparentTheme">
         <item name="android:windowFullscreen">true</item>
         <item name="android:windowContentOverlay">@null</item>

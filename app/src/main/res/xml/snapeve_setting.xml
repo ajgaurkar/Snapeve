@@ -1,18 +1,18 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
 
-    <!--<Preference-->
-        <!--android:icon="@drawable/ic_account_circle_grey_600_24dp"-->
-        <!--android:key="userAccountPreferenceKey"-->
-        <!--android:title="Account">-->
+    <Preference
+        android:icon="@drawable/ic_account_circle_grey_600_24dp"
+        android:key="userAccountPreferenceKey"
+        android:title="Account">
 
-    <!--</Preference>-->
+    </Preference>
 
     <Preference
         android:icon="@drawable/ic_feedback_grey_600_24dp"
         android:key="snapeveFeedbackPreferenceKey"
         android:title="Feedback">
-        
+
     </Preference>
 
     <SwitchPreference
@@ -23,8 +23,8 @@
         android:title="@string/notification_setting" />
 
     <Preference
-        android:key="helpPreferenceKey"
         android:icon="@drawable/ic_help_grey_600_24dp"
+        android:key="helpPreferenceKey"
         android:title="Help">
 
     </Preference>
@@ -37,8 +37,8 @@
     </Preference>
 
     <Preference
-        android:key="appInfoPreferenceKey"
         android:icon="@drawable/ic_info_grey_600_24dp"
+        android:key="appInfoPreferenceKey"
         android:title="App info">
         <intent
             android:action="android.intent.action.VIEW"
@@ -46,8 +46,8 @@
     </Preference>
 
     <Preference
-        android:key="termsAndPolicyInfoPreferenceKey"
         android:icon="@drawable/ic_description_grey_600_24dp"
+        android:key="termsAndPolicyInfoPreferenceKey"
         android:title="Terms and Policy">
         <intent
             android:action="android.intent.action.VIEW"
@@ -55,8 +55,8 @@
     </Preference>
 
     <Preference
-        android:key="fAQPreferenceKey"
         android:icon="@drawable/ic_question_answer_grey_600_24dp"
+        android:key="fAQPreferenceKey"
         android:title="FAQ">
         <intent
             android:action="android.intent.action.VIEW"

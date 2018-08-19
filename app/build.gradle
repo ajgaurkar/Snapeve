@@ -6,6 +6,7 @@ android {
         applicationId "com.umbcapp.gaurk.snapeve"
         minSdkVersion 21
         targetSdkVersion 27
+        multiDexEnabled true
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -36,7 +37,7 @@ dependencies {
     implementation 'com.akexorcist:RoundCornerProgressBar:2.0.3'
     implementation 'com.google.code.gson:gson:2.3'
     implementation 'com.google.guava:guava:18.0'
-    implementation 'com.squareup.okhttp:okhttp:2.5.0'
+    implementation 'com.squareup.okhttp:okhttp:2.7.5'
     implementation 'com.prolificinteractive:material-calendarview:1.4.3'
     //Gallery Photo selector Library
     implementation 'me.iwf.photopicker:PhotoPicker:0.9.12@aar'
@@ -49,7 +50,7 @@ dependencies {
     implementation 'nl.dionsegijn:konfetti:1.1.2'
     implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.2.51'
     implementation 'com.github.Shashank02051997:FancyAlertDialog-Android:0.1'
-    implementation 'com.google.firebase:firebase-inappmessaging-display:17.0.0'
+    //implementation 'com.google.firebase:firebase-inappmessaging-display:17.0.0'
 
 
 }

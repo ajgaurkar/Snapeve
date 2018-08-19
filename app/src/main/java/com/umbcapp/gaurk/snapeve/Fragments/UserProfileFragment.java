@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -50,6 +51,9 @@ import com.microsoft.azure.storage.blob.CloudBlobContainer;
 import com.microsoft.azure.storage.blob.CloudBlockBlob;
 import com.microsoft.windowsazure.mobileservices.MobileServiceClient;
 import com.microsoft.windowsazure.mobileservices.table.MobileServiceTable;
+import com.shashank.sony.fancydialoglib.FancyAlertDialog;
+import com.shashank.sony.fancydialoglib.FancyAlertDialogListener;
+import com.shashank.sony.fancydialoglib.Icon;
 import com.squareup.picasso.Picasso;
 import com.umbcapp.gaurk.snapeve.Adapters.SignupGrpAdapter;
 import com.umbcapp.gaurk.snapeve.Adapters.TeamMatesAdapter;
@@ -405,6 +409,7 @@ public class UserProfileFragment extends Fragment {
             public void onFailure(Throwable exception) {
                 resultFuture.setException(exception);
                 progressDialog.dismiss();
+                showNoResponseDialog();
                 System.out.println(" fetch_user_details exception    " + exception);
             }
 
@@ -418,6 +423,25 @@ public class UserProfileFragment extends Fragment {
 //                fetchGrpPostAndMembers(grp_id, 1);
             }
         });
+    }
+
+    private void showNoResponseDialog() {
+        new FancyAlertDialog.Builder(getActivity())
+                .setTitle("Oopsy daisy!")
+                .setBackgroundColor(Color.parseColor("#3F51B5"))  //Don't pass R.color.colorvalue
+                .setMessage("Something went wrong")
+                .setIcon(R.drawable.traingale_exclamation_100, Icon.Visible)
+                .setPositiveBtnText("Reload")
+                .setPositiveBtnBackground(Color.parseColor("#303F9F"))//Don't pass R.color.colorvalue
+                .OnPositiveClicked(new FancyAlertDialogListener() {
+                    @Override
+                    public void OnClick() {
+                        fetch_user_details();
+                    }
+                })
+                .setNegativeBtnBackground(Color.parseColor("#003F51B5"))//Don't pass R.color.colorvalue
+                .setNegativeBtnText("")
+                .build();
     }
 
     private void parseAndDivideUserInfo(JsonElement response) {

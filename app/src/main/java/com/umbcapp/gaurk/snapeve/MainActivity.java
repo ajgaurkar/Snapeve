@@ -7,6 +7,7 @@ import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -41,6 +42,10 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.microsoft.windowsazure.mobileservices.MobileServiceClient;
+import com.shashank.sony.fancydialoglib.Animation;
+import com.shashank.sony.fancydialoglib.FancyAlertDialog;
+import com.shashank.sony.fancydialoglib.FancyAlertDialogListener;
+import com.shashank.sony.fancydialoglib.Icon;
 import com.umbcapp.gaurk.snapeve.Adapters.Dash_Event_ListAdapter;
 import com.umbcapp.gaurk.snapeve.Controllers.Event_dash_list_obj;
 import com.umbcapp.gaurk.snapeve.Fragments.MapsFragment;
@@ -263,7 +268,8 @@ public class MainActivity extends AppCompatActivity implements Listview_communic
                 progressDialog.dismiss();
                 fetchUserDetails();
 
-                Toast.makeText(MainActivity.this, "Something went wrong try again", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(MainActivity.this, "Something went wrong try again", Toast.LENGTH_SHORT).show();
+                showNoResponseDialog();
             }
 
             @Override
@@ -279,6 +285,26 @@ public class MainActivity extends AppCompatActivity implements Listview_communic
 
             }
         });
+    }
+
+    private void showNoResponseDialog() {
+        new FancyAlertDialog.Builder(MainActivity.this)
+                .setTitle("Oopsy daisy!")
+                .setBackgroundColor(Color.parseColor("#3F51B5"))  //Don't pass R.color.colorvalue
+                .setMessage("Something went wrong")
+                .setIcon(R.drawable.traingale_exclamation_100, Icon.Visible)
+                .setPositiveBtnText("Reload")
+                .setPositiveBtnBackground(Color.parseColor("#303F9F"))//Don't pass R.color.colorvalue
+                .OnPositiveClicked(new FancyAlertDialogListener() {
+                    @Override
+                    public void OnClick() {
+
+                        executeGetFeedsApi();
+                    }
+                })
+                .setNegativeBtnBackground(Color.parseColor("#003F51B5"))//Don't pass R.color.colorvalue
+                .setNegativeBtnText("")
+                .build();
     }
 
     private void fetchUserDetails() {
@@ -378,100 +404,106 @@ public class MainActivity extends AppCompatActivity implements Listview_communic
             JsonObject feeds_list_object = feedsJsonArray.get(j).getAsJsonObject();
             System.out.println(" feeds_list_object  " + feeds_list_object);
 
-            String post_img_url = feeds_list_object.get("img_url").getAsString();
-            String post_user_id = feeds_list_object.get("initializer_id").getAsString();
-            String post_id = feeds_list_object.get("post_id").getAsString();
-            String post_dt = feeds_list_object.get("post_date").getAsString();
-            String event_start_dt_time = feeds_list_object.get("event_start_dt_time").getAsString();
-            String event_end_dt_time = feeds_list_object.get("event_end_dt_time").getAsString();
-            boolean event_all_day_status = feeds_list_object.get("all_day").getAsBoolean();
-            String initializer_name = feeds_list_object.get("initializer_name").getAsString();
-            int post_as = feeds_list_object.get("post_as").getAsInt();
-            int event_type = feeds_list_object.get("event_type").getAsInt();
-            int scope = feeds_list_object.get("scope").getAsInt();
-            int location_type = feeds_list_object.get("location_type").getAsInt();
-
-
-            //getting likes and spam data/count. replace null with 0
-            //5 attributes
-            int total_likes = 0;
+            String post_id = null;
             try {
-                total_likes = feeds_list_object.get("total_likes").getAsInt();
+                post_id = feeds_list_object.get("post_id").getAsString();
+                String post_img_url = feeds_list_object.get("img_url").getAsString();
+                String post_user_id = feeds_list_object.get("initializer_id").getAsString();
+                String post_dt = feeds_list_object.get("post_date").getAsString();
+                String event_start_dt_time = feeds_list_object.get("event_start_dt_time").getAsString();
+                String event_end_dt_time = feeds_list_object.get("event_end_dt_time").getAsString();
+                boolean event_all_day_status = feeds_list_object.get("all_day").getAsBoolean();
+                String initializer_name = feeds_list_object.get("initializer_name").getAsString();
+                int post_as = feeds_list_object.get("post_as").getAsInt();
+                int event_type = feeds_list_object.get("event_type").getAsInt();
+                int scope = feeds_list_object.get("scope").getAsInt();
+                int location_type = feeds_list_object.get("location_type").getAsInt();
+
+
+                //getting likes and spam data/count. replace null with 0
+                //5 attributes
+                int total_likes = 0;
+                try {
+                    total_likes = feeds_list_object.get("total_likes").getAsInt();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                int total_spam = 0;
+                try {
+                    total_spam = feeds_list_object.get("total_spam").getAsInt();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                int user_spam = 0;
+                try {
+                    user_spam = feeds_list_object.get("user_spam").getAsInt();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                int user_likes = 0;
+                try {
+                    user_likes = feeds_list_object.get("user_likes").getAsInt();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                int total_comments = 0;
+                try {
+                    total_comments = feeds_list_object.get("total_comments").getAsInt();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                String img_comment = null;
+                try {
+                    img_comment = feeds_list_object.get("img_comment").getAsString();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    img_comment = "";
+                }
+
+                String post_grp_id = null;
+                String post_grp_dp_url = null;
+                String post_grp_name = null;
+                try {
+                    //sequence of these 3 thing sis importatnt
+                    //if id is null then everything should be null
+                    //if id is present then name will be definatly present but dp_url may or may not be present so it can be kepy last for exception
+                    post_grp_id = feeds_list_object.get("grp_id").getAsString();
+                    post_grp_name = feeds_list_object.get("grp_name").getAsString();
+
+                    post_grp_dp_url = feeds_list_object.get("grp_dp_url").getAsString();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                String post_dp_url = null;
+                try {
+                    post_dp_url = feeds_list_object.get("dp_url").getAsString();
+                    System.out.println("Main activity feeds user dp_url : " + post_dp_url);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    post_dp_url = null;
+                }
+
+                Date date = null;
+                try {
+                    date = feedsDateFormat.parse(post_dt);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+                System.out.println(date);
+                post_dt = displayDtFormat.format(date);
+                System.out.println("Report Date: " + post_dt);
+
+                event_main_list.add(0, new Event_dash_list_obj(post_user_id, post_dp_url, initializer_name, img_comment,
+                        post_dt, post_img_url, post_id, post_dt, event_start_dt_time, event_end_dt_time,
+                        event_all_day_status, post_as, event_type, location_type, scope, post_grp_name, post_grp_id, post_grp_dp_url,
+                        user_likes, user_spam, total_likes, total_spam, total_comments));
+
+
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            int total_spam = 0;
-            try {
-                total_spam = feeds_list_object.get("total_spam").getAsInt();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            int user_spam = 0;
-            try {
-                user_spam = feeds_list_object.get("user_spam").getAsInt();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            int user_likes = 0;
-            try {
-                user_likes = feeds_list_object.get("user_likes").getAsInt();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            int total_comments = 0;
-            try {
-                total_comments = feeds_list_object.get("total_comments").getAsInt();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-            String img_comment = null;
-            try {
-                img_comment = feeds_list_object.get("img_comment").getAsString();
-            } catch (Exception e) {
-                e.printStackTrace();
-                img_comment = "";
-            }
-
-            String post_grp_id = null;
-            String post_grp_dp_url = null;
-            String post_grp_name = null;
-            try {
-                //sequence of these 3 thing sis importatnt
-                //if id is null then everything should be null
-                //if id is present then name will be definatly present but dp_url may or may not be present so it can be kepy last for exception
-                post_grp_id = feeds_list_object.get("grp_id").getAsString();
-                post_grp_name = feeds_list_object.get("grp_name").getAsString();
-
-                post_grp_dp_url = feeds_list_object.get("grp_dp_url").getAsString();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-            String post_dp_url = null;
-            try {
-                post_dp_url = feeds_list_object.get("dp_url").getAsString();
-                System.out.println("Main activity feeds user dp_url : " + post_dp_url);
-            } catch (Exception e) {
-                e.printStackTrace();
-                post_dp_url = null;
-            }
-
-            Date date = null;
-            try {
-                date = feedsDateFormat.parse(post_dt);
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
-            System.out.println(date);
-            post_dt = displayDtFormat.format(date);
-            System.out.println("Report Date: " + post_dt);
-
-            event_main_list.add(0, new Event_dash_list_obj(post_user_id, post_dp_url, initializer_name, img_comment,
-                    post_dt, post_img_url, post_id, post_dt, event_start_dt_time, event_end_dt_time,
-                    event_all_day_status, post_as, event_type, location_type, scope, post_grp_name, post_grp_id, post_grp_dp_url,
-                    user_likes, user_spam, total_likes, total_spam, total_comments));
-
         }
         System.out.println(" event_main_list " + event_main_list.size());
         dash_event_listAdapter = new Dash_Event_ListAdapter(this, event_main_list);

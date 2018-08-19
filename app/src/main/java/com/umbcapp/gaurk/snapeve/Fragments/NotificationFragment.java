@@ -2,26 +2,36 @@ package com.umbcapp.gaurk.snapeve.Fragments;
 
 import android.app.Fragment;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.SwitchCompat;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.gson.JsonObject;
+import com.shashank.sony.fancydialoglib.Animation;
+import com.shashank.sony.fancydialoglib.FancyAlertDialog;
+import com.shashank.sony.fancydialoglib.FancyAlertDialogListener;
+import com.shashank.sony.fancydialoglib.Icon;
 import com.umbcapp.gaurk.snapeve.Adapters.MessagesPersonalAdapter;
 import com.umbcapp.gaurk.snapeve.Adapters.NotificationsAdapter;
+import com.umbcapp.gaurk.snapeve.Add_event;
 import com.umbcapp.gaurk.snapeve.Controllers.MessagesPersonalListItem;
 import com.umbcapp.gaurk.snapeve.Controllers.NotificationListItem;
 import com.umbcapp.gaurk.snapeve.MessageThread;
 import com.umbcapp.gaurk.snapeve.R;
+import com.umbcapp.gaurk.snapeve.SessionManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,11 +40,12 @@ public class NotificationFragment extends Fragment {
 
 
     private JsonObject jsonObjectUserProfileFragParameters;
-    private TextView notification_switch_notification_textview;
-    private TextView notification_switch_messages_textview;
+    //    private TextView notification_switch_notification_textview;
+//    private TextView notification_switch_messages_textview;
     private ListView notification_layout_listview;
     int page_type_code = 1;
     private ImageView notification_settings_imageview;
+    private SwitchCompat notification_switch;
 
     public NotificationFragment() {
     }
@@ -51,38 +62,46 @@ public class NotificationFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.notification_fragment, container, false);
 
         RelativeLayout main_notification_layout = (RelativeLayout) rootView.findViewById(R.id.main_notification_layout);
-        notification_switch_notification_textview = (TextView) rootView.findViewById(R.id.notification_switch_notification_textview);
-        notification_switch_messages_textview = (TextView) rootView.findViewById(R.id.notification_switch_messages_textview);
+//        notification_switch_notification_textview = (TextView) rootView.findViewById(R.id.notification_switch_notification_textview);
+//        notification_switch_messages_textview = (TextView) rootView.findViewById(R.id.notification_switch_messages_textview);
         notification_layout_listview = (ListView) rootView.findViewById(R.id.notification_layout_listview);
         notification_settings_imageview = (ImageView) rootView.findViewById(R.id.notification_settings_imageview);
+        notification_switch = (SwitchCompat) rootView.findViewById(R.id.notification_switch);
+
+        if (new SessionManager(getActivity()).getSpecificUserBooleanDetail(SessionManager.KEY_NOTIFICATION_ONN_OFF_STATUS)) {
+            notification_switch.setChecked(true);
+        } else {
+            notification_switch.setChecked(false);
+        }
+
 
         notification_settings_imageview.setImageResource(R.drawable.settings_white_48);
 
         populateData(page_type_code);
 
-        notification_switch_notification_textview.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                page_type_code = 1;
-                notification_switch_notification_textview.setBackground(getResources().getDrawable(R.drawable.text_selection_left_seleted));
-                notification_switch_messages_textview.setBackground(getResources().getDrawable(R.drawable.text_selection_right_unseleted));
-                populateData(page_type_code);
-                notification_settings_imageview.setImageResource(R.drawable.settings_white_48);
-
-            }
-        });
-
-
-        notification_switch_messages_textview.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                page_type_code = 2;
-                notification_switch_messages_textview.setBackground(getResources().getDrawable(R.drawable.text_selection_right_seleted));
-                notification_switch_notification_textview.setBackground(getResources().getDrawable(R.drawable.text_selection_left_unseleted));
-                populateData(page_type_code);
-                notification_settings_imageview.setImageResource(R.drawable.plus_white_48);
-            }
-        });
+//        notification_switch_notification_textview.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                page_type_code = 1;
+//                notification_switch_notification_textview.setBackground(getResources().getDrawable(R.drawable.text_selection_left_seleted));
+//                notification_switch_messages_textview.setBackground(getResources().getDrawable(R.drawable.text_selection_right_unseleted));
+//                populateData(page_type_code);
+//                notification_settings_imageview.setImageResource(R.drawable.settings_white_48);
+//
+//            }
+//        });
+//
+//
+//        notification_switch_messages_textview.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                page_type_code = 2;
+//                notification_switch_messages_textview.setBackground(getResources().getDrawable(R.drawable.text_selection_right_seleted));
+//                notification_switch_notification_textview.setBackground(getResources().getDrawable(R.drawable.text_selection_left_unseleted));
+//                populateData(page_type_code);
+//                notification_settings_imageview.setImageResource(R.drawable.plus_white_48);
+//            }
+//        });
 
         notification_settings_imageview.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -125,7 +144,48 @@ public class NotificationFragment extends Fragment {
 
             }
         });
+
+        notification_switch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+
+                System.out.println("notification_switch " + isChecked);
+
+                if (isChecked) {
+                    new SessionManager(getActivity()).setSpecificUserBooleanDetail(SessionManager.KEY_NOTIFICATION_ONN_OFF_STATUS, true);
+                } else {
+                    showConfirmationDialog();
+                }
+            }
+        });
+
+
         return rootView;
+    }
+
+    private void showConfirmationDialog() {
+        new FancyAlertDialog.Builder(getActivity())
+                .setTitle("Are you sure you want to disable app notifications?")
+                .setBackgroundColor(Color.parseColor("#3F51B5"))  //Don't pass R.color.colorvalue
+                .setNegativeBtnText("Keep it ON")
+                .setAnimation(Animation.SLIDE)
+                .setIcon(R.drawable.notification_round_blue_white_100, Icon.Visible)
+                .isCancellable(false)
+                .OnNegativeClicked(new FancyAlertDialogListener() {
+                    @Override
+                    public void OnClick() {
+                        notification_switch.setChecked(true);
+                    }
+                })
+                .setPositiveBtnText("Turn it OFF")
+                .setPositiveBtnBackground(getResources().getColor(R.color.colorPrimary))//Don't pass R.color.colorvalue
+                .OnPositiveClicked(new FancyAlertDialogListener() {
+                    @Override
+                    public void OnClick() {
+                        new SessionManager(getActivity()).setSpecificUserBooleanDetail(SessionManager.KEY_NOTIFICATION_ONN_OFF_STATUS, false);
+                    }
+                })
+                .build();
     }
 
     private void populateData(int type_code) {

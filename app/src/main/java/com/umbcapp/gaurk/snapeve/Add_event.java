@@ -66,6 +66,7 @@ import com.shashank.sony.fancydialoglib.FancyAlertDialog;
 import com.shashank.sony.fancydialoglib.FancyAlertDialogListener;
 import com.shashank.sony.fancydialoglib.Icon;
 import com.umbcapp.gaurk.snapeve.Adapters.SimilarPostsAdapter;
+import com.umbcapp.gaurk.snapeve.Controllers.LocationCoordinatesList;
 import com.umbcapp.gaurk.snapeve.Controllers.SimilarPostsListItem;
 
 import java.io.File;
@@ -141,7 +142,7 @@ public class Add_event extends AppCompatActivity implements LocationListener {
     private ListView similar_posts_cardview_list_view;
     private SimilarPostsAdapter similarPostAdapter;
     private ArrayList<SimilarPostsListItem> similarPostsList;
-    private String CHANNEL_ID = "chchchchc";
+    //    private String CHANNEL_ID = "chchchchc";
     private File mCameraImageFile;
     public Uri mCameraImageFileUri = null;
     static final int REQUEST_TAKE_PHOTO = 5;
@@ -152,7 +153,7 @@ public class Add_event extends AppCompatActivity implements LocationListener {
     public LocationManager mLocationManager;
     private MobileServiceClient mClient;
     private CloudBlobContainer container;
-    private Map<String, Uri> mapForUploadingSelectedImage;
+    private Map<String, Uri> mapForUploadingSelectedImage = new HashMap<>();
     private ProgressDialog progressDialog;
     private String ImageFileName;
     private TextView post_event_time_text_view;
@@ -161,6 +162,7 @@ public class Add_event extends AppCompatActivity implements LocationListener {
     private boolean allDayEvent;
     private RadioButton post_as_group_radio;
     private View post_as_group_radio_divider_view;
+    private ArrayList<LocationCoordinatesList> coordinatesLists = new ArrayList<>();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -169,8 +171,8 @@ public class Add_event extends AppCompatActivity implements LocationListener {
 
         initiate_permission_check();
 
-        createNotificationChannel();
-        setNotification();
+//        createNotificationChannel();
+//        setNotification();
         // find_similar_posts
         mClient = Singleton.Instance().mClientMethod(this);
 
@@ -381,9 +383,12 @@ public class Add_event extends AppCompatActivity implements LocationListener {
                         pick_location_card_3_spinner.setVisibility(View.INVISIBLE);
                         add_event_card_3_textview.setVisibility(View.VISIBLE);
                         getCurrentLocation();
+                        selectedLat = currentLat;
+                        selectedLng = currentLng;
                         break;
                     case R.id.post_location_picklist_radio:
                         System.out.println("Picklist");
+                        pick_location_card_3_spinner.performClick();
                         location_type_radio_value = 2;
                         pick_location_card_3_spinner.setVisibility(View.VISIBLE);
                         add_event_card_3_textview.setVisibility(View.INVISIBLE);
@@ -472,7 +477,12 @@ public class Add_event extends AppCompatActivity implements LocationListener {
         pick_location_card_3_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                fetch_similar_events(1);
+                //fetch_similar_events(1);
+
+                eventLocation = pick_location_card_3_spinner.getSelectedItem().toString();
+                selectedLat = coordinatesLists.get(pick_location_card_3_spinner.getSelectedItemPosition()).getLat();
+                selectedLng = coordinatesLists.get(pick_location_card_3_spinner.getSelectedItemPosition()).getLon();
+
             }
 
             @Override
@@ -607,50 +617,50 @@ public class Add_event extends AppCompatActivity implements LocationListener {
 //        eventEndDateTime = Calendar.getInstance();
     }
 
-    private void setNotification() {
-        Intent intent = new Intent(this, NotificationReceiver.class);
-        Intent LeaderBoardIntent = new Intent(this, Leaderboard.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
-        PendingIntent leaderboardpendingIntent = PendingIntent.getActivity(this, 0, LeaderBoardIntent, 0);
+//    private void setNotification() {
+//        Intent intent = new Intent(this, NotificationReceiver.class);
+//        Intent LeaderBoardIntent = new Intent(this, Leaderboard.class);
+//        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+//        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
+//        PendingIntent leaderboardpendingIntent = PendingIntent.getActivity(this, 0, LeaderBoardIntent, 0);
+//
+//        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this, CHANNEL_ID)
+//                .addAction(R.drawable.approve_dark_grey_48, "Approve", leaderboardpendingIntent)
+//                .addAction(R.drawable.deny_dark_grey_48, "Snooze", pendingIntent)
+//                .addAction(R.drawable.comments_48_dark_grey, "Spam", leaderboardpendingIntent)
+//                .setSmallIcon(R.drawable.locations_24)
+//                .setContentTitle("New event")
+//                .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.walking_48))
+//                .setContentText("Art exhibition in Erickson field")
+//                .setStyle(new NotificationCompat.BigTextStyle()
+//                        .bigText("Tonight exhibition is sponsored by OCSS"))
+//                .setContentIntent(pendingIntent)
+//
+//                .setPriority(NotificationCompat.PRIORITY_DEFAULT);
+//
+//        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
+//
+//// notificationId is a unique int for each notification that you must define
+//        notificationManager.notify((int) System.currentTimeMillis(), mBuilder.build());
+//    }
 
-        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this, CHANNEL_ID)
-                .addAction(R.drawable.approve_dark_grey_48, "Approve", leaderboardpendingIntent)
-                .addAction(R.drawable.deny_dark_grey_48, "Snooze", pendingIntent)
-                .addAction(R.drawable.comments_48_dark_grey, "Spam", leaderboardpendingIntent)
-                .setSmallIcon(R.drawable.locations_24)
-                .setContentTitle("New event")
-                .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.walking_48))
-                .setContentText("Art exhibition in Erickson field")
-                .setStyle(new NotificationCompat.BigTextStyle()
-                        .bigText("Tonight exhibition is sponsored by OCSS"))
-                .setContentIntent(pendingIntent)
-
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT);
-
-        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
-
-// notificationId is a unique int for each notification that you must define
-        notificationManager.notify((int) System.currentTimeMillis(), mBuilder.build());
-    }
-
-    private void createNotificationChannel() {
-        // Create the NotificationChannel, but only on API 26+ because
-        // the NotificationChannel class is new and not in the support library
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            CharSequence name = "CH1";
-            String description = "CH DES 1";
-            int importance = NotificationManager.IMPORTANCE_DEFAULT;
-            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
-            channel.setDescription(description);
-            // Register the channel with the system; you can't change the importance
-            // or other notification behaviors after this
-            NotificationManager notificationManager = getSystemService(NotificationManager.class);
-            if (notificationManager != null) {
-                notificationManager.createNotificationChannel(channel);
-            }
-        }
-    }
+//    private void createNotificationChannel() {
+//        // Create the NotificationChannel, but only on API 26+ because
+//        // the NotificationChannel class is new and not in the support library
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+//            CharSequence name = "CH1";
+//            String description = "CH DES 1";
+//            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+//            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
+//            channel.setDescription(description);
+//            // Register the channel with the system; you can't change the importance
+//            // or other notification behaviors after this
+//            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+//            if (notificationManager != null) {
+//                notificationManager.createNotificationChannel(channel);
+//            }
+//        }
+//    }
 
     private void openMegrePostDialog(int position) {
 
@@ -746,16 +756,28 @@ public class Add_event extends AppCompatActivity implements LocationListener {
 
     private void fillLocationSpinner() {
 
+        coordinatesLists = new ArrayList<>();
+        coordinatesLists.add(new LocationCoordinatesList("UMBC", 39.255604, -76.711044));
+        coordinatesLists.add(new LocationCoordinatesList("AOK Library and Gallery", 39.256607, -76.711501));
+        coordinatesLists.add(new LocationCoordinatesList("Apartment community center", 39.258153, -76.712419));
+        coordinatesLists.add(new LocationCoordinatesList("Erickson Field", 39.256201, -76.710221));
+        coordinatesLists.add(new LocationCoordinatesList("Starbucks", 39.254256, -76.713239));
+        coordinatesLists.add(new LocationCoordinatesList("The Commons", 39.254913, -76.711070));
+        coordinatesLists.add(new LocationCoordinatesList("Walker Avenue Apartments", 39.259081, -76.714156));
+
         // Spinner Drop down elements
         List<String> categories = new ArrayList<String>();
-        categories.add("[ Select a Location ]");
-        categories.add("Breez way");
-        categories.add("UMBC Commons");
-        categories.add("Administration garage");
-        categories.add("Bookstore");
-        categories.add("Commons street");
-        categories.add("Flat Tuesdays");
-        categories.add("Gameroom");
+        categories.add("Select a Location");
+        categories.add(coordinatesLists.get(1).getLocation());
+        categories.add(coordinatesLists.get(2).getLocation());
+        categories.add(coordinatesLists.get(3).getLocation());
+        categories.add(coordinatesLists.get(4).getLocation());
+        categories.add(coordinatesLists.get(5).getLocation());
+        categories.add(coordinatesLists.get(6).getLocation());
+
+//        LocationCoordinatesList guq = LocationCoordinatesList;
+//        guq.lat
+
 
         ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, categories);
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -767,7 +789,7 @@ public class Add_event extends AppCompatActivity implements LocationListener {
 
         try {
             locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 3000, 0, this);
         } catch (Exception e) {
 
         }
@@ -1028,7 +1050,6 @@ public class Add_event extends AppCompatActivity implements LocationListener {
 
                     if (response.toString().equals("true")) {
 
-
                         new FancyAlertDialog.Builder(Add_event.this)
                                 .setTitle("Thank You for Your contribution")
                                 .setBackgroundColor(Color.parseColor("#3F51B5"))  //Don't pass R.color.colorvalue
@@ -1049,7 +1070,16 @@ public class Add_event extends AppCompatActivity implements LocationListener {
                                 .OnPositiveClicked(new FancyAlertDialogListener() {
                                     @Override
                                     public void OnClick() {
-                                        Toast.makeText(Add_event.this,"Ok", Toast.LENGTH_SHORT).show();
+//                                        Toast.makeText(Add_event.this, "Ok", Toast.LENGTH_SHORT).show();
+
+                                        finish();
+
+                                        Intent nav_share_Intent = new Intent(android.content.Intent.ACTION_SEND);
+                                        nav_share_Intent.setType("text/plain");
+                                        nav_share_Intent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Snapeve");
+                                        nav_share_Intent.putExtra(android.content.Intent.EXTRA_TEXT, "Hey guys!, I just scored 10 points on Spaneve by sharing an event. You can Share events too and an let everyone know about it. Happy sharing!!");
+                                        nav_share_Intent.putExtra(Intent.EXTRA_EMAIL, new String[]{"umbcsnapeve@gmail.com"});
+                                        startActivity(Intent.createChooser(nav_share_Intent, "Share via:"));
                                     }
                                 })
                                 .build();
@@ -1141,6 +1171,11 @@ public class Add_event extends AppCompatActivity implements LocationListener {
 
     private boolean fetchUiParams() {
 
+        if (mapForUploadingSelectedImage.size() == 0) {
+            Toast.makeText(this, "No image selected", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
         if (!post_event_description_text_view.getText().toString().trim().equals("")) {
             postDescription = post_event_description_text_view.getText().toString().trim();
         } else {
@@ -1161,7 +1196,9 @@ public class Add_event extends AppCompatActivity implements LocationListener {
         }
 
 
-        eventLocation = pick_location_card_3_spinner.getSelectedItem().toString();
+//        eventLocation = pick_location_card_3_spinner.getSelectedItem().toString();
+//        selectedLat = coordinatesLists.get(pick_location_card_3_spinner.getSelectedItemPosition()).getLat();
+//        selectedLng = coordinatesLists.get(pick_location_card_3_spinner.getSelectedItemPosition()).getLon();
 
         System.out.println("postDescription : " + postDescription);
         System.out.println("postDescriptionTimeDt : " + postDescriptionTimeDt);

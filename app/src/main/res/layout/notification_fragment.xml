@@ -5,87 +5,129 @@
     android:layout_height="match_parent"
     android:background="@color/colorMainBg">
 
+    <!--<RelativeLayout-->
+    <!--android:id="@+id/notification_header_bg"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_above="@id/view"-->
+    <!--android:layout_alignParentStart="true"-->
+    <!--android:layout_alignParentTop="true"-->
+    <!--android:background="@color/colorPrimary"-->
+    <!--android:paddingBottom="5dp"-->
+    <!--android:paddingTop="10dp"-->
+    <!--android:visibility="gone">-->
+
+    <!--<LinearLayout-->
+    <!--android:id="@+id/notification_layout_switch_lin_layout"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:orientation="horizontal"-->
+    <!--android:weightSum="100">-->
+
+    <!--<View-->
+    <!--android:layout_width="0dp"-->
+    <!--android:layout_height="0dp"-->
+    <!--android:layout_weight="20" />-->
+
+    <!--<TextView-->
+    <!--android:id="@+id/notification_switch_notification_textview"-->
+    <!--android:layout_width="0dp"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_weight="30"-->
+    <!--android:background="@drawable/text_selection_left_seleted"-->
+    <!--android:gravity="center"-->
+    <!--android:padding="5dp"-->
+    <!--android:text="Notifications"-->
+    <!--android:textColor="#fff"-->
+    <!--android:textSize="14sp"-->
+    <!--android:textStyle="bold" />-->
+
+    <!--<TextView-->
+    <!--android:id="@+id/notification_switch_messages_textview"-->
+    <!--android:layout_width="0dp"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_weight="30"-->
+    <!--android:background="@drawable/text_selection_right_unseleted"-->
+    <!--android:gravity="center"-->
+    <!--android:padding="5dp"-->
+    <!--android:text="Messages"-->
+    <!--android:textColor="#fff"-->
+    <!--android:textSize="14sp"-->
+    <!--android:textStyle="bold" />-->
+
+    <!--<View-->
+    <!--android:layout_width="0dp"-->
+    <!--android:layout_height="0dp"-->
+    <!--android:layout_weight="20" />-->
+
+    <!--</LinearLayout>-->
+
+    <!--<ImageView-->
+    <!--android:id="@+id/notification_settings_imageview"-->
+    <!--android:layout_width="40dp"-->
+    <!--android:layout_height="40dp"-->
+    <!--android:layout_alignBottom="@+id/notification_layout_switch_lin_layout"-->
+    <!--android:layout_alignParentEnd="true"-->
+    <!--android:layout_alignTop="@+id/notification_layout_switch_lin_layout"-->
+    <!--android:layout_marginEnd="16dp"-->
+    <!--android:foreground="?android:attr/selectableItemBackground"-->
+    <!--android:padding="2dp"-->
+    <!--android:src="@drawable/settings_white_48" />-->
+
+    <!--<TextView-->
+    <!--android:id="@+id/notification_unread_textview"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_below="@+id/notification_layout_switch_lin_layout"-->
+    <!--android:layout_marginEnd="16dp"-->
+    <!--android:layout_marginStart="16dp"-->
+    <!--android:gravity="center"-->
+    <!--android:padding="5dp"-->
+    <!--android:text="Youh have 2 new notification and 1 unread message"-->
+    <!--android:textColor="#fff"-->
+    <!--android:textSize="12sp" />-->
+
+    <!--</RelativeLayout>-->
+
     <RelativeLayout
         android:id="@+id/notification_header_bg"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@id/view"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
         android:background="@color/colorPrimary"
-        android:paddingBottom="5dp"
-        android:paddingTop="10dp">
-
-        <LinearLayout
-            android:id="@+id/notification_layout_switch_lin_layout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:weightSum="100">
-
-            <View
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_weight="20" />
-
-            <TextView
-                android:id="@+id/notification_switch_notification_textview"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="30"
-                android:background="@drawable/text_selection_left_seleted"
-                android:gravity="center"
-                android:padding="5dp"
-                android:text="Notifications"
-                android:textColor="#fff"
-                android:textSize="14sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/notification_switch_messages_textview"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="30"
-                android:background="@drawable/text_selection_right_unseleted"
-                android:gravity="center"
-                android:padding="5dp"
-                android:text="Messages"
-                android:textColor="#fff"
-                android:textSize="14sp"
-                android:textStyle="bold" />
-
-            <View
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_weight="20" />
-
-        </LinearLayout>
+        android:padding="5dp">
 
         <ImageView
             android:id="@+id/notification_settings_imageview"
             android:layout_width="40dp"
-            android:foreground="?android:attr/selectableItemBackground"
             android:layout_height="40dp"
-            android:layout_alignBottom="@+id/notification_layout_switch_lin_layout"
+            android:layout_alignBottom="@+id/notification_unread_textview"
             android:layout_alignParentEnd="true"
-            android:layout_alignTop="@+id/notification_layout_switch_lin_layout"
-            android:layout_marginEnd="16dp"
-            android:padding="2dp"
+            android:layout_alignTop="@+id/notification_unread_textview"
+            android:layout_marginEnd="8dp"
+            android:foreground="?android:attr/selectableItemBackground"
+            android:padding="5dp"
             android:src="@drawable/settings_white_48" />
 
         <TextView
             android:id="@+id/notification_unread_textview"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/notification_layout_switch_lin_layout"
-            android:layout_marginEnd="16dp"
-            android:layout_marginStart="16dp"
-            android:gravity="center"
-            android:padding="5dp"
-            android:text="Youh have 2 new notification and 1 unread message"
+            android:layout_centerHorizontal="true"
+            android:padding="10dp"
+            android:text="1 New Notification"
             android:textColor="#fff"
-            android:textSize="12sp" />
+            android:textStyle="bold" />
 
+        <android.support.v7.widget.SwitchCompat
+            android:layout_width="wrap_content"
+            android:id="@+id/notification_switch"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:text="OFF / ON  "
+            android:textColor="#fff"
+            android:textSize="10sp"
+            android:textStyle="bold"
+            android:theme="@style/ToggleSwitchTheme" />
     </RelativeLayout>
 
     <ListView

@@ -37,6 +37,7 @@ public class SessionManager {
     public static final String KEY_REQ_PENDING_GRP_STATUS = "req_pend_grp_status";
     public static final String KEY_REQ_PENDING_GRP_ID = "req_pend_grp_id";
     public static final String KEY_REQ_PENDING_GRP_NAME = "req_pend_grp_name";
+    public static final String KEY_NOTIFICATION_ONN_OFF_STATUS = "notification_on_off_status";
 
     SharedPreferences pref;
     // Editor for Shared preferences
@@ -57,6 +58,7 @@ public class SessionManager {
         Log.d("INTO shapref CREAT SESS", "INTO shapref CREAT SESS");
         // Storing login value as TRUE
         editor.putBoolean(IS_LOGIN, true);
+        editor.putBoolean(KEY_NOTIFICATION_ONN_OFF_STATUS, true);
         editor.putString(KEY_USER_NAME, user_name);
         System.out.println("user_name : " + user_name);
         editor.putString(KEY_PASSWORD, user_pass);

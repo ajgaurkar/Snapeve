@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.google.gson.JsonObject;
+import com.umbcapp.gaurk.snapeve.AccountHandler;
 import com.umbcapp.gaurk.snapeve.Login_snapeve_activity;
 import com.umbcapp.gaurk.snapeve.R;
 import com.umbcapp.gaurk.snapeve.ScheduledRewards;
@@ -53,6 +54,10 @@ public class SettingsFragment extends PreferenceFragment {
     @Override
     public boolean onPreferenceTreeClick(PreferenceScreen preferenceScreen, Preference preference) {
         switch (preference.getKey()) {
+            case "userAccountPreferenceKey":
+                startActivity(new Intent(getActivity(), AccountHandler.class));
+                break;
+
             case "snapeveFeedbackPreferenceKey":
                 startActivity(new Intent(getActivity(), SnapeveFeedback.class));
                 break;
