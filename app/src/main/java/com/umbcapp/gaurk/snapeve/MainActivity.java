@@ -109,9 +109,6 @@ public class MainActivity extends AppCompatActivity implements Listview_communic
         System.out.println("2 LOGIN KEY_GRP_NAME " + new SessionManager(getApplicationContext()).getSpecificUserDetail(SessionManager.KEY_GRP_NAME));
         System.out.println("2 LOGIN KEY_REQ_PENDING_GRP_ID " + new SessionManager(getApplicationContext()).getSpecificUserDetail(SessionManager.KEY_REQ_PENDING_GRP_ID));
 
-
-        testNotification();
-
         event_main_list = new ArrayList<Event_dash_list_obj>();
         main_event_list_view = (ListView) findViewById(R.id.dashboard_event_listview);
         pullToRefresh = (SwipeRefreshLayout) findViewById(R.id.dashboard_pull_refresh_layout);
@@ -207,8 +204,6 @@ public class MainActivity extends AppCompatActivity implements Listview_communic
                     fragmentTransaction1.replace(R.id.dashboard_main_frame_layout, notificationFragment);
                     fragmentTransaction1.commit();
 
-                    testNotification();
-
                     System.out.print("notificationFragment");
                     Toast.makeText(getApplicationContext(), "toast", Toast.LENGTH_SHORT).show();
                     return true;
@@ -226,24 +221,24 @@ public class MainActivity extends AppCompatActivity implements Listview_communic
         }
     };
 
-    private void testNotification() {
-
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
-        builder.setSmallIcon(R.drawable.walking_48);
-        builder.setTicker("Ticker");
-        builder.setAutoCancel(true);
-        builder.setWhen(System.currentTimeMillis());
-        builder.setContentTitle("Titke");
-        builder.setContentText("Content");
-
-        Intent intent = new Intent(this, NotificationReceiver.class);
-        PendingIntent pIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-        builder.setContentIntent(pIntent);
-
-        NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-        notificationManager.notify(8978, builder.build());
-
-    }
+//    private void testNotification() {
+//
+//        NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
+//        builder.setSmallIcon(R.drawable.walking_48);
+//        builder.setTicker("Ticker");
+//        builder.setAutoCancel(true);
+//        builder.setWhen(System.currentTimeMillis());
+//        builder.setContentTitle("Titke");
+//        builder.setContentText("Content");
+//
+//        Intent intent = new Intent(this, NotificationReceiver.class);
+//        PendingIntent pIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+//        builder.setContentIntent(pIntent);
+//
+//        NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+//        notificationManager.notify(8978, builder.build());
+//
+//    }
 
     private void executeGetFeedsApi() {
         final ProgressDialog progressDialog = new ProgressDialog(MainActivity.this);

@@ -29,7 +29,9 @@ public class Leaderboard extends AppCompatActivity implements Listview_communica
     int user_type = -1;
     private RecyclerView leader_board_recyclerview;
     private ArrayList<LeaderboardListItem> leaderBoardIndList;
+    private ArrayList<LeaderboardListItem> leaderBoardIndTop10List;
     private ArrayList<LeaderboardListItem> leaderBoardGrpList;
+    private ArrayList<LeaderboardListItem> leaderBoardGrpTop10List;
     private LeaderBoardAdapter leaderBoardAdapter;
     private int maxIndividualRank = 0;
     private int maxGrpRank = 0;
@@ -96,33 +98,14 @@ public class Leaderboard extends AppCompatActivity implements Listview_communica
                 } else {
                     top_10_all_sort_textview.setText("   All    ");
                 }
+                populateLeaderboardListView(user_type_selection_status);
             }
         });
 
         leaderBoardIndList = new ArrayList<LeaderboardListItem>();
+        leaderBoardIndTop10List = new ArrayList<LeaderboardListItem>();
 
         mLayoutManager = new LinearLayoutManager(getApplicationContext());
-
-        //COMMENTED AS OF NOW TO STOP REDIRECTION TO ANOTHER PAGE (also commented listviewcommunicator method)
-//        leader_board_recyclerview.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//
-//                if (user_type_selection_status == 0) {
-//
-//                    int selectedItemPosition = leader_board_recyclerview.getChildLayoutPosition(v);
-////                    leaderBoardIndList.get(selectedItemPosition).getUserId();
-//                    System.out.println(leaderBoardIndList.get(selectedItemPosition).getUserId());
-//
-//                }
-//                if (user_type_selection_status == 1) {
-//
-//                    int selectedItemPosition = leader_board_recyclerview.getChildLayoutPosition(v);
-////                    leaderBoardGrpList.get(selectedItemPosition).getUserId();
-//                    System.out.println(leaderBoardGrpList.get(selectedItemPosition).getUserId());
-//                }
-//            }
-//        });
 
 
     }
@@ -170,6 +153,7 @@ public class Leaderboard extends AppCompatActivity implements Listview_communica
 
     private void createUsersArrayList(JsonElement response) {
         leaderBoardIndList = new ArrayList<LeaderboardListItem>();
+        leaderBoardIndTop10List = new ArrayList<LeaderboardListItem>();
 
         System.out.println(" IN PARSE JASON");
 
@@ -202,9 +186,14 @@ public class Leaderboard extends AppCompatActivity implements Listview_communica
 
             leaderBoardIndList.add(new LeaderboardListItem(user_id, user_name, user_points, "Grp UMBC", dp_url));
 
+            if (j < 10) {
+                leaderBoardIndTop10List.add(new LeaderboardListItem(user_id, user_name, user_points, "Grp UMBC", dp_url));
+            }
+
         }
         System.out.println(" leaderBoardIndList " + leaderBoardIndList.size());
-        leaderBoardAdapter = new LeaderBoardAdapter(Leaderboard.this, leaderBoardIndList, maxIndividualRank, user_type_selection_status);
+        //set top N by default
+        leaderBoardAdapter = new LeaderBoardAdapter(Leaderboard.this, leaderBoardIndTop10List, maxIndividualRank, user_type_selection_status);
         leader_board_recyclerview.setLayoutManager(mLayoutManager);
         leader_board_recyclerview.setItemAnimator(new DefaultItemAnimator());
         leader_board_recyclerview.setAdapter(leaderBoardAdapter);
@@ -212,6 +201,7 @@ public class Leaderboard extends AppCompatActivity implements Listview_communica
 
     private void createGrpArrayList(JsonElement response) {
         leaderBoardGrpList = new ArrayList<LeaderboardListItem>();
+        leaderBoardGrpTop10List = new ArrayList<LeaderboardListItem>();
 
         System.out.println(" IN PARSE JASON");
 
@@ -242,7 +232,9 @@ public class Leaderboard extends AppCompatActivity implements Listview_communica
             System.out.println(" grp_dp_url " + grp_dp_url);
 
             leaderBoardGrpList.add(new LeaderboardListItem(grp_id, "place holder", grp_points, grp_name, grp_dp_url));
-
+            if (j < 10) {
+                leaderBoardGrpTop10List.add(new LeaderboardListItem(grp_id, "place holder", grp_points, grp_name, grp_dp_url));
+            }
         }
         System.out.println(" leaderBoardIndList " + leaderBoardIndList.size());
     }
@@ -251,15 +243,22 @@ public class Leaderboard extends AppCompatActivity implements Listview_communica
 
         if (user_type_selection_status == 0) {
 
-            leaderBoardAdapter = new LeaderBoardAdapter(Leaderboard.this, leaderBoardIndList, maxIndividualRank, user_type_selection_status);
+            if (top_10_selection_status) {
+                leaderBoardAdapter = new LeaderBoardAdapter(Leaderboard.this, leaderBoardIndTop10List, maxIndividualRank, user_type_selection_status);
+            } else {
+                leaderBoardAdapter = new LeaderBoardAdapter(Leaderboard.this, leaderBoardIndList, maxIndividualRank, user_type_selection_status);
+            }
             leader_board_recyclerview.setLayoutManager(mLayoutManager);
             leader_board_recyclerview.setItemAnimator(new DefaultItemAnimator());
             leader_board_recyclerview.setAdapter(leaderBoardAdapter);
 
         }
         if (user_type_selection_status == 1) {
-
-            leaderBoardAdapter = new LeaderBoardAdapter(Leaderboard.this, leaderBoardGrpList, maxGrpRank, user_type_selection_status);
+            if (top_10_selection_status) {
+                leaderBoardAdapter = new LeaderBoardAdapter(Leaderboard.this, leaderBoardGrpTop10List, maxGrpRank, user_type_selection_status);
+            } else {
+                leaderBoardAdapter = new LeaderBoardAdapter(Leaderboard.this, leaderBoardGrpList, maxGrpRank, user_type_selection_status);
+            }
             leader_board_recyclerview.setLayoutManager(mLayoutManager);
             leader_board_recyclerview.setItemAnimator(new DefaultItemAnimator());
             leader_board_recyclerview.setAdapter(leaderBoardAdapter);
@@ -270,27 +269,6 @@ public class Leaderboard extends AppCompatActivity implements Listview_communica
     @Override
     public void main_event_listview_element_clicked(int position, int click_code) {
         System.out.println("position :" + position);
-
-        //COMMENTED AS OF NOW TO STOP REDIRECTION TO ANOTHER PAGE
-
-//        if (user_type_selection_status == 0) {
-//            leaderBoardIndList.get(position);
-//            System.out.println(leaderBoardIndList.get(position).getUserId());
-//
-//
-//            Intent browseUserIntent = new Intent(getApplicationContext(), BrowseUserProfile.class);
-//            browseUserIntent.putExtra("user_id", leaderBoardIndList.get(position).getUserId());
-//            startActivity(browseUserIntent);
-//        }
-//        if (user_type_selection_status == 1) {
-//            leaderBoardGrpList.get(position);
-//            System.out.println(leaderBoardGrpList.get(position).getUserId());
-//
-//            Intent browseGrpIntent = new Intent(getApplicationContext(), BrowseGroupProfile.class);
-//            browseGrpIntent.putExtra("grp_id", leaderBoardGrpList.get(position).getUserId());
-//            startActivity(browseGrpIntent);
-//
-//        }
 
     }
 

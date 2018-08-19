@@ -51,7 +51,7 @@
         android:title="Terms and Policy">
         <intent
             android:action="android.intent.action.VIEW"
-            android:data="http://www.example.com" />
+            android:data="https://www.ajgaurkar.com" />
     </Preference>
 
     <Preference
@@ -60,7 +60,7 @@
         android:title="FAQ">
         <intent
             android:action="android.intent.action.VIEW"
-            android:data="http://www.example.com" />
+            android:data="https://www.ajgaurkar.com" />
     </Preference>
 
     <Preference

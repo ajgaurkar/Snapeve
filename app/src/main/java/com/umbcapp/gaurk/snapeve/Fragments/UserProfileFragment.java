@@ -612,6 +612,10 @@ public class UserProfileFragment extends Fragment {
         } else {
             user_profile_settings_imageview.setVisibility(View.INVISIBLE);
         }
+
+        new SessionManager(getActivity()).setSpecificUserDetail(SessionManager.KEY_GRP_DP_URL, grp_dp_url);
+        new SessionManager(getActivity()).setSpecificUserDetail(SessionManager.KEY_GRP_NAME, grp_name);
+        new SessionManager(getActivity()).setSpecificUserDetail(SessionManager.KEY_GRP_ID, grp_id);
         populateUserInfo();
 
     }
@@ -1202,14 +1206,11 @@ public class UserProfileFragment extends Fragment {
                     progressDialog.dismiss();
                     if (response.toString().contains("true")) {
                         System.out.println("response OK");
-
+                        fetch_user_details();
                     }
                 }
-
             }
         });
-
-
     }
 
     private void parseMemberList(JsonElement response) {
@@ -1288,8 +1289,45 @@ public class UserProfileFragment extends Fragment {
     }
 
     private void executeDeleteGroupApi() {
-        //execute delete group api and if response success, delete all data related to group from SP
-        Toast.makeText(getActivity(), "executeDeleteGroupApi", Toast.LENGTH_SHORT).show();
+        final ProgressDialog progressDialog = new ProgressDialog(getActivity());
+        progressDialog.setTitle("Updating, Please wait...");
+        progressDialog.create();
+        progressDialog.show();
+        progressDialog.setCanceledOnTouchOutside(false);
+        progressDialog.setCancelable(false);
+        JsonObject jsonObjectParameters = new JsonObject();
+        jsonObjectParameters.addProperty("grpId", grp_id);
+        jsonObjectParameters.addProperty("adminId", new SessionManager(getActivity()).getSpecificUserDetail(SessionManager.KEY_USER_ID));
+
+        final SettableFuture<JsonElement> resultFuture = SettableFuture.create();
+        ListenableFuture<JsonElement> serviceFilterFuture = MainActivity.mClient.invokeApi("delete_group_api", jsonObjectParameters);
+
+        Futures.addCallback(serviceFilterFuture, new FutureCallback<JsonElement>() {
+            @Override
+            public void onFailure(Throwable exception) {
+                resultFuture.setException(exception);
+                progressDialog.dismiss();
+                System.out.println(" delete_group_api exception    " + exception);
+
+            }
+
+            @Override
+            public void onSuccess(JsonElement response) {
+                resultFuture.set(response);
+                progressDialog.dismiss();
+                System.out.println(" delete_group_api success response    " + response);
+
+                Toast.makeText(getActivity(), response.toString(), Toast.LENGTH_SHORT).show();
+
+                if (response.toString().contains("true")) {
+                    System.out.println("response OK");
+                    fetch_user_details();
+
+                }
+
+            }
+        });
+
     }
 
     private void showPendingGrpRequestDialog() {

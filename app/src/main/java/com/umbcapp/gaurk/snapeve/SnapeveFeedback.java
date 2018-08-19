@@ -59,7 +59,6 @@ public class SnapeveFeedback extends AppCompatActivity {
     private Spinner feedback_type;
     private EditText feedback_description;
     private CardView feedback_submit_button;
-    private CardView feedback_attachment_card_view;
     private ImageView feedback_attachment_imageview;
     private TextView feedback_attachment_textview;
     private List<String> feedback_type_list;
@@ -78,16 +77,14 @@ public class SnapeveFeedback extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.feedback_snapeve);
+        setContentView(R.layout.snapeve_feedback);
         feedback_title = (EditText) findViewById(R.id.feedback_title_editext);
         feedback_type = (Spinner) findViewById(R.id.feedback_type_spinner);
         feedback_description = (EditText) findViewById(R.id.feedback_description_edittext);
         feedback_submit_button = (CardView) findViewById(R.id.feedback_submit_button_cardview);
-        feedback_attachment_card_view = (CardView) findViewById(R.id.attachment_card_view);
         feedback_attachment_imageview = (ImageView) findViewById(R.id.feedback_attachment_imageview);
         feedback_attachment_textview = (TextView) findViewById(R.id.feedback_attachment_textview);
         feedback_attachment_textview.setVisibility(View.VISIBLE);
-
 
         SessionManager sessionManager = new SessionManager(SnapeveFeedback.this);
         feedbackSubmittedByUserName = sessionManager.getSpecificUserDetail(SessionManager.KEY_FIRST_NAME) + " " + sessionManager.getSpecificUserDetail(SessionManager.KEY_LAST_NAME);
@@ -96,12 +93,10 @@ public class SnapeveFeedback extends AppCompatActivity {
         feedbackposttedDate = getCurrentTime();
 
         feedback_type_list = new ArrayList<String>();
-        feedback_type_list.add("Item 1");
-        feedback_type_list.add("Item 2");
-        feedback_type_list.add("Item 3");
-        feedback_type_list.add("Item 4");
-        feedback_type_list.add("Item 5");
-        feedback_type_list.add("Item 6");
+        feedback_type_list.add("[ Select category ]");
+        feedback_type_list.add("Found a bug");
+        feedback_type_list.add("Suggestion");
+        feedback_type_list.add("Miscellaneous feedback");
 
         feedback_list_adpter = new ArrayAdapter<String>(SnapeveFeedback.this, android.R.layout.simple_spinner_item, feedback_type_list);
         feedback_list_adpter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -179,10 +174,15 @@ public class SnapeveFeedback extends AppCompatActivity {
     private void submitFeedback() {
 
         if (feedback_title.getText().toString().length() > 0) {
-            new SubmitFeedbackAsyncTask().execute();
 
+            if (feedback_type.getSelectedItemPosition() == 0) {
+                Toast.makeText(SnapeveFeedback.this, "Select a category", Toast.LENGTH_LONG).show();
+
+            } else {
+                new SubmitFeedbackAsyncTask().execute();
+            }
         } else {
-            Toast.makeText(SnapeveFeedback.this, "Provide Feedtitle", Toast.LENGTH_LONG).show();
+            Toast.makeText(SnapeveFeedback.this, "Enter title", Toast.LENGTH_LONG).show();
         }
 
 
