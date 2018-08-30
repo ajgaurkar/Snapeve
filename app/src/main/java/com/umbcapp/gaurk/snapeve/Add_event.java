@@ -483,6 +483,9 @@ public class Add_event extends AppCompatActivity implements LocationListener {
                 selectedLat = coordinatesLists.get(pick_location_card_3_spinner.getSelectedItemPosition()).getLat();
                 selectedLng = coordinatesLists.get(pick_location_card_3_spinner.getSelectedItemPosition()).getLon();
 
+                System.out.println("pick selectedLat : "+ selectedLat);
+                System.out.println("pick selectedLng : "+ selectedLng);
+
             }
 
             @Override
@@ -643,7 +646,7 @@ public class Add_event extends AppCompatActivity implements LocationListener {
 //// notificationId is a unique int for each notification that you must define
 //        notificationManager.notify((int) System.currentTimeMillis(), mBuilder.build());
 //    }
-
+//
 //    private void createNotificationChannel() {
 //        // Create the NotificationChannel, but only on API 26+ because
 //        // the NotificationChannel class is new and not in the support library
@@ -757,23 +760,57 @@ public class Add_event extends AppCompatActivity implements LocationListener {
     private void fillLocationSpinner() {
 
         coordinatesLists = new ArrayList<>();
+//        coordinatesLists.add(new LocationCoordinatesList("Apartment community center", 39.258153, -76.712419));
+//        coordinatesLists.add(new LocationCoordinatesList("Starbucks", 39.254256, -76.713239));
+//        coordinatesLists.add(new LocationCoordinatesList("The Commons", 39.254913, -76.711070));
+//        coordinatesLists.add(new LocationCoordinatesList("Walker Avenue Apartments", 39.259081, -76.714156));
+
         coordinatesLists.add(new LocationCoordinatesList("UMBC", 39.255604, -76.711044));
         coordinatesLists.add(new LocationCoordinatesList("AOK Library and Gallery", 39.256607, -76.711501));
-        coordinatesLists.add(new LocationCoordinatesList("Apartment community center", 39.258153, -76.712419));
+        coordinatesLists.add(new LocationCoordinatesList("RAC", 39.252916, -76.712617));
         coordinatesLists.add(new LocationCoordinatesList("Erickson Field", 39.256201, -76.710221));
-        coordinatesLists.add(new LocationCoordinatesList("Starbucks", 39.254256, -76.713239));
-        coordinatesLists.add(new LocationCoordinatesList("The Commons", 39.254913, -76.711070));
-        coordinatesLists.add(new LocationCoordinatesList("Walker Avenue Apartments", 39.259081, -76.714156));
+        coordinatesLists.add(new LocationCoordinatesList("PHAB",39.254982, -76.714788));
+        coordinatesLists.add(new LocationCoordinatesList("Stadium complx",39.250616, -76.707769));
+        coordinatesLists.add(new LocationCoordinatesList("Event Center",39.252124, -76.707533));
+        coordinatesLists.add(new LocationCoordinatesList("UC bldg",39.254306, -76.713080));
+        coordinatesLists.add(new LocationCoordinatesList("Sherman hall",39.253766, -76.713618));
+        coordinatesLists.add(new LocationCoordinatesList("Engineering bldg",39.254409, -76.713988));
+        coordinatesLists.add(new LocationCoordinatesList("Commons terrace",39.254854, -76.711432));
+        coordinatesLists.add(new LocationCoordinatesList("LC-1",39.254833, -76.711866));
+        coordinatesLists.add(new LocationCoordinatesList("The quad",39.254234, -76.711760));
+        coordinatesLists.add(new LocationCoordinatesList("Sondheim hall",39.253434, -76.712752));
+        coordinatesLists.add(new LocationCoordinatesList("Meyerhoff bldg",39.254730, -76.712984));
+        coordinatesLists.add(new LocationCoordinatesList("Library pond",39.255814, -76.712156));
+        coordinatesLists.add(new LocationCoordinatesList("Public policy bldg",39.255137, -76.709222));
+        coordinatesLists.add(new LocationCoordinatesList("Telescope",39.254387, -76.709762));
+        coordinatesLists.add(new LocationCoordinatesList("Alumni-House",39.258124, -76.717755));
+        coordinatesLists.add(new LocationCoordinatesList("Truegits",39.255606, -76.707861));
+        coordinatesLists.add(new LocationCoordinatesList("Chesapeake Hall",39.256768, -76.708602));
+        coordinatesLists.add(new LocationCoordinatesList("Erickson Hall",39.256902, -76.709295));
+        coordinatesLists.add(new LocationCoordinatesList("residnetial life",39.256741, -76.709910));
+        coordinatesLists.add(new LocationCoordinatesList("UHS",39.256702, -76.709405));
+        coordinatesLists.add(new LocationCoordinatesList("Harbor Hall",39.257284, -76.708009));
+        coordinatesLists.add(new LocationCoordinatesList("Patapsco Hall",39.255051, -76.706711));
+        coordinatesLists.add(new LocationCoordinatesList("Potomac Hall",39.255986, -76.706628));
+        coordinatesLists.add(new LocationCoordinatesList("Susquehanna Hall",39.255592, -76.708705));
+        coordinatesLists.add(new LocationCoordinatesList("TRC",39.255012, -76.702271));
+        coordinatesLists.add(new LocationCoordinatesList("UMBC Police",39.257281, -76.714171));
+        coordinatesLists.add(new LocationCoordinatesList("Public Policy Bldg",39.255163, -76.709133));
+        coordinatesLists.add(new LocationCoordinatesList("Administration Bldg",39.253051, -76.713495));
+        coordinatesLists.add(new LocationCoordinatesList("Fine Arts Bldg",39.255052, -76.713492));
 
         // Spinner Drop down elements
         List<String> categories = new ArrayList<String>();
-        categories.add("Select a Location");
-        categories.add(coordinatesLists.get(1).getLocation());
-        categories.add(coordinatesLists.get(2).getLocation());
-        categories.add(coordinatesLists.get(3).getLocation());
-        categories.add(coordinatesLists.get(4).getLocation());
-        categories.add(coordinatesLists.get(5).getLocation());
-        categories.add(coordinatesLists.get(6).getLocation());
+//        categories.add("[ Select a Location ]");
+        for(int i=0;i<coordinatesLists.size();i++){
+            categories.add(coordinatesLists.get(i).getLocation());
+        }
+//        categories.add(coordinatesLists.get(1).getLocation());
+//        categories.add(coordinatesLists.get(2).getLocation());
+//        categories.add(coordinatesLists.get(3).getLocation());
+//        categories.add(coordinatesLists.get(4).getLocation());
+//        categories.add(coordinatesLists.get(5).getLocation());
+//        categories.add(coordinatesLists.get(6).getLocation());
 
 //        LocationCoordinatesList guq = LocationCoordinatesList;
 //        guq.lat
