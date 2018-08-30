@@ -1,6 +1,8 @@
 package com.umbcapp.gaurk.snapeve.Fragments;
 
 import android.app.Fragment;
+import android.arch.lifecycle.LifecycleOwner;
+import android.arch.lifecycle.Observer;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -26,9 +28,12 @@ import com.shashank.sony.fancydialoglib.FancyAlertDialogListener;
 import com.shashank.sony.fancydialoglib.Icon;
 import com.umbcapp.gaurk.snapeve.Adapters.MessagesPersonalAdapter;
 import com.umbcapp.gaurk.snapeve.Adapters.NotificationsAdapter;
+import com.umbcapp.gaurk.snapeve.Adapters.SnapeveNotificationAdapter;
 import com.umbcapp.gaurk.snapeve.Add_event;
 import com.umbcapp.gaurk.snapeve.Controllers.MessagesPersonalListItem;
 import com.umbcapp.gaurk.snapeve.Controllers.NotificationListItem;
+import com.umbcapp.gaurk.snapeve.Controllers.SnapeveNotification;
+import com.umbcapp.gaurk.snapeve.DatabaseRepository.SnapeveNotificationRepository;
 import com.umbcapp.gaurk.snapeve.MessageThread;
 import com.umbcapp.gaurk.snapeve.R;
 import com.umbcapp.gaurk.snapeve.SessionManager;
@@ -46,6 +51,7 @@ public class NotificationFragment extends Fragment {
     int page_type_code = 1;
     private ImageView notification_settings_imageview;
     private SwitchCompat notification_switch;
+    private SnapeveNotificationRepository studentRepository;
 
     public NotificationFragment() {
     }
@@ -53,6 +59,7 @@ public class NotificationFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        studentRepository = new SnapeveNotificationRepository(getActivity());
 
     }
 
@@ -194,13 +201,26 @@ public class NotificationFragment extends Fragment {
         switch (type_code) {
             case 1:
 
-                ArrayList<NotificationListItem> notificationsList = new ArrayList<>();
-                notificationsList.add(new NotificationListItem("u1", "n1", 1, "Request approved", "Your request to join the group has been accepted", "Today 12:39 PM", true));
-                notificationsList.add(new NotificationListItem("u1", "n1", 1, "Post liked", "Your post from last week has been liked", "Wed 04:12 PM", false));
-                notificationsList.add(new NotificationListItem("u1", "n1", 1, "Invitation for event", "Your group member has invited to you attend an event", "Jul 03, 09:30 AM", false));
+//                ArrayList<NotificationListItem> notificationsList = new ArrayList<>();
+//                notificationsList.add(new NotificationListItem("u1", "n1", 1, "Request approved", "Your request to join the group has been accepted", "Today 12:39 PM", true));
+//                notificationsList.add(new NotificationListItem("u1", "n1", 1, "Post liked", "Your post from last week has been liked", "Wed 04:12 PM", false));
+//                notificationsList.add(new NotificationListItem("u1", "n1", 1, "Invitation for event", "Your group member has invited to you attend an event", "Jul 03, 09:30 AM", false));
+//
+//                NotificationsAdapter notificationsAdapter = new NotificationsAdapter(getActivity(), notificationsList);
+//                notification_layout_listview.setAdapter(notificationsAdapter);
 
-                NotificationsAdapter notificationsAdapter = new NotificationsAdapter(getActivity(), notificationsList);
-                notification_layout_listview.setAdapter(notificationsAdapter);
+
+
+                studentRepository.getTasks().observe((LifecycleOwner) getActivity(), new Observer<List<SnapeveNotification>>() {
+                    @Override
+                    public void onChanged(@Nullable List<SnapeveNotification> notificationsList) {
+                        System.out.println("List---   " + notificationsList);
+                        System.out.println("List size---   " + notificationsList.size());
+                        SnapeveNotificationAdapter notificationsAdapter = new SnapeveNotificationAdapter(getActivity(), notificationsList);
+                        notification_layout_listview.setAdapter(notificationsAdapter);
+                    }
+                });
+
                 break;
             case 2:
                 ArrayList<MessagesPersonalListItem> messagePersonalList = new ArrayList<>();

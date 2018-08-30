@@ -14,6 +14,7 @@ import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 
 import com.microsoft.windowsazure.notifications.NotificationsHandler;
+import com.umbcapp.gaurk.snapeve.DatabaseRepository.SnapeveNotificationRepository;
 
 /**
  * Created by Amey on 29-07-2018.
@@ -28,6 +29,7 @@ public class AppNotificationHandler extends NotificationsHandler {
     private String nhMessage = "";
     private String nhTitle;
     private String nhTag;
+    private SnapeveNotificationRepository snapeveNotificationRepository;
 
     @Override
     public void onReceive(Context context, Bundle bundle) {
@@ -38,6 +40,10 @@ public class AppNotificationHandler extends NotificationsHandler {
         System.out.println("in Notoification on Recive ");
 //        sendNotification(nhMessage);
         setNotification();
+
+        snapeveNotificationRepository = new SnapeveNotificationRepository(ctx);
+
+        snapeveNotificationRepository.insertSnapeveNotification(nhTitle,nhMessage,nhTag);
     }
 
 

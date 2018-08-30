@@ -48,6 +48,7 @@ import com.shashank.sony.fancydialoglib.FancyAlertDialogListener;
 import com.shashank.sony.fancydialoglib.Icon;
 import com.umbcapp.gaurk.snapeve.Adapters.Dash_Event_ListAdapter;
 import com.umbcapp.gaurk.snapeve.Controllers.Event_dash_list_obj;
+import com.umbcapp.gaurk.snapeve.DatabaseRepository.SnapeveNotificationRepository;
 import com.umbcapp.gaurk.snapeve.Fragments.MapsFragment;
 import com.umbcapp.gaurk.snapeve.Fragments.NotificationFragment;
 import com.umbcapp.gaurk.snapeve.Fragments.SettingsFragment;
@@ -89,6 +90,7 @@ public class MainActivity extends AppCompatActivity implements Listview_communic
     private int server_action_like = 0;
     private int server_action_spam = 0;
     int selcted_item_position = -1;
+    private SnapeveNotificationRepository snapeveNotificationRepository;
 //    private Button refreshBtn;
 
     @Override
@@ -103,6 +105,8 @@ public class MainActivity extends AppCompatActivity implements Listview_communic
         System.out.println("Start @ sessionCounter : " + text);
 
         new SessionManager(getApplicationContext()).checkLogin();
+
+        snapeveNotificationRepository = new SnapeveNotificationRepository(getApplicationContext());
 
         System.out.println("2 LOGIN USER ID " + new SessionManager(getApplicationContext()).getSpecificUserDetail(SessionManager.KEY_USER_ID));
         System.out.println("2 LOGIN GRP ID " + new SessionManager(getApplicationContext()).getSpecificUserDetail(SessionManager.KEY_GRP_ID));
