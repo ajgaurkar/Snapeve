@@ -93,7 +93,7 @@ public class MapsFragment extends Fragment {
         DateFormat formatter = new SimpleDateFormat("HH:mm:ss", Locale.US);
         formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
         String text = formatter.format(new Date(sessionCounter));
-        System.out.println("Start @ sessionCounter : " + text);
+        System.out.println("Start @ sessionCounter : " + sessionCounter);
     }
 
     @Override
@@ -397,12 +397,25 @@ public class MapsFragment extends Fragment {
     public void onResume() {
         super.onResume();
         mMapView.onResume();
+
+        sessionCounter = System.currentTimeMillis();
+        DateFormat formatter = new SimpleDateFormat("HH:mm:ss", Locale.US);
+        formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
+        String text = formatter.format(new Date(sessionCounter));
+        System.out.println("Start @ sessionCounter : " + sessionCounter);
     }
 
     @Override
     public void onPause() {
         super.onPause();
         mMapView.onPause();
+
+        sessionCounter = System.currentTimeMillis() - sessionCounter;
+        long minutes = TimeUnit.MILLISECONDS.toMinutes(sessionCounter);
+        long seconds = TimeUnit.MILLISECONDS.toSeconds(sessionCounter);
+
+        System.out.println("MAPS sessionCounter : " + minutes + "m " + seconds + "s");
+
     }
 
     @Override

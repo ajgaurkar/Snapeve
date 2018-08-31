@@ -91,6 +91,7 @@ public class MainActivity extends AppCompatActivity implements Listview_communic
     private int server_action_spam = 0;
     int selcted_item_position = -1;
     private SnapeveNotificationRepository snapeveNotificationRepository;
+    private JsonObject sessionCounterParameters;
 //    private Button refreshBtn;
 
     @Override
@@ -102,7 +103,7 @@ public class MainActivity extends AppCompatActivity implements Listview_communic
         DateFormat formatter = new SimpleDateFormat("HH:mm:ss", Locale.US);
         formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
         String text = formatter.format(new Date(sessionCounter));
-        System.out.println("Start @ sessionCounter : " + text);
+        System.out.println("Start onCreate@ sessionCounter : " + sessionCounter);
 
         new SessionManager(getApplicationContext()).checkLogin();
 
@@ -138,6 +139,7 @@ public class MainActivity extends AppCompatActivity implements Listview_communic
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
         executeGetFeedsApi();
+        postSessionCounterdataApi();
 
         main_img_pick_fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -156,6 +158,35 @@ public class MainActivity extends AppCompatActivity implements Listview_communic
         System.out.println("GRPP ID " + new SessionManager(getApplicationContext()).getSpecificUserDetail(SessionManager.KEY_GRP_ID));
 
 
+    }
+
+    private void postSessionCounterdataApi() {
+        sessionCounterParameters = new JsonObject();
+        sessionCounterParameters.addProperty("user_id", new SessionManager(getApplicationContext()).getSpecificUserDetail(SessionManager.KEY_USER_ID));
+        sessionCounterParameters.addProperty("activity_code", "MPS");
+        sessionCounterParameters.addProperty("start_time", Calendar.getInstance().getTimeInMillis()-13);
+        sessionCounterParameters.addProperty("end_time", Calendar.getInstance().getTimeInMillis());
+        sessionCounterParameters.addProperty("duration", 13);
+        sessionCounterParameters.addProperty("user_name", "xx_person_XX");
+
+        final SettableFuture<JsonElement> resultFuture = SettableFuture.create();
+//        ListenableFuture<JsonElement> serviceFilterFuture = mClient.invokeApi("Login_api", jsonObjectLoginParameters);
+        ListenableFuture<JsonElement> serviceFilterFuture = mClient.invokeApi("session_counter_api", sessionCounterParameters);
+
+        Futures.addCallback(serviceFilterFuture, new FutureCallback<JsonElement>() {
+            @Override
+            public void onFailure(Throwable exception) {
+                resultFuture.setException(exception);
+                System.out.println(" session_counter_api exception    " + exception);
+            }
+
+            @Override
+            public void onSuccess(JsonElement response) {
+                resultFuture.set(response);
+                System.out.println(" session_counter_api success response    " + response);
+
+            }
+        });
     }
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
@@ -840,6 +871,18 @@ public class MainActivity extends AppCompatActivity implements Listview_communic
     }
 
     @Override
+    public void onPause() {
+        super.onPause();
+
+        sessionCounter = System.currentTimeMillis() - sessionCounter;
+        long minutes = TimeUnit.MILLISECONDS.toMinutes(sessionCounter);
+        long seconds = TimeUnit.MILLISECONDS.toSeconds(sessionCounter);
+
+        System.out.println("MAINACTIVITY onPause sessionCounter : " + minutes + "m " + seconds + "s");
+
+    }
+
+    @Override
     public void onDestroy() {
         super.onDestroy();
 
@@ -847,12 +890,17 @@ public class MainActivity extends AppCompatActivity implements Listview_communic
         long minutes = TimeUnit.MILLISECONDS.toMinutes(sessionCounter);
         long seconds = TimeUnit.MILLISECONDS.toSeconds(sessionCounter);
 
-        System.out.println("MAINACTIVITY sessionCounter : " + minutes + "m " + seconds + "s");
+        System.out.println("MAINACTIVITY onDestroy sessionCounter : " + minutes + "m " + seconds + "s");
     }
 
     @Override
     public void onResume() {
         executeGetFeedsApi();
+        sessionCounter = System.currentTimeMillis();
+        DateFormat formatter = new SimpleDateFormat("HH:mm:ss", Locale.US);
+        formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
+        String text = formatter.format(new Date(sessionCounter));
+        System.out.println("Start onResume@ sessionCounter : " + sessionCounter);
 
         super.onResume();
     }
