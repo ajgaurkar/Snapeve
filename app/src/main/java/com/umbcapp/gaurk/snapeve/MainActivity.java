@@ -164,8 +164,8 @@ public class MainActivity extends AppCompatActivity implements Listview_communic
 
     private void postSessionCounterdataApi() {
 
-        studentRepository = new SnapeveDatabaseRepository( MainActivity.this);
-        studentRepository.getSessiondata().observe((LifecycleOwner)MainActivity.this, new Observer<List<SnapEveSession>>() {
+        studentRepository = new SnapeveDatabaseRepository(MainActivity.this);
+        studentRepository.getSessiondata().observe((LifecycleOwner) MainActivity.this, new Observer<List<SnapEveSession>>() {
             @Override
             public void onChanged(@Nullable List<SnapEveSession> snapEveSessionList) {
                 System.out.println("Session List---   " + snapEveSessionList);
@@ -214,17 +214,22 @@ public class MainActivity extends AppCompatActivity implements Listview_communic
     }
 
     private boolean refreshMainActSessionFlag = true;
+    private int curentBottonNavigationSelection = 0;
+    FragmentManager fragmentManager = getFragmentManager();
+    FragmentTransaction fragmentTransaction1;
+
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
 
-        FragmentManager fragmentManager = getFragmentManager();
-        FragmentTransaction fragmentTransaction1;
+
         //        FragmentTransaction fragmentTransaction2;
 
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.navigation_home:
+
+                    curentBottonNavigationSelection = 0;
 
                     refreshMainActSessionFlag = true;
                     sessionCounter = System.currentTimeMillis();
@@ -238,6 +243,8 @@ public class MainActivity extends AppCompatActivity implements Listview_communic
 
                     return true;
                 case R.id.navigation_maps:
+
+                    curentBottonNavigationSelection = 1;
 
                     if (refreshMainActSessionFlag) {
                         sessionCounter = System.currentTimeMillis() - sessionCounter;
@@ -257,6 +264,7 @@ public class MainActivity extends AppCompatActivity implements Listview_communic
                     return true;
                 case R.id.navigation_user:
 //                    startActivity(new Intent(getApplicationContext(), UserProfileActivity.class));
+                    curentBottonNavigationSelection = 2;
 
                     if (refreshMainActSessionFlag) {
                         sessionCounter = System.currentTimeMillis() - sessionCounter;
@@ -277,6 +285,7 @@ public class MainActivity extends AppCompatActivity implements Listview_communic
 
                 case R.id.navigation_notification:
 //                    startActivity(new Intent(getApplicationContext(), UserProfileActivity.class));
+                    curentBottonNavigationSelection = 3;
 
                     if (refreshMainActSessionFlag) {
                         sessionCounter = System.currentTimeMillis() - sessionCounter;
@@ -297,6 +306,8 @@ public class MainActivity extends AppCompatActivity implements Listview_communic
 
                 case R.id.navigation_settings:
 //                    startActivity(new Intent(getApplicationContext(), MapsActivityFragment.class));
+                    curentBottonNavigationSelection = 4;
+
                     if (refreshMainActSessionFlag) {
                         sessionCounter = System.currentTimeMillis() - sessionCounter;
                         long minutes = TimeUnit.MILLISECONDS.toMinutes(sessionCounter);
@@ -485,7 +496,8 @@ public class MainActivity extends AppCompatActivity implements Listview_communic
     private void poupulateList(JsonElement response) {
 
         event_main_list = new ArrayList<Event_dash_list_obj>();
-        DateFormat feedsDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSX");
+//        DateFormat feedsDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSX");
+        DateFormat feedsDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
         DateFormat displayDtFormat = new SimpleDateFormat("MMM dd HH:mm");
 
         System.out.println(" IN PARSE JASON");
@@ -947,11 +959,27 @@ public class MainActivity extends AppCompatActivity implements Listview_communic
     public void onDestroy() {
         super.onDestroy();
 
-//        sessionCounter = System.currentTimeMillis() - sessionCounter;
-//        long minutes = TimeUnit.MILLISECONDS.toMinutes(sessionCounter);
-//        long seconds = TimeUnit.MILLISECONDS.toSeconds(sessionCounter);
-//
-//        System.out.println("MAINACTIVITY onDestroy sessionCounter : " + minutes + "m " + seconds + "s");
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (curentBottonNavigationSelection == 0) {
+            finish();
+            super.onBackPressed();
+        } else {
+            curentBottonNavigationSelection = 0;
+            refreshMainActSessionFlag = true;
+            sessionCounter = System.currentTimeMillis();
+
+            fragmentTransaction1 = fragmentManager.beginTransaction();
+            fragmentTransaction1.remove(mapsFragment);
+            fragmentTransaction1.remove(userProfileFragment);
+            fragmentTransaction1.remove(settingsFragment);
+            fragmentTransaction1.remove(notificationFragment);
+            fragmentTransaction1.commit();
+
+        }
+
     }
 
     @Override

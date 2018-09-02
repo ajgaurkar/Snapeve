@@ -238,8 +238,10 @@ public class Add_event extends AppCompatActivity implements LocationListener {
             //disable post as grp radio btn
             post_as_group_radio.setVisibility(View.GONE);
             post_as_group_radio_divider_view.setVisibility(View.GONE);
+            add_event_card_2.setVisibility(View.GONE);
         } else {
             //enable post as grp radio btn
+            add_event_card_2.setVisibility(View.VISIBLE);
             post_as_group_radio.setVisibility(View.VISIBLE);
             post_as_group_radio_divider_view.setVisibility(View.VISIBLE);
 //            post_as_group_radio.setText(userDetailsObj.get("grp_name").getAsString());

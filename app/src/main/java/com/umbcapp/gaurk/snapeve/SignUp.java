@@ -1,9 +1,11 @@
 package com.umbcapp.gaurk.snapeve;
 
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -34,14 +36,17 @@ public class SignUp extends AppCompatActivity {
     private String last_name;
     private String first_name;
     private String confirm_pass;
+    private String security_answer;
+    private String security_question;
     private String pass;
     private String user_name;
+    String ref_code;
     private String email;
     String emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
     private Spinner signup_page_security_question_spinner;
     private EditText signup_page_referral_code_edittext;
     private EditText signup_page_security_answer_edittext;
-    private ArrayList<String> questionsList= new ArrayList<>();
+    private ArrayList<String> questionsList = new ArrayList<>();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -79,11 +84,95 @@ public class SignUp extends AppCompatActivity {
 //                startActivity(new Intent(getApplicationContext(), Signup_grp_join.class));
 
                 if (validateInputs()) {
-                    executeSignupApi();
+
+
+                    verifyRefCodeApi();
+
+//                    executeSignupApi();
                 }
             }
         });
 
+    }
+
+    private void verifyRefCodeApi() {
+
+        ref_code = signup_page_referral_code_edittext.getText().toString().trim();
+
+        if (ref_code == null || ref_code.isEmpty()) {
+//            System.out.println("Show no ref dialog");
+            showNoRefCodeDialog(1);
+        } else {
+
+            final ProgressDialog progressDialog = new ProgressDialog(SignUp.this);
+            progressDialog.setTitle("Verifying code, Please wait...");
+            progressDialog.create();
+            progressDialog.show();
+            JsonObject jsonObjectParameters = new JsonObject();
+
+            jsonObjectParameters.addProperty("ref_code", ref_code);
+
+            final SettableFuture<JsonElement> resultFuture = SettableFuture.create();
+            ListenableFuture<JsonElement> serviceFilterFuture = MainActivity.mClient.invokeApi("verify_referral_code_api", jsonObjectParameters);
+
+            Futures.addCallback(serviceFilterFuture, new FutureCallback<JsonElement>() {
+                @Override
+                public void onFailure(Throwable exception) {
+                    resultFuture.setException(exception);
+                    progressDialog.dismiss();
+                    System.out.println(" verify_referral_code_api exception    " + exception);
+
+                }
+
+                @Override
+                public void onSuccess(JsonElement response) {
+                    resultFuture.set(response);
+                    progressDialog.dismiss();
+
+                    System.out.println(" verify_referral_code_api success response    " + response);
+
+                    if (response.toString().contains("true")) {
+                        System.out.println("REF TRUE");
+                        executeSignupApi();
+                    } else {
+                        showNoRefCodeDialog(2);
+                        System.out.println("REF FALSE");
+                    }
+
+                }
+            });
+        }
+
+    }
+
+    private void showNoRefCodeDialog(int code) {
+        String message = null;
+        ref_code = null;
+        if (code == 1) {
+            message = "No Referral code applied. Do you want to proceed?";
+        }
+        if (code == 2) {
+            message = "Invalid code. Do you still want to proceed?";
+        }
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(message)
+                .setCancelable(false)
+                .setPositiveButton("Yes, proceed", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        System.out.println("No ref code, execute signup api ");
+                        executeSignupApi();
+                    }
+                })
+                .setNegativeButton("No, Go back", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        System.out.println("No ref code, GO BACK ");
+
+                        dialog.cancel();
+                    }
+                });
+        AlertDialog alert = builder.create();
+        alert.show();
     }
 
     private void executeSignupApi() {
@@ -106,7 +195,9 @@ public class SignUp extends AppCompatActivity {
         jsonObjectParameters.addProperty("email", email);
         jsonObjectParameters.addProperty("user_name", user_name);
         jsonObjectParameters.addProperty("pass", pass);
-
+        jsonObjectParameters.addProperty("ref_code", ref_code);
+        jsonObjectParameters.addProperty("security_answer", security_answer);
+        jsonObjectParameters.addProperty("security_question", security_question);
 
         final SettableFuture<JsonElement> resultFuture = SettableFuture.create();
         ListenableFuture<JsonElement> serviceFilterFuture = MainActivity.mClient.invokeApi("sign_up_api", jsonObjectParameters);
@@ -186,9 +277,10 @@ public class SignUp extends AppCompatActivity {
         user_name = signup_user_name_edittext.getText().toString().trim();
         pass = signup_page_pass_edittext.getText().toString().trim();
         confirm_pass = signup_page_confirm_pass_edittext.getText().toString().trim();
+        security_answer = signup_page_security_answer_edittext.getText().toString().trim();
+        security_question = questionsList.get(signup_page_security_question_spinner.getSelectedItemPosition());
 
-
-        if ((email.isEmpty()) || (first_name.isEmpty()) || (last_name.isEmpty()) || (user_name.isEmpty()) || (pass.isEmpty()) || (confirm_pass.isEmpty())) {
+        if ((email.isEmpty()) || (first_name.isEmpty()) || (last_name.isEmpty()) || (user_name.isEmpty()) || (security_answer.isEmpty()) || (pass.isEmpty()) || (confirm_pass.isEmpty())) {
 
             System.out.println("VALIDATION FALSE");
             Toast.makeText(getApplicationContext(), "Fields empty", Toast.LENGTH_SHORT).show();
@@ -201,7 +293,14 @@ public class SignUp extends AppCompatActivity {
                 if (pass.length() > 3) {
                     if (pass.equals(confirm_pass)) {
 
-                        return true;
+                        if (signup_page_security_question_spinner.getSelectedItemPosition() != 0) {
+
+                            System.out.println("all ok");
+                            return true;
+                        } else {
+                            Toast.makeText(getApplicationContext(), "Select a security question", Toast.LENGTH_SHORT).show();
+                            return false;
+                        }
 
                     } else {
                         Toast.makeText(getApplicationContext(), "Password mismatch", Toast.LENGTH_SHORT).show();

@@ -336,4 +336,16 @@ public class Signup_grp_join extends AppCompatActivity {
 
     }
 
+    @Override
+    public void onBackPressed() {
+        if (page_mode == 0) {
+            this.finish();
+            System.exit(0);
+        } else {
+            super.onBackPressed();
+        }
+
+    }
+
+
 }

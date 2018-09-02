@@ -51,6 +51,7 @@ public class Mem_joined_fragment extends Fragment {
     private String grp_id;
     private AlertDialog close_Dialog_temp_obj;
     private int user_admin_flag = 0;
+    private ListView mem_joined_frag_options_listview;
 
     public Mem_joined_fragment() {
     }
@@ -80,6 +81,7 @@ public class Mem_joined_fragment extends Fragment {
         mem_joined_frag_listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
                 System.out.println("position :" + position);
 //                openCancelRequestDialog(position);
                 openOptionsDialog(position);
@@ -189,7 +191,7 @@ public class Mem_joined_fragment extends Fragment {
         }
 
 
-        ListView mem_joined_frag_options_listview = (ListView) view.findViewById(R.id.mem_joined_frag_options_listview);
+        mem_joined_frag_options_listview = (ListView) view.findViewById(R.id.mem_joined_frag_options_listview);
         ArrayAdapter adapter = new ArrayAdapter<String>(getActivity(), R.layout.members_joined_options_list_item, memJoinedOptionsList);
         mem_joined_frag_options_listview.setAdapter(adapter);
 
@@ -227,6 +229,8 @@ public class Mem_joined_fragment extends Fragment {
 
                 switch (position) {
                     case 0:
+                        mem_joined_frag_options_listview.setSelector(R.color.transparent);
+
                         System.out.println(memJoinedOptionsList.get(position));
                         mem_joined_dialog_selected_option = position;
 
@@ -236,6 +240,8 @@ public class Mem_joined_fragment extends Fragment {
 
                         break;
                     case 1:
+                        mem_joined_frag_options_listview.setSelector(R.color.transparent);
+
 //                        System.out.println(memJoinedOptionsList.get(position));
 //                        mem_joined_dialog_selected_option = position;
 
@@ -245,6 +251,8 @@ public class Mem_joined_fragment extends Fragment {
                         break;
 
                     case 2:
+                        mem_joined_frag_options_listview.setSelector(R.color.colorVeryLightGrey);
+
                         //req status I.E. privilege type in this frag
                         if (groupList.get(memebr_position).getUserReqStatus() == 1) {
                             Toast.makeText(getActivity(), "Already existing privilege", Toast.LENGTH_SHORT).show();
@@ -258,6 +266,8 @@ public class Mem_joined_fragment extends Fragment {
                         break;
 
                     case 3:
+                        mem_joined_frag_options_listview.setSelector(R.color.colorVeryLightGrey);
+
                         if (groupList.get(memebr_position).getUserReqStatus() == 2) {
                             Toast.makeText(getActivity(), "Already existing privilege", Toast.LENGTH_SHORT).show();
                         } else {
@@ -270,6 +280,8 @@ public class Mem_joined_fragment extends Fragment {
                         break;
 
                     case 4:
+                        mem_joined_frag_options_listview.setSelector(R.color.colorVeryLightGrey);
+
                         if (groupList.get(memebr_position).getUserReqStatus() == 3) {
                             Toast.makeText(getActivity(), "Already existing privilege", Toast.LENGTH_SHORT).show();
                         } else {
@@ -282,6 +294,8 @@ public class Mem_joined_fragment extends Fragment {
                         break;
 
                     case 5:
+                        mem_joined_frag_options_listview.setSelector(R.color.colorVeryLightGrey);
+
                         mem_joined_frag_confirm_textview.setText("Confirm removing the user from this group");
                         mem_joined_frag_btn_lin_layout.setVisibility(View.VISIBLE);
                         mem_joined_frag_confirm_textview.setVisibility(View.VISIBLE);
@@ -291,6 +305,8 @@ public class Mem_joined_fragment extends Fragment {
                         break;
 
                     case 6:
+                        mem_joined_frag_options_listview.setSelector(R.color.colorVeryLightGrey);
+
                         mem_joined_frag_confirm_textview.setText("Confirm giving rights of admin. Doing this will result in your admin rights to get revoked");
                         mem_joined_frag_btn_lin_layout.setVisibility(View.VISIBLE);
                         mem_joined_frag_confirm_textview.setVisibility(View.VISIBLE);

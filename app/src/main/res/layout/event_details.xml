@@ -11,7 +11,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="50"
+        android:layout_weight="70"
         android:background="@color/colorMainBg">
 
         <ImageView
@@ -267,7 +267,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="42">
+        android:layout_weight="22">
 
         <ProgressBar
             android:id="@+id/event_details_comments_loading_progress_bar"

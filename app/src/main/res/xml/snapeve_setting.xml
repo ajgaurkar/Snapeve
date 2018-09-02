@@ -15,19 +15,18 @@
 
     </Preference>
 
-    <SwitchPreference
-        android:defaultValue="false"
-        android:icon="@drawable/ic_notifications_grey_600_24dp"
-        android:key="notificationPreferenceKey"
-        android:summary="@string/notiofcation_summary"
-        android:title="@string/notification_setting" />
+    <!--<SwitchPreference-->
+        <!--android:defaultValue="false"-->
+        <!--android:icon="@drawable/ic_notifications_grey_600_24dp"-->
+        <!--android:key="notificationPreferenceKey"-->
+        <!--android:summary="@string/notiofcation_summary"-->
+        <!--android:title="@string/notification_setting" />-->
 
-    <Preference
-        android:icon="@drawable/ic_help_grey_600_24dp"
-        android:key="helpPreferenceKey"
-        android:title="Help">
-
-    </Preference>
+    <!--<Preference-->
+        <!--android:icon="@drawable/ic_help_grey_600_24dp"-->
+        <!--android:key="helpPreferenceKey"-->
+        <!--android:title="Help">-->
+    <!--</Preference>-->
 
     <Preference
         android:icon="@drawable/ic_assistant_grey_600_24dp"
@@ -40,9 +39,9 @@
         android:icon="@drawable/ic_info_grey_600_24dp"
         android:key="appInfoPreferenceKey"
         android:title="App info">
-        <intent
-            android:action="android.intent.action.VIEW"
-            android:data="http://www.example.com" />
+        <!--<intent-->
+            <!--android:action="android.intent.action.VIEW"-->
+            <!--android:data="http://www.example.com" />-->
     </Preference>
 
     <Preference
@@ -66,8 +65,8 @@
     <Preference
         android:icon="@drawable/ic_supervisor_account_grey_600_24dp"
         android:key="inviteFriendsPreferenceKey"
-        android:title="Invite Friends">
-
+        android:title="Invite Friends"
+        android:summary="Earn rewards when your friends signup">
     </Preference>
 
     <Preference

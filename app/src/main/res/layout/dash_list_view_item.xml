@@ -29,6 +29,23 @@
                 android:scaleType="centerCrop"
                 android:src="@drawable/login_gradient_bg" />
 
+            <!--<jp.shts.android.library.TriangleLabelView-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="match_parent"-->
+                <!--android:layout_alignParentTop="true"-->
+                <!--android:background="#000"-->
+                <!--app:backgroundColor="#ff0000"-->
+                <!--app:corner="leftTop"-->
+                <!--app:labelBottomPadding="5dp"-->
+                <!--app:labelCenterPadding="0dp"-->
+                <!--app:labelTopPadding="10dp"-->
+                <!--app:primaryTextColor="#fff"-->
+                <!--app:primaryTextSize="18sp"-->
+                <!--app:secondaryText="Live"-->
+                <!--app:primaryText="New"-->
+                <!--app:secondaryTextColor="#fff"-->
+                <!--app:secondaryTextSize="18sp" />-->
+
             <!--<TextView-->
             <!--android:id="@+id/textetx"-->
             <!--android:layout_width="match_parent"-->

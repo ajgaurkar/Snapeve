@@ -54,8 +54,8 @@
         <TextView
             android:id="@+id/browse_profile_user_name"
             android:layout_width="wrap_content"
+            android:layout_below="@+id/user_full_name"
             android:layout_height="wrap_content"
-            android:layout_alignTop="@+id/profile_pic_image_view"
             android:layout_toEndOf="@+id/profile_pic_image_view"
             android:padding="5dp"
             android:text="Hora_pag"
@@ -67,7 +67,7 @@
             android:id="@+id/user_full_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/src_user_name"
+            android:layout_alignTop="@+id/profile_pic_image_view"
             android:layout_toEndOf="@+id/profile_pic_image_view"
             android:padding="5dp"
             android:text="Horacio Pagani"
@@ -78,7 +78,7 @@
             android:id="@+id/user_status"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/user_full_name"
+            android:layout_below="@+id/browse_profile_user_name"
             android:layout_toEndOf="@+id/profile_pic_image_view"
             android:padding="5dp"
             android:text="Contributor : Level 5"
@@ -98,7 +98,6 @@
             android:textSize="18sp"
             android:textStyle="bold" />
 
-
         <TextView
             android:id="@+id/grp_name_text_view"
             android:layout_width="wrap_content"
@@ -107,7 +106,6 @@
             android:layout_below="@+id/profile_progress_bar"
             android:layout_marginBottom="20dp"
             android:layout_marginEnd="16dp"
-            android:layout_marginTop="10dp"
             android:layout_toEndOf="@+id/vertical_divider_user_profile"
             android:gravity="end"
             android:padding="5dp"
@@ -139,7 +137,7 @@
             android:layout_marginEnd="30dp"
             android:layout_marginRight="30dp"
             android:layout_marginStart="-5dp"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="5dp"
             android:layout_toEndOf="@+id/profile_pic_image_view"
             app:rcBackgroundColor="#00ffffff"
             app:rcBackgroundPadding="10dp"

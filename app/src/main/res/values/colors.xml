@@ -3,7 +3,9 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#505b65</color>
     <color name="colorAccent">#808890</color>
+    <color name="colorVeryLightGrey">#cfcfcf</color>
     <color name="colorMainBg">#EEEEEE</color>
+    <color name="transparent">#00eeeeee</color>
 
     <color name="bg_screen1">#f64c73</color>
     <color name="bg_screen2">#20d2bb</color>

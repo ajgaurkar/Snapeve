@@ -67,6 +67,8 @@ public class SettingsFragment extends PreferenceFragment {
 
     @Override
     public boolean onPreferenceTreeClick(PreferenceScreen preferenceScreen, Preference preference) {
+
+        Uri uri;
         switch (preference.getKey()) {
             case "userAccountPreferenceKey":
                 startActivity(new Intent(getActivity(), AccountHandler.class));
@@ -79,18 +81,14 @@ public class SettingsFragment extends PreferenceFragment {
             case "notificationPreferenceKey":
                 break;
 
-            case "helpPreferenceKey":
-                startActivity(new Intent(getActivity(), ScheduledRewards.class));
-
-                break;
-
             case "rateusPreferenceKey":
-                Uri uri = Uri.parse("market://details?id=" + getActivity().getPackageName());
+                uri = Uri.parse("market://details?id=" + getActivity().getPackageName());
                 Intent goToMarket = new Intent(Intent.ACTION_VIEW, uri);
                 startActivity(goToMarket);
                 break;
 
             case "appInfoPreferenceKey":
+                startActivity(new Intent(getActivity(), ScheduledRewards.class));
                 break;
 
             case "termsAndPolicyInfoPreferenceKey":
@@ -100,11 +98,11 @@ public class SettingsFragment extends PreferenceFragment {
                 break;
 
             case "inviteFriendsPreferenceKey":
+                uri = Uri.parse("market://details?id=" + getActivity().getPackageName());
                 Intent nav_share_Intent = new Intent(android.content.Intent.ACTION_SEND);
                 nav_share_Intent.setType("text/plain");
                 nav_share_Intent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Snapeve");
-                nav_share_Intent.putExtra(android.content.Intent.EXTRA_TEXT, "Random Text About your app");
-                nav_share_Intent.putExtra(Intent.EXTRA_EMAIL, new String[]{"umbcsnapeve@gmail.com"});
+                nav_share_Intent.putExtra(android.content.Intent.EXTRA_TEXT, "You should try SnapEve, It's an awesome app for campus events. Get 10 bonus points when you sign up using my referral code '"+new SessionManager(getActivity()).getSpecificUserDetail(SessionManager.KEY_USER_NAME)+"' https://play.google.com/store/apps/developer?id=MAAK+Services");
                 startActivity(Intent.createChooser(nav_share_Intent, "Share via :"));
                 break;
 
