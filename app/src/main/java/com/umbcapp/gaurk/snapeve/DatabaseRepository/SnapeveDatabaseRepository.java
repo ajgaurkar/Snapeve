@@ -5,22 +5,22 @@ import android.arch.persistence.room.Room;
 import android.content.Context;
 import android.os.AsyncTask;
 
+import com.umbcapp.gaurk.snapeve.Controllers.SnapEveSession;
 import com.umbcapp.gaurk.snapeve.Controllers.SnapeveNotification;
 import com.umbcapp.gaurk.snapeve.Database.SnapeveDatabase;
 
 import java.util.List;
 
-public class SnapeveNotificationRepository {
+public class SnapeveDatabaseRepository {
 
     private String DB_NAME = "snapevedb";
     private SnapeveDatabase snapeveDatabase;
 
-    public SnapeveNotificationRepository(Context context) {
+    public SnapeveDatabaseRepository(Context context) {
         snapeveDatabase = Room.databaseBuilder(context, SnapeveDatabase.class, DB_NAME)
                 .fallbackToDestructiveMigration()
                 .build();
     }
-
 
     public void insertSnapeveNotification(String notificationTitle, String notificationDesc, String notificationTag) {
         SnapeveNotification snapeveNotification = new SnapeveNotification();
@@ -28,6 +28,16 @@ public class SnapeveNotificationRepository {
         snapeveNotification.setNotificationDescription(notificationDesc);
         snapeveNotification.setNotificationTag(notificationTag);
         insertTask(snapeveNotification);
+    }
+
+    public void insertSnapeveSession(String activityCode, long startTime, long endTime, long duration, int uploadStatus) {
+        SnapEveSession snapEveSession = new SnapEveSession();
+        snapEveSession.setStartTime(startTime);
+        snapEveSession.setEndTime(endTime);
+        snapEveSession.setDuration(duration);
+        snapEveSession.setUploadStatus(uploadStatus);
+        snapEveSession.setActivityCode(activityCode);
+        insertSession(snapEveSession);
     }
 
     public void insertTask(final SnapeveNotification notification) {
@@ -40,8 +50,34 @@ public class SnapeveNotificationRepository {
         }.execute();
     }
 
+    public void insertSession(final SnapEveSession session) {
+        new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected Void doInBackground(Void... voids) {
+                snapeveDatabase.snapeveSessionDao().insertSession(session);
+                return null;
+            }
+        }.execute();
+    }
+    public void deleteSession(final SnapEveSession session) {
+        new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected Void doInBackground(Void... voids) {
+                snapeveDatabase.snapeveSessionDao().deleteSession(session);
+                return null;
+            }
+        }.execute();
+    }
+
+
     public LiveData<List<SnapeveNotification>> getTasks() {
         return snapeveDatabase.snapeveNotificationDao().fetchAllNotification();
     }
+
+    public LiveData<List<SnapEveSession>> getSessiondata() {
+        return snapeveDatabase.snapeveSessionDao().fetchSession();
+    }
+
+
 
 }

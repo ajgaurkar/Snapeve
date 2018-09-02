@@ -37,9 +37,15 @@ import com.umbcapp.gaurk.snapeve.Adapters.CommentsAdapter;
 import com.umbcapp.gaurk.snapeve.Controllers.AttendiesListItem;
 import com.umbcapp.gaurk.snapeve.Controllers.CommentsListItem;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
+import java.util.TimeZone;
+import java.util.concurrent.TimeUnit;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -103,10 +109,17 @@ public class EventDetails extends AppCompatActivity implements Listview_communic
     private int server_spam_count = 0;
     private int server_comment_count = 0;
     private TextView event_details_actions_count_textview;
+    private long sessionCounter = 0;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        sessionCounter = System.currentTimeMillis();
+        DateFormat formatter = new SimpleDateFormat("HH:mm:ss", Locale.US);
+        formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
+        String text = formatter.format(new Date(sessionCounter));
+
         setContentView(R.layout.event_details);
 
         attendies_type_selection_status = 0;
@@ -1070,4 +1083,27 @@ public class EventDetails extends AppCompatActivity implements Listview_communic
         attendies_dialog_layout_attendies_listview.onRestoreInstanceState(state);
 
     }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+
+        sessionCounter = System.currentTimeMillis() - sessionCounter;
+        long minutes = TimeUnit.MILLISECONDS.toMinutes(sessionCounter);
+        long seconds = TimeUnit.MILLISECONDS.toSeconds(sessionCounter);
+
+        System.out.println("ADDEVENT onPause sessionCounter : " + minutes + "m " + seconds + "s");
+
+    }
+
+    @Override
+    public void onResume() {
+        sessionCounter = System.currentTimeMillis();
+        DateFormat formatter = new SimpleDateFormat("HH:mm:ss", Locale.US);
+        formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
+        String text = formatter.format(new Date(sessionCounter));
+
+        super.onResume();
+    }
+
 }

@@ -18,8 +18,6 @@ import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.gson.JsonObject;
 import com.shashank.sony.fancydialoglib.Animation;
@@ -27,19 +25,23 @@ import com.shashank.sony.fancydialoglib.FancyAlertDialog;
 import com.shashank.sony.fancydialoglib.FancyAlertDialogListener;
 import com.shashank.sony.fancydialoglib.Icon;
 import com.umbcapp.gaurk.snapeve.Adapters.MessagesPersonalAdapter;
-import com.umbcapp.gaurk.snapeve.Adapters.NotificationsAdapter;
 import com.umbcapp.gaurk.snapeve.Adapters.SnapeveNotificationAdapter;
-import com.umbcapp.gaurk.snapeve.Add_event;
 import com.umbcapp.gaurk.snapeve.Controllers.MessagesPersonalListItem;
-import com.umbcapp.gaurk.snapeve.Controllers.NotificationListItem;
+import com.umbcapp.gaurk.snapeve.Controllers.SnapEveSession;
 import com.umbcapp.gaurk.snapeve.Controllers.SnapeveNotification;
-import com.umbcapp.gaurk.snapeve.DatabaseRepository.SnapeveNotificationRepository;
+import com.umbcapp.gaurk.snapeve.DatabaseRepository.SnapeveDatabaseRepository;
 import com.umbcapp.gaurk.snapeve.MessageThread;
 import com.umbcapp.gaurk.snapeve.R;
 import com.umbcapp.gaurk.snapeve.SessionManager;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
+import java.util.TimeZone;
+import java.util.concurrent.TimeUnit;
 
 public class NotificationFragment extends Fragment {
 
@@ -51,7 +53,10 @@ public class NotificationFragment extends Fragment {
     int page_type_code = 1;
     private ImageView notification_settings_imageview;
     private SwitchCompat notification_switch;
-    private SnapeveNotificationRepository studentRepository;
+    private SnapeveDatabaseRepository studentRepository;
+    private long sessionCounter;
+    private SnapeveDatabaseRepository snapeveDatabaseRepository;
+
 
     public NotificationFragment() {
     }
@@ -59,7 +64,7 @@ public class NotificationFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        studentRepository = new SnapeveNotificationRepository(getActivity());
+        studentRepository = new SnapeveDatabaseRepository(getActivity());
 
     }
 
@@ -67,6 +72,11 @@ public class NotificationFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.notification_fragment, container, false);
+
+        sessionCounter = System.currentTimeMillis();
+        DateFormat formatter = new SimpleDateFormat("HH:mm:ss", Locale.US);
+        formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
+        String text = formatter.format(new Date(sessionCounter));
 
         RelativeLayout main_notification_layout = (RelativeLayout) rootView.findViewById(R.id.main_notification_layout);
 //        notification_switch_notification_textview = (TextView) rootView.findViewById(R.id.notification_switch_notification_textview);
@@ -241,4 +251,36 @@ public class NotificationFragment extends Fragment {
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        sessionCounter = System.currentTimeMillis();
+        DateFormat formatter = new SimpleDateFormat("HH:mm:ss", Locale.US);
+        formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
+        String text = formatter.format(new Date(sessionCounter));
+//        System.out.println("Start @ sessionCounter : " + sessionCounter);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+
+        long startTime = sessionCounter;
+        long endTime = System.currentTimeMillis();
+        long duration = System.currentTimeMillis() - sessionCounter;
+
+        sessionCounter = System.currentTimeMillis() - sessionCounter;
+        long minutes = TimeUnit.MILLISECONDS.toMinutes(sessionCounter);
+        long seconds = TimeUnit.MILLISECONDS.toSeconds(sessionCounter);
+
+        System.out.println("NOTIFICATION onPause sessionCounter : " + minutes + "m " + seconds + "s");
+
+
+        snapeveDatabaseRepository = new SnapeveDatabaseRepository(getActivity());
+
+        snapeveDatabaseRepository.insertSnapeveSession("NOT", startTime, endTime, duration, 0);
+    }
+
 }

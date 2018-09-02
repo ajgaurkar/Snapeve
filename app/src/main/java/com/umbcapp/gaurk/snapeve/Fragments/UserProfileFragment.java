@@ -191,7 +191,8 @@ public class UserProfileFragment extends Fragment {
         DateFormat formatter = new SimpleDateFormat("HH:mm:ss", Locale.US);
         formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
         String text = formatter.format(new Date(sessionCounter));
-        System.out.println("Start @ sessionCounter : " + text);
+//        System.out.println("Start @ sessionCounter : " + text);
+
         mClient = Singleton.Instance().mClientMethod(getActivity());
         mUserTable = mClient.getTable(user_table.class);
 
@@ -202,6 +203,24 @@ public class UserProfileFragment extends Fragment {
         fetch_user_details();
 
         super.onResume();
+
+        sessionCounter = System.currentTimeMillis();
+        DateFormat formatter = new SimpleDateFormat("HH:mm:ss", Locale.US);
+        formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
+        String text = formatter.format(new Date(sessionCounter));
+//        System.out.println("Start @ sessionCounter : " + sessionCounter);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+
+        sessionCounter = System.currentTimeMillis() - sessionCounter;
+        long minutes = TimeUnit.MILLISECONDS.toMinutes(sessionCounter);
+        long seconds = TimeUnit.MILLISECONDS.toSeconds(sessionCounter);
+
+        System.out.println("USERPROFILE onPause sessionCounter : " + minutes + "m " + seconds + "s");
+
     }
 
     private void fetchGrpPostAndMembers(String grp_id) {
@@ -1485,11 +1504,11 @@ public class UserProfileFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
 
-        sessionCounter = System.currentTimeMillis() - sessionCounter;
-        long minutes = TimeUnit.MILLISECONDS.toMinutes(sessionCounter);
-        long seconds = TimeUnit.MILLISECONDS.toSeconds(sessionCounter);
-
-        System.out.println("PROFILE sessionCounter : " + minutes + "m " + seconds + "s");
+//        sessionCounter = System.currentTimeMillis() - sessionCounter;
+//        long minutes = TimeUnit.MILLISECONDS.toMinutes(sessionCounter);
+//        long seconds = TimeUnit.MILLISECONDS.toSeconds(sessionCounter);
+//
+//        System.out.println("PROFILE sessionCounter : " + minutes + "m " + seconds + "s");
     }
 
 

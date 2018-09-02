@@ -2,17 +2,17 @@ package com.umbcapp.gaurk.snapeve;
 
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.app.ProgressDialog;
+import android.arch.lifecycle.LifecycleOwner;
+import android.arch.lifecycle.Observer;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.NotificationCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -20,7 +20,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Spinner;
@@ -42,18 +41,19 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.microsoft.windowsazure.mobileservices.MobileServiceClient;
-import com.shashank.sony.fancydialoglib.Animation;
 import com.shashank.sony.fancydialoglib.FancyAlertDialog;
 import com.shashank.sony.fancydialoglib.FancyAlertDialogListener;
 import com.shashank.sony.fancydialoglib.Icon;
 import com.umbcapp.gaurk.snapeve.Adapters.Dash_Event_ListAdapter;
 import com.umbcapp.gaurk.snapeve.Controllers.Event_dash_list_obj;
-import com.umbcapp.gaurk.snapeve.DatabaseRepository.SnapeveNotificationRepository;
+import com.umbcapp.gaurk.snapeve.Controllers.SnapEveSession;
+import com.umbcapp.gaurk.snapeve.DatabaseRepository.SnapeveDatabaseRepository;
 import com.umbcapp.gaurk.snapeve.Fragments.MapsFragment;
 import com.umbcapp.gaurk.snapeve.Fragments.NotificationFragment;
 import com.umbcapp.gaurk.snapeve.Fragments.SettingsFragment;
 import com.umbcapp.gaurk.snapeve.Fragments.UserProfileFragment;
 
+import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
@@ -67,7 +67,7 @@ public class MainActivity extends AppCompatActivity implements Listview_communic
     private MapsFragment mapsFragment;
     private NotificationFragment notificationFragment;
     private SwipeRefreshLayout pullToRefresh;
-    private long sessionCounter;
+    private long sessionCounter = 0;
     private ListView main_event_list_view;
     private ArrayList<Event_dash_list_obj> event_main_list;
     private FloatingActionButton main_img_pick_fab;
@@ -90,8 +90,10 @@ public class MainActivity extends AppCompatActivity implements Listview_communic
     private int server_action_like = 0;
     private int server_action_spam = 0;
     int selcted_item_position = -1;
-    private SnapeveNotificationRepository snapeveNotificationRepository;
+    private SnapeveDatabaseRepository snapeveDatabaseRepository;
     private JsonObject sessionCounterParameters;
+    private SnapeveDatabaseRepository studentRepository;
+    private List<SnapEveSession> snapeveSessionList = new ArrayList<>();
 //    private Button refreshBtn;
 
     @Override
@@ -103,11 +105,11 @@ public class MainActivity extends AppCompatActivity implements Listview_communic
         DateFormat formatter = new SimpleDateFormat("HH:mm:ss", Locale.US);
         formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
         String text = formatter.format(new Date(sessionCounter));
-        System.out.println("Start onCreate@ sessionCounter : " + sessionCounter);
+//        System.out.println("Start onCreate@ sessionCounter : " + sessionCounter);
 
         new SessionManager(getApplicationContext()).checkLogin();
 
-        snapeveNotificationRepository = new SnapeveNotificationRepository(getApplicationContext());
+        snapeveDatabaseRepository = new SnapeveDatabaseRepository(getApplicationContext());
 
         System.out.println("2 LOGIN USER ID " + new SessionManager(getApplicationContext()).getSpecificUserDetail(SessionManager.KEY_USER_ID));
         System.out.println("2 LOGIN GRP ID " + new SessionManager(getApplicationContext()).getSpecificUserDetail(SessionManager.KEY_GRP_ID));
@@ -139,7 +141,6 @@ public class MainActivity extends AppCompatActivity implements Listview_communic
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
         executeGetFeedsApi();
-        postSessionCounterdataApi();
 
         main_img_pick_fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -157,17 +158,34 @@ public class MainActivity extends AppCompatActivity implements Listview_communic
 
         System.out.println("GRPP ID " + new SessionManager(getApplicationContext()).getSpecificUserDetail(SessionManager.KEY_GRP_ID));
 
+//        postSessionCounterdataApi();
 
     }
 
     private void postSessionCounterdataApi() {
+
+        studentRepository = new SnapeveDatabaseRepository( MainActivity.this);
+        studentRepository.getSessiondata().observe((LifecycleOwner)MainActivity.this, new Observer<List<SnapEveSession>>() {
+            @Override
+            public void onChanged(@Nullable List<SnapEveSession> snapEveSessionList) {
+                System.out.println("Session List---   " + snapEveSessionList);
+                System.out.println("Session List size---   " + snapEveSessionList.size());
+                snapeveSessionList = snapEveSessionList;
+            }
+        });
+
+
+        for (int i = 0; i < snapeveSessionList.size(); i++) {
+
+        }
+
         sessionCounterParameters = new JsonObject();
         sessionCounterParameters.addProperty("user_id", new SessionManager(getApplicationContext()).getSpecificUserDetail(SessionManager.KEY_USER_ID));
-        sessionCounterParameters.addProperty("activity_code", "MPS");
-        sessionCounterParameters.addProperty("start_time", Calendar.getInstance().getTimeInMillis()-13);
-        sessionCounterParameters.addProperty("end_time", Calendar.getInstance().getTimeInMillis());
-        sessionCounterParameters.addProperty("duration", 13);
-        sessionCounterParameters.addProperty("user_name", "xx_person_XX");
+        sessionCounterParameters.addProperty("activity_code", snapeveSessionList.get(0).getActivityCode());
+        sessionCounterParameters.addProperty("start_time", snapeveSessionList.get(0).getStartTime());
+        sessionCounterParameters.addProperty("end_time", snapeveSessionList.get(0).getEndTime());
+        sessionCounterParameters.addProperty("duration", snapeveSessionList.get(0).getDuration());
+        sessionCounterParameters.addProperty("user_name", new SessionManager(getApplicationContext()).getSpecificUserDetail(SessionManager.KEY_USER_NAME));
 
         final SettableFuture<JsonElement> resultFuture = SettableFuture.create();
 //        ListenableFuture<JsonElement> serviceFilterFuture = mClient.invokeApi("Login_api", jsonObjectLoginParameters);
@@ -183,12 +201,19 @@ public class MainActivity extends AppCompatActivity implements Listview_communic
             @Override
             public void onSuccess(JsonElement response) {
                 resultFuture.set(response);
-                System.out.println(" session_counter_api success response    " + response);
 
+                if (response.toString().contains("true")) {
+                    //delete local session data
+                    System.out.println("delete local session data");
+                    studentRepository.deleteSession(snapeveSessionList.get(0));
+                }
+
+                System.out.println(" session_counter_api success response    " + response);
             }
         });
     }
 
+    private boolean refreshMainActSessionFlag = true;
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
 
@@ -201,6 +226,9 @@ public class MainActivity extends AppCompatActivity implements Listview_communic
             switch (item.getItemId()) {
                 case R.id.navigation_home:
 
+                    refreshMainActSessionFlag = true;
+                    sessionCounter = System.currentTimeMillis();
+
                     fragmentTransaction1 = fragmentManager.beginTransaction();
                     fragmentTransaction1.remove(mapsFragment);
                     fragmentTransaction1.remove(userProfileFragment);
@@ -208,48 +236,81 @@ public class MainActivity extends AppCompatActivity implements Listview_communic
                     fragmentTransaction1.remove(notificationFragment);
                     fragmentTransaction1.commit();
 
-                    System.out.print("home");
-                    Toast.makeText(getApplicationContext(), "toast", Toast.LENGTH_SHORT).show();
                     return true;
                 case R.id.navigation_maps:
-                    System.out.print("dashboard");
+
+                    if (refreshMainActSessionFlag) {
+                        sessionCounter = System.currentTimeMillis() - sessionCounter;
+                        long minutes = TimeUnit.MILLISECONDS.toMinutes(sessionCounter);
+                        long seconds = TimeUnit.MILLISECONDS.toSeconds(sessionCounter);
+
+                        refreshMainActSessionFlag = false;
+                        sessionCounter = System.currentTimeMillis();
+
+                        System.out.println("MAINACTIVITY frag hide sessionCounter : " + minutes + "m " + seconds + "s");
+                    }
 
                     fragmentTransaction1 = fragmentManager.beginTransaction();
                     fragmentTransaction1.replace(R.id.dashboard_main_frame_layout, mapsFragment);
                     fragmentTransaction1.commit();
 
-                    Toast.makeText(getApplicationContext(), "toast", Toast.LENGTH_SHORT).show();
                     return true;
                 case R.id.navigation_user:
 //                    startActivity(new Intent(getApplicationContext(), UserProfileActivity.class));
+
+                    if (refreshMainActSessionFlag) {
+                        sessionCounter = System.currentTimeMillis() - sessionCounter;
+                        long minutes = TimeUnit.MILLISECONDS.toMinutes(sessionCounter);
+                        long seconds = TimeUnit.MILLISECONDS.toSeconds(sessionCounter);
+
+                        refreshMainActSessionFlag = false;
+                        sessionCounter = System.currentTimeMillis();
+
+                        System.out.println("MAINACTIVITY frag hide sessionCounter : " + minutes + "m " + seconds + "s");
+                    }
 
                     fragmentTransaction1 = fragmentManager.beginTransaction();
                     fragmentTransaction1.replace(R.id.dashboard_main_frame_layout, userProfileFragment);
                     fragmentTransaction1.commit();
 
-
-                    System.out.print("navigation_user");
-                    Toast.makeText(getApplicationContext(), "toast", Toast.LENGTH_SHORT).show();
                     return true;
 
                 case R.id.navigation_notification:
 //                    startActivity(new Intent(getApplicationContext(), UserProfileActivity.class));
 
+                    if (refreshMainActSessionFlag) {
+                        sessionCounter = System.currentTimeMillis() - sessionCounter;
+                        long minutes = TimeUnit.MILLISECONDS.toMinutes(sessionCounter);
+                        long seconds = TimeUnit.MILLISECONDS.toSeconds(sessionCounter);
+
+                        refreshMainActSessionFlag = false;
+                        sessionCounter = System.currentTimeMillis();
+
+                        System.out.println("MAINACTIVITY frag hide sessionCounter : " + minutes + "m " + seconds + "s");
+                    }
+
                     fragmentTransaction1 = fragmentManager.beginTransaction();
                     fragmentTransaction1.replace(R.id.dashboard_main_frame_layout, notificationFragment);
                     fragmentTransaction1.commit();
 
-                    System.out.print("notificationFragment");
-                    Toast.makeText(getApplicationContext(), "toast", Toast.LENGTH_SHORT).show();
                     return true;
 
                 case R.id.navigation_settings:
 //                    startActivity(new Intent(getApplicationContext(), MapsActivityFragment.class));
-                    System.out.print("notification");
+                    if (refreshMainActSessionFlag) {
+                        sessionCounter = System.currentTimeMillis() - sessionCounter;
+                        long minutes = TimeUnit.MILLISECONDS.toMinutes(sessionCounter);
+                        long seconds = TimeUnit.MILLISECONDS.toSeconds(sessionCounter);
+
+                        refreshMainActSessionFlag = false;
+                        sessionCounter = System.currentTimeMillis();
+
+                        System.out.println("MAINACTIVITY frag hide sessionCounter : " + minutes + "m " + seconds + "s");
+                    }
+
                     fragmentTransaction1 = fragmentManager.beginTransaction();
                     fragmentTransaction1.replace(R.id.dashboard_main_frame_layout, settingsFragment);
                     fragmentTransaction1.commit();
-                    Toast.makeText(getApplicationContext(), "toast", Toast.LENGTH_SHORT).show();
                     return true;
             }
             return false;
@@ -886,11 +947,11 @@ public class MainActivity extends AppCompatActivity implements Listview_communic
     public void onDestroy() {
         super.onDestroy();
 
-        sessionCounter = System.currentTimeMillis() - sessionCounter;
-        long minutes = TimeUnit.MILLISECONDS.toMinutes(sessionCounter);
-        long seconds = TimeUnit.MILLISECONDS.toSeconds(sessionCounter);
-
-        System.out.println("MAINACTIVITY onDestroy sessionCounter : " + minutes + "m " + seconds + "s");
+//        sessionCounter = System.currentTimeMillis() - sessionCounter;
+//        long minutes = TimeUnit.MILLISECONDS.toMinutes(sessionCounter);
+//        long seconds = TimeUnit.MILLISECONDS.toSeconds(sessionCounter);
+//
+//        System.out.println("MAINACTIVITY onDestroy sessionCounter : " + minutes + "m " + seconds + "s");
     }
 
     @Override
@@ -900,7 +961,7 @@ public class MainActivity extends AppCompatActivity implements Listview_communic
         DateFormat formatter = new SimpleDateFormat("HH:mm:ss", Locale.US);
         formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
         String text = formatter.format(new Date(sessionCounter));
-        System.out.println("Start onResume@ sessionCounter : " + sessionCounter);
+//        System.out.println("Start onResume@ sessionCounter : " + sessionCounter);
 
         super.onResume();
     }

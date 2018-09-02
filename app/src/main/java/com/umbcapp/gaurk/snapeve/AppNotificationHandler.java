@@ -1,20 +1,13 @@
 package com.umbcapp.gaurk.snapeve;
 
-import android.app.NotificationChannel;
 import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.Context;
-import android.content.Intent;
-import android.graphics.BitmapFactory;
-import android.media.RingtoneManager;
-import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 
 import com.microsoft.windowsazure.notifications.NotificationsHandler;
-import com.umbcapp.gaurk.snapeve.DatabaseRepository.SnapeveNotificationRepository;
+import com.umbcapp.gaurk.snapeve.DatabaseRepository.SnapeveDatabaseRepository;
 
 /**
  * Created by Amey on 29-07-2018.
@@ -29,7 +22,7 @@ public class AppNotificationHandler extends NotificationsHandler {
     private String nhMessage = "";
     private String nhTitle;
     private String nhTag;
-    private SnapeveNotificationRepository snapeveNotificationRepository;
+    private SnapeveDatabaseRepository snapeveDatabaseRepository;
 
     @Override
     public void onReceive(Context context, Bundle bundle) {
@@ -41,9 +34,9 @@ public class AppNotificationHandler extends NotificationsHandler {
 //        sendNotification(nhMessage);
         setNotification();
 
-        snapeveNotificationRepository = new SnapeveNotificationRepository(ctx);
+        snapeveDatabaseRepository = new SnapeveDatabaseRepository(ctx);
 
-        snapeveNotificationRepository.insertSnapeveNotification(nhTitle,nhMessage,nhTag);
+        snapeveDatabaseRepository.insertSnapeveNotification(nhTitle,nhMessage,nhTag);
     }
 
 

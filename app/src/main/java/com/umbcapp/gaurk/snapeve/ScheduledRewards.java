@@ -26,7 +26,13 @@ import com.google.gson.JsonObject;
 import com.umbcapp.gaurk.snapeve.Adapters.TopScorerAdapter;
 import com.umbcapp.gaurk.snapeve.Controllers.LeaderboardListItem;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Locale;
+import java.util.TimeZone;
+import java.util.concurrent.TimeUnit;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import nl.dionsegijn.konfetti.KonfettiView;
@@ -47,10 +53,18 @@ public class ScheduledRewards extends AppCompatActivity {
     private ArrayList<LeaderboardListItem> grpScorerList;
     private ArrayList<LeaderboardListItem> teamMembersList;
     private TextView scheduled_rewards_runnerup_label;
+    private long sessionCounter = 0;
+    private int currentSelectedTab = 1;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        sessionCounter = System.currentTimeMillis();
+        DateFormat formatter = new SimpleDateFormat("HH:mm:ss", Locale.US);
+        formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
+        String text = formatter.format(new Date(sessionCounter));
+
         setContentView(R.layout.scheduled_rewards);
 
         topScorerlistView = (ListView) findViewById(R.id.scheduled_rewards_scorer_list);
@@ -76,35 +90,73 @@ public class ScheduledRewards extends AppCompatActivity {
 
     }
 
+
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
 
-        public int currentSelectedTab;
 
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.rewards_navigation_user:
+                    calculateSession(currentSelectedTab);
+
                     System.out.print("rewards_navigation_group");
                     currentSelectedTab = 1;
                     showWinners(currentSelectedTab);
+
+
                     return true;
 
                 case R.id.rewards_navigation_group:
+                    calculateSession(currentSelectedTab);
+
                     currentSelectedTab = 2;
                     showWinners(currentSelectedTab);
                     System.out.print("rewards_navigation_group");
+
+
                     return true;
 
                 case R.id.rewards_navigation_team:
+                    calculateSession(currentSelectedTab);
+
                     currentSelectedTab = 3;
                     showWinners(currentSelectedTab);
                     System.out.print("rewards_navigation_team");
+
+
                     return true;
             }
             return false;
         }
     };
+
+    private void calculateSession(int currentSelectedTab) {
+
+
+        sessionCounter = System.currentTimeMillis() - sessionCounter;
+        long minutes = TimeUnit.MILLISECONDS.toMinutes(sessionCounter);
+        long seconds = TimeUnit.MILLISECONDS.toSeconds(sessionCounter);
+
+
+        //reset counter to current time
+        sessionCounter = System.currentTimeMillis();
+
+        switch (currentSelectedTab) {
+            case 1:
+                System.out.println("WR1 : " + minutes + "m " + seconds + "s");
+                break;
+
+            case 2:
+                System.out.println("SCHEDULEDREWARDS 2 onPause sessionCounter : " + minutes + "m " + seconds + "s");
+                break;
+
+            case 3:
+                System.out.println("SCHEDULEDREWARDS 3 onPause sessionCounter : " + minutes + "m " + seconds + "s");
+                break;
+        }
+    }
 
     private void showWinners(int winnerType) {
         TopScorerAdapter topScorerAdapter = null;
@@ -454,7 +506,24 @@ public class ScheduledRewards extends AppCompatActivity {
             }
 
         }
+    }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+
+        calculateSession(currentSelectedTab);
 
     }
+
+    @Override
+    public void onResume() {
+        sessionCounter = System.currentTimeMillis();
+        DateFormat formatter = new SimpleDateFormat("HH:mm:ss", Locale.US);
+        formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
+        String text = formatter.format(new Date(sessionCounter));
+
+        super.onResume();
+    }
+
 }

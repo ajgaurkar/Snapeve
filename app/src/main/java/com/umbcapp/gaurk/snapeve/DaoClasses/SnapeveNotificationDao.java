@@ -25,10 +25,8 @@ public interface SnapeveNotificationDao {
     @Query("SELECT * FROM SnapeveNotification WHERE id =:taskId")
     LiveData<SnapeveNotification> fetchNotitifcationWithId(int taskId);
 
-
     @Update
     void updateTask(SnapeveNotification notification);
-
 
     @Delete
     void deleteTask(SnapeveNotification notification);

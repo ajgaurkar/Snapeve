@@ -22,7 +22,13 @@ import com.umbcapp.gaurk.snapeve.Adapters.LeaderBoardAdapter;
 import com.umbcapp.gaurk.snapeve.Controllers.Event_dash_list_obj;
 import com.umbcapp.gaurk.snapeve.Controllers.LeaderboardListItem;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Locale;
+import java.util.TimeZone;
+import java.util.concurrent.TimeUnit;
 
 public class Leaderboard extends AppCompatActivity implements Listview_communicator {
 
@@ -44,10 +50,17 @@ public class Leaderboard extends AppCompatActivity implements Listview_communica
     private JsonObject jsonObjectLoginParameters;
     private JsonElement bkupUserResponse;
     private JsonElement bkupGrpResponse;
+    private long sessionCounter = 0;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        sessionCounter = System.currentTimeMillis();
+        DateFormat formatter = new SimpleDateFormat("HH:mm:ss", Locale.US);
+        formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
+        String text = formatter.format(new Date(sessionCounter));
+
         setContentView(R.layout.leaderboard_activity);
 
         user_type_selection_status = 0;
@@ -271,5 +284,25 @@ public class Leaderboard extends AppCompatActivity implements Listview_communica
         System.out.println("position :" + position);
 
     }
+    @Override
+    public void onPause() {
+        super.onPause();
 
+        sessionCounter = System.currentTimeMillis() - sessionCounter;
+        long minutes = TimeUnit.MILLISECONDS.toMinutes(sessionCounter);
+        long seconds = TimeUnit.MILLISECONDS.toSeconds(sessionCounter);
+
+        System.out.println("LEADERBOARD onPause sessionCounter : " + minutes + "m " + seconds + "s");
+
+    }
+
+    @Override
+    public void onResume() {
+        sessionCounter = System.currentTimeMillis();
+        DateFormat formatter = new SimpleDateFormat("HH:mm:ss", Locale.US);
+        formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
+        String text = formatter.format(new Date(sessionCounter));
+
+        super.onResume();
+    }
 }

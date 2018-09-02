@@ -6,7 +6,9 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -17,6 +19,8 @@ import com.google.common.util.concurrent.SettableFuture;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+
+import java.util.ArrayList;
 
 public class SignUp extends AppCompatActivity {
 
@@ -34,6 +38,10 @@ public class SignUp extends AppCompatActivity {
     private String user_name;
     private String email;
     String emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
+    private Spinner signup_page_security_question_spinner;
+    private EditText signup_page_referral_code_edittext;
+    private EditText signup_page_security_answer_edittext;
+    private ArrayList<String> questionsList= new ArrayList<>();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -45,8 +53,24 @@ public class SignUp extends AppCompatActivity {
         signup_page_email_edittext = (EditText) findViewById(R.id.signup_page_email_edittext);
         signup_user_name_edittext = (EditText) findViewById(R.id.signup_user_name_edittext);
         signup_page_pass_edittext = (EditText) findViewById(R.id.signup_page_pass_edittext);
+        signup_page_security_answer_edittext = (EditText) findViewById(R.id.signup_page_security_answer_edittext);
+        signup_page_referral_code_edittext = (EditText) findViewById(R.id.signup_page_referral_code_edittext);
         signup_page_confirm_pass_edittext = (EditText) findViewById(R.id.signup_page_confirm_pass_edittext);
         signup_page_signup_btn_card_textview = (TextView) findViewById(R.id.signup_page_signup_btn_card_textview);
+        signup_page_security_question_spinner = (Spinner) findViewById(R.id.signup_page_security_question_spinner);
+
+        questionsList.add("[ Select a security question ]");
+        questionsList.add("What was your childhood nickname?");
+        questionsList.add("What is your favorite movie?");
+        questionsList.add("Town of your first school?");
+        questionsList.add("Mother's maiden name?");
+        questionsList.add("Year when your father was born?");
+        questionsList.add("What is your pet’s name?");
+
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this, R.layout.signup_spinner_item, questionsList);
+        dataAdapter.setDropDownViewResource(R.layout.signup_spinner_dropdown_item);
+        signup_page_security_question_spinner.setAdapter(dataAdapter);
+
 
         signup_page_signup_btn_card_textview.setOnClickListener(new View.OnClickListener() {
             @Override

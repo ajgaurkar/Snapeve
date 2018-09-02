@@ -74,6 +74,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.math.RoundingMode;
+import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -84,6 +85,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Random;
+import java.util.TimeZone;
+import java.util.concurrent.TimeUnit;
 
 import me.iwf.photopicker.PhotoPicker;
 
@@ -163,11 +166,17 @@ public class Add_event extends AppCompatActivity implements LocationListener {
     private RadioButton post_as_group_radio;
     private View post_as_group_radio_divider_view;
     private ArrayList<LocationCoordinatesList> coordinatesLists = new ArrayList<>();
+    private long sessionCounter=0;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.test_2);
+
+        sessionCounter = System.currentTimeMillis();
+        DateFormat formatter = new SimpleDateFormat("HH:mm:ss", Locale.US);
+        formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
+        String text = formatter.format(new Date(sessionCounter));
 
         initiate_permission_check();
 
@@ -1422,5 +1431,27 @@ public class Add_event extends AppCompatActivity implements LocationListener {
             Log.d("AsyncTask", "else..calling");
             return task.execute();
         }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+
+        sessionCounter = System.currentTimeMillis() - sessionCounter;
+        long minutes = TimeUnit.MILLISECONDS.toMinutes(sessionCounter);
+        long seconds = TimeUnit.MILLISECONDS.toSeconds(sessionCounter);
+
+        System.out.println("ADDEVENT onPause sessionCounter : " + minutes + "m " + seconds + "s");
+
+    }
+
+    @Override
+    public void onResume() {
+        sessionCounter = System.currentTimeMillis();
+        DateFormat formatter = new SimpleDateFormat("HH:mm:ss", Locale.US);
+        formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
+        String text = formatter.format(new Date(sessionCounter));
+
+        super.onResume();
     }
 }

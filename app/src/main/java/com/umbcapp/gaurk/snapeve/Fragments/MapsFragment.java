@@ -67,7 +67,7 @@ public class MapsFragment extends Fragment {
     private GoogleMap googleMap;
     private ArrayList<Event_dash_list_obj> event_main_list;
     private CardView maps_loading_events_cardview;
-    private long sessionCounter;
+    private long sessionCounter=0;
     private CheckBox filter_dialog_event_time_upcoming_chk_box;
     private CheckBox filter_dialog_event_time_ongoing_chk_box;
     private CheckBox filter_dialog_event_time_completed_chk_box;
@@ -93,7 +93,7 @@ public class MapsFragment extends Fragment {
         DateFormat formatter = new SimpleDateFormat("HH:mm:ss", Locale.US);
         formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
         String text = formatter.format(new Date(sessionCounter));
-        System.out.println("Start @ sessionCounter : " + sessionCounter);
+//        System.out.println("Start @ sessionCounter : " + sessionCounter);
     }
 
     @Override
@@ -402,7 +402,7 @@ public class MapsFragment extends Fragment {
         DateFormat formatter = new SimpleDateFormat("HH:mm:ss", Locale.US);
         formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
         String text = formatter.format(new Date(sessionCounter));
-        System.out.println("Start @ sessionCounter : " + sessionCounter);
+//        System.out.println("Start @ sessionCounter : " + sessionCounter);
     }
 
     @Override
@@ -414,7 +414,7 @@ public class MapsFragment extends Fragment {
         long minutes = TimeUnit.MILLISECONDS.toMinutes(sessionCounter);
         long seconds = TimeUnit.MILLISECONDS.toSeconds(sessionCounter);
 
-        System.out.println("MAPS sessionCounter : " + minutes + "m " + seconds + "s");
+        System.out.println("MAPS onPause sessionCounter : " + minutes + "m " + seconds + "s");
 
     }
 
@@ -434,10 +434,10 @@ public class MapsFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
 
-        sessionCounter = System.currentTimeMillis() - sessionCounter;
-        long minutes = TimeUnit.MILLISECONDS.toMinutes(sessionCounter);
-        long seconds = TimeUnit.MILLISECONDS.toSeconds(sessionCounter);
-
-        System.out.println("MAPS sessionCounter : " + minutes + "m " + seconds + "s");
+//        sessionCounter = System.currentTimeMillis() - sessionCounter;
+//        long minutes = TimeUnit.MILLISECONDS.toMinutes(sessionCounter);
+//        long seconds = TimeUnit.MILLISECONDS.toSeconds(sessionCounter);
+//
+//        System.out.println("MAPS onDestroyView sessionCounter : " + minutes + "m " + seconds + "s");
     }
 }
