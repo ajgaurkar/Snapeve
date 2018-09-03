@@ -232,4 +232,12 @@ public class Login_snapeve_activity extends AppCompatActivity {
         startService(intent);
     }
 
+    @Override
+    public void onBackPressed() {
+        //logic to exit the app
+        Intent a = new Intent(Intent.ACTION_MAIN);
+        a.addCategory(Intent.CATEGORY_HOME);
+        a.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(a);
+    }
 }

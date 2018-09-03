@@ -23,7 +23,7 @@
         android:gravity="center_vertical"
         android:padding="5dp"
         android:singleLine="true"
-        android:text="Pending request :"
+        android:text="Request sent: "
         android:textSize="16sp"
         android:textStyle="bold" />
 
@@ -96,7 +96,7 @@
         android:layout_below="@+id/show_pending_req_dialog_btn_lin_layout"
         android:layout_marginEnd="20dp"
         android:layout_marginStart="20dp"
-        android:visibility="visible" />
+        android:visibility="gone" />
 
     <TextView
         android:id="@+id/show_pending_req_dialog_progressBar_label"
@@ -107,13 +107,13 @@
         android:layout_toEndOf="@+id/show_pending_req_dialog_progressBar"
         android:gravity="center"
         android:text="Loading group invitations"
-        android:visibility="visible" />
+        android:visibility="gone" />
 
     <RelativeLayout
         android:id="@+id/show_accept_invitation_dialog_invitations_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:visibility="gone"
+        android:visibility="visible"
         android:layout_below="@+id/show_pending_req_dialog_btn_lin_layout">
 
         <TextView
@@ -123,6 +123,7 @@
             android:layout_centerHorizontal="true"
             android:layout_margin="5dp"
             android:padding="2dp"
+            android:visibility="invisible"
             android:text="OR"
             android:textSize="14sp" />
 

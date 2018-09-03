@@ -175,6 +175,12 @@ public class UserProfileFragment extends Fragment {
     private String selected_new_admin_id;
     private TextView leave_grp_dialog_header_textView;
     private CardView leave_grp_dialog_member_switch_spinner_card_view;
+    private TextView show_pending_req_dialog_btn_grp_name_textView;
+    private TextView show_pending_req_dialog_accept_invitation_label;
+    private String pending_req_grp_id;
+    private LinearLayout show_pending_req_dialog_btn_lin_layout;
+    private TextView signup_grp_page_or_textview;
+    private String joinMeToTheGrpId = null;
 
 
     public UserProfileFragment() {
@@ -626,7 +632,7 @@ public class UserProfileFragment extends Fragment {
             }
         }
 
-        if (privilege_type == 3 || privilege_type == 2) {
+        if (privilege_type == 3 || privilege_type == 2 || privilege_type == 1) {
             user_profile_settings_imageview.setVisibility(View.VISIBLE);
         } else {
             user_profile_settings_imageview.setVisibility(View.INVISIBLE);
@@ -763,19 +769,8 @@ public class UserProfileFragment extends Fragment {
             public void onClick(View v) {
 
                 if (grp_id.equals("xxxxx____xxxxx")) {
+                    Toast.makeText(getActivity(), "No group joined", Toast.LENGTH_SHORT).show();
                     checkForGroupRequest();
-                    Toast.makeText(getActivity(), "No group info found", Toast.LENGTH_SHORT).show();
-//                    grp_profile_btn.setError("No group info found");
-                    user_profile_member_count_text_view.setVisibility(View.GONE);
-                    user_profile_member_count_text_view_icon.setVisibility(View.GONE);
-
-                    if (new SessionManager(getActivity()).getSpecificUserBooleanDetail(SessionManager.KEY_REQ_PENDING_GRP_STATUS)) {
-                        showPendingGrpRequestDialog();
-                    } else {
-                        Intent joinGrpIntent = new Intent(getActivity(), Signup_grp_join.class);
-                        joinGrpIntent.putExtra("page_open_mode", 1);
-                        startActivity(joinGrpIntent);
-                    }
                 } else {
                     currentActiveTab = 2;
 
@@ -933,6 +928,14 @@ public class UserProfileFragment extends Fragment {
     }
 
     private void checkForGroupRequest() {
+
+        final ProgressDialog progressDialog = new ProgressDialog(getActivity());
+        progressDialog.setMessage("Loading group requests, Please wait...");
+        progressDialog.setCancelable(false);
+        progressDialog.setCanceledOnTouchOutside(false);
+        progressDialog.create();
+        progressDialog.show();
+
         JsonObject jsonObjectParameters = new JsonObject();
         jsonObjectParameters.addProperty("user_id", new SessionManager(getActivity()).getSpecificUserDetail(SessionManager.KEY_USER_ID));
 
@@ -943,22 +946,15 @@ public class UserProfileFragment extends Fragment {
             @Override
             public void onFailure(Throwable exception) {
                 resultFuture.setException(exception);
-//                progressDialog.dismiss();
+                progressDialog.dismiss();
                 System.out.println(" check_user_group_requests_api exception    " + exception);
-                show_pending_req_dialog_progressBar.setVisibility(View.GONE);
-                show_pending_req_dialog_progressBar_label.setVisibility(View.GONE);
-                show_accept_invitation_dialog_invitations_layout.setVisibility(View.GONE);
-
             }
 
             @Override
             public void onSuccess(JsonElement response) {
                 resultFuture.set(response);
-//                progressDialog.dismiss();
+                progressDialog.dismiss();
                 System.out.println(" check_user_group_requests_api success response    " + response);
-                show_pending_req_dialog_progressBar.setVisibility(View.GONE);
-                show_pending_req_dialog_progressBar_label.setVisibility(View.GONE);
-                show_accept_invitation_dialog_invitations_layout.setVisibility(View.VISIBLE);
                 parseInvitationsData(response);
 
             }
@@ -972,39 +968,60 @@ public class UserProfileFragment extends Fragment {
 
         JsonArray groupsJSONArray = invitationsResponse.getAsJsonArray();
 
-        for (int j = 0; j < groupsJSONArray.size(); j++) {
-            JsonObject group_list_object = groupsJSONArray.get(j).getAsJsonObject();
-            System.out.println(" group_list_object  " + group_list_object);
+        if (groupsJSONArray.size() == 0) {
 
-            String grp_id = group_list_object.get("grp_id").getAsString();
-            String grp_name = group_list_object.get("grp_name").getAsString();
-            String grp_dp_url = null;
-            try {
-                grp_dp_url = group_list_object.get("grp_dp_url").getAsString();
-            } catch (Exception e) {
+            System.out.println("No grp request present, show signup grp page");
+            Intent joinGrpIntent = new Intent(getActivity(), Signup_grp_join.class);
+            joinGrpIntent.putExtra("page_open_mode", 1);
+            startActivity(joinGrpIntent);
 
-            }
-            int req_code = group_list_object.get("REQ_CODE").getAsInt();
-
-            System.out.println(" user_id " + grp_id);
-            System.out.println(" grp_name " + grp_name);
-            System.out.println(" grp_dp_url " + grp_dp_url);
-            System.out.println(" req_code " + req_code);
-
-            //condition to put data only if code = 11 (Invitation from admin)
-            if (req_code == 11) {
-                signupGrpList.add(new SignUpGrpListItem(grp_id, 0, grp_name, grp_dp_url, 1));
-            }
-
-        }
-        if (signupGrpList.size() > 0) {
-            System.out.println(" signupGrpList " + signupGrpList.size());
-            SignupGrpAdapter signupGrpAdapter = new SignupGrpAdapter(getActivity(), signupGrpList);
-            show_pending_req_dialog_pending_req_listview.setAdapter(signupGrpAdapter);
         } else {
-            show_accept_invitation_dialog_invitations_layout.setVisibility(View.GONE);
-        }
+            showPendingGrpRequestDialog();
+            for (int j = 0; j < groupsJSONArray.size(); j++) {
+                JsonObject group_list_object = groupsJSONArray.get(j).getAsJsonObject();
+                System.out.println(" group_list_object  " + group_list_object);
 
+                String grp_id = group_list_object.get("grp_id").getAsString();
+                String grp_name = group_list_object.get("grp_name").getAsString();
+                String grp_dp_url = null;
+                try {
+                    grp_dp_url = group_list_object.get("grp_dp_url").getAsString();
+                } catch (Exception e) {
+
+                }
+                int req_code = group_list_object.get("REQ_CODE").getAsInt();
+
+                System.out.println(" user_id " + grp_id);
+                System.out.println(" grp_name " + grp_name);
+                System.out.println(" grp_dp_url " + grp_dp_url);
+                System.out.println(" req_code " + req_code);
+
+                //condition to put data only if code = 11 (Invitation from admin)
+                if (req_code == 11) {
+                    signupGrpList.add(new SignUpGrpListItem(grp_id, 0, grp_name, grp_dp_url, 1));
+                }
+                if (req_code == 10) {
+                    show_pending_req_dialog_btn_lin_layout.setVisibility(View.VISIBLE);
+                    show_pending_req_dialog_btn_grp_name_textView.setVisibility(View.VISIBLE);
+                    show_pending_req_dialog_btn_grp_name_textView.setText("Request sent : " + grp_name);
+                    pending_req_grp_id = grp_id;
+
+                    if (groupsJSONArray.size() > 1) {
+                        signup_grp_page_or_textview.setVisibility(View.VISIBLE);
+                    } else {
+                        signup_grp_page_or_textview.setVisibility(View.INVISIBLE);
+                    }
+                }
+
+                if (signupGrpList.size() > 0) {
+                    System.out.println(" signupGrpList " + signupGrpList.size());
+                    SignupGrpAdapter signupGrpAdapter = new SignupGrpAdapter(getActivity(), signupGrpList);
+                    show_pending_req_dialog_pending_req_listview.setAdapter(signupGrpAdapter);
+                    show_pending_req_dialog_accept_invitation_label.setVisibility(View.VISIBLE);
+                }
+
+            }
+        }
     }
 
     private void populateUserInfo() {
@@ -1034,7 +1051,7 @@ public class UserProfileFragment extends Fragment {
                 popup.getMenuInflater().inflate(R.menu.user_profile_2_settings_popup_menu, popup.getMenu());
             }
         }
-        if (privilege_type == 2) {
+        if (privilege_type == 2 || privilege_type == 1) {
             popup.getMenuInflater().inflate(R.menu.user_profile_1_settings_popup_menu, popup.getMenu());
         }
         popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
@@ -1355,23 +1372,28 @@ public class UserProfileFragment extends Fragment {
         View view = flater.inflate(R.layout.show_pending_grp_req_dialog, null);
         alertDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         alertDialog.setContentView(view);
-        alertDialog.setCancelable(true);
-        alertDialog.setCanceledOnTouchOutside(false);
 
-        TextView show_pending_req_dialog_btn_grp_name_textView = (TextView) view.findViewById(R.id.show_pending_req_dialog_btn_grp_name_textView);
+        show_pending_req_dialog_btn_grp_name_textView = (TextView) view.findViewById(R.id.show_pending_req_dialog_btn_grp_name_textView);
+        show_pending_req_dialog_accept_invitation_label = (TextView) view.findViewById(R.id.show_pending_req_dialog_accept_invitation_label);
+        signup_grp_page_or_textview = (TextView) view.findViewById(R.id.signup_grp_page_or_textview);
         CardView show_pending_req_dialog_cancel_req_btn_card_view = (CardView) view.findViewById(R.id.show_pending_req_dialog_cancel_req_btn_card_view);
         CardView show_pending_req_dialog_ok_btn_card_view = (CardView) view.findViewById(R.id.show_pending_req_dialog_ok_btn_card_view);
         show_accept_invitation_dialog_invitations_layout = (RelativeLayout) view.findViewById(R.id.show_accept_invitation_dialog_invitations_layout);
+        show_pending_req_dialog_btn_lin_layout = (LinearLayout) view.findViewById(R.id.show_pending_req_dialog_btn_lin_layout);
         show_pending_req_dialog_pending_req_listview = (ListView) view.findViewById(R.id.show_pending_req_dialog_pending_req_listview);
 
-        show_pending_req_dialog_progressBar = (ProgressBar) view.findViewById(R.id.show_pending_req_dialog_progressBar);
-        show_pending_req_dialog_progressBar_label = (TextView) view.findViewById(R.id.show_pending_req_dialog_progressBar_label);
-        show_pending_req_dialog_progressBar.setVisibility(View.VISIBLE);
-        show_pending_req_dialog_progressBar_label.setVisibility(View.VISIBLE);
+        show_pending_req_dialog_btn_lin_layout.setVisibility(View.GONE);
+        show_pending_req_dialog_btn_grp_name_textView.setVisibility(View.GONE);
+        show_pending_req_dialog_accept_invitation_label.setVisibility(View.GONE);
 
-        System.out.println("PENDING " + new SessionManager(getActivity()).getSpecificUserDetail(SessionManager.KEY_REQ_PENDING_GRP_NAME));
+//        show_pending_req_dialog_progressBar = (ProgressBar) view.findViewById(R.id.show_pending_req_dialog_progressBar);
+//        show_pending_req_dialog_progressBar_label = (TextView) view.findViewById(R.id.show_pending_req_dialog_progressBar_label);
+//        show_pending_req_dialog_progressBar.setVisibility(View.VISIBLE);
+//        show_pending_req_dialog_progressBar_label.setVisibility(View.VISIBLE);
 
-        show_pending_req_dialog_btn_grp_name_textView.setText("Pending request : " + new SessionManager(getActivity()).getSpecificUserDetail(SessionManager.KEY_REQ_PENDING_GRP_NAME));
+//        System.out.println("PENDING " + new SessionManager(getActivity()).getSpecificUserDetail(SessionManager.KEY_REQ_PENDING_GRP_NAME));
+
+//        show_pending_req_dialog_btn_grp_name_textView.setText("Pending request : " + new SessionManager(getActivity()).getSpecificUserDetail(SessionManager.KEY_REQ_PENDING_GRP_NAME));
 
         show_pending_req_dialog_ok_btn_card_view.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -1387,8 +1409,81 @@ public class UserProfileFragment extends Fragment {
             }
         });
         alertDialog.setCanceledOnTouchOutside(false);
-        alertDialog.setCancelable(false);
+        alertDialog.setCancelable(true);
         alertDialog.show();
+
+        show_pending_req_dialog_pending_req_listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                alertDialog.dismiss();
+                confirmAcceptJoiningGrp(signupGrpList.get(position).getGrpName());
+                joinMeToTheGrpId = signupGrpList.get(position).getGrpId();
+            }
+        });
+
+    }
+
+    private void confirmAcceptJoiningGrp(String grpName) {
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setMessage("Confirm joining " + grpName)
+                .setCancelable(false)
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        joinMeToTheGroup();
+                    }
+                })
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        System.out.println("No ref code, GO BACK ");
+
+                        dialog.cancel();
+                    }
+                });
+        AlertDialog alert = builder.create();
+        alert.show();
+    }
+
+    private void joinMeToTheGroup() {
+
+        final ProgressDialog progressDialog = new ProgressDialog(getActivity());
+        progressDialog.setTitle("Sending request, Please wait...");
+        progressDialog.create();
+        progressDialog.show();
+        progressDialog.setCanceledOnTouchOutside(false);
+        progressDialog.setCancelable(false);
+        JsonObject jsonObjectParameters = new JsonObject();
+        jsonObjectParameters.addProperty("req_code", 0);
+        jsonObjectParameters.addProperty("grpId", joinMeToTheGrpId);
+        jsonObjectParameters.addProperty("userId", new SessionManager(getActivity()).getSpecificUserDetail(SessionManager.KEY_USER_ID));
+
+        final SettableFuture<JsonElement> resultFuture = SettableFuture.create();
+        ListenableFuture<JsonElement> serviceFilterFuture = MainActivity.mClient.invokeApi("group_request_handler_api", jsonObjectParameters);
+
+        Futures.addCallback(serviceFilterFuture, new FutureCallback<JsonElement>() {
+            @Override
+            public void onFailure(Throwable exception) {
+                resultFuture.setException(exception);
+                progressDialog.dismiss();
+                System.out.println(" group_request_handler_api exception    " + exception);
+
+            }
+
+            @Override
+            public void onSuccess(JsonElement response) {
+                resultFuture.set(response);
+                progressDialog.dismiss();
+                System.out.println(" group_request_handler_api success response    " + response);
+
+                Toast.makeText(getActivity(), response.toString(), Toast.LENGTH_SHORT).show();
+
+                if (response.toString().contains("true")) {
+                    System.out.println("response OK");
+                    fetch_user_details();
+                }
+
+            }
+        });
     }
 
     private void cancelJoinGrpPendingRequest() {
@@ -1411,7 +1506,8 @@ public class UserProfileFragment extends Fragment {
         progressDialog.setCancelable(false);
         JsonObject jsonObjectParameters = new JsonObject();
         jsonObjectParameters.addProperty("req_code", -11);
-        jsonObjectParameters.addProperty("grpId", new SessionManager(getActivity()).getSpecificUserDetail(SessionManager.KEY_REQ_PENDING_GRP_ID));
+//        jsonObjectParameters.addProperty("grpId", new SessionManager(getActivity()).getSpecificUserDetail(SessionManager.KEY_REQ_PENDING_GRP_ID));
+        jsonObjectParameters.addProperty("grpId", pending_req_grp_id);
         jsonObjectParameters.addProperty("userId", new SessionManager(getActivity()).getSpecificUserDetail(SessionManager.KEY_USER_ID));
 
         final SettableFuture<JsonElement> resultFuture = SettableFuture.create();
@@ -1511,7 +1607,6 @@ public class UserProfileFragment extends Fragment {
 //        System.out.println("PROFILE sessionCounter : " + minutes + "m " + seconds + "s");
     }
 
-
     private void selcectFromGallery() {
         PhotoPicker.builder()
                 .setPhotoCount(1)
@@ -1573,7 +1668,6 @@ public class UserProfileFragment extends Fragment {
         return createdImageFile;
     }
 
-
     public String CompressionOfImage(String selectedImagePath) {
         //************************compress logic start****************
         BitmapFactory.Options options = new BitmapFactory.Options();
@@ -1630,7 +1724,6 @@ public class UserProfileFragment extends Fragment {
         }
         return filePath;
     }
-
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {

@@ -964,8 +964,12 @@ public class MainActivity extends AppCompatActivity implements Listview_communic
     @Override
     public void onBackPressed() {
         if (curentBottonNavigationSelection == 0) {
-            finish();
-            super.onBackPressed();
+
+            //logic to exit the app
+            Intent a = new Intent(Intent.ACTION_MAIN);
+            a.addCategory(Intent.CATEGORY_HOME);
+            a.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(a);
         } else {
             curentBottonNavigationSelection = 0;
             refreshMainActSessionFlag = true;
