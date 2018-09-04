@@ -194,7 +194,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="33"
                     android:checked="true"
-                    android:text="T_cruise" />
+                    android:text="You" />
 
                 <View
                     android:layout_width="1dp"

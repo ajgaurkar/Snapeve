@@ -35,6 +35,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.common.util.concurrent.FutureCallback;
 import com.google.common.util.concurrent.Futures;
@@ -53,6 +54,7 @@ import com.umbcapp.gaurk.snapeve.MainActivity;
 import com.umbcapp.gaurk.snapeve.R;
 
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -67,7 +69,7 @@ public class MapsFragment extends Fragment {
     private GoogleMap googleMap;
     private ArrayList<Event_dash_list_obj> event_main_list;
     private CardView maps_loading_events_cardview;
-    private long sessionCounter=0;
+    private long sessionCounter = 0;
     private CheckBox filter_dialog_event_time_upcoming_chk_box;
     private CheckBox filter_dialog_event_time_ongoing_chk_box;
     private CheckBox filter_dialog_event_time_completed_chk_box;
@@ -84,6 +86,7 @@ public class MapsFragment extends Fragment {
     Date filterStartDate = new Date();
     Date filterEndDate = new Date();
     private TextView date_range_text_view_1;
+    private JsonArray feedsJsonArray;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -141,6 +144,22 @@ public class MapsFragment extends Fragment {
                 CameraPosition cameraPosition = new CameraPosition.Builder().target(sydney).zoom(15.5f).build();
                 googleMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
 
+
+
+//                googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+//                    @Override
+//                    public boolean onMarkerClick(Marker marker) {
+//
+//                        marker.ge;
+//
+//                        int position = (int) (marker.getTag());
+//                        //Using position get Value from arraylist
+//
+//                        System.out.println("Marker click : " + feedsJsonArray.get(position).getAsJsonObject().get("description").getAsString());
+//
+//                        return false;
+//                    }
+//                });
             }
         });
 
@@ -150,6 +169,9 @@ public class MapsFragment extends Fragment {
 //                showFilterDialog();
 //            }
 //        });
+
+
+
 
         return rootView;
     }
@@ -356,42 +378,69 @@ public class MapsFragment extends Fragment {
 
         System.out.println(" IN PARSE JASON");
 
-        JsonArray feedsJsonArray = response.getAsJsonArray();
+        feedsJsonArray = response.getAsJsonArray();
 
         for (int j = 0; j < feedsJsonArray.size(); j++) {
             JsonObject feeds_list_object = feedsJsonArray.get(j).getAsJsonObject();
             System.out.println(" feeds_list_object  " + feeds_list_object);
 
-            String img_comment = feeds_list_object.get("img_comment").toString();
-            String feed_img_url = feeds_list_object.get("img_url").toString();
-            String event_lat = feeds_list_object.get("lattitude").toString();
-            String event_long = feeds_list_object.get("longitude").toString();
-            String event_type = feeds_list_object.get("event_type").toString();
+            String img_comment = feeds_list_object.get("img_comment").getAsString();
+            String feed_img_url = feeds_list_object.get("img_url").getAsString();
+            String event_lat = feeds_list_object.get("lattitude").getAsString();
+            String event_long = feeds_list_object.get("longitude").getAsString();
+            String event_type = feeds_list_object.get("event_type").getAsString();
+            String event_start_dt_time = feeds_list_object.get("event_start_dt_time").getAsString();
+            String event_end_dt_time = feeds_list_object.get("event_end_dt_time").getAsString();
+            boolean all_day = feeds_list_object.get("all_day").getAsBoolean();
             System.out.println(" img_comment " + img_comment);
             System.out.println(" feed_img_url " + feed_img_url);
-
-            //Remove " from start and end from every string
-            img_comment = img_comment.substring(1, img_comment.length() - 1);
-            event_lat = event_lat.substring(1, event_lat.length() - 1);
-            event_long = event_long.substring(1, event_long.length() - 1);
-            event_type = event_type.substring(1, event_type.length() - 1);
-            feed_img_url = feed_img_url.substring(1, feed_img_url.length() - 1);
+            String eventTimming = "";
 
             System.out.println("event_lat : " + event_lat);
             System.out.println("event_long : " + event_long);
+            DateFormat feedsDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
 
+            if (all_day) {
+                DateFormat displayAlldayDtFormat = new SimpleDateFormat("MMM dd");
+
+                Date startDateTime = null;
+                Date endDateTime = null;
+                try {
+                    startDateTime = feedsDateFormat.parse(event_start_dt_time);
+                    //just 1 of the 2 dates needed for all_day
+                    //endDateTime = feedsDateFormat.parse(event_dash_list_obj.getPost_end_dt_time());
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+
+                eventTimming = displayAlldayDtFormat.format(startDateTime) + ", All day event";
+            } else {
+                DateFormat displayStartDtFormat = new SimpleDateFormat("MMM dd, HH:MM - ");
+                DateFormat displayEndTimeFormat = new SimpleDateFormat("HH:mm");
+
+                Date startDateTime = null;
+                Date endDateTime = null;
+                try {
+                    startDateTime = feedsDateFormat.parse(event_start_dt_time);
+                    endDateTime = feedsDateFormat.parse(event_end_dt_time);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+                eventTimming = displayStartDtFormat.format(startDateTime) + displayEndTimeFormat.format(endDateTime);
+            }
 
             LatLng event_marker = new LatLng(Double.parseDouble(event_lat), Double.parseDouble(event_long));
 
             if (event_type.equals("0")) {
-                googleMap.addMarker(new MarkerOptions().position(event_marker).title(img_comment).icon(BitmapDescriptorFactory.fromResource(R.drawable.flag_blue_32)));
+                googleMap.addMarker(new MarkerOptions().position(event_marker).title(img_comment + " - " + eventTimming).icon(BitmapDescriptorFactory.fromResource(R.drawable.flag_blue_32)));
             }
             if (event_type.equals("1")) {
-                googleMap.addMarker(new MarkerOptions().position(event_marker).title(img_comment).icon(BitmapDescriptorFactory.fromResource(R.drawable.flag_32_trai)));
+                googleMap.addMarker(new MarkerOptions().position(event_marker).title(img_comment + " - " + eventTimming).icon(BitmapDescriptorFactory.fromResource(R.drawable.flag_32_trai)));
             }
         }
 
     }
+
 
     @Override
     public void onResume() {

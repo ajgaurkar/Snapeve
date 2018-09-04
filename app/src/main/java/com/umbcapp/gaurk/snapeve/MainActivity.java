@@ -543,7 +543,7 @@ public class MainActivity extends AppCompatActivity implements Listview_communic
                 int post_as = feeds_list_object.get("post_as").getAsInt();
                 int event_type = feeds_list_object.get("event_type").getAsInt();
                 int scope = feeds_list_object.get("scope").getAsInt();
-                int location_type = feeds_list_object.get("location_type").getAsInt();
+                int location_type = Integer.parseInt(feeds_list_object.get("location_type").getAsString());
 
 
                 //getting likes and spam data/count. replace null with 0
@@ -577,6 +577,11 @@ public class MainActivity extends AppCompatActivity implements Listview_communic
                     total_comments = feeds_list_object.get("total_comments").getAsInt();
                 } catch (Exception e) {
                     e.printStackTrace();
+                }
+
+                String location_name = "";
+                if (location_type == 2) {
+                    location_name = feeds_list_object.get("location_name").getAsString();
                 }
 
                 String img_comment = null;
@@ -623,7 +628,7 @@ public class MainActivity extends AppCompatActivity implements Listview_communic
 
                 event_main_list.add(0, new Event_dash_list_obj(post_user_id, post_dp_url, initializer_name, img_comment,
                         post_dt, post_img_url, post_id, post_dt, event_start_dt_time, event_end_dt_time,
-                        event_all_day_status, post_as, event_type, location_type, scope, post_grp_name, post_grp_id, post_grp_dp_url,
+                        event_all_day_status, post_as, event_type, location_type, location_name, scope, post_grp_name, post_grp_id, post_grp_dp_url,
                         user_likes, user_spam, total_likes, total_spam, total_comments));
 
 
@@ -657,8 +662,8 @@ public class MainActivity extends AppCompatActivity implements Listview_communic
         MaterialShowcaseSequence sequence = new MaterialShowcaseSequence(this);
 
         sequence.setConfig(config);
-//        sequence.singleUse("DASH_SHOWCASE_SEQUENCE_1");
-        sequence.singleUse(String.valueOf(id));
+        sequence.singleUse("DASH_SHOWCASE_SEQUENCE_1");
+//        sequence.singleUse(String.valueOf(id));
 
         sequence.addSequenceItem(showcase_view_2,
                 "Events show up here", "NEXT");

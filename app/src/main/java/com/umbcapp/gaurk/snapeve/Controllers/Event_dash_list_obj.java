@@ -16,6 +16,7 @@ public class Event_dash_list_obj {
     int post_as;
     int scope;
     int location_type;
+    String location_name;
     int event_type;
     String grp_name;
     String grp_id;
@@ -26,7 +27,7 @@ public class Event_dash_list_obj {
     int total_spam;
     int total_comments;
 
-    public Event_dash_list_obj(String user_id, String user_dp_url, String user_name, String user_comment, String comment_time, String image_url, String post_id, String post_dt, String post_start_dt_time, String post_end_dt_time, Boolean all_day_status, int post_as, int scope, int location_type, int event_type, String grp_name, String grp_id, String grp_dp_url, int user_like, int user_spam, int total_likes, int total_spam, int total_comments) {
+    public Event_dash_list_obj(String user_id, String user_dp_url, String user_name, String user_comment, String comment_time, String image_url, String post_id, String post_dt, String post_start_dt_time, String post_end_dt_time, Boolean all_day_status, int post_as, int scope, int location_type, String location_name, int event_type, String grp_name, String grp_id, String grp_dp_url, int user_like, int user_spam, int total_likes, int total_spam, int total_comments) {
         this.user_id = user_id;
         this.user_dp_url = user_dp_url;
         this.user_name = user_name;
@@ -41,6 +42,7 @@ public class Event_dash_list_obj {
         this.post_as = post_as;
         this.scope = scope;
         this.location_type = location_type;
+        this.location_name = location_name;
         this.event_type = event_type;
         this.grp_name = grp_name;
         this.grp_id = grp_id;
@@ -50,6 +52,14 @@ public class Event_dash_list_obj {
         this.total_likes = total_likes;
         this.total_spam = total_spam;
         this.total_comments = total_comments;
+    }
+
+    public String getLocation_name() {
+        return location_name;
+    }
+
+    public void setLocation_name(String location_name) {
+        this.location_name = location_name;
     }
 
     public int getPost_as() {

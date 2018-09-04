@@ -1,6 +1,7 @@
 package com.umbcapp.gaurk.snapeve.Adapters;
 
 import android.content.Context;
+import android.media.Image;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -63,7 +64,9 @@ public class Dash_Event_ListAdapter extends BaseAdapter {
 //            viewHolder.list_item_deny_iv = (ImageView) view.findViewById(R.id.list_item_deny_iv);
             viewHolder.list_item_comment_iv = (ImageView) view.findViewById(R.id.list_item_comment_iv);
             viewHolder.list_item_spam_iv = (ImageView) view.findViewById(R.id.list_item_spam_iv);
+            viewHolder.post_location_imageview = (ImageView) view.findViewById(R.id.post_location_imageview);
             viewHolder.list_item_verify_tv = (TextView) view.findViewById(R.id.list_item_verify_tv);
+            viewHolder.post_location_textview = (TextView) view.findViewById(R.id.post_location_textview);
             viewHolder.likes_status_textview = (TextView) view.findViewById(R.id.likes_status_textview);
             viewHolder.list_item_post_dt_time = (TextView) view.findViewById(R.id.post_dt_time_textview);
             viewHolder.list_item_event_statr_end_dt_time_textview = (TextView) view.findViewById(R.id.list_item_event_statr_end_dt_time_textview);
@@ -138,8 +141,28 @@ public class Dash_Event_ListAdapter extends BaseAdapter {
             viewHolder.likes_status_textview.setVisibility(View.VISIBLE);
             viewHolder.likes_status_textview.setText(actionCountString);
         }
-        //set user like/spam icons
 
+
+        System.out.print(" TYPE no   " + event_dash_list_obj.getLocation_type());
+        System.out.println("TYPE name " + event_dash_list_obj.getLocation_name());
+
+        //set location type
+        switch (event_dash_list_obj.getLocation_type()) {
+            case 0:
+                viewHolder.post_location_textview.setText("Map location");
+                viewHolder.post_location_imageview.setVisibility(View.VISIBLE);
+                break;
+            case 1:
+                viewHolder.post_location_textview.setText("Map location");
+                viewHolder.post_location_imageview.setVisibility(View.VISIBLE);
+                break;
+            case 2:
+                viewHolder.post_location_textview.setText("@ " + event_dash_list_obj.getLocation_name());
+                viewHolder.post_location_imageview.setVisibility(View.INVISIBLE);
+                break;
+        }
+
+        //set user like/spam icons
         switch (event_dash_list_obj.getUser_like()) {
             case 0:
                 viewHolder.list_item_verify_iv.setImageResource(R.drawable.approve_light_grey_48);
@@ -297,5 +320,7 @@ public class Dash_Event_ListAdapter extends BaseAdapter {
         private TextView list_item_user_name;
         private TextView list_item_post_dt_time;
         private TextView likes_status_textview;
+        private TextView post_location_textview;
+        private ImageView post_location_imageview;
     }
 }

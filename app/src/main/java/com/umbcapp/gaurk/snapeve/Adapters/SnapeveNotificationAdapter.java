@@ -95,7 +95,7 @@ public class SnapeveNotificationAdapter extends BaseAdapter {
         if (selectedNotificationListItem.getNotificationTag().contains("Action comment")) {
             viewHolder.notification_list_item_circle_img_view.setImageResource(R.drawable.notification_icon_new_comment_96);
         }
-        if (selectedNotificationListItem.getNotificationTag().contains("Event")) {
+        if (selectedNotificationListItem.getNotificationTag().contains("New Event")) {
             viewHolder.notification_list_item_circle_img_view.setImageResource(R.drawable.notification_icon_new_event_96);
         }
         if (selectedNotificationListItem.getNotificationTag().contains("Invitation received")) {
