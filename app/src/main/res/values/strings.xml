@@ -57,6 +57,7 @@
     <string name="at_the_rate_string">\@</string>
     <string name="notification_setting">Notification</string>
     <string name="notiofcation_summary">Notification ON/OFF</string>
+    <string name="agree_and_continue">Tap \"I agree and continue\" to accept</string>
 
 
 </resources>

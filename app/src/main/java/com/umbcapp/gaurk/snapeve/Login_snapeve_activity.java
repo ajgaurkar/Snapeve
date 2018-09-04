@@ -52,7 +52,10 @@ public class Login_snapeve_activity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        startActivity(new Intent(getApplicationContext(),UserAgreementActivity.class));
+
         setContentView(R.layout.login_snapeve);
+
 
         createNotificationChannel();
 

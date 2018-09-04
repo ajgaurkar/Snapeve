@@ -70,7 +70,8 @@ public class CommentsAdapter extends BaseAdapter {
             viewHolder = (CommentsAdapter.ViewHolder) view.getTag();
 
         }
-        DateFormat commentsDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSX");
+//        DateFormat commentsDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSX");
+        DateFormat commentsDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
         DateFormat displayDtFormat = new SimpleDateFormat("MMM dd HH:MM");
 
         CommentsListItem commentsListItem = comments_list.get(position);

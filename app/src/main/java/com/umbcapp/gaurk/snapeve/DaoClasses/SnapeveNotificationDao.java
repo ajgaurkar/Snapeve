@@ -18,7 +18,7 @@ public interface SnapeveNotificationDao {
     Long insertTask(SnapeveNotification notification);
 
 
-    @Query("SELECT * FROM SnapeveNotification ORDER BY created_at desc")
+    @Query("SELECT * FROM SnapeveNotification ORDER BY created_at")
     LiveData<List<SnapeveNotification>> fetchAllNotification();
 
 

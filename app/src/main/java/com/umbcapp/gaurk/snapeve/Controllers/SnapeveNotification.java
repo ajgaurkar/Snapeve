@@ -20,6 +20,7 @@ public class SnapeveNotification implements Serializable {
     private String notificationTitle;
     private String notificationDescription;
     private String notificationTag;
+    private long notificationTimeStamp;
 
     public String getNotificationTag() {
         return notificationTag;
@@ -75,5 +76,13 @@ public class SnapeveNotification implements Serializable {
 
     public void setModifiedAt(Date modifiedAt) {
         this.modifiedAt = modifiedAt;
+    }
+
+    public long getNotificationTimeStamp() {
+        return notificationTimeStamp;
+    }
+
+    public void setNotificationTimeStamp(long notificationTimeStamp) {
+        this.notificationTimeStamp = notificationTimeStamp;
     }
 }

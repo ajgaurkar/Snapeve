@@ -8,7 +8,7 @@ import com.umbcapp.gaurk.snapeve.Controllers.SnapeveNotification;
 import com.umbcapp.gaurk.snapeve.DaoClasses.SnapeveNotificationDao;
 import com.umbcapp.gaurk.snapeve.DaoClasses.SnapeveSessionDao;
 
-@Database(entities = {SnapeveNotification.class,SnapEveSession.class}, version = 2, exportSchema = false)
+@Database(entities = {SnapeveNotification.class,SnapEveSession.class}, version = 1, exportSchema = false)
 public abstract class SnapeveDatabase extends RoomDatabase {
 
     public abstract SnapeveNotificationDao snapeveNotificationDao();

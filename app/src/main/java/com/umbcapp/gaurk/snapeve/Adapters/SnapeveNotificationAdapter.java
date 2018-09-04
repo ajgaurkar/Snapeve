@@ -11,6 +11,9 @@ import android.widget.TextView;
 import com.umbcapp.gaurk.snapeve.Controllers.SnapeveNotification;
 import com.umbcapp.gaurk.snapeve.R;
 
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -62,7 +65,6 @@ public class SnapeveNotificationAdapter extends BaseAdapter {
 //            Listview_communicator communicator;
 //            communicator = ((Listview_communicator)context).main_event_listview_element_clicked();
 //            communicator.main_event_listview_element_clicked();
-//
 
         } else {
 
@@ -72,11 +74,43 @@ public class SnapeveNotificationAdapter extends BaseAdapter {
 
         SnapeveNotification selectedNotificationListItem = notifications_list.get(position);
 
-        viewHolder.notification_list_item_header_text_view.setText(String.valueOf(selectedNotificationListItem.getId()));
+        viewHolder.notification_list_item_header_text_view.setText(String.valueOf(selectedNotificationListItem.getNotificationTitle()));
         viewHolder.notification_list_item_description_text_view.setText(selectedNotificationListItem.getNotificationDescription());
-        viewHolder.notification_list_item_time_text_view.setText(selectedNotificationListItem.getNotificationTitle());
 
-        viewHolder.notification_list_item_circle_img_view.setImageResource(R.drawable.accept_96);
+        SimpleDateFormat sdf = new SimpleDateFormat("MMM dd, HH:MM:SS");
+        System.out.println("current millis" + selectedNotificationListItem.getNotificationTimeStamp());
+
+        Timestamp timestamp = new Timestamp(selectedNotificationListItem.getNotificationTimeStamp());
+        viewHolder.notification_list_item_time_text_view.setText(sdf.format(timestamp));
+
+        if (selectedNotificationListItem.getNotificationTag().contains("Action spammed")) {
+            viewHolder.notification_list_item_circle_img_view.setImageResource(R.drawable.notification_icon_spam_round_96);
+        }
+        if (selectedNotificationListItem.getNotificationTag().contains("Action verified")) {
+            viewHolder.notification_list_item_circle_img_view.setImageResource(R.drawable.notification_icon_like_round_96);
+        }
+        if (selectedNotificationListItem.getNotificationTag().contains("Join request received")) {
+            viewHolder.notification_list_item_circle_img_view.setImageResource(R.drawable.notification_icon_new_request_96);
+        }
+        if (selectedNotificationListItem.getNotificationTag().contains("Action comment")) {
+            viewHolder.notification_list_item_circle_img_view.setImageResource(R.drawable.notification_icon_new_comment_96);
+        }
+        if (selectedNotificationListItem.getNotificationTag().contains("Event")) {
+            viewHolder.notification_list_item_circle_img_view.setImageResource(R.drawable.notification_icon_new_event_96);
+        }
+        if (selectedNotificationListItem.getNotificationTag().contains("Invitation received")) {
+            viewHolder.notification_list_item_circle_img_view.setImageResource(R.drawable.notification_icon_invite_96);
+        }
+        if (selectedNotificationListItem.getNotificationTag().contains("Weekly reward")) {
+            viewHolder.notification_list_item_circle_img_view.setImageResource(R.drawable.notification_icon_weekly_rewards_128);
+        }
+        if (selectedNotificationListItem.getNotificationTag().contains("Added to the group")) {
+            viewHolder.notification_list_item_circle_img_view.setImageResource(R.drawable.notification_icon_added_togrp_90);
+        }
+        if (selectedNotificationListItem.getNotificationTag().contains("code used")) {
+            viewHolder.notification_list_item_circle_img_view.setImageResource(R.drawable.notification_icon_gift_card_round_96);
+        }
+
 
 //                iv_logo.setImageResource(getResources().getIdentifier(logo_id, "drawable", "com.yourpackage"));
 

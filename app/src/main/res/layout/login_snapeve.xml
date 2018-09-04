@@ -172,59 +172,59 @@
 
     </android.support.v7.widget.CardView>
 
-    <TextView
-        android:id="@+id/login_page_or_textview"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/signup_btn_card"
-        android:layout_centerHorizontal="true"
-        android:layout_margin="15dp"
-        android:padding="2dp"
-        android:text="OR"
-        android:textColor="#fff"
-        android:textSize="14sp" />
+    <!--<TextView-->
+        <!--android:id="@+id/login_page_or_textview"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_below="@+id/signup_btn_card"-->
+        <!--android:layout_centerHorizontal="true"-->
+        <!--android:layout_margin="15dp"-->
+        <!--android:padding="2dp"-->
+        <!--android:text="OR"-->
+        <!--android:textColor="#fff"-->
+        <!--android:textSize="14sp" />-->
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_alignBottom="@+id/login_page_or_textview"
-        android:layout_alignStart="@+id/signup_btn_card"
-        android:layout_alignTop="@+id/login_page_or_textview"
-        android:layout_toStartOf="@+id/login_page_or_textview">
+    <!--<RelativeLayout-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:layout_alignBottom="@+id/login_page_or_textview"-->
+        <!--android:layout_alignStart="@+id/signup_btn_card"-->
+        <!--android:layout_alignTop="@+id/login_page_or_textview"-->
+        <!--android:layout_toStartOf="@+id/login_page_or_textview">-->
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:layout_centerVertical="true"
-            android:background="#fff" />
-    </RelativeLayout>
+        <!--<View-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="0.5dp"-->
+            <!--android:layout_centerVertical="true"-->
+            <!--android:background="#fff" />-->
+    <!--</RelativeLayout>-->
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_alignBottom="@+id/login_page_or_textview"
-        android:layout_alignEnd="@+id/signup_btn_card"
-        android:layout_alignTop="@+id/login_page_or_textview"
-        android:layout_toEndOf="@+id/login_page_or_textview">
+    <!--<RelativeLayout-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:layout_alignBottom="@+id/login_page_or_textview"-->
+        <!--android:layout_alignEnd="@+id/signup_btn_card"-->
+        <!--android:layout_alignTop="@+id/login_page_or_textview"-->
+        <!--android:layout_toEndOf="@+id/login_page_or_textview">-->
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:layout_centerVertical="true"
-            android:background="#fff" />
-    </RelativeLayout>
+        <!--<View-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="0.5dp"-->
+            <!--android:layout_centerVertical="true"-->
+            <!--android:background="#fff" />-->
+    <!--</RelativeLayout>-->
 
 
-    <TextView
-        android:id="@+id/login_page_login_google_textview"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/login_page_or_textview"
-        android:layout_centerHorizontal="true"
-        android:background="?android:selectableItemBackground"
-        android:padding="5dp"
-        android:text="Login via Google"
-        android:textColor="#fff"
-        android:textSize="18sp"
-        android:textStyle="bold" />
+    <!--<TextView-->
+        <!--android:id="@+id/login_page_login_google_textview"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_below="@+id/login_page_or_textview"-->
+        <!--android:layout_centerHorizontal="true"-->
+        <!--android:background="?android:selectableItemBackground"-->
+        <!--android:padding="5dp"-->
+        <!--android:text="Login via Google"-->
+        <!--android:textColor="#fff"-->
+        <!--android:textSize="18sp"-->
+        <!--android:textStyle="bold" />-->
 </RelativeLayout>

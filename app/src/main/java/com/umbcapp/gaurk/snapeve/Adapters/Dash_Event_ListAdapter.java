@@ -80,7 +80,8 @@ public class Dash_Event_ListAdapter extends BaseAdapter {
         }
         Event_dash_list_obj event_dash_list_obj = event_dash_list.get(position);
 
-        DateFormat feedsDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSX");
+//        DateFormat feedsDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSX");
+        DateFormat feedsDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
 
         if (event_dash_list_obj.getAll_day_status()) {
             DateFormat displayAlldayDtFormat = new SimpleDateFormat("MMM dd");

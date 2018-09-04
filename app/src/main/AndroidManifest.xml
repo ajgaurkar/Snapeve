@@ -96,6 +96,7 @@
         <activity android:name=".MessageThread" />
         <activity android:name=".ImageFullscreenOpen" />
         <activity android:name=".AccountHandler" />
+        <activity android:name=".UserAgreementActivity" />
 
         <service
             android:name=".RegisterNotificationTags"

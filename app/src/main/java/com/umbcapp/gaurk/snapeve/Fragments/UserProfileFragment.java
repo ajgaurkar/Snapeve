@@ -548,7 +548,8 @@ public class UserProfileFragment extends Fragment {
                 System.out.println(" dp_url is null, set local image");
             }
 
-            DateFormat srcDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSX");
+//            DateFormat srcDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSX");
+            DateFormat srcDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
             DateFormat displayDtFormat = new SimpleDateFormat("MMM dd HH:mm");
 
             Date postDate = null;

@@ -37,6 +37,7 @@ import com.umbcapp.gaurk.snapeve.SessionManager;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -141,7 +142,7 @@ public class NotificationFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                startActivity(new Intent(getActivity(), MessageThread.class));
+//                startActivity(new Intent(getActivity(), MessageThread.class));
 
             }
         });
@@ -226,6 +227,10 @@ public class NotificationFragment extends Fragment {
                     public void onChanged(@Nullable List<SnapeveNotification> notificationsList) {
                         System.out.println("List---   " + notificationsList);
                         System.out.println("List size---   " + notificationsList.size());
+
+                        //data from sqlite comes in reverseorder even in DESC is added to the query
+                        Collections.reverse(notificationsList);
+
                         SnapeveNotificationAdapter notificationsAdapter = new SnapeveNotificationAdapter(getActivity(), notificationsList);
                         notification_layout_listview.setAdapter(notificationsAdapter);
                     }

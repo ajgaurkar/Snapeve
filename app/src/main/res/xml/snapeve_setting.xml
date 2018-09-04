@@ -50,7 +50,7 @@
         android:title="Terms and Policy">
         <intent
             android:action="android.intent.action.VIEW"
-            android:data="https://www.ajgaurkar.com" />
+            android:data="https://sites.google.com/view/snapeve-privacy-policy/home" />
     </Preference>
 
     <Preference
@@ -59,7 +59,7 @@
         android:title="FAQ">
         <intent
             android:action="android.intent.action.VIEW"
-            android:data="https://www.ajgaurkar.com" />
+            android:data="https://sites.google.com/view/snapeve-user-agreement/home" />
     </Preference>
 
     <Preference

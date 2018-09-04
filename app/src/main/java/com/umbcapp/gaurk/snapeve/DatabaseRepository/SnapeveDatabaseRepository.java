@@ -22,11 +22,12 @@ public class SnapeveDatabaseRepository {
                 .build();
     }
 
-    public void insertSnapeveNotification(String notificationTitle, String notificationDesc, String notificationTag) {
+    public void insertSnapeveNotification(String notificationTitle, String notificationDesc, String notificationTag, long not_receive_time) {
         SnapeveNotification snapeveNotification = new SnapeveNotification();
         snapeveNotification.setNotificationTitle(notificationTitle);
         snapeveNotification.setNotificationDescription(notificationDesc);
         snapeveNotification.setNotificationTag(notificationTag);
+        snapeveNotification.setNotificationTimeStamp(not_receive_time);
         insertTask(snapeveNotification);
     }
 

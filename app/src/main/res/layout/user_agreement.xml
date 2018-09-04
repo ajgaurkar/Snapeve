@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/user_agreement_text"
+        android:layout_margin="16dp"
+        android:gravity="center"
+        android:text="@string/agree_and_continue"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/user_agreement_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/privacy_policy_text"
+        android:layout_marginBottom="10dp"
+        android:layout_marginStart="16dp"
+        android:gravity="center"
+        android:text="End user agreement"
+        android:textColor="#366cff" />
+
+    <TextView
+        android:id="@+id/privacy_policy_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/useragreementconfirmbtn"
+        android:layout_marginStart="16dp"
+        android:gravity="center"
+        android:text="Privacy policy"
+        android:textColor="#366cff" />
+
+    <Button
+        android:id="@+id/useragreementconfirmbtn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_margin="16dp"
+        android:text="I agree and continue" />
+
+</RelativeLayout>

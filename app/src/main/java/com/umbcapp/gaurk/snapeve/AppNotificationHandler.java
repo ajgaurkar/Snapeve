@@ -9,6 +9,8 @@ import android.support.v4.app.NotificationManagerCompat;
 import com.microsoft.windowsazure.notifications.NotificationsHandler;
 import com.umbcapp.gaurk.snapeve.DatabaseRepository.SnapeveDatabaseRepository;
 
+import java.util.Calendar;
+
 /**
  * Created by Amey on 29-07-2018.
  */
@@ -32,11 +34,17 @@ public class AppNotificationHandler extends NotificationsHandler {
         nhTag = bundle.getString("tag");
         System.out.println("in Notoification on Recive ");
 //        sendNotification(nhMessage);
+
+//        new SessionManager(ctx).getSpecificUserDetail()
         setNotification();
 
         snapeveDatabaseRepository = new SnapeveDatabaseRepository(ctx);
 
-        snapeveDatabaseRepository.insertSnapeveNotification(nhTitle,nhMessage,nhTag);
+        long curentTime = System.currentTimeMillis();
+        System.out.println("System.currentTimeMillis() " + curentTime);
+
+        snapeveDatabaseRepository.insertSnapeveNotification(nhTitle, nhMessage, nhTag, curentTime);
+
     }
 
 
