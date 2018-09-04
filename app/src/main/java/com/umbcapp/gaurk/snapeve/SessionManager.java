@@ -94,7 +94,8 @@ public class SessionManager {
             Log.d("data null", "data null");
 
             // user is not logged in redirect him to Login Activity
-            Intent i = new Intent(_context, Login_snapeve_activity.class);
+//            Intent i = new Intent(_context, Login_snapeve_activity.class);
+            Intent i = new Intent(_context, WelcomeActivity.class);
             // Closing all the Activities
             i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
@@ -145,7 +146,8 @@ public class SessionManager {
         editor.commit();
 
         // After logout redirect user to Loing Activity
-        Intent i = new Intent(_context, Login_snapeve_activity.class);
+//        Intent i = new Intent(_context, Login_snapeve_activity.class);
+        Intent i = new Intent(_context, WelcomeActivity.class);
         // Closing all the Activities
         i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 

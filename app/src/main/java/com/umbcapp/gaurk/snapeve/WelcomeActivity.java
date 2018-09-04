@@ -126,7 +126,8 @@ public class WelcomeActivity extends AppCompatActivity {
 
     private void launchHomeScreen() {
 //        session.setFirstTimeLaunch(false);
-        startActivity(new Intent(WelcomeActivity.this, MainActivity.class));
+//        startActivity(new Intent(WelcomeActivity.this, MainActivity.class));
+        startActivity(new Intent(WelcomeActivity.this, Login_snapeve_activity.class));
         finish();
     }
 
@@ -140,7 +141,7 @@ public class WelcomeActivity extends AppCompatActivity {
             // changing the next button text 'NEXT' / 'GOT IT'
             if (position == layouts.length - 1) {
                 // last page. make button text to GOT IT
-                btnNext.setText("GOT IT");
+                btnNext.setText("GET STARTED");
                 btnSkip.setVisibility(View.GONE);
             } else {
                 // still pages are left

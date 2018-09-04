@@ -9,6 +9,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomNavigationView;
@@ -58,6 +59,9 @@ import java.util.Locale;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 
+import uk.co.deanwild.materialshowcaseview.MaterialShowcaseSequence;
+import uk.co.deanwild.materialshowcaseview.ShowcaseConfig;
+
 public class MainActivity extends AppCompatActivity implements Listview_communicator {
 
     public static MobileServiceClient mClient;
@@ -94,6 +98,9 @@ public class MainActivity extends AppCompatActivity implements Listview_communic
     private JsonObject sessionCounterParameters;
     private SnapeveDatabaseRepository studentRepository;
     private List<SnapEveSession> snapeveSessionList = new ArrayList<>();
+    private View showcase_view_1;
+    private View showcase_view_2;
+    private int onResumeCounter = 0;
 //    private Button refreshBtn;
 
     @Override
@@ -121,6 +128,8 @@ public class MainActivity extends AppCompatActivity implements Listview_communic
         pullToRefresh = (SwipeRefreshLayout) findViewById(R.id.dashboard_pull_refresh_layout);
 
         main_img_pick_fab = (FloatingActionButton) findViewById(R.id.main_img_pick_fab);
+        showcase_view_1 = (View) findViewById(R.id.showcase_view_1);
+        showcase_view_2 = (View) findViewById(R.id.showcase_view_2);
 
         userProfileFragment = new UserProfileFragment();
         settingsFragment = new SettingsFragment();
@@ -140,6 +149,7 @@ public class MainActivity extends AppCompatActivity implements Listview_communic
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
+        System.out.println("executeGetFeedsApi 1");
         executeGetFeedsApi();
 
         main_img_pick_fab.setOnClickListener(new View.OnClickListener() {
@@ -152,6 +162,8 @@ public class MainActivity extends AppCompatActivity implements Listview_communic
         pullToRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
+                System.out.println("IN PULL TO REFRESH");
+                System.out.println("executeGetFeedsApi 2");
                 executeGetFeedsApi();
             }
         });
@@ -328,25 +340,6 @@ public class MainActivity extends AppCompatActivity implements Listview_communic
         }
     };
 
-//    private void testNotification() {
-//
-//        NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
-//        builder.setSmallIcon(R.drawable.walking_48);
-//        builder.setTicker("Ticker");
-//        builder.setAutoCancel(true);
-//        builder.setWhen(System.currentTimeMillis());
-//        builder.setContentTitle("Titke");
-//        builder.setContentText("Content");
-//
-//        Intent intent = new Intent(this, NotificationReceiver.class);
-//        PendingIntent pIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-//        builder.setContentIntent(pIntent);
-//
-//        NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-//        notificationManager.notify(8978, builder.build());
-//
-//    }
-
     private void executeGetFeedsApi() {
         final ProgressDialog progressDialog = new ProgressDialog(MainActivity.this);
         progressDialog.setMessage("Loading feeds, Please wait...");
@@ -370,8 +363,8 @@ public class MainActivity extends AppCompatActivity implements Listview_communic
                 progressDialog.dismiss();
                 fetchUserDetails();
 
-//                Toast.makeText(MainActivity.this, "Something went wrong try again", Toast.LENGTH_SHORT).show();
-                showNoResponseDialog();
+//                showNoResponseDialog();
+                showNoResponseAlertDialog();
             }
 
             @Override
@@ -389,24 +382,51 @@ public class MainActivity extends AppCompatActivity implements Listview_communic
         });
     }
 
-    private void showNoResponseDialog() {
-        new FancyAlertDialog.Builder(MainActivity.this)
-                .setTitle("Oopsy daisy!")
-                .setBackgroundColor(Color.parseColor("#3F51B5"))  //Don't pass R.color.colorvalue
-                .setMessage("Something went wrong")
-                .setIcon(R.drawable.traingale_exclamation_100, Icon.Visible)
-                .setPositiveBtnText("Reload")
-                .setPositiveBtnBackground(Color.parseColor("#303F9F"))//Don't pass R.color.colorvalue
-                .OnPositiveClicked(new FancyAlertDialogListener() {
-                    @Override
-                    public void OnClick() {
-
+    private void showNoResponseAlertDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+        builder.setMessage("Couldn't update feeds")
+                .setCancelable(false)
+                .setPositiveButton("Try again", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        System.out.println("executeGetFeedsApi 3");
                         executeGetFeedsApi();
                     }
                 })
-                .setNegativeBtnBackground(Color.parseColor("#003F51B5"))//Don't pass R.color.colorvalue
-                .setNegativeBtnText("")
-                .build();
+                .setNegativeButton("Exit", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        System.out.println("No ref code, GO BACK ");
+
+                        //logic to exit the app
+                        Intent a = new Intent(Intent.ACTION_MAIN);
+                        a.addCategory(Intent.CATEGORY_HOME);
+                        a.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivity(a);
+                    }
+                });
+        AlertDialog alert = builder.create();
+        alert.show();
+    }
+
+    private void showNoResponseDialog() {
+
+//        System.out.println("IN SHOW NO RESPONSE DIALOG");
+//        new FancyAlertDialog.Builder(MainActivity.this)
+//                .setTitle("Oopsy daisy!")
+//                .setBackgroundColor(Color.parseColor("#3F51B5"))  //Don't pass R.color.colorvalue
+//                .setMessage("Something went wrong")
+//                .setIcon(R.drawable.traingale_exclamation_100, Icon.Visible)
+//                .setPositiveBtnText("Reload")
+//                .setPositiveBtnBackground(Color.parseColor("#303F9F"))//Don't pass R.color.colorvalue
+//                .OnPositiveClicked(new FancyAlertDialogListener() {
+//                    @Override
+//                    public void OnClick() {
+//
+//                        executeGetFeedsApi();
+//                    }
+//                })
+//                .setNegativeBtnBackground(Color.parseColor("#003F51B5"))//Don't pass R.color.colorvalue
+//                .setNegativeBtnText("")
+//                .build();
     }
 
     private void fetchUserDetails() {
@@ -491,6 +511,8 @@ public class MainActivity extends AppCompatActivity implements Listview_communic
         new SessionManager(getApplicationContext()).setSpecificUserDetail(SessionManager.KEY_GRP_NAME, grp_name);
         new SessionManager(getApplicationContext()).setSpecificUserDetail(SessionManager.KEY_GRP_ID, grp_id);
         System.out.println("SESSION MANAGER 2");
+
+
     }
 
     private void poupulateList(JsonElement response) {
@@ -612,6 +634,40 @@ public class MainActivity extends AppCompatActivity implements Listview_communic
         System.out.println(" event_main_list " + event_main_list.size());
         dash_event_listAdapter = new Dash_Event_ListAdapter(this, event_main_list);
         main_event_list_view.setAdapter(dash_event_listAdapter);
+
+        startShowCase();
+    }
+
+    private void startShowCase() {
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                System.out.println("HANDLER CALLED");
+                showShowcase();
+            }
+        }, 1500);
+    }
+
+    private void showShowcase() {
+// sequence example
+        ShowcaseConfig config = new ShowcaseConfig();
+        config.setDelay(600); // half second between each showcase view
+        long id = System.currentTimeMillis();
+
+        MaterialShowcaseSequence sequence = new MaterialShowcaseSequence(this);
+
+        sequence.setConfig(config);
+//        sequence.singleUse("DASH_SHOWCASE_SEQUENCE_1");
+        sequence.singleUse(String.valueOf(id));
+
+        sequence.addSequenceItem(showcase_view_2,
+                "Events show up here", "NEXT");
+        sequence.addSequenceItem(main_img_pick_fab,
+                "Add new events using this, It's fun!", "NEXT");
+        sequence.addSequenceItem(showcase_view_1,
+                "Buttons to take action on events", "GOT IT");
+        sequence.start();
+
     }
 
     private void openAddCommentDialog(final int selectedItemPosition) {
@@ -916,6 +972,7 @@ public class MainActivity extends AppCompatActivity implements Listview_communic
             Toast.makeText(getApplicationContext(), "Something went wrong. Try again", Toast.LENGTH_SHORT).show();
 
         } else {
+            System.out.println("executeGetFeedsApi 4");
             executeGetFeedsApi();
         }
     }
@@ -988,13 +1045,19 @@ public class MainActivity extends AppCompatActivity implements Listview_communic
 
     @Override
     public void onResume() {
-        executeGetFeedsApi();
-        sessionCounter = System.currentTimeMillis();
-        DateFormat formatter = new SimpleDateFormat("HH:mm:ss", Locale.US);
-        formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
-        String text = formatter.format(new Date(sessionCounter));
+        System.out.println("IN ON RESUME");
+
+        if (onResumeCounter == 1) {
+            System.out.println("executeGetFeedsApi 5");
+            executeGetFeedsApi();
+            sessionCounter = System.currentTimeMillis();
+            DateFormat formatter = new SimpleDateFormat("HH:mm:ss", Locale.US);
+            formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
+            String text = formatter.format(new Date(sessionCounter));
 //        System.out.println("Start onResume@ sessionCounter : " + sessionCounter);
 
+        }
+        onResumeCounter = 1;
         super.onResume();
     }
 }

@@ -9,6 +9,20 @@
     tools:context=".MainActivity">
 
 
+    <View
+        android:id="@+id/showcase_view_1"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="230dp" />
+
+    <View
+        android:id="@+id/showcase_view_2"
+        android:layout_width="300dp"
+        android:layout_height="200dp"
+        android:layout_marginTop="50dp"
+        android:layout_centerHorizontal="true" />
+
     <FrameLayout
         android:id="@+id/dashboard_main_frame_layout"
         android:layout_width="match_parent"

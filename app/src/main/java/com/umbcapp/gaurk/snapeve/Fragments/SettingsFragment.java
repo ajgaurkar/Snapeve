@@ -15,7 +15,6 @@ import android.view.ViewGroup;
 
 import com.google.gson.JsonObject;
 import com.umbcapp.gaurk.snapeve.AccountHandler;
-import com.umbcapp.gaurk.snapeve.Login_snapeve_activity;
 import com.umbcapp.gaurk.snapeve.R;
 import com.umbcapp.gaurk.snapeve.ScheduledRewards;
 import com.umbcapp.gaurk.snapeve.SessionManager;
@@ -108,7 +107,6 @@ public class SettingsFragment extends PreferenceFragment {
 
             case "logoutPreferenceKey":
                 new SessionManager(getActivity()).logoutUser();
-//                startActivity(new Intent(getActivity(), Login_snapeve_activity.class));
                 break;
 
         }
