@@ -187,7 +187,7 @@ public class EventDetails extends AppCompatActivity implements Listview_communic
 
         event_detail_user_post_dt_time_text_view.setText(comm_dt_time);
         event_detail_user_comment_text_view.setText(user_comment);
-        Picasso.get().load(img_url).fit().centerCrop().into(event_detail_event_image_image_view);
+        Picasso.with(getApplicationContext()).load(img_url).fit().centerCrop().into(event_detail_event_image_image_view);
 
         switch (post_as) {
             case 0://User
@@ -199,7 +199,7 @@ public class EventDetails extends AppCompatActivity implements Listview_communic
                     event_detail_profile_pic_image_view.setImageResource(R.drawable.avatar_100_3);
                 } else {
                     System.out.println("CASE 1 ELSE");
-                    Picasso.get().load(user_dp_url).fit().centerCrop().into(event_detail_profile_pic_image_view);
+                    Picasso.with(getApplicationContext()).load(user_dp_url).fit().centerCrop().into(event_detail_profile_pic_image_view);
                 }
                 break;
             case 1://Group
@@ -211,7 +211,7 @@ public class EventDetails extends AppCompatActivity implements Listview_communic
                     event_detail_profile_pic_image_view.setImageResource(R.drawable.avatar_100_3);
                 } else {
                     System.out.println("CASE 2 ELSE");
-                    Picasso.get().load(grp_dp_url).fit().centerCrop().into(event_detail_profile_pic_image_view);
+                    Picasso.with(getApplicationContext()).load(grp_dp_url).fit().centerCrop().into(event_detail_profile_pic_image_view);
                 }
                 break;
             case 2://Anonymous

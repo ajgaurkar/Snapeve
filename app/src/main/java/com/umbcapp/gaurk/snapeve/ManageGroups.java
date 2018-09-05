@@ -105,7 +105,7 @@ public class ManageGroups extends Activity {
             create_group_profile_pic_image_view.setImageResource(R.drawable.avatar_100_3);
 
         } else {
-            Picasso.get().load(grp_dp_url).fit().centerCrop().into(create_group_profile_pic_image_view);
+            Picasso.with(getApplicationContext()).load(grp_dp_url).fit().centerCrop().into(create_group_profile_pic_image_view);
         }
 
         add_mem_layout.setOnClickListener(new View.OnClickListener() {

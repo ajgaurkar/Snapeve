@@ -171,7 +171,7 @@ public class ScheduledRewards extends AppCompatActivity {
                     scheduled_rewards_profile_pic_image_view.setImageResource(R.drawable.avatar_100_3);
 
                 } else {
-                    Picasso.get().load(tempList.get(0).getUserPicUrl()).fit().centerCrop().into(scheduled_rewards_profile_pic_image_view);
+                    Picasso.with(getApplicationContext()).load(tempList.get(0).getUserPicUrl()).fit().centerCrop().into(scheduled_rewards_profile_pic_image_view);
                 }
                 scheduled_rewards_user_fullname_name_textview.setText(tempList.get(0).getUserName());
                 scheduled_rewards_user_name_textview.setText("Score this week : " + tempList.get(0).getUserRank());
@@ -196,7 +196,7 @@ public class ScheduledRewards extends AppCompatActivity {
                 if (tempList.get(0).getUserPicUrl() == null) {
                     scheduled_rewards_profile_pic_image_view.setImageResource(R.drawable.avatar_100_3);
                 } else {
-                    Picasso.get().load(tempList.get(0).getUserPicUrl()).fit().centerCrop().into(scheduled_rewards_profile_pic_image_view);
+                    Picasso.with(getApplicationContext()).load(tempList.get(0).getUserPicUrl()).fit().centerCrop().into(scheduled_rewards_profile_pic_image_view);
                 }
                 scheduled_rewards_user_fullname_name_textview.setText(tempList.get(0).getUserName());
                 scheduled_rewards_user_name_textview.setText("Score this week : " + tempList.get(0).getUserRank());
@@ -219,7 +219,7 @@ public class ScheduledRewards extends AppCompatActivity {
                 if (tempList.get(0).getUserPicUrl() == null) {
                     scheduled_rewards_profile_pic_image_view.setImageResource(R.drawable.avatar_100_3);
                 } else {
-                    Picasso.get().load(tempList.get(0).getUserPicUrl()).fit().centerCrop().into(scheduled_rewards_profile_pic_image_view);
+                    Picasso.with(getApplicationContext()).load(tempList.get(0).getUserPicUrl()).fit().centerCrop().into(scheduled_rewards_profile_pic_image_view);
                 }
                 scheduled_rewards_user_fullname_name_textview.setText(tempList.get(0).getUserName());
                 scheduled_rewards_user_name_textview.setText("Score this week : " + tempList.get(0).getUserRank());
@@ -495,7 +495,7 @@ public class ScheduledRewards extends AppCompatActivity {
                     scheduled_rewards_profile_pic_image_view.setImageResource(R.drawable.avatar_100_3);
 
                 } else {
-                    Picasso.get().load(dp_url).fit().centerCrop().into(scheduled_rewards_profile_pic_image_view);
+                    Picasso.with(getApplicationContext()).load(dp_url).fit().centerCrop().into(scheduled_rewards_profile_pic_image_view);
                 }
                 scheduled_rewards_user_fullname_name_textview.setText(first_name + " " + last_name);
                 scheduled_rewards_user_name_textview.setText(userName);

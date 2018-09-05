@@ -94,7 +94,7 @@ public class LeaderBoardAdapter extends RecyclerView.Adapter<LeaderBoardAdapter.
             holder.userPic.setImageResource(R.drawable.avatar_100_3);
         } else {
             System.out.println("LEADERBOARD DP URL ELSE");
-            Picasso.get().load(selectedLeaderboardListItem.getUserPicUrl()).fit().centerCrop().into(holder.userPic);
+            Picasso.with(context).load(selectedLeaderboardListItem.getUserPicUrl()).fit().centerCrop().into(holder.userPic);
         }
 
         holder.recycler_parent.setOnClickListener(new View.OnClickListener() {

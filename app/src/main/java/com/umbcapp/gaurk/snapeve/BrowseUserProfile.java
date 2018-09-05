@@ -112,7 +112,7 @@ public class BrowseUserProfile extends AppCompatActivity {
 
             dp_url = userData_list_object.get("dp_url").getAsString();
             System.out.println(" dp_url found" + dp_url);
-            Picasso.get().load(dp_url).fit().centerCrop().into(profile_pic_image_view);
+            Picasso.with(getApplicationContext()).load(dp_url).fit().centerCrop().into(profile_pic_image_view);
 
         } catch (Exception e) {
             e.printStackTrace();

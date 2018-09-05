@@ -81,7 +81,7 @@ public class MessagesPersonalAdapter extends BaseAdapter {
         viewHolder.message_list_item_last_message_text_view.setText(selectedMessagesPersonalListItem.getLast_msg_data());
         viewHolder.message_list_item_time_text_view.setText(selectedMessagesPersonalListItem.getLast_msg_dt_time());
 
-        Picasso.get().load(selectedMessagesPersonalListItem.getOther_user_dp_url())
+        Picasso.with(context).load(selectedMessagesPersonalListItem.getOther_user_dp_url())
                 .fit().centerCrop().into(viewHolder.message_list_item_circle_img_view);
 
 

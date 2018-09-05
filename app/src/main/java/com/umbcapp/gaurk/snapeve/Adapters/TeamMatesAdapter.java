@@ -90,7 +90,7 @@ public class TeamMatesAdapter extends BaseAdapter {
         if (selectedTeammatesListItem.getUserPicUrl() == null) {
             viewHolder.teammates_list_item_dp_imageview.setImageResource(R.drawable.avatar_100_3);
         } else {
-            Picasso.get().load(selectedTeammatesListItem.getUserPicUrl())
+            Picasso.with(context).load(selectedTeammatesListItem.getUserPicUrl())
                     .fit().centerCrop().into(viewHolder.teammates_list_item_dp_imageview);
         }
 

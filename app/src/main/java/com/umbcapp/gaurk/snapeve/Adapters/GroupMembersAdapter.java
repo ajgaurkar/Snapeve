@@ -80,7 +80,7 @@ public class GroupMembersAdapter extends RecyclerView.Adapter<GroupMembersAdapte
         System.out.println("111");
 
         holder.userRank.setText(String.valueOf(selectedLeaderboardListItem.getUserRank()));
-        Picasso.get().load(selectedLeaderboardListItem.getUserPicUrl())
+        Picasso.with(context).load(selectedLeaderboardListItem.getUserPicUrl())
                 .fit().centerCrop().into(holder.userPic);
         System.out.println("INSIDE LeaderBoardAdapter");
 

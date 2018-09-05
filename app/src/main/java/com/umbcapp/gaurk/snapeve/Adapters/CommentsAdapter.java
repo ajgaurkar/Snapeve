@@ -86,7 +86,7 @@ public class CommentsAdapter extends BaseAdapter {
         if (commentsListItem.getImage_url() == null) {
             viewHolder.comments_list_item_user_pic_img_view.setImageResource(R.drawable.avatar_100_3);
         } else {
-            Picasso.get().load(commentsListItem.getImage_url()).fit().centerCrop().into(viewHolder.comments_list_item_user_pic_img_view);
+            Picasso.with(context).load(commentsListItem.getImage_url()).fit().centerCrop().into(viewHolder.comments_list_item_user_pic_img_view);
         }
 
 

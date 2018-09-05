@@ -785,7 +785,7 @@ public class UserProfileFragment extends Fragment {
                     if (grp_dp_url == null) {
                         profile_pic_image_view.setImageResource(R.drawable.avatar_100_3);
                     } else {
-                        Picasso.get().load(grp_dp_url).fit().centerCrop().into(profile_pic_image_view);
+                        Picasso.with(getActivity().getApplicationContext()).load(grp_dp_url).fit().centerCrop().into(profile_pic_image_view);
                     }
 //                    Picasso.get().load(grp_dp_url)
 //                            .fit().centerCrop().into(profile_pic_image_view);
@@ -885,7 +885,7 @@ public class UserProfileFragment extends Fragment {
                                     Toast.makeText(getActivity(), "No Image found", Toast.LENGTH_SHORT).show();
                                 } else {
                                     full_screen_imageview_layout.setVisibility(View.VISIBLE);
-                                    Picasso.get().load(dp_url).fit().centerInside().into(full_screen_imageview);
+                                    Picasso.with(getActivity().getApplicationContext()).load(dp_url).fit().centerInside().into(full_screen_imageview);
                                 }
                                 break;
                             case 2:
@@ -893,7 +893,7 @@ public class UserProfileFragment extends Fragment {
                                     Toast.makeText(getActivity(), "No Image found", Toast.LENGTH_SHORT).show();
                                 } else {
                                     full_screen_imageview_layout.setVisibility(View.VISIBLE);
-                                    Picasso.get().load(grp_dp_url).fit().centerInside().into(full_screen_imageview);
+                                    Picasso.with(getActivity().getApplicationContext()).load(grp_dp_url).fit().centerInside().into(full_screen_imageview);
                                 }
                                 break;
                         }
@@ -1031,7 +1031,7 @@ public class UserProfileFragment extends Fragment {
         if (dp_url == null) {
             profile_pic_image_view.setImageResource(R.drawable.avatar_100_3);
         } else {
-            Picasso.get().load(dp_url).fit().centerCrop().into(profile_pic_image_view);
+            Picasso.with(getActivity().getApplicationContext()).load(dp_url).fit().centerCrop().into(profile_pic_image_view);
         }
         loadContributionList(user_type_selection_status);
         user_name_textview.setText(userName);

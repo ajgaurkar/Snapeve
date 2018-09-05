@@ -81,7 +81,7 @@ public class SignupGrpAdapter extends BaseAdapter {
         //condition for null PD
         if (selectedSignUpGrpListItem.getGrpDpUrl() != null) {
             System.out.println("SignupGrpAdapter getGrpDpUrl found" + selectedSignUpGrpListItem.getGrpDpUrl());
-            Picasso.get().load(selectedSignUpGrpListItem.getGrpDpUrl())
+            Picasso.with(context).load(selectedSignUpGrpListItem.getGrpDpUrl())
                     .fit().centerCrop().into(viewHolder.signup_list_item_grp_pic_img_view);
         } else {
             System.out.println("SignupGrpAdapter getGrpDpUrl null" + selectedSignUpGrpListItem.getGrpDpUrl());

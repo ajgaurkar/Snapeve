@@ -73,7 +73,7 @@ public class TopScorerAdapter extends BaseAdapter {
             viewHolder.topscorer_list_item_dp_imageview.setImageResource(R.drawable.avatar_100_3);
 
         } else {
-            Picasso.get().load(selectedLeaderBoardListItem.getUserPicUrl())
+            Picasso.with(context).load(selectedLeaderBoardListItem.getUserPicUrl())
                     .fit().centerCrop().into(viewHolder.topscorer_list_item_dp_imageview);
         }
         viewHolder.topscorer_list_item_name_textview.setText(selectedLeaderBoardListItem.getUserName());

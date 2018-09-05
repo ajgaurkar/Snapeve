@@ -74,7 +74,7 @@ public class UserContributionAdapter extends BaseAdapter {
         if (selectedUserContributionListItem.getDp_url() == null) {
             viewHolder.user_contri_list_item_user_pic_img_view.setImageResource(R.drawable.avatar_100_3);
         } else {
-            Picasso.get().load(selectedUserContributionListItem.getDp_url())
+            Picasso.with(context).load(selectedUserContributionListItem.getDp_url())
                     .fit().centerCrop().into(viewHolder.user_contri_list_item_user_pic_img_view);
         }
 

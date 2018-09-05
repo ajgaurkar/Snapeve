@@ -25,7 +25,7 @@ public class ImageFullscreenOpen extends AppCompatActivity {
         Intent imageDetailIntent = getIntent();
 
         String img_url = imageDetailIntent.getStringExtra("img_url");
-        Picasso.get().load(img_url).fit().centerInside().into(fullscreen_imageview);
+        Picasso.with(getApplicationContext()).load(img_url).fit().centerInside().into(fullscreen_imageview);
 
 
     }

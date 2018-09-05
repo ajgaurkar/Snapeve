@@ -114,7 +114,8 @@ public class Dash_Event_ListAdapter extends BaseAdapter {
             }
             viewHolder.list_item_event_statr_end_dt_time_textview.setText(displayStartDtFormat.format(startDateTime) + displayEndTimeFormat.format(endDateTime));
         }
-        Picasso.get().load(event_dash_list_obj.getImage_url()).fit().centerCrop().into(viewHolder.main_card_imageview);
+        // Picasso.get().load(event_dash_list_obj.getImage_url()).fit().centerCrop().into(viewHolder.main_card_imageview);
+        Picasso.with(context).load(event_dash_list_obj.getImage_url()).fit().centerCrop().into(viewHolder.main_card_imageview);
         viewHolder.list_item_event_title.setText(event_dash_list_obj.getUser_comment());
         viewHolder.list_item_post_dt_time.setText(event_dash_list_obj.getPost_dt());
 
@@ -192,7 +193,7 @@ public class Dash_Event_ListAdapter extends BaseAdapter {
                 if (event_dash_list_obj.getUser_dp_url() == null) {
                     viewHolder.list_item_user_img.setImageResource(R.drawable.avatar_100_3);
                 } else {
-                    Picasso.get().load(event_dash_list_obj.getUser_dp_url())
+                    Picasso.with(context).load(event_dash_list_obj.getUser_dp_url())
                             .fit().centerCrop().into(viewHolder.list_item_user_img);
                 }
                 break;
@@ -202,7 +203,7 @@ public class Dash_Event_ListAdapter extends BaseAdapter {
                 if (event_dash_list_obj.getGrp_dp_url() == null) {
                     viewHolder.list_item_user_img.setImageResource(R.drawable.avatar_100_3);
                 } else {
-                    Picasso.get().load(event_dash_list_obj.getGrp_dp_url())
+                    Picasso.with(context).load(event_dash_list_obj.getGrp_dp_url())
                             .fit().centerCrop().into(viewHolder.list_item_user_img);
                 }
                 break;
