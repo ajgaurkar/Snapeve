@@ -7,12 +7,17 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.CardView;
+import android.support.v7.widget.PopupMenu;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -84,10 +89,45 @@ public class Signup_grp_join extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 //                SignUpGrpListItem selectedGrpItem = signupGrpList.get(position);
 
-                requestToJoinGrpDialog(signupGrpList.get(position).getGrpId(), signupGrpList.get(position).getGrpName(), new SessionManager(getApplicationContext()).getSpecificUserDetail(SessionManager.KEY_USER_ID));
+                openGroupOptions(position);
 
             }
         });
+
+    }
+
+    private void openGroupOptions(final int position) {
+        final Dialog alertDialog = new Dialog(this);
+        LayoutInflater flater = this.getLayoutInflater();
+        View view = flater.inflate(R.layout.signup_grp_join_options, null);
+        alertDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        alertDialog.setContentView(view);
+        alertDialog.setTitle("Choose an option");
+
+        CardView signup_grp_join_grp_info_btn_card_view = (CardView) view.findViewById(R.id.signup_grp_join_grp_info_btn_card_view);
+        CardView signup_grp_join_send_req_btn_card_view = (CardView) view.findViewById(R.id.signup_grp_join_send_req_btn_card_view);
+
+        signup_grp_join_grp_info_btn_card_view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                alertDialog.dismiss();
+                System.out.println("grp info");
+
+                Intent groupInfoIntent = new Intent(getApplicationContext(), BrowseGroupProfile.class);
+                groupInfoIntent.putExtra("grp_id", signupGrpList.get(position).getGrpId());
+                startActivity(groupInfoIntent);
+            }
+        });
+        signup_grp_join_send_req_btn_card_view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                alertDialog.dismiss();
+                requestToJoinGrp(signupGrpList.get(position).getGrpId(), new SessionManager(getApplicationContext()).getSpecificUserDetail(SessionManager.KEY_USER_ID));
+            }
+        });
+        alertDialog.setCanceledOnTouchOutside(false);
+        alertDialog.setCancelable(true);
+        alertDialog.show();
 
     }
 
@@ -114,6 +154,59 @@ public class Signup_grp_join extends AppCompatActivity {
 
             }
         });
+        grpJoinDialog.create().show();
+    }
+
+    private void congratulateDialog(int congratulateCode) {
+
+        final AlertDialog.Builder grpJoinDialog = new AlertDialog.Builder(Signup_grp_join.this);
+
+        if (congratulateCode == 0) {
+
+            grpJoinDialog.setTitle("Your request is on the way");
+            grpJoinDialog.setMessage("You will get notified when the group accepts your request");
+            grpJoinDialog.setCancelable(false);
+
+            grpJoinDialog.setPositiveButton("Ok,  Lets Proceed", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+
+                    //set boolean as pending status true
+                    new SessionManager(getApplicationContext()).setSpecificUserBooleanDetail(SessionManager.KEY_REQ_PENDING_GRP_STATUS, true);
+
+                    //set data for pending status
+                    new SessionManager(getApplicationContext()).setSpecificUserDetail(SessionManager.KEY_REQ_PENDING_GRP_ID, temp_req_pending_grp_id_to_push_to_sp);
+                    new SessionManager(getApplicationContext()).setSpecificUserDetail(SessionManager.KEY_REQ_PENDING_GRP_NAME, temp_req_pending_grp_name_to_push_to_sp);
+
+                    //                either parse response or store response grp data in SP as created grp id OR request to join grp as pending request
+                    //depending on intent type open dashboard page or finish this page and go to profile mgmnt
+//                0 : open dashboard
+//                1 : finish and go back
+
+                    if (page_mode == 0) {
+                        finish();
+                        startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                    }
+                    if (page_mode == 1) {
+                        finish();
+//                        startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                    }
+
+                }
+            });
+        } else {
+            grpJoinDialog.setTitle("Something went wrong");
+            grpJoinDialog.setMessage("Please try again");
+            grpJoinDialog.setCancelable(false);
+
+            grpJoinDialog.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+
+                }
+            });
+        }
+
         grpJoinDialog.create().show();
     }
 
@@ -199,8 +292,6 @@ public class Signup_grp_join extends AppCompatActivity {
         progressDialog.setTitle("Sending request to join group, Please wait...");
         progressDialog.create();
         progressDialog.show();
-        progressDialog.setCanceledOnTouchOutside(false);
-        progressDialog.setCancelable(false);
         JsonObject jsonObjectParameters = new JsonObject();
         jsonObjectParameters.addProperty("req_code", 10);
         jsonObjectParameters.addProperty("grpId", grpId);
@@ -229,26 +320,11 @@ public class Signup_grp_join extends AppCompatActivity {
                 if (response.toString().contains("true")) {
                     System.out.println("response OK");
 
-                    //set boolean as pending status true
-                    new SessionManager(getApplicationContext()).setSpecificUserBooleanDetail(SessionManager.KEY_REQ_PENDING_GRP_STATUS, true);
+                    congratulateDialog(0);
 
-                    //set data for pending status
-                    new SessionManager(getApplicationContext()).setSpecificUserDetail(SessionManager.KEY_REQ_PENDING_GRP_ID, temp_req_pending_grp_id_to_push_to_sp);
-                    new SessionManager(getApplicationContext()).setSpecificUserDetail(SessionManager.KEY_REQ_PENDING_GRP_NAME, temp_req_pending_grp_name_to_push_to_sp);
+                } else {
 
-                    //                either parse response or store response grp data in SP as created grp id OR request to join grp as pending request
-                    //depending on intent type open dashboard page or finish this page and go to profile mgmnt
-//                0 : open dashboard
-//                1 : finish and go back
-
-                    if (page_mode == 0) {
-                        finish();
-                        startActivity(new Intent(getApplicationContext(), MainActivity.class));
-                    }
-                    if (page_mode == 1) {
-                        finish();
-//                        startActivity(new Intent(getApplicationContext(), MainActivity.class));
-                    }
+                    congratulateDialog(1);
                 }
 
 

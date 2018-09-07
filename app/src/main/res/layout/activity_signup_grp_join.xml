@@ -24,10 +24,11 @@
             android:padding="5dp"
             android:text="Do you wish to join a group?"
             android:textColor="#fff"
-            android:textSize="16sp"
+            android:textSize="22sp"
             android:textStyle="bold" />
 
         <TextView
+            android:id="@+id/signup_group_header_2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/signup_group_header_1"
@@ -35,18 +36,27 @@
             android:layout_marginStart="20dp"
             android:gravity="center"
             android:padding="5dp"
-            android:text="Joing a group will let you collaborate effectviely and earn more rewards"
+            android:text="Joining a group will let you collaborate effectviely and earn more rewards"
             android:textColor="#fff"
             android:textSize="14sp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/signup_group_header_2"
+            android:gravity="center"
+            android:text="* You can be a part of 1 group at a time"
+            android:textColor="#fff"
+            android:textSize="13sp" />
     </RelativeLayout>
 
     <ListView
         android:id="@+id/signup_grp_list_view"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:dividerHeight="0dp"
+        android:layout_weight="65"
         android:divider="#00ffffff"
-        android:layout_weight="65" />
+        android:dividerHeight="0dp" />
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -120,10 +130,10 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/signup_grp_page_or_textview"
             android:layout_toEndOf="@+id/signup_grp_plus_imageview"
+            android:background="?android:selectableItemBackground"
             android:gravity="center"
             android:padding="5dp"
             android:text="Create a group"
-            android:background="?android:selectableItemBackground"
             android:textColor="#fff"
             android:textSize="16sp"
             android:textStyle="bold" />
@@ -136,11 +146,11 @@
             android:layout_alignParentEnd="true"
             android:layout_alignTop="@+id/signup_grp_create_grp_textview"
             android:layout_marginEnd="20dp"
+            android:background="?android:selectableItemBackground"
             android:gravity="center"
             android:padding="5dp"
             android:text="Skip"
             android:textColor="#fff"
-            android:background="?android:selectableItemBackground"
             android:textSize="16sp"
             android:textStyle="bold" />
 

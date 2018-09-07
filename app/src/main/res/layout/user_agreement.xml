@@ -3,8 +3,23 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <TextView
+        android:id="@+id/user_agreement_consent_textview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/user_agreement_heading"
+        android:padding="10dp"
+        android:scrollbars="vertical"
+        android:text="@string/user_consent_text_1" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@+id/user_agreement_consent_textview"
+        android:background="@color/colorPrimaryDark" />
 
     <TextView
+        android:id="@+id/user_agreement_heading"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@+id/user_agreement_text"

@@ -271,16 +271,21 @@ public class SignUp extends AppCompatActivity {
     private boolean validateInputs() {
         System.out.println("IN VALIDATION");
 
-        first_name = signup_page_f_name_edittext.getText().toString().trim();
-        last_name = signup_page_l_name_edittext.getText().toString().trim();
-        email = signup_page_email_edittext.getText().toString().trim();
+        first_name = "_";
+        last_name = "_";
+
+//        first_name = signup_page_f_name_edittext.getText().toString().trim();
+//        last_name = signup_page_l_name_edittext.getText().toString().trim();
+//        email = signup_page_email_edittext.getText().toString().trim();
+        email = "abx@xyz.com";
         user_name = signup_user_name_edittext.getText().toString().trim();
         pass = signup_page_pass_edittext.getText().toString().trim();
         confirm_pass = signup_page_confirm_pass_edittext.getText().toString().trim();
         security_answer = signup_page_security_answer_edittext.getText().toString().trim();
         security_question = questionsList.get(signup_page_security_question_spinner.getSelectedItemPosition());
 
-        if ((email.isEmpty()) || (first_name.isEmpty()) || (last_name.isEmpty()) || (user_name.isEmpty()) || (security_answer.isEmpty()) || (pass.isEmpty()) || (confirm_pass.isEmpty())) {
+//        if ((email.isEmpty()) || (first_name.isEmpty()) || (last_name.isEmpty()) || (user_name.isEmpty()) || (security_answer.isEmpty()) || (pass.isEmpty()) || (confirm_pass.isEmpty())) {
+        if ((user_name.isEmpty()) || (security_answer.isEmpty()) || (pass.isEmpty()) || (confirm_pass.isEmpty())) {
 
             System.out.println("VALIDATION FALSE");
             Toast.makeText(getApplicationContext(), "Fields empty", Toast.LENGTH_SHORT).show();

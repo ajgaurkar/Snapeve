@@ -791,7 +791,7 @@ public class UserProfileFragment extends Fragment {
 //                            .fit().centerCrop().into(profile_pic_image_view);
                     loadContributionList(user_type_selection_status);
                     user_name_textview.setText(grp_name);
-                    user_points.setText(String.valueOf(grp_total_pts));
+//                    user_points.setText(String.valueOf(grp_total_pts));
 
                     user_profile_member_count_text_view_icon.setImageResource(R.drawable.down_arrow_white_24);
 
@@ -832,11 +832,11 @@ public class UserProfileFragment extends Fragment {
 
         switch (tab_code) {
             case 0:
-                user_status.setText("Contributor Level " + calculatedReward.getLevel());
+                user_status.setText("Level  " + calculatedReward.getLevel() + "  •  " + reward_points + "  Points");
                 break;
 
             case 1:
-                user_status.setText("Group Contribution Level " + calculatedReward.getLevel());
+                user_status.setText("Level  " + calculatedReward.getLevel() + "  •  " + reward_points + "  Points");
                 break;
         }
 
@@ -1004,7 +1004,7 @@ public class UserProfileFragment extends Fragment {
                 if (req_code == 10) {
                     show_pending_req_dialog_btn_lin_layout.setVisibility(View.VISIBLE);
                     show_pending_req_dialog_btn_grp_name_textView.setVisibility(View.VISIBLE);
-                    show_pending_req_dialog_btn_grp_name_textView.setText("Request sent : " + grp_name);
+                    show_pending_req_dialog_btn_grp_name_textView.setText(grp_name + " (Waiting for approval)");
                     pending_req_grp_id = grp_id;
 
                     if (groupsJSONArray.size() > 1) {
@@ -1035,7 +1035,7 @@ public class UserProfileFragment extends Fragment {
         }
         loadContributionList(user_type_selection_status);
         user_name_textview.setText(userName);
-        user_points.setText(String.valueOf(user_total_pts));
+//        user_points.setText(String.valueOf(user_total_pts));
         setRewardProgress(user_total_pts, 0);
 
         user_profile_member_count_text_view.setVisibility(View.GONE);

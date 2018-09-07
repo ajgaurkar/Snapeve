@@ -47,8 +47,8 @@
             android:layout_height="100dp"
             android:layout_below="@+id/profile_layout_user_switch_lin_layout"
             android:layout_margin="16dp"
-            android:src="@drawable/my_pic"
-            app:civ_border_color="@color/colorPrimaryDark"
+            android:src="@drawable/avatar_100_3"
+            app:civ_border_color="@color/cardview_light_background"
             app:civ_border_width="3dp" />
 
         <TextView
@@ -58,27 +58,27 @@
             android:layout_alignTop="@+id/profile_pic_image_view"
             android:layout_toEndOf="@+id/profile_pic_image_view"
             android:padding="5dp"
-            android:text="STRBX"
+            android:text=""
             android:textColor="#fff"
             android:textSize="18sp"
             android:textStyle="bold" />
 
-        <TextView
-            android:id="@+id/grp_full_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/grp_user_name"
-            android:layout_toEndOf="@+id/profile_pic_image_view"
-            android:padding="5dp"
-            android:text="STRBX Emp"
-            android:textColor="#fff"
-            android:textStyle="bold" />
+        <!--<TextView-->
+            <!--android:id="@+id/grp_full_name"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_below="@+id/grp_user_name"-->
+            <!--android:layout_toEndOf="@+id/profile_pic_image_view"-->
+            <!--android:padding="5dp"-->
+            <!--android:text="Grp name"-->
+            <!--android:textColor="#fff"-->
+            <!--android:textStyle="bold" />-->
 
         <TextView
             android:id="@+id/grp_status"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/grp_full_name"
+            android:layout_below="@+id/grp_user_name"
             android:layout_toEndOf="@+id/profile_pic_image_view"
             android:padding="5dp"
             android:text="Contribution : Level 5"
@@ -115,12 +115,13 @@
             android:paddingStart="15dp"
             android:paddingTop="5dp"
             android:singleLine="true"
-            android:text="3 Members"
+            android:text=""
             android:textColor="#fff"
             android:textSize="15sp"
             android:textStyle="bold" />
 
         <ImageView
+            android:id="@+id/grp_member_count_text_view_icon"
             android:layout_width="30dp"
             android:layout_height="wrap_content"
             android:layout_alignBottom="@+id/grp_member_count_text_view"
@@ -140,7 +141,7 @@
             android:gravity="center_vertical"
             android:padding="5dp"
             android:singleLine="true"
-            android:text="17 Events posted"
+            android:text=""
             android:textColor="#fff"
             android:textStyle="bold" />
 
@@ -164,8 +165,8 @@
             app:rcSecondaryProgress="5"
             app:rcSecondaryProgressColor="#ebf7ff" />
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/user_profile_contribution_rec_view"
+        <ListView
+            android:id="@+id/user_profile_contribution_list_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_below="@+id/header_bg"

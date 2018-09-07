@@ -72,10 +72,10 @@ public class SignupGrpAdapter extends BaseAdapter {
         //0 : request to join...from signup grp join
         //1 : accept invitation from user profile frag
         if (selectedSignUpGrpListItem.getAccept_or_request_flag() == 0) {
-            viewHolder.signup_list_item_request_accept_btn_text_view.setText("Request to join");
+            viewHolder.signup_list_item_request_accept_btn_text_view.setText("     Info      |      Join    ");
         }
         if (selectedSignUpGrpListItem.getAccept_or_request_flag() == 1) {
-            viewHolder.signup_list_item_request_accept_btn_text_view.setText("Accept");
+            viewHolder.signup_list_item_request_accept_btn_text_view.setText("  Accept  ");
         }
 
         //condition for null PD

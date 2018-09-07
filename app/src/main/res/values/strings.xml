@@ -31,17 +31,20 @@
     <string name="skip">SKIP</string>
     <string name="start">GOT IT</string>
 
-    <string name="slide_1_title">Welcome to Snapeve See what\'s going on</string>
-    <string name="slide_1_desc">Check nearby events or get latest updates for new events posted</string>
+    <string name="slide_1_title">welcome to snapeve, get the first news</string>
+    <string name="slide_1_desc">Attend events nearby or get latest updates on events in your campus</string>
 
-    <string name="slide_2_title">Share what you know</string>
-    <string name="slide_2_desc">Post events you would like to tell other about</string>
+    <string name="slide_2_title">see an event?</string>
+    <string name="slide_2_desc">Post events you would like to tell others about</string>
 
-    <string name="slide_3_title">Earn reputation</string>
-    <string name="slide_3_desc">Every task needs effort, every effort is worth few points</string>
+    <string name="slide_3_title">Earn reputation &amp; get popular</string>
+    <string name="slide_3_desc"></string>
 
-    <string name="slide_4_title">Make your surroundings better</string>
-    <string name="slide_4_desc">Help your community and institution grow better by sharing important information</string>
+    <string name="slide_5_title">OR \n Be part of a group\n for more fun</string>
+    <string name="slide_5_desc"></string>
+
+    <string name="slide_4_title">Earn your rewards</string>
+    <string name="slide_4_desc"></string>
 
     <string name="play_again_desc">To see the welcome slider again, goto Settings -> apps -> welcome slider -> clear data</string>
     <string name="play_again">Play Again</string>
@@ -58,6 +61,7 @@
     <string name="notification_setting">Notification</string>
     <string name="notiofcation_summary">Notification ON/OFF</string>
     <string name="agree_and_continue">Tap \"I agree and continue\" to accept</string>
+    <string name="user_consent_text_1">CONSENT \n\nThank you for agreeing to participate in our study. \n \n Before we start, we’d like for you to read the informed consent information below. Informed consent refers to the voluntary choice of an individual to participate in research based on an accurate and complete understanding of its purposes, procedures, risks, benefits, and alternatives.  The survey will be completely anonymous and voluntary.  We do not ask or identify any individuals who plan to participate in this survey.  If you have any questions before completing this survey, please contact the investigators, Ajinkya Gaurkar (Faculty Adviser: Zhiyuan Chen) by 240–917–8687 ez55574@umbc.edu  \n\n Informed consent:\n\n You must be of 18 years or older to participate in this experiment. \n\n The purpose of this study is to understand behavior of users in group vs individual actions in crowdsourcing applications.  \nYou are being asked to volunteer because we need participants who are willing to volunteer to use an android mobile application to post events happening in UMBC campus, you will be asked to \n\n  1.\tDownload and use the free application from google playstore (limited to android users). \n\n 2.\tParticipants are required to create a unique username(alias)for their account during signup process. \n\n 3.\tParticipants are required to perform certain tasks like posting an event, sharing, planning and validating a post in the mobile application \n\n 4.\tWe will use questionnaires to collect feedback and suggestions which are focused on improving user engagement and usability of the application. \n\n 5.\tThe usage and observation period of users on this mobile app is 4 weeks, during which users are required to record and validate the events occurring on the campus (active users) or use the mobile application to get information about the events (passive users) \n\n 6.\tThis app is designed to study group vs individual contribution in crowdsourcing. \n\n  There are no known risks involved in completing the survey.  There are no tangible benefits for completing the survey, but you may receive virtual rewards from the application in the form of point system and weekly appreciation amongst peers. \n\n Participation is entirely voluntary; you may at any time withdraw from participation. \n\n  All data obtained will be anonymous. There is no way for us to find out who you are, and your data will not be shared with any other parties under any circumstance. \n\n This study has been reviewed and approved by the UMBC Institutional Review Board (IRB).  A representative of that Board, from the Office of Research Protections and Compliance, is available to discuss the review process or my rights as a research participant.  Contact information of the Office is (410) 455-2737 or compliance@umbc.edu. \n\n After reading the consent items, click \"Accept and continue\" to get started with the application. If you\'d like to leave the application at any time, just click \"Logout\" from settings menu.</string>
 
 
 </resources>

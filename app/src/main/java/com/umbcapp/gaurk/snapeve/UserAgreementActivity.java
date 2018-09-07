@@ -5,6 +5,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
+import android.text.method.ScrollingMovementMethod;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -16,6 +17,9 @@ public class UserAgreementActivity extends AppCompatActivity {
         setContentView(R.layout.user_agreement);
 
         Button useragreementconfirmbtn = (Button) findViewById(R.id.useragreementconfirmbtn);
+        TextView user_agreement_consent_textview = (TextView) findViewById(R.id.user_agreement_consent_textview);
+
+        user_agreement_consent_textview.setMovementMethod(new ScrollingMovementMethod());
 
 
         TextView user_agreement_text = (TextView) findViewById(R.id.user_agreement_text);
