@@ -2,6 +2,7 @@ package com.umbcapp.gaurk.snapeve.Adapters;
 
 import android.content.Context;
 import android.media.Image;
+import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +19,7 @@ import com.umbcapp.gaurk.snapeve.R;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -72,9 +74,12 @@ public class Dash_Event_ListAdapter extends BaseAdapter {
             viewHolder.list_item_event_statr_end_dt_time_textview = (TextView) view.findViewById(R.id.list_item_event_statr_end_dt_time_textview);
             viewHolder.list_item_comment_tv = (TextView) view.findViewById(R.id.list_item_comment_tv);
             viewHolder.list_item_spam_tv = (TextView) view.findViewById(R.id.list_item_spam_tv);
+            viewHolder.feeds_item_live_tag_textview = (TextView) view.findViewById(R.id.feeds_item_live_tag_textview);
 
             viewHolder.list_item_user_name = (TextView) view.findViewById(R.id.list_item_username);
             viewHolder.list_item_event_title = (TextView) view.findViewById(R.id.list_item_user_description);
+
+            viewHolder.feeds_item_live_tag_textview.setVisibility(View.GONE);
 
             view.setTag(viewHolder);
 
@@ -93,8 +98,13 @@ public class Dash_Event_ListAdapter extends BaseAdapter {
             Date endDateTime = null;
             try {
                 startDateTime = feedsDateFormat.parse(event_dash_list_obj.getPost_start_dt_time());
-                //just 1 of the 2 dates needed for all_day
-                //endDateTime = feedsDateFormat.parse(event_dash_list_obj.getPost_end_dt_time());
+
+                if(compareDate(startDateTime, new Date())==0){
+                    viewHolder.feeds_item_live_tag_textview.setVisibility(View.VISIBLE);
+                }else {
+                    viewHolder.feeds_item_live_tag_textview.setVisibility(View.GONE);
+                }
+
             } catch (ParseException e) {
                 e.printStackTrace();
             }
@@ -109,6 +119,16 @@ public class Dash_Event_ListAdapter extends BaseAdapter {
             try {
                 startDateTime = feedsDateFormat.parse(event_dash_list_obj.getPost_start_dt_time());
                 endDateTime = feedsDateFormat.parse(event_dash_list_obj.getPost_end_dt_time());
+
+
+                if (startDateTime.compareTo(new Date()) < 0 && endDateTime.compareTo(new Date()) > 0) {
+                    System.out.println("LIVE EVENT 1");
+                    viewHolder.feeds_item_live_tag_textview.setVisibility(View.VISIBLE);
+                } else {
+                    viewHolder.feeds_item_live_tag_textview.setVisibility(View.GONE);
+
+                }
+
             } catch (ParseException e) {
                 e.printStackTrace();
             }
@@ -303,6 +323,12 @@ public class Dash_Event_ListAdapter extends BaseAdapter {
         return view;
     }
 
+    private int compareDate(Date startDateTime, Date date) {
+
+        DateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
+        return dateFormat.format(startDateTime).compareTo(dateFormat.format(date));
+    }
+
     public class ViewHolder {
 
         private ImageView main_card_imageview;
@@ -316,6 +342,7 @@ public class Dash_Event_ListAdapter extends BaseAdapter {
         //        private TextView list_item_deny_tv;
         private TextView list_item_comment_tv;
         private TextView list_item_spam_tv;
+        private TextView feeds_item_live_tag_textview;
         private TextView list_item_event_title;
         private TextView list_item_event_statr_end_dt_time_textview;
         private TextView list_item_user_name;

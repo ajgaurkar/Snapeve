@@ -264,7 +264,8 @@ public class BrowseGroupProfile extends AppCompatActivity implements Listview_co
             }
 
 
-            DateFormat srcDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSX");
+//            DateFormat srcDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSX");
+            DateFormat srcDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
             DateFormat displayDtFormat = new SimpleDateFormat("MMM dd HH:mm");
 
             Date postDate = null;

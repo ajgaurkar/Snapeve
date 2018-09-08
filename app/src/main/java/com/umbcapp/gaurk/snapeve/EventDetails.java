@@ -3,18 +3,17 @@ package com.umbcapp.gaurk.snapeve;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.media.Image;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.CardView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.CheckedTextView;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -38,6 +37,7 @@ import com.umbcapp.gaurk.snapeve.Controllers.AttendiesListItem;
 import com.umbcapp.gaurk.snapeve.Controllers.CommentsListItem;
 
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -110,6 +110,16 @@ public class EventDetails extends AppCompatActivity implements Listview_communic
     private int server_comment_count = 0;
     private TextView event_details_actions_count_textview;
     private long sessionCounter = 0;
+    private String post_start_time = null;
+    private String post_end_time = null;
+    private boolean post_all_day_status = false;
+    private TextView event_details_item_live_tag_textview;
+    private TextView event_details_event_statr_end_dt_time_textview;
+    private String post_location_name;
+    private int post_location_type;
+    private ImageView event_details_location_imageview;
+    private TextView event_details_location_textview;
+    private ImageView event_details_event_statr_end_dt_time_imageview;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -138,6 +148,14 @@ public class EventDetails extends AppCompatActivity implements Listview_communic
         grp_id = eventDetailIntent.getStringExtra("grp_id");
         post_as = eventDetailIntent.getIntExtra("post_as", 0);
 
+        post_location_type = eventDetailIntent.getIntExtra("post_location_type", 0);
+        post_location_name = eventDetailIntent.getStringExtra("post_location_name");
+
+        post_start_time = eventDetailIntent.getStringExtra("post_start_time");
+        post_end_time = eventDetailIntent.getStringExtra("post_end_time");
+        post_all_day_status = eventDetailIntent.getBooleanExtra("post_all_day_status", false);
+
+
         logged_in_user_grp_id = new SessionManager(getApplicationContext()).getSpecificUserDetail(SessionManager.KEY_GRP_ID);
 
         System.out.println("EVENT DETAILS ----------");
@@ -159,6 +177,12 @@ public class EventDetails extends AppCompatActivity implements Listview_communic
         event_detail_grey_view_panel = (View) findViewById(R.id.event_detail_grey_view_panel);
         list_item_status_spinner = (Spinner) findViewById(R.id.list_item_status_spinner_textview);
         event_detail_user_name_text_view = (TextView) findViewById(R.id.event_detail_user_name_text_view);
+        event_details_event_statr_end_dt_time_textview = (TextView) findViewById(R.id.event_details_event_statr_end_dt_time_textview);
+        event_details_event_statr_end_dt_time_imageview = (ImageView) findViewById(R.id.event_details_event_statr_end_dt_time_imageview);
+        event_details_event_statr_end_dt_time_imageview.setVisibility(View.INVISIBLE);
+        event_details_event_statr_end_dt_time_textview.setVisibility(View.INVISIBLE);
+
+        event_details_item_live_tag_textview = (TextView) findViewById(R.id.event_details_item_live_tag_textview);
         event_details_comments_tap_to_load_textview = (TextView) findViewById(R.id.event_details_comments_tap_to_load_textview);
         event_detail_user_post_dt_time_text_view = (TextView) findViewById(R.id.event_detail_user_post_dt_time_text_view);
         event_detail_user_comment_text_view = (TextView) findViewById(R.id.event_detail_user_comment_text_view);
@@ -168,11 +192,13 @@ public class EventDetails extends AppCompatActivity implements Listview_communic
         event_details_comments_loading_progress_bar = (ProgressBar) findViewById(R.id.event_details_comments_loading_progress_bar);
 
         merge_event_cancel_btn_text_view = (TextView) findViewById(R.id.merge_event_cancel_btn_text_view);
+        event_details_location_textview = (TextView) findViewById(R.id.event_details_location_textview);
         merge_event_merge_btn_text_view = (TextView) findViewById(R.id.merge_event_merge_btn_text_view);
         event_detail_individual_image_comment_textview = (TextView) findViewById(R.id.event_detail_individual_image_comment_textview);
 
         event_detail_attendies_text_view = (TextView) findViewById(R.id.event_detail_attendies_text_view);
         event_detail_event_image_image_view = (ImageView) findViewById(R.id.event_detail_event_image_image_view);
+        event_details_location_imageview = (ImageView) findViewById(R.id.event_details_location_imageview);
 
         list_item_verify_iv = (ImageView) findViewById(R.id.list_item_verify_iv);
         list_item_verify_tv = (TextView) findViewById(R.id.list_item_verify_tv);
@@ -181,6 +207,11 @@ public class EventDetails extends AppCompatActivity implements Listview_communic
         list_item_spam_tv = (TextView) findViewById(R.id.list_item_spam_tv);
 
         eventDetailsCommentsListView = (ListView) findViewById(R.id.event_detail_comments_list_view);
+
+        //it works only from main activity not from any other activity due to bundle params
+        if (post_start_time != null) {
+            setLocationDateTimeValues(post_start_time, post_end_time, post_all_day_status);
+        }
 
         fetchCommentsApi(post_id);
         fillAttendingSpinner();
@@ -220,6 +251,7 @@ public class EventDetails extends AppCompatActivity implements Listview_communic
                 System.out.println("CASE 3 ");
                 break;
         }
+
 
         event_details_comments_tap_to_load_textview.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -352,6 +384,78 @@ public class EventDetails extends AppCompatActivity implements Listview_communic
                 //blank listener to override clicks
             }
         });
+    }
+
+    private void setLocationDateTimeValues(String post_start_time, String post_end_time, boolean post_all_day_status) {
+        DateFormat feedsDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+        event_details_event_statr_end_dt_time_textview.setVisibility(View.VISIBLE);
+        event_details_event_statr_end_dt_time_imageview.setVisibility(View.VISIBLE);
+
+        if (post_all_day_status) {
+            DateFormat displayAlldayDtFormat = new SimpleDateFormat("MMM dd");
+
+            Date startDateTime = null;
+            Date endDateTime = null;
+            try {
+                startDateTime = feedsDateFormat.parse(post_start_time);
+
+                if (compareDate(startDateTime, new Date()) == 0) {
+                    event_details_item_live_tag_textview.setVisibility(View.VISIBLE);
+                } else {
+                    event_details_item_live_tag_textview.setVisibility(View.GONE);
+                }
+
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+            event_details_event_statr_end_dt_time_textview.setText(displayAlldayDtFormat.format(startDateTime) + ", All day event");
+
+        } else {
+            DateFormat displayStartDtFormat = new SimpleDateFormat("MMM dd, HH:MM - ");
+            DateFormat displayEndTimeFormat = new SimpleDateFormat("HH:mm");
+
+            Date startDateTime = null;
+            Date endDateTime = null;
+            try {
+                startDateTime = feedsDateFormat.parse(post_start_time);
+                endDateTime = feedsDateFormat.parse(post_end_time);
+
+
+                if (startDateTime.compareTo(new Date()) < 0 && endDateTime.compareTo(new Date()) > 0) {
+                    System.out.println("LIVE EVENT 1");
+                    event_details_item_live_tag_textview.setVisibility(View.VISIBLE);
+                } else {
+                    event_details_item_live_tag_textview.setVisibility(View.GONE);
+                }
+
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+            event_details_event_statr_end_dt_time_textview.setText(displayStartDtFormat.format(startDateTime) + displayEndTimeFormat.format(endDateTime));
+        }
+
+
+        //set location type
+        switch (post_location_type) {
+            case 0:
+                event_details_location_textview.setText("Map location");
+                event_details_location_imageview.setVisibility(View.VISIBLE);
+                break;
+            case 1:
+                event_details_location_textview.setText("Map location");
+                event_details_location_imageview.setVisibility(View.VISIBLE);
+                break;
+            case 2:
+                event_details_location_textview.setText("@ " + post_location_name);
+                event_details_location_imageview.setVisibility(View.INVISIBLE);
+                break;
+        }
+    }
+
+    private int compareDate(Date startDateTime, Date date) {
+
+        DateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
+        return dateFormat.format(startDateTime).compareTo(dateFormat.format(date));
     }
 
     private void calculateAction(int click_code) {

@@ -66,7 +66,7 @@ public class WelcomeActivity extends AppCompatActivity {
                 R.layout.welcome_slide1,
                 R.layout.welcome_slide2,
                 R.layout.welcome_slide3,
-                R.layout.welcome_slide5,
+//                R.layout.welcome_slide5,
                 R.layout.welcome_slide4};
 
         // adding bottom dots
@@ -105,6 +105,8 @@ public class WelcomeActivity extends AppCompatActivity {
     private void addBottomDots(int currentPage) {
         dots = new TextView[layouts.length];
 
+        System.out.println("layouts.length : " + layouts.length);
+
         int[] colorsActive = getResources().getIntArray(R.array.array_dot_active);
         int[] colorsInactive = getResources().getIntArray(R.array.array_dot_inactive);
 
@@ -137,6 +139,7 @@ public class WelcomeActivity extends AppCompatActivity {
 
         @Override
         public void onPageSelected(int position) {
+            System.out.println("Position" + position);
             addBottomDots(position);
 
             // changing the next button text 'NEXT' / 'GOT IT'

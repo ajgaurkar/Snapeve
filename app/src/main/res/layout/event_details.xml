@@ -21,6 +21,22 @@
             android:scaleType="centerCrop"
             android:src="@drawable/user_96" />
 
+        <TextView
+            android:id="@+id/event_details_item_live_tag_textview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:background="@drawable/live_tag_bg"
+            android:paddingBottom="2dp"
+            android:paddingEnd="10dp"
+            android:paddingStart="10dp"
+            android:paddingTop="2dp"
+            android:text="LIVE"
+            android:visibility="gone"
+            android:textColor="#fff"
+            android:textSize="12sp"
+            android:textStyle="bold" />
+
         <View
             android:id="@+id/event_detail_grey_view_panel"
             android:layout_width="match_parent"
@@ -72,13 +88,62 @@
             android:id="@+id/event_detail_user_comment_text_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
+            android:layout_above="@+id/event_details_event_statr_end_dt_time_textview"
             android:layout_marginEnd="10dp"
             android:layout_marginRight="10dp"
             android:layout_toEndOf="@+id/event_detail_profile_pic_image_view"
-            android:maxLines="4"
-            android:minLines="2"
+            android:maxLines="10"
             android:text="Donut party at UMBC" />
+
+        <ImageView
+            android:id="@+id/event_details_event_statr_end_dt_time_imageview"
+            android:layout_width="20dp"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/event_details_event_statr_end_dt_time_textview"
+            android:layout_alignStart="@+id/event_detail_user_comment_text_view"
+            android:layout_alignTop="@+id/event_details_event_statr_end_dt_time_textview"
+            android:layout_marginStart="-4dp"
+            android:layout_toEndOf="@+id/list_item_user_img"
+            android:padding="2dp"
+            android:src="@drawable/clock_24" />
+
+        <TextView
+            android:id="@+id/event_details_event_statr_end_dt_time_textview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginEnd="2dp"
+            android:layout_toEndOf="@+id/event_details_event_statr_end_dt_time_imageview"
+            android:layout_toStartOf="@+id/event_details_location_textview"
+            android:singleLine="true"
+            android:text=""
+            android:textSize="12sp" />
+
+
+        <TextView
+            android:id="@+id/event_details_location_textview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/event_details_event_statr_end_dt_time_textview"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="10dp"
+            android:paddingBottom="2dp"
+            android:paddingEnd="2dp"
+            android:paddingStart="2dp"
+            android:paddingTop="2dp"
+            android:text=""
+            android:textSize="11sp" />
+
+        <ImageView
+            android:id="@+id/event_details_location_imageview"
+            android:layout_width="18dp"
+            android:layout_height="match_parent"
+            android:layout_alignBottom="@+id/event_details_location_textview"
+            android:layout_alignTop="@+id/event_details_location_textview"
+            android:layout_toStartOf="@+id/event_details_location_textview"
+            android:padding="2dp"
+            android:visibility="invisible"
+            android:src="@drawable/location_marker_26" />
 
         <!--<android.support.v7.widget.CardView-->
         <!--android:id="@+id/event_detail_attendies_card_view"-->

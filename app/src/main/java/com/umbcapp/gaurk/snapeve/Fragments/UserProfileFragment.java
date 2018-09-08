@@ -13,6 +13,7 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
@@ -54,9 +55,9 @@ import com.microsoft.azure.storage.blob.CloudBlobContainer;
 import com.microsoft.azure.storage.blob.CloudBlockBlob;
 import com.microsoft.windowsazure.mobileservices.MobileServiceClient;
 import com.microsoft.windowsazure.mobileservices.table.MobileServiceTable;
-import com.shashank.sony.fancydialoglib.FancyAlertDialog;
-import com.shashank.sony.fancydialoglib.FancyAlertDialogListener;
-import com.shashank.sony.fancydialoglib.Icon;
+//import com.shashank.sony.fancydialoglib.FancyAlertDialog;
+//import com.shashank.sony.fancydialoglib.FancyAlertDialogListener;
+//import com.shashank.sony.fancydialoglib.Icon;
 import com.squareup.picasso.Picasso;
 import com.umbcapp.gaurk.snapeve.Adapters.SignupGrpAdapter;
 import com.umbcapp.gaurk.snapeve.Adapters.TeamMatesAdapter;
@@ -73,6 +74,7 @@ import com.umbcapp.gaurk.snapeve.MainActivity;
 import com.umbcapp.gaurk.snapeve.ManageGroups;
 import com.umbcapp.gaurk.snapeve.R;
 import com.umbcapp.gaurk.snapeve.RewardCalcuator;
+import com.umbcapp.gaurk.snapeve.ScheduledRewards;
 import com.umbcapp.gaurk.snapeve.SessionManager;
 import com.umbcapp.gaurk.snapeve.Signup_grp_join;
 import com.umbcapp.gaurk.snapeve.Singleton;
@@ -97,6 +99,8 @@ import java.util.concurrent.TimeUnit;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import me.iwf.photopicker.PhotoPicker;
+import uk.co.deanwild.materialshowcaseview.MaterialShowcaseSequence;
+import uk.co.deanwild.materialshowcaseview.ShowcaseConfig;
 
 import static android.app.Activity.RESULT_OK;
 import static com.umbcapp.gaurk.snapeve.AzureConfiguration.getContainer;
@@ -137,7 +141,6 @@ public class UserProfileFragment extends Fragment {
     private TextView user_points;
     private int admin_flag = 0;
     private TextView user_profile_member_count_text_view;
-    private ImageView user_profile_member_count_text_view_icon;
     private JsonElement bkupPostResponse;
     private JsonElement bkupMemberResponse;
     private ArrayList<TeammatesListItem> userProfileList = new ArrayList<>();
@@ -181,6 +184,8 @@ public class UserProfileFragment extends Fragment {
     private LinearLayout show_pending_req_dialog_btn_lin_layout;
     private TextView signup_grp_page_or_textview;
     private String joinMeToTheGrpId = null;
+    private ImageView header_bg;
+    private TextView weekly_text_view;
 
 
     public UserProfileFragment() {
@@ -336,7 +341,8 @@ public class UserProfileFragment extends Fragment {
             }
 
 
-            DateFormat srcDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSX");
+//            DateFormat srcDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSX");
+            DateFormat srcDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
             DateFormat displayDtFormat = new SimpleDateFormat("MMM dd HH:mm");
 
             Date postDate = null;
@@ -462,22 +468,35 @@ public class UserProfileFragment extends Fragment {
     }
 
     private void showNoResponseDialog() {
-        new FancyAlertDialog.Builder(getActivity())
-                .setTitle("Oopsy daisy!")
-                .setBackgroundColor(Color.parseColor("#3F51B5"))  //Don't pass R.color.colorvalue
+//        new FancyAlertDialog.Builder(getActivity())
+//                .setTitle("Oopsy daisy!")
+//                .setBackgroundColor(Color.parseColor("#3F51B5"))  //Don't pass R.color.colorvalue
+//                .setMessage("Something went wrong")
+//                .setIcon(R.drawable.traingale_exclamation_100, Icon.Visible)
+//                .setPositiveBtnText("Reload")
+//                .setPositiveBtnBackground(Color.parseColor("#303F9F"))//Don't pass R.color.colorvalue
+//                .OnPositiveClicked(new FancyAlertDialogListener() {
+//                    @Override
+//                    public void OnClick() {
+//                        fetch_user_details();
+//                    }
+//                })
+//                .setNegativeBtnBackground(Color.parseColor("#003F51B5"))//Don't pass R.color.colorvalue
+//                .setNegativeBtnText("")
+//                .build();
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle("Oopsy daisy!")
                 .setMessage("Something went wrong")
-                .setIcon(R.drawable.traingale_exclamation_100, Icon.Visible)
-                .setPositiveBtnText("Reload")
-                .setPositiveBtnBackground(Color.parseColor("#303F9F"))//Don't pass R.color.colorvalue
-                .OnPositiveClicked(new FancyAlertDialogListener() {
-                    @Override
-                    public void OnClick() {
+                .setCancelable(false)
+                .setPositiveButton("Try again", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
                         fetch_user_details();
                     }
-                })
-                .setNegativeBtnBackground(Color.parseColor("#003F51B5"))//Don't pass R.color.colorvalue
-                .setNegativeBtnText("")
-                .build();
+                });
+        AlertDialog alert = builder.create();
+        alert.show();
+
     }
 
     private void parseAndDivideUserInfo(JsonElement response) {
@@ -663,13 +682,13 @@ public class UserProfileFragment extends Fragment {
         leaderboard_text_view = (TextView) rootView.findViewById(R.id.leaderboard_text_view);
         profile_pic_image_view = (CircleImageView) rootView.findViewById(R.id.profile_pic_image_view);
         user_profile_settings_imageview = (ImageView) rootView.findViewById(R.id.user_profile_settings_imageview);
+        header_bg = (ImageView) rootView.findViewById(R.id.header_bg);
         profile_progress_bar = (RoundCornerProgressBar) rootView.findViewById(R.id.profile_progress_bar);
 
-        user_profile_member_count_text_view = (TextView) rootView.findViewById(R.id.user_profile_member_count_text_view);
-        user_profile_member_count_text_view_icon = (ImageView) rootView.findViewById(R.id.user_profile_member_count_text_view_icon);
+        user_profile_member_count_text_view = (TextView) rootView.findViewById(R.id.user_profile_members_count_text_view);
+        weekly_text_view = (TextView) rootView.findViewById(R.id.weekly_text_view);
         //gone by default, check for group avaiablity and show/hide accordingly
         user_profile_member_count_text_view.setVisibility(View.GONE);
-        user_profile_member_count_text_view_icon.setVisibility(View.GONE);
 
 //        Picasso.get().load("https://www.goldenglobes.com/sites/default/files/styles/portrait_medium/public/gallery_images/17-tomcruiseag.jpg?itok=qNj0cQGV&c=c9a73b7bdf609d72214d226ab9ea015e")
 //                .fit().centerCrop().into(profile_pic_image_view);
@@ -711,20 +730,27 @@ public class UserProfileFragment extends Fragment {
             @Override
             public void onClick(View v) {
 
-                if (!memberListOpenFlag) {
-                    loadContributionList(2);
-                    memberListOpenFlag = true;
-                    user_profile_member_count_text_view_icon.setImageResource(R.drawable.up_arrow_white_24);
-
-                } else {
-                    loadContributionList(1);
-                    user_profile_member_count_text_view_icon.setImageResource(R.drawable.down_arrow_white_24);
-                    memberListOpenFlag = false;
-                }
-
+                loadContributionList(2);
+                memberListOpenFlag = true;
+                user_profile_member_count_text_view.setBackground(getResources().getDrawable(R.drawable.user_profile_tabs_right_selected));
+                user_profile_posts_count_text_view.setBackground(getResources().getDrawable(R.drawable.user_profile_tabs_left_unselected));
 
             }
         });
+        user_profile_posts_count_text_view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if (currentActiveTab == 2) {
+                    loadContributionList(1);
+                    memberListOpenFlag = false;
+                    user_profile_posts_count_text_view.setBackground(getResources().getDrawable(R.drawable.user_profile_tabs_left_selected));
+                    user_profile_member_count_text_view.setBackground(getResources().getDrawable(R.drawable.user_profile_tabs_right_unselected));
+                }
+
+            }
+        });
+
 
         profile_relative_layout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -752,14 +778,24 @@ public class UserProfileFragment extends Fragment {
                 startActivity(mIntent);
             }
         });
+        weekly_text_view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent mIntent = new Intent(getActivity(), ScheduledRewards.class);
+                startActivity(mIntent);
+            }
+        });
 
         user_profile_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
                 currentActiveTab = 1;
-                user_profile_btn.setBackground(getResources().getDrawable(R.drawable.text_selection_left_seleted));
-                grp_profile_btn.setBackground(getResources().getDrawable(R.drawable.text_selection_right_unseleted));
+//                user_profile_btn.setBackground(getResources().getDrawable(R.drawable.text_selection_left_seleted));
+//                grp_profile_btn.setBackground(getResources().getDrawable(R.drawable.text_selection_right_unseleted));
+                user_profile_member_count_text_view.setBackground(getResources().getDrawable(R.drawable.user_profile_tabs_right_unselected));
+                user_profile_posts_count_text_view.setBackground(getResources().getDrawable(R.drawable.user_profile_tabs_left_selected));
+
                 populateUserInfo();
 
             }
@@ -776,9 +812,12 @@ public class UserProfileFragment extends Fragment {
                     currentActiveTab = 2;
 
                     user_profile_member_count_text_view.setVisibility(View.VISIBLE);
-                    user_profile_member_count_text_view_icon.setVisibility(View.VISIBLE);
                     grp_profile_btn.setBackground(getResources().getDrawable(R.drawable.text_selection_right_seleted));
                     user_profile_btn.setBackground(getResources().getDrawable(R.drawable.text_selection_left_unseleted));
+
+                    user_profile_posts_count_text_view.setBackground(getResources().getDrawable(R.drawable.user_profile_tabs_left_selected));
+                    user_profile_member_count_text_view.setBackground(getResources().getDrawable(R.drawable.user_profile_tabs_right_unselected));
+
                     user_type_selection_status = 1;
 
                     System.out.println("XXXXX grp_dp_url " + grp_dp_url);
@@ -793,8 +832,6 @@ public class UserProfileFragment extends Fragment {
                     user_name_textview.setText(grp_name);
 //                    user_points.setText(String.valueOf(grp_total_pts));
 
-                    user_profile_member_count_text_view_icon.setImageResource(R.drawable.down_arrow_white_24);
-
                     setRewardProgress(grp_total_pts, 1);
 
                 }
@@ -807,7 +844,41 @@ public class UserProfileFragment extends Fragment {
                 openImageOptionsDialog();
             }
         });
+
         return rootView;
+    }
+
+
+    private void startShowCase() {
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                System.out.println("HANDLER CALLED");
+                showShowcase();
+            }
+        }, 1500);
+    }
+
+    private void showShowcase() {
+// sequence example
+        ShowcaseConfig config = new ShowcaseConfig();
+        config.setDelay(600); // half second between each showcase view
+        long id = System.currentTimeMillis();
+
+        MaterialShowcaseSequence sequence = new MaterialShowcaseSequence(getActivity());
+
+        sequence.setConfig(config);
+        sequence.singleUse("DASH_SHOWCASE_SEQUENCE_2");
+//        sequence.singleUse(String.valueOf(id));
+
+        sequence.addSequenceItem(header_bg,
+                "Check yours and group Profile details", "NEXT");
+        sequence.addSequenceItem(user_profile_settings_imageview,
+                "Manage group members and send group invites", "NEXT");
+        sequence.addSequenceItem(leaderboard_text_view,
+                "check out your competition", "GOT IT");
+        sequence.start();
+
     }
 
     private void setRewardProgress(int reward_points, int tab_code) {
@@ -1039,7 +1110,9 @@ public class UserProfileFragment extends Fragment {
         setRewardProgress(user_total_pts, 0);
 
         user_profile_member_count_text_view.setVisibility(View.GONE);
-        user_profile_member_count_text_view_icon.setVisibility(View.GONE);
+
+        user_profile_btn.setBackground(getResources().getDrawable(R.drawable.text_selection_left_seleted));
+        grp_profile_btn.setBackground(getResources().getDrawable(R.drawable.text_selection_right_unseleted));
     }
 
     private void openSettingsMenu(int admin_flag, final int privilege_type) {
@@ -1587,9 +1660,12 @@ public class UserProfileFragment extends Fragment {
 
             TeamMatesAdapter teamMatesAdapter = new TeamMatesAdapter(getActivity(), userProfileList);
             user_profile_contribution_list_view.setAdapter(teamMatesAdapter);
-            user_profile_posts_count_text_view.setVisibility(View.GONE);
+            user_profile_posts_count_text_view.setVisibility(View.VISIBLE);
+            user_profile_posts_count_text_view.setVisibility(View.VISIBLE);
+
 
         }
+//        startShowCase();
     }
 
     @Override

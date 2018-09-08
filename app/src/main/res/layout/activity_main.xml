@@ -8,7 +8,6 @@
     android:background="@color/colorMainBg"
     tools:context=".MainActivity">
 
-
     <View
         android:id="@+id/showcase_view_1"
         android:layout_width="100dp"

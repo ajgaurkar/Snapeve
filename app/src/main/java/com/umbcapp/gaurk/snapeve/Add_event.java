@@ -11,6 +11,7 @@ import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -29,6 +30,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 import android.support.v4.content.FileProvider;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.util.Log;
@@ -61,10 +63,10 @@ import com.google.gson.JsonObject;
 import com.microsoft.azure.storage.blob.CloudBlobContainer;
 import com.microsoft.azure.storage.blob.CloudBlockBlob;
 import com.microsoft.windowsazure.mobileservices.MobileServiceClient;
-import com.shashank.sony.fancydialoglib.Animation;
-import com.shashank.sony.fancydialoglib.FancyAlertDialog;
-import com.shashank.sony.fancydialoglib.FancyAlertDialogListener;
-import com.shashank.sony.fancydialoglib.Icon;
+//import com.shashank.sony.fancydialoglib.Animation;
+//import com.shashank.sony.fancydialoglib.FancyAlertDialog;
+//import com.shashank.sony.fancydialoglib.FancyAlertDialogListener;
+//import com.shashank.sony.fancydialoglib.Icon;
 import com.umbcapp.gaurk.snapeve.Adapters.SimilarPostsAdapter;
 import com.umbcapp.gaurk.snapeve.Controllers.LocationCoordinatesList;
 import com.umbcapp.gaurk.snapeve.Controllers.SimilarPostsListItem;
@@ -166,7 +168,7 @@ public class Add_event extends AppCompatActivity implements LocationListener {
     private RadioButton post_as_group_radio;
     private View post_as_group_radio_divider_view;
     private ArrayList<LocationCoordinatesList> coordinatesLists = new ArrayList<>();
-    private long sessionCounter=0;
+    private long sessionCounter = 0;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -494,8 +496,8 @@ public class Add_event extends AppCompatActivity implements LocationListener {
                 selectedLat = coordinatesLists.get(pick_location_card_3_spinner.getSelectedItemPosition()).getLat();
                 selectedLng = coordinatesLists.get(pick_location_card_3_spinner.getSelectedItemPosition()).getLon();
 
-                System.out.println("pick selectedLat : "+ selectedLat);
-                System.out.println("pick selectedLng : "+ selectedLng);
+                System.out.println("pick selectedLat : " + selectedLat);
+                System.out.println("pick selectedLng : " + selectedLng);
 
             }
 
@@ -780,40 +782,40 @@ public class Add_event extends AppCompatActivity implements LocationListener {
         coordinatesLists.add(new LocationCoordinatesList("AOK Library and Gallery", 39.256607, -76.711501));
         coordinatesLists.add(new LocationCoordinatesList("RAC", 39.252916, -76.712617));
         coordinatesLists.add(new LocationCoordinatesList("Erickson Field", 39.256201, -76.710221));
-        coordinatesLists.add(new LocationCoordinatesList("PHAB",39.254982, -76.714788));
-        coordinatesLists.add(new LocationCoordinatesList("Stadium complx",39.250616, -76.707769));
-        coordinatesLists.add(new LocationCoordinatesList("Event Center",39.252124, -76.707533));
-        coordinatesLists.add(new LocationCoordinatesList("UC bldg",39.254306, -76.713080));
-        coordinatesLists.add(new LocationCoordinatesList("Sherman hall",39.253766, -76.713618));
-        coordinatesLists.add(new LocationCoordinatesList("Engineering bldg",39.254409, -76.713988));
-        coordinatesLists.add(new LocationCoordinatesList("Commons terrace",39.254854, -76.711432));
-        coordinatesLists.add(new LocationCoordinatesList("LC-1",39.254833, -76.711866));
-        coordinatesLists.add(new LocationCoordinatesList("The quad",39.254234, -76.711760));
-        coordinatesLists.add(new LocationCoordinatesList("Sondheim hall",39.253434, -76.712752));
-        coordinatesLists.add(new LocationCoordinatesList("Meyerhoff bldg",39.254730, -76.712984));
-        coordinatesLists.add(new LocationCoordinatesList("Library pond",39.255814, -76.712156));
-        coordinatesLists.add(new LocationCoordinatesList("Public policy bldg",39.255137, -76.709222));
-        coordinatesLists.add(new LocationCoordinatesList("Telescope",39.254387, -76.709762));
-        coordinatesLists.add(new LocationCoordinatesList("Alumni-House",39.258124, -76.717755));
-        coordinatesLists.add(new LocationCoordinatesList("Truegits",39.255606, -76.707861));
-        coordinatesLists.add(new LocationCoordinatesList("Chesapeake Hall",39.256768, -76.708602));
-        coordinatesLists.add(new LocationCoordinatesList("Erickson Hall",39.256902, -76.709295));
-        coordinatesLists.add(new LocationCoordinatesList("residnetial life",39.256741, -76.709910));
-        coordinatesLists.add(new LocationCoordinatesList("UHS",39.256702, -76.709405));
-        coordinatesLists.add(new LocationCoordinatesList("Harbor Hall",39.257284, -76.708009));
-        coordinatesLists.add(new LocationCoordinatesList("Patapsco Hall",39.255051, -76.706711));
-        coordinatesLists.add(new LocationCoordinatesList("Potomac Hall",39.255986, -76.706628));
-        coordinatesLists.add(new LocationCoordinatesList("Susquehanna Hall",39.255592, -76.708705));
-        coordinatesLists.add(new LocationCoordinatesList("TRC",39.255012, -76.702271));
-        coordinatesLists.add(new LocationCoordinatesList("UMBC Police",39.257281, -76.714171));
-        coordinatesLists.add(new LocationCoordinatesList("Public Policy Bldg",39.255163, -76.709133));
-        coordinatesLists.add(new LocationCoordinatesList("Administration Bldg",39.253051, -76.713495));
-        coordinatesLists.add(new LocationCoordinatesList("Fine Arts Bldg",39.255052, -76.713492));
+        coordinatesLists.add(new LocationCoordinatesList("PHAB", 39.254982, -76.714788));
+        coordinatesLists.add(new LocationCoordinatesList("Stadium complx", 39.250616, -76.707769));
+        coordinatesLists.add(new LocationCoordinatesList("Event Center", 39.252124, -76.707533));
+        coordinatesLists.add(new LocationCoordinatesList("UC bldg", 39.254306, -76.713080));
+        coordinatesLists.add(new LocationCoordinatesList("Sherman hall", 39.253766, -76.713618));
+        coordinatesLists.add(new LocationCoordinatesList("Engineering bldg", 39.254409, -76.713988));
+        coordinatesLists.add(new LocationCoordinatesList("Commons terrace", 39.254854, -76.711432));
+        coordinatesLists.add(new LocationCoordinatesList("LC-1", 39.254833, -76.711866));
+        coordinatesLists.add(new LocationCoordinatesList("The quad", 39.254234, -76.711760));
+        coordinatesLists.add(new LocationCoordinatesList("Sondheim hall", 39.253434, -76.712752));
+        coordinatesLists.add(new LocationCoordinatesList("Meyerhoff bldg", 39.254730, -76.712984));
+        coordinatesLists.add(new LocationCoordinatesList("Library pond", 39.255814, -76.712156));
+        coordinatesLists.add(new LocationCoordinatesList("Public policy bldg", 39.255137, -76.709222));
+        coordinatesLists.add(new LocationCoordinatesList("Telescope", 39.254387, -76.709762));
+        coordinatesLists.add(new LocationCoordinatesList("Alumni-House", 39.258124, -76.717755));
+        coordinatesLists.add(new LocationCoordinatesList("Truegits", 39.255606, -76.707861));
+        coordinatesLists.add(new LocationCoordinatesList("Chesapeake Hall", 39.256768, -76.708602));
+        coordinatesLists.add(new LocationCoordinatesList("Erickson Hall", 39.256902, -76.709295));
+        coordinatesLists.add(new LocationCoordinatesList("residnetial life", 39.256741, -76.709910));
+        coordinatesLists.add(new LocationCoordinatesList("UHS", 39.256702, -76.709405));
+        coordinatesLists.add(new LocationCoordinatesList("Harbor Hall", 39.257284, -76.708009));
+        coordinatesLists.add(new LocationCoordinatesList("Patapsco Hall", 39.255051, -76.706711));
+        coordinatesLists.add(new LocationCoordinatesList("Potomac Hall", 39.255986, -76.706628));
+        coordinatesLists.add(new LocationCoordinatesList("Susquehanna Hall", 39.255592, -76.708705));
+        coordinatesLists.add(new LocationCoordinatesList("TRC", 39.255012, -76.702271));
+        coordinatesLists.add(new LocationCoordinatesList("UMBC Police", 39.257281, -76.714171));
+        coordinatesLists.add(new LocationCoordinatesList("Public Policy Bldg", 39.255163, -76.709133));
+        coordinatesLists.add(new LocationCoordinatesList("Administration Bldg", 39.253051, -76.713495));
+        coordinatesLists.add(new LocationCoordinatesList("Fine Arts Bldg", 39.255052, -76.713492));
 
         // Spinner Drop down elements
         List<String> categories = new ArrayList<String>();
 //        categories.add("[ Select a Location ]");
-        for(int i=0;i<coordinatesLists.size();i++){
+        for (int i = 0; i < coordinatesLists.size(); i++) {
             categories.add(coordinatesLists.get(i).getLocation());
         }
 //        categories.add(coordinatesLists.get(1).getLocation());
@@ -1098,41 +1100,34 @@ public class Add_event extends AppCompatActivity implements LocationListener {
 
                     if (response.toString().equals("true")) {
 
-                        new FancyAlertDialog.Builder(Add_event.this)
+                        AlertDialog.Builder builder = new AlertDialog.Builder(Add_event.this);
+                        builder.setMessage("Would you like to share your achievement with your friends")
                                 .setTitle("Thank You for Your contribution")
-                                .setBackgroundColor(Color.parseColor("#3F51B5"))  //Don't pass R.color.colorvalue
-                                .setMessage("Would you like to share your achievement with your friends")
-                                .setNegativeBtnText("No thanks!")
-                                .setAnimation(Animation.POP)
-                                .isCancellable(false)
-                                .setIcon(R.drawable.achievement_100, Icon.Visible)
-                                .OnNegativeClicked(new FancyAlertDialogListener() {
-                                    @Override
-                                    public void OnClick() {
-//                                        onBackPressed();
-                                        finish();
-                                    }
-                                })
-                                .setPositiveBtnText("Sure")
-                                .setPositiveBtnBackground(Color.parseColor("#303F9F"))//Don't pass R.color.colorvalue
-                                .OnPositiveClicked(new FancyAlertDialogListener() {
-                                    @Override
-                                    public void OnClick() {
-//                                        Toast.makeText(Add_event.this, "Ok", Toast.LENGTH_SHORT).show();
+                                .setCancelable(false)
+                                .setPositiveButton("Sure!", new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
+                                        System.out.println("executeGetFeedsApi 3");
 
                                         finish();
-
+//
                                         Intent nav_share_Intent = new Intent(android.content.Intent.ACTION_SEND);
                                         nav_share_Intent.setType("text/plain");
                                         nav_share_Intent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Snapeve");
-                                        nav_share_Intent.putExtra(android.content.Intent.EXTRA_TEXT, "Hey guys!, I just scored 10 points on Spaneve by sharing an event. You can Share events too and an let everyone know about it. Happy sharing!!");
+                                        nav_share_Intent.putExtra(android.content.Intent.EXTRA_TEXT, "Hey guys!, I just scored 10 points on Spaneve by sharing an event. You can Share events too and let everyone know about it. Happy sharing!!");
                                         nav_share_Intent.putExtra(Intent.EXTRA_EMAIL, new String[]{"umbcsnapeve@gmail.com"});
                                         startActivity(Intent.createChooser(nav_share_Intent, "Share via:"));
                                     }
-                                })
-                                .build();
-                    }
+                                }).setNegativeButton("No thanks!", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                System.out.println("executeGetFeedsApi 3");
 
+                                onBackPressed();
+                                finish();
+                            }
+                        });
+                        AlertDialog alert = builder.create();
+                        alert.show();
+                    }
 
                 }
             });

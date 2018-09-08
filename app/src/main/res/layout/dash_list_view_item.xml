@@ -29,6 +29,21 @@
                 android:scaleType="centerCrop"
                 android:src="@drawable/login_gradient_bg" />
 
+            <TextView
+                android:id="@+id/feeds_item_live_tag_textview"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:paddingBottom="2dp"
+                android:background="@drawable/live_tag_bg"
+                android:paddingEnd="10dp"
+                android:paddingStart="10dp"
+                android:paddingTop="2dp"
+                android:text="LIVE"
+                android:textColor="#fff"
+                android:textSize="12sp"
+                android:textStyle="bold" />
+
             <!--<jp.shts.android.library.TriangleLabelView-->
             <!--android:layout_width="match_parent"-->
             <!--android:layout_height="match_parent"-->
@@ -99,10 +114,10 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/list_item_username"
+                    android:layout_marginBottom="2dp"
                     android:layout_marginEnd="20dp"
                     android:layout_toEndOf="@+id/list_item_user_img"
                     android:padding="1dp"
-                    android:layout_marginBottom="2dp"
                     android:singleLine="true"
                     android:text="Donut party at umbc commons"
                     android:textSize="12sp" />
@@ -124,8 +139,8 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/list_item_user_description"
                     android:layout_marginEnd="2dp"
-                    android:layout_toStartOf="@+id/post_location_imageview"
                     android:layout_toEndOf="@+id/list_item_event_statr_end_dt_time_imageview"
+                    android:layout_toStartOf="@+id/post_location_imageview"
                     android:singleLine="true"
                     android:text="Jul 07, 14:07 - 15:45"
                     android:textSize="12sp" />
@@ -176,10 +191,10 @@
                     android:layout_alignBottom="@+id/list_item_event_statr_end_dt_time_textview"
                     android:layout_alignParentEnd="true"
                     android:layout_marginEnd="10dp"
-                    android:paddingTop="2dp"
+                    android:paddingBottom="2dp"
                     android:paddingEnd="2dp"
                     android:paddingStart="2dp"
-                    android:paddingBottom="2dp"
+                    android:paddingTop="2dp"
                     android:text="Map location"
                     android:textSize="11sp" />
 

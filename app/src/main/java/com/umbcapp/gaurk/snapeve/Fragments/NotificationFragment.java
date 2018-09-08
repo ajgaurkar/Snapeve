@@ -3,10 +3,12 @@ package com.umbcapp.gaurk.snapeve.Fragments;
 import android.app.Fragment;
 import android.arch.lifecycle.LifecycleOwner;
 import android.arch.lifecycle.Observer;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.SwitchCompat;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -20,10 +22,10 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 
 import com.google.gson.JsonObject;
-import com.shashank.sony.fancydialoglib.Animation;
-import com.shashank.sony.fancydialoglib.FancyAlertDialog;
-import com.shashank.sony.fancydialoglib.FancyAlertDialogListener;
-import com.shashank.sony.fancydialoglib.Icon;
+//import com.shashank.sony.fancydialoglib.Animation;
+//import com.shashank.sony.fancydialoglib.FancyAlertDialog;
+//import com.shashank.sony.fancydialoglib.FancyAlertDialogListener;
+//import com.shashank.sony.fancydialoglib.Icon;
 import com.umbcapp.gaurk.snapeve.Adapters.MessagesPersonalAdapter;
 import com.umbcapp.gaurk.snapeve.Adapters.SnapeveNotificationAdapter;
 import com.umbcapp.gaurk.snapeve.Controllers.MessagesPersonalListItem;
@@ -182,28 +184,45 @@ public class NotificationFragment extends Fragment {
     }
 
     private void showConfirmationDialog() {
-        new FancyAlertDialog.Builder(getActivity())
-                .setTitle("Are you sure you want to disable app notifications?")
-                .setBackgroundColor(Color.parseColor("#3F51B5"))  //Don't pass R.color.colorvalue
-                .setNegativeBtnText("Keep it ON")
-                .setAnimation(Animation.SLIDE)
-                .setIcon(R.drawable.notification_round_blue_white_100, Icon.Visible)
-                .isCancellable(false)
-                .OnNegativeClicked(new FancyAlertDialogListener() {
-                    @Override
-                    public void OnClick() {
-                        notification_switch.setChecked(true);
-                    }
-                })
-                .setPositiveBtnText("Turn it OFF")
-                .setPositiveBtnBackground(getResources().getColor(R.color.colorPrimary))//Don't pass R.color.colorvalue
-                .OnPositiveClicked(new FancyAlertDialogListener() {
-                    @Override
-                    public void OnClick() {
+//        new FancyAlertDialog.Builder(getActivity())
+//                .setTitle("Are you sure you want to disable app notifications?")
+//                .setBackgroundColor(Color.parseColor("#3F51B5"))  //Don't pass R.color.colorvalue
+//                .setNegativeBtnText("Keep it ON")
+//                .setAnimation(Animation.SLIDE)
+//                .setIcon(R.drawable.notification_round_blue_white_100, Icon.Visible)
+//                .isCancellable(false)
+//                .OnNegativeClicked(new FancyAlertDialogListener() {
+//                    @Override
+//                    public void OnClick() {
+//                        notification_switch.setChecked(true);
+//                    }
+//                })
+//                .setPositiveBtnText("Turn it OFF")
+//                .setPositiveBtnBackground(getResources().getColor(R.color.colorPrimary))//Don't pass R.color.colorvalue
+//                .OnPositiveClicked(new FancyAlertDialogListener() {
+//                    @Override
+//                    public void OnClick() {
+//                        new SessionManager(getActivity()).setSpecificUserBooleanDetail(SessionManager.KEY_NOTIFICATION_ONN_OFF_STATUS, false);
+//                    }
+//                })
+//                .build();
+
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle("Are you sure you want to disable app notifications?")
+                .setCancelable(false)
+                .setPositiveButton("Keep it ON", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
                         new SessionManager(getActivity()).setSpecificUserBooleanDetail(SessionManager.KEY_NOTIFICATION_ONN_OFF_STATUS, false);
                     }
-                })
-                .build();
+                }).setNegativeButton("Turn it OFF", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                notification_switch.setChecked(true);
+            }
+        });
+        AlertDialog alert = builder.create();
+        alert.show();
+
     }
 
     private void populateData(int type_code) {
@@ -219,7 +238,6 @@ public class NotificationFragment extends Fragment {
 //
 //                NotificationsAdapter notificationsAdapter = new NotificationsAdapter(getActivity(), notificationsList);
 //                notification_layout_listview.setAdapter(notificationsAdapter);
-
 
 
                 studentRepository.getTasks().observe((LifecycleOwner) getActivity(), new Observer<List<SnapeveNotification>>() {

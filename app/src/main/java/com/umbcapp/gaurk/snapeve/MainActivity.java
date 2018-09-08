@@ -42,9 +42,9 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.microsoft.windowsazure.mobileservices.MobileServiceClient;
-import com.shashank.sony.fancydialoglib.FancyAlertDialog;
-import com.shashank.sony.fancydialoglib.FancyAlertDialogListener;
-import com.shashank.sony.fancydialoglib.Icon;
+//import com.shashank.sony.fancydialoglib.FancyAlertDialog;
+//import com.shashank.sony.fancydialoglib.FancyAlertDialogListener;
+//import com.shashank.sony.fancydialoglib.Icon;
 import com.umbcapp.gaurk.snapeve.Adapters.Dash_Event_ListAdapter;
 import com.umbcapp.gaurk.snapeve.Controllers.Event_dash_list_obj;
 import com.umbcapp.gaurk.snapeve.Controllers.SnapEveSession;
@@ -1000,6 +1000,12 @@ public class MainActivity extends AppCompatActivity implements Listview_communic
         eventDetailIntent.putExtra("grp_name", selectedEvent_dash_list_obj.getGrp_name());
         eventDetailIntent.putExtra("grp_id", selectedEvent_dash_list_obj.getGrp_id());
         eventDetailIntent.putExtra("post_as", selectedEvent_dash_list_obj.getPost_as());
+
+        eventDetailIntent.putExtra("post_start_time", selectedEvent_dash_list_obj.getPost_start_dt_time());
+        eventDetailIntent.putExtra("post_end_time", selectedEvent_dash_list_obj.getPost_end_dt_time());
+        eventDetailIntent.putExtra("post_all_day_status", selectedEvent_dash_list_obj.getAll_day_status());
+        eventDetailIntent.putExtra("post_location_type", selectedEvent_dash_list_obj.getLocation_type());
+        eventDetailIntent.putExtra("post_location_name", selectedEvent_dash_list_obj.getLocation_name());
 
         startActivity(eventDetailIntent);
 

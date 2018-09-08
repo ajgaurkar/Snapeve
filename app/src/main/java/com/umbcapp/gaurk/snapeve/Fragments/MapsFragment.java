@@ -145,7 +145,6 @@ public class MapsFragment extends Fragment {
                 googleMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
 
 
-
 //                googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
 //                    @Override
 //                    public boolean onMarkerClick(Marker marker) {
@@ -169,8 +168,6 @@ public class MapsFragment extends Fragment {
 //                showFilterDialog();
 //            }
 //        });
-
-
 
 
         return rootView;
@@ -400,6 +397,7 @@ public class MapsFragment extends Fragment {
             System.out.println("event_long : " + event_long);
             DateFormat feedsDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
 
+
             if (all_day) {
                 DateFormat displayAlldayDtFormat = new SimpleDateFormat("MMM dd");
 
@@ -412,8 +410,20 @@ public class MapsFragment extends Fragment {
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
-
                 eventTimming = displayAlldayDtFormat.format(startDateTime) + ", All day event";
+
+
+                if (compareDate(startDateTime, new Date()) == 0) {
+                    LatLng event_marker = new LatLng(Double.parseDouble(event_lat), Double.parseDouble(event_long));
+
+                    if (event_type.equals("0")) {
+                        googleMap.addMarker(new MarkerOptions().position(event_marker).title(img_comment + " - " + eventTimming).icon(BitmapDescriptorFactory.fromResource(R.drawable.flag_blue_32)));
+                    }
+                    if (event_type.equals("1")) {
+                        googleMap.addMarker(new MarkerOptions().position(event_marker).title(img_comment + " - " + eventTimming).icon(BitmapDescriptorFactory.fromResource(R.drawable.flag_32_trai)));
+                    }
+                }
+
             } else {
                 DateFormat displayStartDtFormat = new SimpleDateFormat("MMM dd, HH:MM - ");
                 DateFormat displayEndTimeFormat = new SimpleDateFormat("HH:mm");
@@ -427,18 +437,38 @@ public class MapsFragment extends Fragment {
                     e.printStackTrace();
                 }
                 eventTimming = displayStartDtFormat.format(startDateTime) + displayEndTimeFormat.format(endDateTime);
+
+
+                if (startDateTime.compareTo(new Date()) < 0 && endDateTime.compareTo(new Date()) > 0) {
+                    System.out.println("LIVE EVENT 1");
+                    LatLng event_marker = new LatLng(Double.parseDouble(event_lat), Double.parseDouble(event_long));
+
+                    if (event_type.equals("0")) {
+                        googleMap.addMarker(new MarkerOptions().position(event_marker).title(img_comment + " - " + eventTimming).icon(BitmapDescriptorFactory.fromResource(R.drawable.flag_blue_32)));
+                    }
+                    if (event_type.equals("1")) {
+                        googleMap.addMarker(new MarkerOptions().position(event_marker).title(img_comment + " - " + eventTimming).icon(BitmapDescriptorFactory.fromResource(R.drawable.flag_32_trai)));
+                    }
+                }
+
             }
 
-            LatLng event_marker = new LatLng(Double.parseDouble(event_lat), Double.parseDouble(event_long));
-
-            if (event_type.equals("0")) {
-                googleMap.addMarker(new MarkerOptions().position(event_marker).title(img_comment + " - " + eventTimming).icon(BitmapDescriptorFactory.fromResource(R.drawable.flag_blue_32)));
-            }
-            if (event_type.equals("1")) {
-                googleMap.addMarker(new MarkerOptions().position(event_marker).title(img_comment + " - " + eventTimming).icon(BitmapDescriptorFactory.fromResource(R.drawable.flag_32_trai)));
-            }
+//            LatLng event_marker = new LatLng(Double.parseDouble(event_lat), Double.parseDouble(event_long));
+//
+//            if (event_type.equals("0")) {
+//                googleMap.addMarker(new MarkerOptions().position(event_marker).title(img_comment + " - " + eventTimming).icon(BitmapDescriptorFactory.fromResource(R.drawable.flag_blue_32)));
+//            }
+//            if (event_type.equals("1")) {
+//                googleMap.addMarker(new MarkerOptions().position(event_marker).title(img_comment + " - " + eventTimming).icon(BitmapDescriptorFactory.fromResource(R.drawable.flag_32_trai)));
+//            }
         }
 
+    }
+
+    private int compareDate(Date startDateTime, Date date) {
+
+        DateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
+        return dateFormat.format(startDateTime).compareTo(dateFormat.format(date));
     }
 
 

@@ -2,6 +2,7 @@ package com.umbcapp.gaurk.snapeve;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -11,6 +12,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.view.View;
@@ -26,10 +28,10 @@ import com.microsoft.azure.storage.blob.CloudBlobContainer;
 import com.microsoft.azure.storage.blob.CloudBlockBlob;
 import com.microsoft.windowsazure.mobileservices.MobileServiceClient;
 import com.microsoft.windowsazure.mobileservices.table.MobileServiceTable;
-import com.shashank.sony.fancydialoglib.Animation;
-import com.shashank.sony.fancydialoglib.FancyAlertDialog;
-import com.shashank.sony.fancydialoglib.FancyAlertDialogListener;
-import com.shashank.sony.fancydialoglib.Icon;
+//import com.shashank.sony.fancydialoglib.Animation;
+//import com.shashank.sony.fancydialoglib.FancyAlertDialog;
+//import com.shashank.sony.fancydialoglib.FancyAlertDialogListener;
+//import com.shashank.sony.fancydialoglib.Icon;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -249,24 +251,35 @@ public class SnapeveFeedback extends AppCompatActivity {
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
 
-            progressDialog.dismiss();
-            new FancyAlertDialog.Builder(SnapeveFeedback.this)
-                    .setTitle("Thank You for Feedback")
-                    .setBackgroundColor(Color.parseColor("#303F9F"))  //Don't pass R.color.colorvalue
-                    .setMessage("Thnak You for Valueble feedback")
-                    .setNegativeBtnText("Back")
-                    .setNegativeBtnBackground(Color.parseColor("#FFA9A7A8"))  //Don't pass R.color.colorvalue
-                    .setAnimation(Animation.POP)
-                    .isCancellable(false)
-                    .setIcon(R.drawable.ic_star_border_black_24dp, Icon.Visible)
-                    .OnNegativeClicked(new FancyAlertDialogListener() {
-                        @Override
-                        public void OnClick() {
+//            progressDialog.dismiss();
+//            new FancyAlertDialog.Builder(SnapeveFeedback.this)
+//                    .setTitle("Thank You for Feedback")
+//                    .setBackgroundColor(Color.parseColor("#303F9F"))  //Don't pass R.color.colorvalue
+//                    .setMessage("Thnak You for Valueble feedback")
+//                    .setNegativeBtnText("Back")
+//                    .setNegativeBtnBackground(Color.parseColor("#FFA9A7A8"))  //Don't pass R.color.colorvalue
+//                    .setAnimation(Animation.POP)
+//                    .isCancellable(false)
+//                    .setIcon(R.drawable.ic_star_border_black_24dp, Icon.Visible)
+//                    .OnNegativeClicked(new FancyAlertDialogListener() {
+//                        @Override
+//                        public void OnClick() {
+//                            onBackPressed();
+//                        }
+//                    })
+//                    .build();
+
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(SnapeveFeedback.this);
+            builder.setMessage("Thank you for your valuable feeback")
+                    .setCancelable(false)
+                    .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
                             onBackPressed();
                         }
-                    })
-                    .build();
-
+                    });
+            AlertDialog alert = builder.create();
+            alert.show();
 
         }
     }
