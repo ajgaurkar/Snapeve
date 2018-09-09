@@ -120,6 +120,8 @@ public class EventDetails extends AppCompatActivity implements Listview_communic
     private ImageView event_details_location_imageview;
     private TextView event_details_location_textview;
     private ImageView event_details_event_statr_end_dt_time_imageview;
+    private ImageView list_item_status_spinner_imageview_1;
+    private View list_item_status_spinner_imageview_2;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -199,6 +201,8 @@ public class EventDetails extends AppCompatActivity implements Listview_communic
         event_detail_attendies_text_view = (TextView) findViewById(R.id.event_detail_attendies_text_view);
         event_detail_event_image_image_view = (ImageView) findViewById(R.id.event_detail_event_image_image_view);
         event_details_location_imageview = (ImageView) findViewById(R.id.event_details_location_imageview);
+        list_item_status_spinner_imageview_1 = (ImageView) findViewById(R.id.list_item_status_spinner_imageview_1);
+        list_item_status_spinner_imageview_2 = (ImageView) findViewById(R.id.list_item_status_spinner_imageview_2);
 
         list_item_verify_iv = (ImageView) findViewById(R.id.list_item_verify_iv);
         list_item_verify_tv = (TextView) findViewById(R.id.list_item_verify_tv);
@@ -315,6 +319,19 @@ public class EventDetails extends AppCompatActivity implements Listview_communic
                 returnIntent.putExtra("Merge_action", "2");
                 setResult(RESULT_OK, returnIntent);
                 finish();
+            }
+        });
+
+        list_item_status_spinner_imageview_1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                list_item_status_spinner.performClick();
+            }
+        });
+        list_item_status_spinner_imageview_2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                list_item_status_spinner.performClick();
             }
         });
 

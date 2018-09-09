@@ -330,21 +330,29 @@ public class Add_event extends AppCompatActivity implements LocationListener {
             //        similar_posts_list_cardview.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                //text data upload START
-                //Lines commented temporarily for image uploading process
-//                add_event_card_2.setVisibility(View.VISIBLE);
-//                add_event_card_3.setVisibility(View.VISIBLE);
-//                add_event_card_4.setVisibility(View.VISIBLE);
-//                add_event_card_5_rel_layout.setVisibility(View.VISIBLE);
-//                similar_posts_list_cardview.setVisibility(View.GONE);
-//                post_event();
-                //text data upload END
-
                 //----------------------------------------------------------------------------//
+                if (fetchUiParams()) {
 
-                //temporary for image upload
-                uploadEventImage();
+                    //temporary for image upload
+
+                    final AlertDialog.Builder builder = new AlertDialog.Builder(Add_event.this);
+                    builder.setTitle("Cofirm posting")
+                            .setCancelable(false)
+                            .setPositiveButton("Yes, proceed", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+
+                                    uploadEventImage();
+
+                                }
+                            }).setNegativeButton("No, Review", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+
+                        }
+                    });
+                    AlertDialog alert = builder.create();
+                    alert.show();
+                    //start----event post
+                }
 
             }
         });
@@ -1068,7 +1076,7 @@ public class Add_event extends AppCompatActivity implements LocationListener {
         similar_posts_list_cardview.setVisibility(View.GONE);
         //temp lines end
 
-        jsonObjectPostEventParameters = new JsonObject();
+//        jsonObjectPostEventParameters = new JsonObject();
 
         final ProgressDialog mProgressDialog = new ProgressDialog(this);
         mProgressDialog.setIndeterminate(true);
@@ -1079,6 +1087,13 @@ public class Add_event extends AppCompatActivity implements LocationListener {
 
         if (fetchUiParams()) {
 
+//            final AlertDialog.Builder builder = new AlertDialog.Builder(Add_event.this);
+//            builder.setTitle("Cofirm posting")
+//                    .setCancelable(false)
+//                    .setPositiveButton("Yes, proceed", new DialogInterface.OnClickListener() {
+//                        public void onClick(DialogInterface dialog, int id) {
+
+//start----event post
             mProgressDialog.show();
 
             final SettableFuture<JsonElement> resultFuture = SettableFuture.create();
@@ -1131,7 +1146,19 @@ public class Add_event extends AppCompatActivity implements LocationListener {
 
                 }
             });
+
         }
+//                    }).setNegativeButton("No, Review", new DialogInterface.OnClickListener() {
+//                public void onClick(DialogInterface dialog, int id) {
+//
+//                }
+//            });
+//        AlertDialog alert = builder.create();
+//        alert.show();
+        //start----event post
+
+//    }
+
     }
 
     private void fetch_similar_events(int search_code) {
@@ -1278,6 +1305,8 @@ public class Add_event extends AppCompatActivity implements LocationListener {
         if (eventStartDateTime.getTimeInMillis() > eventEndDateTime.getTimeInMillis()) {
             return false;
         }
+
+        jsonObjectPostEventParameters = new JsonObject();
 
         jsonObjectPostEventParameters.addProperty("user_id", new SessionManager(getApplicationContext()).getSpecificUserDetail(SessionManager.KEY_USER_ID));
         //might be xxx__xxx sometimes

@@ -101,6 +101,8 @@ public class MainActivity extends AppCompatActivity implements Listview_communic
     private View showcase_view_1;
     private View showcase_view_2;
     private int onResumeCounter = 0;
+    private int topListviewPosition = 0;
+    private int listCurrentPosition = 0;
 //    private Button refreshBtn;
 
     @Override
@@ -164,6 +166,7 @@ public class MainActivity extends AppCompatActivity implements Listview_communic
             public void onRefresh() {
                 System.out.println("IN PULL TO REFRESH");
                 System.out.println("executeGetFeedsApi 2");
+                storeListViewPoSition();
                 executeGetFeedsApi();
             }
         });
@@ -341,6 +344,9 @@ public class MainActivity extends AppCompatActivity implements Listview_communic
     };
 
     private void executeGetFeedsApi() {
+
+        storeListViewPoSition();
+
         final ProgressDialog progressDialog = new ProgressDialog(MainActivity.this);
         progressDialog.setMessage("Loading feeds, Please wait...");
         progressDialog.setCancelable(false);
@@ -639,6 +645,8 @@ public class MainActivity extends AppCompatActivity implements Listview_communic
         System.out.println(" event_main_list " + event_main_list.size());
         dash_event_listAdapter = new Dash_Event_ListAdapter(this, event_main_list);
         main_event_list_view.setAdapter(dash_event_listAdapter);
+        main_event_list_view.setSelectionFromTop(listCurrentPosition, topListviewPosition);
+
 
         startShowCase();
     }
@@ -1069,6 +1077,15 @@ public class MainActivity extends AppCompatActivity implements Listview_communic
 
         }
         onResumeCounter = 1;
+
+        storeListViewPoSition();
+
         super.onResume();
+    }
+
+    private void storeListViewPoSition() {
+        listCurrentPosition = main_event_list_view.getFirstVisiblePosition();
+        View v = main_event_list_view.getChildAt(0);
+        topListviewPosition = (v == null) ? 0 : (v.getTop() - main_event_list_view.getPaddingTop());
     }
 }

@@ -32,10 +32,10 @@
             android:paddingStart="10dp"
             android:paddingTop="2dp"
             android:text="LIVE"
-            android:visibility="gone"
             android:textColor="#fff"
             android:textSize="12sp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:visibility="gone" />
 
         <View
             android:id="@+id/event_detail_grey_view_panel"
@@ -44,7 +44,7 @@
             android:layout_alignParentBottom="true"
             android:layout_alignTop="@+id/event_detail_profile_pic_image_view"
             android:layout_marginTop="-10dp"
-            android:background="#e6ffffff" />
+            android:background="#ffffff" />
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/event_detail_profile_pic_image_view"
@@ -69,6 +69,7 @@
             android:layout_toEndOf="@+id/event_detail_profile_pic_image_view"
             android:layout_toStartOf="@+id/event_detail_user_post_dt_time_text_view"
             android:text="Jhony Ive"
+            android:textSize="15sp"
             android:textStyle="bold" />
 
         <TextView
@@ -81,7 +82,7 @@
             android:layout_marginEnd="10dp"
             android:layout_marginRight="10dp"
             android:text="07 hrs ago"
-            android:textSize="12sp"
+            android:textSize="13sp"
             android:textStyle="bold" />
 
         <TextView
@@ -93,7 +94,9 @@
             android:layout_marginRight="10dp"
             android:layout_toEndOf="@+id/event_detail_profile_pic_image_view"
             android:maxLines="10"
-            android:text="Donut party at UMBC" />
+            android:padding="2dp"
+            android:text="Donut party at UMBC"
+            android:textSize="15sp" />
 
         <ImageView
             android:id="@+id/event_details_event_statr_end_dt_time_imageview"
@@ -112,13 +115,14 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:layout_marginEnd="2dp"
+            android:layout_margin="2dp"
+            android:layout_marginBottom="3dp"
             android:layout_toEndOf="@+id/event_details_event_statr_end_dt_time_imageview"
             android:layout_toStartOf="@+id/event_details_location_textview"
+            android:padding="2dp"
             android:singleLine="true"
             android:text=""
-            android:textSize="12sp" />
-
+            android:textSize="13sp" />
 
         <TextView
             android:id="@+id/event_details_location_textview"
@@ -132,7 +136,7 @@
             android:paddingStart="2dp"
             android:paddingTop="2dp"
             android:text=""
-            android:textSize="11sp" />
+            android:textSize="12sp" />
 
         <ImageView
             android:id="@+id/event_details_location_imageview"
@@ -142,8 +146,8 @@
             android:layout_alignTop="@+id/event_details_location_textview"
             android:layout_toStartOf="@+id/event_details_location_textview"
             android:padding="2dp"
-            android:visibility="invisible"
-            android:src="@drawable/location_marker_26" />
+            android:src="@drawable/location_marker_26"
+            android:visibility="invisible" />
 
         <!--<android.support.v7.widget.CardView-->
         <!--android:id="@+id/event_detail_attendies_card_view"-->
@@ -187,6 +191,7 @@
             android:layout_marginBottom="20dp"
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
+            android:layout_toStartOf="@+id/event_detail_attendies_text_view"
             android:background="@drawable/transparent_white_line_bg"
             android:foreground="?attr/selectableItemBackground"
             android:hint="  +  Add comment"
@@ -203,9 +208,11 @@
             android:id="@+id/event_detail_attendies_text_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/event_detail_individual_image_comment_textview"
             android:layout_alignParentEnd="true"
-            android:layout_marginTop="16dp"
-            android:background="@drawable/righ_side_btn_grey_bg"
+            android:layout_alignTop="@+id/event_detail_individual_image_comment_textview"
+            android:layout_marginEnd="8dp"
+            android:background="@drawable/transparent_white_line_bg"
             android:foreground="?attr/selectableItemBackground"
             android:gravity="center"
             android:paddingBottom="8dp"
@@ -241,6 +248,7 @@
         android:weightSum="100">
 
         <ImageView
+            android:id="@+id/list_item_status_spinner_imageview_1"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_marginStart="10dp"
@@ -249,6 +257,7 @@
             android:src="@drawable/attending_color_48" />
 
         <ImageView
+            android:id="@+id/list_item_status_spinner_imageview_2"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="5"

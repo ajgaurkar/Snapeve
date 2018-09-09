@@ -3,15 +3,15 @@
 
     <item
         android:id="@+id/rewards_navigation_user"
-        android:icon="@drawable/home_96"
+        android:icon="@drawable/weekly_rewards_user_96"
         android:title="All" />
     <item
         android:id="@+id/rewards_navigation_group"
-        android:icon="@drawable/geo_points_96"
-        android:title="Groups" />
+        android:icon="@drawable/weekly_rewards_groups_96"
+        android:title="All Groups" />
     <item
         android:id="@+id/rewards_navigation_team"
-        android:icon="@drawable/geo_points_96"
-        android:title="My Group" />
+        android:icon="@drawable/weekly_rewards_user_team_96"
+        android:title="My Team" />
 
 </menu>

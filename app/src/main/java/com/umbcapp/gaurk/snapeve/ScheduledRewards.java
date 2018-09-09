@@ -78,6 +78,13 @@ public class ScheduledRewards extends AppCompatActivity {
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.scheduled_rewards_bottom_navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
+        System.out.println("grphhh " + new SessionManager(getApplicationContext()).getSpecificUserDetail(SessionManager.KEY_GRP_ID));
+        if (new SessionManager(getApplicationContext()).getSpecificUserDetail(SessionManager.KEY_GRP_ID) == null
+                || new SessionManager(getApplicationContext()).getSpecificUserDetail(SessionManager.KEY_GRP_ID).equals("xxxxx____xxxxx")) {
+            navigation.getMenu().removeItem(R.id.rewards_navigation_team);
+        }
+
+
         konfettiView.post(new Runnable() {
             @Override
             public void run() {
