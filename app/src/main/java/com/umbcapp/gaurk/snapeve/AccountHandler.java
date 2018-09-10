@@ -11,7 +11,15 @@ import com.surveymonkey.surveymonkeyandroidsdk.SurveyMonkey;
 public class AccountHandler extends AppCompatActivity implements View.OnClickListener {
 
     private SurveyMonkey sdkInstance;
-    public static final String SURVEY_HASH = "ZGTLQ38";
+    //old code
+//    public static final String SURVEY_HASH = "ZGTLQ38";
+
+    //individual users survey code
+    public static final String SURVEY_HASH = "GCGXXMM";
+
+    //group survey code
+//    public static final String SURVEY_HASH = "GQLRGCC";
+
     public static final int SM_REQUEST_CODE = 0;
     public static final String SAMPLE_APP = "Sample App";
     private Button openFeedback;
