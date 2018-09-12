@@ -66,7 +66,12 @@ public class LeaderBoardAdapter extends RecyclerView.Adapter<LeaderBoardAdapter.
     public void onBindViewHolder(MyViewHolder holder, final int position) {
 
         LeaderboardListItem selectedLeaderboardListItem = leaderboardList.get(position);
-        holder.userRankBar.setProgress(selectedLeaderboardListItem.getUserRank());
+
+        //logic to calculate rank progress percentile
+        int calculatedRank = (int) (100 * (new Double(selectedLeaderboardListItem.getUserRank()) / new Double(maxRank)));
+        System.out.println("calculatedRank : " + calculatedRank);
+
+        holder.userRankBar.setProgress(calculatedRank);
         holder.userRankBar.setSecondaryProgress(maxRank);
 
         if (selectedLeaderboardListItem.getUserName().equals(new SessionManager(context).getSpecificUserDetail(SessionManager.KEY_USER_ID))) {

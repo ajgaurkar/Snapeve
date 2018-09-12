@@ -196,13 +196,7 @@
             android:foreground="?attr/selectableItemBackground"
             android:hint="  +  Add comment"
             android:padding="8dp"
-            android:shadowColor="#000"
-            android:shadowDx="1"
-            android:shadowDy="1"
-            android:shadowRadius="2"
-            android:singleLine="true"
-            android:textColor="#fff"
-            android:textColorHint="#fff" />
+            android:singleLine="true" />
 
         <TextView
             android:id="@+id/event_detail_attendies_text_view"
@@ -215,19 +209,14 @@
             android:background="@drawable/transparent_white_line_bg"
             android:foreground="?attr/selectableItemBackground"
             android:gravity="center"
+            android:hint="Attendies"
             android:paddingBottom="8dp"
             android:paddingEnd="12dp"
             android:paddingStart="12dp"
             android:paddingTop="8dp"
-            android:shadowColor="#000"
-            android:shadowDx="1"
-            android:shadowDy="1"
-            android:shadowRadius="2"
+            android:textStyle="bold"
             android:singleLine="true"
-            android:text="Attendies"
-            android:textColor="#fff"
-            android:textSize="12sp"
-            android:textStyle="bold" />
+            android:textSize="12sp" />
 
         <View
             android:layout_width="match_parent"

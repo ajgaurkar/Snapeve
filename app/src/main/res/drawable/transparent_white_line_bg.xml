@@ -5,7 +5,7 @@
     <!--for the shade of view in round-->
     <stroke
         android:width="0.6dp"
-        android:color="#68ffffff" />
+        android:color="#ac929292" />
     <corners
         android:bottomLeftRadius="5dp"
         android:bottomRightRadius="5dp"
@@ -13,8 +13,8 @@
         android:topRightRadius="5dp" />
     <gradient
         android:angle="270"
-        android:endColor="#77c7c7c7"
-        android:startColor="#77c7c7c7"
+        android:endColor="#ffffff"
+        android:startColor="#ffffff"
         android:type="linear" />
     <!--7532789b-->
 </shape>

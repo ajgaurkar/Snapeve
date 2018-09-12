@@ -186,6 +186,7 @@ public class UserProfileFragment extends Fragment {
     private String joinMeToTheGrpId = null;
     private ImageView header_bg;
     private TextView weekly_text_view;
+    private TextView nextlevelpointstextview;
 
 
     public UserProfileFragment() {
@@ -680,6 +681,7 @@ public class UserProfileFragment extends Fragment {
         full_screen_imageview = (ImageView) rootView.findViewById(R.id.full_screen_imageview);
         user_profile_contribution_list_view = (ListView) rootView.findViewById(R.id.user_profile_contribution_list_view);
         leaderboard_text_view = (TextView) rootView.findViewById(R.id.leaderboard_text_view);
+        nextlevelpointstextview = (TextView) rootView.findViewById(R.id.nextlevelpointstextview);
         profile_pic_image_view = (CircleImageView) rootView.findViewById(R.id.profile_pic_image_view);
         user_profile_settings_imageview = (ImageView) rootView.findViewById(R.id.user_profile_settings_imageview);
         header_bg = (ImageView) rootView.findViewById(R.id.header_bg);
@@ -891,6 +893,9 @@ public class UserProfileFragment extends Fragment {
         System.out.println("calculatedReward " + calculatedReward.getMax_range());
         System.out.println("calculatedReward " + calculatedReward.getRelativerewardsValue());
         System.out.println("calculatedReward " + calculatedReward.getLevel());
+
+        int pointsToNextLevel = (int) (calculatedReward.getMax_range() - calculatedReward.getCurrent_points());
+        nextlevelpointstextview.setText(pointsToNextLevel + "  Points to next level");
 
         if (reward_points == 0) {
             profile_progress_bar.setSecondaryProgress(0f);

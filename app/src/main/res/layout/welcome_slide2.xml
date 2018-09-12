@@ -4,39 +4,37 @@
     android:layout_height="match_parent"
     android:background="@color/bg_screen2">
 
-    <LinearLayout
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        android:src="@drawable/welcome_bg_1" />
+
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/wel_2_bottom_tv"
+        android:gravity="center"
+        android:text="@string/slide_2_title"
+        android:textAlignment="center"
+        android:textColor="@android:color/white"
+        android:textSize="30dp"
+        android:textStyle="bold" />
+
+
+    <TextView
+        android:id="@+id/wel_2_bottom_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:gravity="center_horizontal"
-        android:orientation="vertical">
-
-        <ImageView
-            android:layout_width="120dp"
-            android:layout_height="120dp"
-            android:src="@drawable/link_dusk_100" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAlignment="center"
-            android:text="@string/slide_2_title"
-            android:textColor="@android:color/white"
-            android:textSize="30dp"
-            android:textStyle="bold" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:paddingLeft="40dp"
-            android:paddingRight="40dp"
-            android:text="@string/slide_2_desc"
-            android:textAlignment="center"
-            android:textColor="@android:color/white"
-            android:textSize="16dp" />
-
-    </LinearLayout>
-
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="100dp"
+        android:layout_marginTop="20dp"
+        android:paddingLeft="40dp"
+        android:paddingRight="40dp"
+        android:text="@string/slide_2_desc"
+        android:textAlignment="center"
+        android:textColor="@android:color/white"
+        android:textSize="16dp" />
 
 </RelativeLayout>

@@ -251,10 +251,11 @@ public class ScheduledRewards extends AppCompatActivity {
     private void getTopScorers() {
         System.out.println("IN fetch_post_comments_api");
         progressDialog = new ProgressDialog(ScheduledRewards.this);
-        progressDialog.setMessage("Fetching Details");
+        progressDialog.setMessage("Getting winners");
         progressDialog.setCanceledOnTouchOutside(false);
         progressDialog.setCancelable(false);
         progressDialog.create();
+        progressDialog.show();
 
         JsonObject jsonObjectPostEventParameters = new JsonObject();
 

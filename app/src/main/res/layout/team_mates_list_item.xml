@@ -48,9 +48,8 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
                 android:layout_alignTop="@+id/teammates_list_item_dp_imageview"
-                android:gravity="end"
+                android:gravity="center"
                 android:padding="3dp"
-                android:paddingEnd="10dp"
                 android:text="58"
                 android:textSize="17sp"
                 android:textStyle="bold" />
@@ -58,11 +57,23 @@
             <TextView
                 android:id="@+id/teammates_list_item_username"
                 android:layout_width="match_parent"
-                android:layout_height="30dp"
+                android:layout_height="20dp"
                 android:layout_alignStart="@+id/teammates_list_item_name_textview"
                 android:layout_below="@+id/teammates_list_item_dp_imageview"
                 android:layout_marginTop="-5dp"
                 android:layout_toEndOf="@+id/teammates_list_item_dp_imageview" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="@+id/teammates_list_item_rank_textview"
+                android:layout_alignStart="@+id/teammates_list_item_rank_textview"
+                android:layout_below="@+id/teammates_list_item_rank_textview"
+                android:layout_marginTop="-5dp"
+                android:gravity="center"
+                android:padding="2dp"
+                android:text="Points"
+                android:textSize="11sp" />
 
             <TextView
                 android:id="@+id/teammates_list_item_you_textview"

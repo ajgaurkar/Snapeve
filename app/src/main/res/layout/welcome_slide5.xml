@@ -2,40 +2,30 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/bg_screen4">
+    android:background="@color/colorPrimary">
 
-    <LinearLayout
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/welcome_scrn_tv_5"
+        android:scaleType="centerCrop"
+        android:src="@drawable/welcome_bg_5" />
+
+    <TextView
+        android:id="@+id/welcome_scrn_tv_5"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:gravity="center_horizontal"
-        android:orientation="vertical">
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="60dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="16dp"
+        android:paddingTop="10dp"
+        android:text="@string/slide_5_title"
+        android:textAlignment="center"
+        android:textColor="@android:color/white"
+        android:textSize="30dp"
+        android:textStyle="bold" />
 
-        <ImageView
-            android:layout_width="120dp"
-            android:layout_height="120dp"
-            android:src="@drawable/safe_dusk_100" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAlignment="center"
-            android:text="@string/slide_5_title"
-            android:textColor="@android:color/white"
-            android:textSize="30dp"
-            android:textStyle="bold" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:paddingLeft="40dp"
-            android:paddingRight="40dp"
-            android:text="@string/slide_4_desc"
-            android:textAlignment="center"
-            android:textColor="@android:color/white"
-            android:textSize="16dp" />
-
-    </LinearLayout>
 
 </RelativeLayout>
