@@ -87,6 +87,8 @@ public class MapsFragment extends Fragment {
     Date filterEndDate = new Date();
     private TextView date_range_text_view_1;
     private JsonArray feedsJsonArray;
+    private boolean liveEventFlag = false;
+    private TextView liveFlagTextView;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -105,7 +107,7 @@ public class MapsFragment extends Fragment {
 
         mMapView = (MapView) rootView.findViewById(R.id.mapView);
         maps_loading_events_cardview = (CardView) rootView.findViewById(R.id.maps_loading_events_cardview);
-//        FloatingActionButton maps_frag_filter_fab = (FloatingActionButton) rootView.findViewById(R.id.maps_frag_filter_fab);
+        liveFlagTextView = (TextView) rootView.findViewById(R.id.liveFlagTextView);
 
         mMapView.onCreate(savedInstanceState);
 
@@ -418,9 +420,12 @@ public class MapsFragment extends Fragment {
 
                     if (event_type.equals("0")) {
                         googleMap.addMarker(new MarkerOptions().position(event_marker).title(img_comment + " - " + eventTimming).icon(BitmapDescriptorFactory.fromResource(R.drawable.flag_blue_32)));
+
+                        liveEventFlag = true;
                     }
                     if (event_type.equals("1")) {
                         googleMap.addMarker(new MarkerOptions().position(event_marker).title(img_comment + " - " + eventTimming).icon(BitmapDescriptorFactory.fromResource(R.drawable.flag_32_trai)));
+                        liveEventFlag = true;
                     }
                 }
 
@@ -445,9 +450,11 @@ public class MapsFragment extends Fragment {
 
                     if (event_type.equals("0")) {
                         googleMap.addMarker(new MarkerOptions().position(event_marker).title(img_comment + " - " + eventTimming).icon(BitmapDescriptorFactory.fromResource(R.drawable.flag_blue_32)));
+                        liveEventFlag = true;
                     }
                     if (event_type.equals("1")) {
                         googleMap.addMarker(new MarkerOptions().position(event_marker).title(img_comment + " - " + eventTimming).icon(BitmapDescriptorFactory.fromResource(R.drawable.flag_32_trai)));
+                        liveEventFlag = true;
                     }
                 }
 
@@ -461,6 +468,13 @@ public class MapsFragment extends Fragment {
 //            if (event_type.equals("1")) {
 //                googleMap.addMarker(new MarkerOptions().position(event_marker).title(img_comment + " - " + eventTimming).icon(BitmapDescriptorFactory.fromResource(R.drawable.flag_32_trai)));
 //            }
+        }
+
+
+        if (liveEventFlag) {
+            liveFlagTextView.setVisibility(View.INVISIBLE);
+        }else {
+            liveFlagTextView.setVisibility(View.VISIBLE);
         }
 
     }

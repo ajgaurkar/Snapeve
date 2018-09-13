@@ -895,6 +895,7 @@ public class UserProfileFragment extends Fragment {
         System.out.println("calculatedReward " + calculatedReward.getLevel());
 
         int pointsToNextLevel = (int) (calculatedReward.getMax_range() - calculatedReward.getCurrent_points());
+        pointsToNextLevel++;
         nextlevelpointstextview.setText(pointsToNextLevel + "  Points to next level");
 
         if (reward_points == 0) {

@@ -226,13 +226,12 @@ public class Leaderboard extends AppCompatActivity implements Listview_communica
                 RewardCalcuator calculatedReward = null;
                 calculatedReward = rewardCalcuator.calculate((float) user_points);
                 int pointsToNextLevel = (int) (calculatedReward.getMax_range() - calculatedReward.getCurrent_points());
-//                leaderboard_list_item_name_textview.setText("Level  " + calculatedReward.getLevel() + "  •  " + pointsToNextLevel + "  Points to next level");
+                pointsToNextLevel++;
 
                 int rankToDisplay = j + 1;
 
-                leaderboard_list_item_name_textview.setText("Level  " + calculatedReward.getLevel() + "  •  " + rankToDisplay + "  Rank");
-                leaderboard_list_item_nextlevel_textview.setText("•  " + pointsToNextLevel + "  Points to next level");
-
+                leaderboard_list_item_name_textview.setText("Level  " + calculatedReward.getLevel() + "  •  Rank  " + rankToDisplay);
+                leaderboard_list_item_nextlevel_textview.setText("• " + pointsToNextLevel + "  Points to next level");
 
                 if (dp_url == null) {
                     System.out.println("LEADERBOARD DP URL IF");

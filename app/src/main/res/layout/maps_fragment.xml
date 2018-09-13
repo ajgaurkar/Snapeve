@@ -10,6 +10,7 @@
         android:layout_height="match_parent" />
 
     <LinearLayout
+        android:id="@+id/maps_legend_lin_layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
@@ -58,6 +59,20 @@
             android:text="Live Incidents" />
 
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/liveFlagTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignEnd="@+id/maps_legend_lin_layout"
+        android:layout_alignStart="@+id/maps_legend_lin_layout"
+        android:layout_below="@+id/maps_legend_lin_layout"
+        android:background="@drawable/maps_legend_bg"
+        android:gravity="center"
+        android:padding="5dp"
+        android:layout_marginTop="-2dp"
+        android:text="No Live Activity Found"
+        android:textStyle="bold" />
 
     <android.support.v7.widget.CardView
         android:id="@+id/maps_loading_events_cardview"
