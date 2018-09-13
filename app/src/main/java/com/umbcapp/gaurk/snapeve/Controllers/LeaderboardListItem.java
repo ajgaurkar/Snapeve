@@ -4,16 +4,34 @@ public class LeaderboardListItem {
 
     String userId;
     String userName;
-    int userRank;
+    int userPoints;
+    int userSequenceNo;
     String userGroup;
     String userPicUrl;
 
-    public LeaderboardListItem(String userId, String userName, int userRank, String userGroup, String userPicUrl) {
+    public LeaderboardListItem(int userSequenceNo, String userId, String userName, int userPoints, String userGroup, String userPicUrl) {
         this.userId = userId;
         this.userName = userName;
-        this.userRank = userRank;
+        this.userPoints = userPoints;
+        this.userSequenceNo = userSequenceNo;
         this.userGroup = userGroup;
         this.userPicUrl = userPicUrl;
+    }
+
+    public int getUserPoints() {
+        return userPoints;
+    }
+
+    public void setUserPoints(int userPoints) {
+        this.userPoints = userPoints;
+    }
+
+    public int getUserSequenceNo() {
+        return userSequenceNo;
+    }
+
+    public void setUserSequenceNo(int userSequenceNo) {
+        this.userSequenceNo = userSequenceNo;
     }
 
     public String getUserId() {
@@ -33,11 +51,11 @@ public class LeaderboardListItem {
     }
 
     public int getUserRank() {
-        return userRank;
+        return userPoints;
     }
 
     public void setUserRank(int userRank) {
-        this.userRank = userRank;
+        this.userPoints = userRank;
     }
 
     public String getUserGroup() {

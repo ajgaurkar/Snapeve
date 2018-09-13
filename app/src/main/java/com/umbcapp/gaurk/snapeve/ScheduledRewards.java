@@ -385,7 +385,7 @@ public class ScheduledRewards extends AppCompatActivity {
 //                scheduled_rewards_user_name_textview.setText(userName);
 //
 //            } else {
-            teamMembersList.add(new LeaderboardListItem(userId, userName, userRank, userGroup, dp_url));
+            teamMembersList.add(new LeaderboardListItem(0, userId, userName, userRank, userGroup, dp_url));
 //
 //            }
 
@@ -426,7 +426,7 @@ public class ScheduledRewards extends AppCompatActivity {
 //                scheduled_rewards_user_name_textview.setText(userName);
 //
 //            } else {
-            grpScorerList.add(new LeaderboardListItem(grp_id, grp_name, grp_points, userGroup, grp_dp_url));
+            grpScorerList.add(new LeaderboardListItem(0, grp_id, grp_name, grp_points, userGroup, grp_dp_url));
 //
 //            }
 
@@ -465,7 +465,7 @@ public class ScheduledRewards extends AppCompatActivity {
 //                scheduled_rewards_user_name_textview.setText(userName);
 //
 //            } else {
-            individualScorerList.add(new LeaderboardListItem(userId, userName, userRank, userGroup, dp_url));
+            individualScorerList.add(new LeaderboardListItem(0, userId, userName, userRank, userGroup, dp_url));
 //
 //            }
 
@@ -509,7 +509,7 @@ public class ScheduledRewards extends AppCompatActivity {
                 scheduled_rewards_user_name_textview.setText(userName);
 
             } else {
-                individualScorerList.add(new LeaderboardListItem(userId, userName, userRank, userGroup, dp_url));
+                individualScorerList.add(new LeaderboardListItem(0, userId, userName, userRank, userGroup, dp_url));
 
             }
 

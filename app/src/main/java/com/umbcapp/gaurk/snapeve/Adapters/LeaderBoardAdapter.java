@@ -38,6 +38,7 @@ public class LeaderBoardAdapter extends RecyclerView.Adapter<LeaderBoardAdapter.
     public class MyViewHolder extends RecyclerView.ViewHolder {
         public TextView userName;
         public TextView userRank;
+        public TextView sequence;
         public TextView youTextView;
         public RoundCornerProgressBar userRankBar;
         public CircleImageView userPic;
@@ -74,18 +75,18 @@ public class LeaderBoardAdapter extends RecyclerView.Adapter<LeaderBoardAdapter.
         holder.userRankBar.setProgress(calculatedRank);
         holder.userRankBar.setSecondaryProgress(maxRank);
 
-        if (selectedLeaderboardListItem.getUserName().equals(new SessionManager(context).getSpecificUserDetail(SessionManager.KEY_USER_ID))) {
+        if (selectedLeaderboardListItem.getUserId().equals(new SessionManager(context).getSpecificUserDetail(SessionManager.KEY_USER_ID))) {
             holder.youTextView.setVisibility(View.VISIBLE);
         } else {
             holder.youTextView.setVisibility(View.INVISIBLE);
         }
 
         if (user_type_selection_status == 0) {
-            holder.userName.setText(selectedLeaderboardListItem.getUserName());
+            holder.userName.setText(selectedLeaderboardListItem.getUserSequenceNo() + ". " + selectedLeaderboardListItem.getUserName());
             System.out.println("000");
         }
         if (user_type_selection_status == 1) {
-            holder.userName.setText(selectedLeaderboardListItem.getUserGroup());
+            holder.userName.setText(selectedLeaderboardListItem.getUserSequenceNo() + ". " + selectedLeaderboardListItem.getUserGroup());
 
             System.out.println("111");
         }

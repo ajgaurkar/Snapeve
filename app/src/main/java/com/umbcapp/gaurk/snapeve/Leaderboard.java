@@ -11,6 +11,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
 
+import com.akexorcist.roundcornerprogressbar.RoundCornerProgressBar;
 import com.google.common.util.concurrent.FutureCallback;
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
@@ -18,6 +19,7 @@ import com.google.common.util.concurrent.SettableFuture;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.squareup.picasso.Picasso;
 import com.umbcapp.gaurk.snapeve.Adapters.LeaderBoardAdapter;
 import com.umbcapp.gaurk.snapeve.Controllers.Event_dash_list_obj;
 import com.umbcapp.gaurk.snapeve.Controllers.LeaderboardListItem;
@@ -29,6 +31,8 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class Leaderboard extends AppCompatActivity implements Listview_communicator {
 
@@ -51,6 +55,12 @@ public class Leaderboard extends AppCompatActivity implements Listview_communica
     private JsonElement bkupUserResponse;
     private JsonElement bkupGrpResponse;
     private long sessionCounter = 0;
+    private TextView leaderboard_list_item_you_textview;
+    private RoundCornerProgressBar leaderboard_you_list_item_rank_progress_bar;
+    private TextView leaderboard_list_item_name_textview;
+    private TextView leaderboard_list_item_nextlevel_textview;
+    private CircleImageView leaderboard_you_list_item_dp_imageview;
+    private TextView leaderboard_you_list_item_rank_textview;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -70,6 +80,12 @@ public class Leaderboard extends AppCompatActivity implements Listview_communica
         top_10_all_sort_textview = (TextView) findViewById(R.id.top_10_all_sort_textview);
         leader_board_switch_grp_textview = (TextView) findViewById(R.id.leader_board_switch_grp_textview);
         leader_board_switch_you_textview = (TextView) findViewById(R.id.leader_board_switch_you_textview);
+        leaderboard_list_item_name_textview = (TextView) findViewById(R.id.leaderboard_list_item_name_textview);
+        leaderboard_list_item_nextlevel_textview = (TextView) findViewById(R.id.leaderboard_list_item_nextlevel_textview);
+        leaderboard_you_list_item_dp_imageview = (CircleImageView) findViewById(R.id.leaderboard_you_list_item_dp_imageview);
+        leaderboard_you_list_item_rank_textview = (TextView) findViewById(R.id.leaderboard_you_list_item_rank_textview);
+        leaderboard_you_list_item_rank_progress_bar = (RoundCornerProgressBar) findViewById(R.id.leaderboard_you_list_item_rank_progress_bar);
+        leaderboard_list_item_you_textview = (TextView) findViewById(R.id.leaderboard_list_item_you_textview);
 
         System.out.println("System.currentTimeMillis() onCreate : " + System.currentTimeMillis());
 
@@ -197,10 +213,34 @@ public class Leaderboard extends AppCompatActivity implements Listview_communica
             System.out.println(" user_points " + user_points);
             System.out.println(" dp_url " + dp_url);
 
-            leaderBoardIndList.add(new LeaderboardListItem(user_id, user_name, user_points, "Grp UMBC", dp_url));
+            leaderBoardIndList.add(new LeaderboardListItem(j + 1, user_id, user_name, user_points, "place holder", dp_url));
 
             if (j < 10) {
-                leaderBoardIndTop10List.add(new LeaderboardListItem(user_id, user_name, user_points, "Grp UMBC", dp_url));
+                leaderBoardIndTop10List.add(new LeaderboardListItem(j + 1, user_id, user_name, user_points, "place holder", dp_url));
+            }
+
+            if (user_id.equals(new SessionManager(getApplicationContext()).getSpecificUserDetail(SessionManager.KEY_USER_ID))) {
+
+                leaderboard_you_list_item_rank_textview.setText(String.valueOf(user_points));
+                RewardCalcuator rewardCalcuator = new RewardCalcuator();
+                RewardCalcuator calculatedReward = null;
+                calculatedReward = rewardCalcuator.calculate((float) user_points);
+                int pointsToNextLevel = (int) (calculatedReward.getMax_range() - calculatedReward.getCurrent_points());
+//                leaderboard_list_item_name_textview.setText("Level  " + calculatedReward.getLevel() + "  •  " + pointsToNextLevel + "  Points to next level");
+
+                int rankToDisplay = j + 1;
+
+                leaderboard_list_item_name_textview.setText("Level  " + calculatedReward.getLevel() + "  •  " + rankToDisplay + "  Rank");
+                leaderboard_list_item_nextlevel_textview.setText("•  " + pointsToNextLevel + "  Points to next level");
+
+
+                if (dp_url == null) {
+                    System.out.println("LEADERBOARD DP URL IF");
+                    leaderboard_you_list_item_dp_imageview.setImageResource(R.drawable.avatar_100_3);
+                } else {
+                    System.out.println("LEADERBOARD DP URL ELSE");
+                    Picasso.with(getApplicationContext()).load(dp_url).fit().centerCrop().into(leaderboard_you_list_item_dp_imageview);
+                }
             }
 
         }
@@ -244,9 +284,9 @@ public class Leaderboard extends AppCompatActivity implements Listview_communica
             System.out.println(" grp_points " + grp_points);
             System.out.println(" grp_dp_url " + grp_dp_url);
 
-            leaderBoardGrpList.add(new LeaderboardListItem(grp_id, "place holder", grp_points, grp_name, grp_dp_url));
+            leaderBoardGrpList.add(new LeaderboardListItem(j + 1, grp_id, "place holder", grp_points, grp_name, grp_dp_url));
             if (j < 10) {
-                leaderBoardGrpTop10List.add(new LeaderboardListItem(grp_id, "place holder", grp_points, grp_name, grp_dp_url));
+                leaderBoardGrpTop10List.add(new LeaderboardListItem(j + 1, grp_id, "place holder", grp_points, grp_name, grp_dp_url));
             }
         }
         System.out.println(" leaderBoardIndList " + leaderBoardIndList.size());
@@ -284,6 +324,7 @@ public class Leaderboard extends AppCompatActivity implements Listview_communica
         System.out.println("position :" + position);
 
     }
+
     @Override
     public void onPause() {
         super.onPause();
