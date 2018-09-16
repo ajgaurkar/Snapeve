@@ -4,6 +4,7 @@ import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.app.ProgressDialog;
 import android.arch.lifecycle.LifecycleOwner;
+import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.Observer;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -48,6 +49,7 @@ import com.microsoft.windowsazure.mobileservices.MobileServiceClient;
 import com.umbcapp.gaurk.snapeve.Adapters.Dash_Event_ListAdapter;
 import com.umbcapp.gaurk.snapeve.Controllers.Event_dash_list_obj;
 import com.umbcapp.gaurk.snapeve.Controllers.SnapEveSession;
+import com.umbcapp.gaurk.snapeve.Controllers.SnapeveNotification;
 import com.umbcapp.gaurk.snapeve.DatabaseRepository.SnapeveDatabaseRepository;
 import com.umbcapp.gaurk.snapeve.Fragments.MapsFragment;
 import com.umbcapp.gaurk.snapeve.Fragments.NotificationFragment;
@@ -110,15 +112,23 @@ public class MainActivity extends AppCompatActivity implements Listview_communic
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+
         sessionCounter = System.currentTimeMillis();
         DateFormat formatter = new SimpleDateFormat("HH:mm:ss", Locale.US);
         formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
         String text = formatter.format(new Date(sessionCounter));
-//        System.out.println("Start onCreate@ sessionCounter : " + sessionCounter);
 
         new SessionManager(getApplicationContext()).checkLogin();
 
-        snapeveDatabaseRepository = new SnapeveDatabaseRepository(getApplicationContext());
+        if (new SessionManager(getApplicationContext()).getSpecificUserBooleanDetail(SessionManager.KEY_RESET_PASSWORD_STATUS)) {
+            System.out.println("Session mangaer resetpassword true no need to change");
+        } else {
+            System.out.println("Session mangaer resetpassword false");
+            startActivity(new Intent(MainActivity.this, ResetPassword.class));
+        }
+
+        snapeveDatabaseRepository = new SnapeveDatabaseRepository(MainActivity.this);
+
 
         System.out.println("2 LOGIN USER ID " + new SessionManager(getApplicationContext()).getSpecificUserDetail(SessionManager.KEY_USER_ID));
         System.out.println("2 LOGIN GRP ID " + new SessionManager(getApplicationContext()).getSpecificUserDetail(SessionManager.KEY_GRP_ID));
@@ -174,6 +184,22 @@ public class MainActivity extends AppCompatActivity implements Listview_communic
         System.out.println("GRPP ID " + new SessionManager(getApplicationContext()).getSpecificUserDetail(SessionManager.KEY_GRP_ID));
 
 //        postSessionCounterdataApi();
+        System.out.println("snapeveDatabaseRepository------- " + snapeveDatabaseRepository);
+        snapeveDatabaseRepository.getSessiondata().observe(this, new Observer<List<SnapEveSession>>() {
+            @Override
+            public void onChanged(@Nullable List<SnapEveSession> snapEveSessions) {
+                System.out.println("snapEveSessions------------  " + snapEveSessions.size());
+            }
+        });
+        snapeveDatabaseRepository.getTasks().observe(MainActivity.this, new Observer<List<SnapeveNotification>>() {
+            @Override
+            public void onChanged(@Nullable List<SnapeveNotification> snapeveNotifications) {
+                System.out.println("snapEveSessions------------  " + snapeveNotifications.size());
+            }
+        });
+        System.out.println("snapeveDatabaseRepository.getTasks(); --------  " + snapeveDatabaseRepository.getTasks());
+        System.out.println("snapeveDatabaseRepository.getSessiondata(); --------  " + snapeveDatabaseRepository.getSessiondata());
+
 
     }
 

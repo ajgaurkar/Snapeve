@@ -52,7 +52,7 @@ public class Login_snapeve_activity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        startActivity(new Intent(getApplicationContext(),UserAgreementActivity.class));
+        startActivity(new Intent(getApplicationContext(), UserAgreementActivity.class));
 
         setContentView(R.layout.login_snapeve);
 
@@ -96,6 +96,13 @@ public class Login_snapeve_activity extends AppCompatActivity {
 
                 startActivity(new Intent(getApplicationContext(), SignUp.class));
 
+            }
+        });
+
+        forgot_pass_textview.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getApplicationContext(), ForgotPassword.class));
             }
         });
 
@@ -187,7 +194,6 @@ public class Login_snapeve_activity extends AppCompatActivity {
         if (new SessionManager(getApplicationContext()).createLoginSession(user_id, user_name, user_pass, first_name, last_name, email)) {
             NotificationsManager.handleNotifications(Login_snapeve_activity.this, AzureConfiguration.SenderId, AppNotificationHandler.class);
             registerWithNotificationHubs();
-
             startActivity(new Intent(getApplicationContext(), MainActivity.class));
         }
 

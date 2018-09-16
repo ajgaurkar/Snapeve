@@ -1857,7 +1857,6 @@ public class UserProfileFragment extends Fragment {
 
     private void uploadProfileImage() {
 
-
         AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
 
             @Override
@@ -1905,6 +1904,7 @@ public class UserProfileFragment extends Fragment {
         };
 
         runAsyncTask(task);
+
     }
 
     private AsyncTask<Void, Void, Void> runAsyncTask(AsyncTask<Void, Void, Void> task) {

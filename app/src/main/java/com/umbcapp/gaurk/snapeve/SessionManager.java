@@ -38,6 +38,7 @@ public class SessionManager {
     public static final String KEY_REQ_PENDING_GRP_ID = "req_pend_grp_id";
     public static final String KEY_REQ_PENDING_GRP_NAME = "req_pend_grp_name";
     public static final String KEY_NOTIFICATION_ONN_OFF_STATUS = "notification_on_off_status";
+    public static final String KEY_RESET_PASSWORD_STATUS = "rest_status";
 
     SharedPreferences pref;
     // Editor for Shared preferences
