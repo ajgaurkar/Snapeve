@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import com.google.gson.JsonObject;
 import com.umbcapp.gaurk.snapeve.AccountHandler;
 import com.umbcapp.gaurk.snapeve.R;
+import com.umbcapp.gaurk.snapeve.ResetPassword;
 import com.umbcapp.gaurk.snapeve.ScheduledRewards;
 import com.umbcapp.gaurk.snapeve.SessionManager;
 import com.umbcapp.gaurk.snapeve.SnapeveFeedback;
@@ -70,7 +71,8 @@ public class SettingsFragment extends PreferenceFragment {
         Uri uri;
         switch (preference.getKey()) {
             case "userAccountPreferenceKey":
-                startActivity(new Intent(getActivity(), AccountHandler.class));
+//                startActivity(new Intent(getActivity(), AccountHandler.class));
+                startActivity(new Intent(getActivity(), ResetPassword.class));
                 break;
 
             case "snapeveFeedbackPreferenceKey":
@@ -96,14 +98,14 @@ public class SettingsFragment extends PreferenceFragment {
             case "fAQPreferenceKey":
                 break;
 
-            case "inviteFriendsPreferenceKey":
-                uri = Uri.parse("market://details?id=" + getActivity().getPackageName());
-                Intent nav_share_Intent = new Intent(android.content.Intent.ACTION_SEND);
-                nav_share_Intent.setType("text/plain");
-                nav_share_Intent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Snapeve");
-                nav_share_Intent.putExtra(android.content.Intent.EXTRA_TEXT, "You should try SnapEve, It's an awesome app for campus events. Get 10 bonus points when you sign up using my referral code '"+new SessionManager(getActivity()).getSpecificUserDetail(SessionManager.KEY_USER_NAME)+"' https://play.google.com/store/apps/developer?id=MAAK+Services");
-                startActivity(Intent.createChooser(nav_share_Intent, "Share via :"));
-                break;
+//            case "inviteFriendsPreferenceKey":
+//                uri = Uri.parse("market://details?id=" + getActivity().getPackageName());
+//                Intent nav_share_Intent = new Intent(android.content.Intent.ACTION_SEND);
+//                nav_share_Intent.setType("text/plain");
+//                nav_share_Intent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Snapeve");
+//                nav_share_Intent.putExtra(android.content.Intent.EXTRA_TEXT, "You should try SnapEve, It's an awesome app for campus events. Get 10 bonus points when you sign up using my referral code '"+new SessionManager(getActivity()).getSpecificUserDetail(SessionManager.KEY_USER_NAME)+"' https://play.google.com/store/apps/developer?id=MAAK+Services");
+//                startActivity(Intent.createChooser(nav_share_Intent, "Share via :"));
+//                break;
 
             case "logoutPreferenceKey":
                 new SessionManager(getActivity()).logoutUser();

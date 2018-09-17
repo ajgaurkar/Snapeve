@@ -180,6 +180,7 @@ public class Login_snapeve_activity extends AppCompatActivity {
         String first_name = userData_list_object.get("first_name").toString();
         String last_name = userData_list_object.get("last_name").toString();
         String email = userData_list_object.get("email").toString();
+        boolean reset_pass_flag = userData_list_object.get("reset_pass_flag").getAsBoolean();
         int user_points = Integer.parseInt(userData_list_object.get("user_points").toString());
 
         dp_url = dp_url.substring(1, dp_url.length() - 1);
@@ -191,7 +192,7 @@ public class Login_snapeve_activity extends AppCompatActivity {
         email = email.substring(1, email.length() - 1);
 
 
-        if (new SessionManager(getApplicationContext()).createLoginSession(user_id, user_name, user_pass, first_name, last_name, email)) {
+        if (new SessionManager(getApplicationContext()).createLoginSession(user_id, user_name, user_pass, first_name, last_name, email, reset_pass_flag)) {
             NotificationsManager.handleNotifications(Login_snapeve_activity.this, AzureConfiguration.SenderId, AppNotificationHandler.class);
             registerWithNotificationHubs();
             startActivity(new Intent(getApplicationContext(), MainActivity.class));

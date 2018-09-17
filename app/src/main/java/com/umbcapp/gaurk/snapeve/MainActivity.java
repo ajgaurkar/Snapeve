@@ -219,7 +219,6 @@ public class MainActivity extends AppCompatActivity implements Listview_communic
         for (int i = 0; i < snapeveSessionList.size(); i++) {
 
         }
-
         sessionCounterParameters = new JsonObject();
         sessionCounterParameters.addProperty("user_id", new SessionManager(getApplicationContext()).getSpecificUserDetail(SessionManager.KEY_USER_ID));
         sessionCounterParameters.addProperty("activity_code", snapeveSessionList.get(0).getActivityCode());

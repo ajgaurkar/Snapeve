@@ -16,6 +16,17 @@ public class user_table {
     @com.google.gson.annotations.SerializedName("user_pass")
     String user_pass;
 
+    @com.google.gson.annotations.SerializedName("reset_pass_flag")
+    boolean reset_pass_flag;
+
+    public boolean getReset_pass_flag() {
+        return reset_pass_flag;
+    }
+
+    public void setReset_pass_flag(boolean reset_pass_flag) {
+        this.reset_pass_flag = reset_pass_flag;
+    }
+
     public String getId() {
         return id;
     }

@@ -2,13 +2,6 @@
 
 
     <Preference
-        android:icon="@drawable/ic_account_circle_grey_600_24dp"
-        android:key="userAccountPreferenceKey"
-        android:title="Account">
-
-    </Preference>
-
-    <Preference
         android:icon="@drawable/ic_feedback_grey_600_24dp"
         android:key="snapeveFeedbackPreferenceKey"
         android:title="Feedback">
@@ -16,16 +9,16 @@
     </Preference>
 
     <!--<SwitchPreference-->
-        <!--android:defaultValue="false"-->
-        <!--android:icon="@drawable/ic_notifications_grey_600_24dp"-->
-        <!--android:key="notificationPreferenceKey"-->
-        <!--android:summary="@string/notiofcation_summary"-->
-        <!--android:title="@string/notification_setting" />-->
+    <!--android:defaultValue="false"-->
+    <!--android:icon="@drawable/ic_notifications_grey_600_24dp"-->
+    <!--android:key="notificationPreferenceKey"-->
+    <!--android:summary="@string/notiofcation_summary"-->
+    <!--android:title="@string/notification_setting" />-->
 
     <!--<Preference-->
-        <!--android:icon="@drawable/ic_help_grey_600_24dp"-->
-        <!--android:key="helpPreferenceKey"-->
-        <!--android:title="Help">-->
+    <!--android:icon="@drawable/ic_help_grey_600_24dp"-->
+    <!--android:key="helpPreferenceKey"-->
+    <!--android:title="Help">-->
     <!--</Preference>-->
 
     <Preference
@@ -35,14 +28,14 @@
 
     </Preference>
 
-    <Preference
-        android:icon="@drawable/ic_info_grey_600_24dp"
-        android:key="appInfoPreferenceKey"
-        android:title="App info">
-        <!--<intent-->
-            <!--android:action="android.intent.action.VIEW"-->
-            <!--android:data="http://www.example.com" />-->
-    </Preference>
+    <!--<Preference-->
+    <!--android:icon="@drawable/ic_info_grey_600_24dp"-->
+    <!--android:key="appInfoPreferenceKey"-->
+    <!--android:title="App info">-->
+    <!--&lt;!&ndash;<intent&ndash;&gt;-->
+    <!--&lt;!&ndash;android:action="android.intent.action.VIEW"&ndash;&gt;-->
+    <!--&lt;!&ndash;android:data="http://www.example.com" />&ndash;&gt;-->
+    <!--</Preference>-->
 
     <Preference
         android:icon="@drawable/ic_description_grey_600_24dp"
@@ -53,20 +46,27 @@
             android:data="https://sites.google.com/view/snapeve-privacy-policy/home" />
     </Preference>
 
-    <Preference
-        android:icon="@drawable/ic_question_answer_grey_600_24dp"
-        android:key="fAQPreferenceKey"
-        android:title="FAQ">
-        <intent
-            android:action="android.intent.action.VIEW"
-            android:data="https://sites.google.com/view/snapeve-user-agreement/home" />
-    </Preference>
+    <!--<Preference-->
+    <!--android:icon="@drawable/ic_question_answer_grey_600_24dp"-->
+    <!--android:key="fAQPreferenceKey"-->
+    <!--android:title="FAQ">-->
+    <!--<intent-->
+    <!--android:action="android.intent.action.VIEW"-->
+    <!--android:data="https://sites.google.com/view/snapeve-user-agreement/home" />-->
+    <!--</Preference>-->
+
+    <!--<Preference-->
+    <!--android:icon="@drawable/ic_supervisor_account_grey_600_24dp"-->
+    <!--android:key="inviteFriendsPreferenceKey"-->
+    <!--android:title="Invite Friends"-->
+    <!--android:summary="Earn rewards when your friends signup">-->
+    <!--</Preference>-->
 
     <Preference
-        android:icon="@drawable/ic_supervisor_account_grey_600_24dp"
-        android:key="inviteFriendsPreferenceKey"
-        android:title="Invite Friends"
-        android:summary="Earn rewards when your friends signup">
+        android:icon="@drawable/ic_account_circle_grey_600_24dp"
+        android:key="userAccountPreferenceKey"
+        android:title="Reset Password">
+
     </Preference>
 
     <Preference

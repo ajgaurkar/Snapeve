@@ -134,6 +134,7 @@ public class ResetPassword extends AppCompatActivity {
                     user_table = new user_table();
                     user_table.setId(new SessionManager(ResetPassword.this).getSpecificUserDetail(SessionManager.KEY_USER_ID));
                     user_table.setUser_pass(confirmPassword);
+                    user_table.setReset_pass_flag(true);
                     mUserTable.update(user_table).get();
 
                 } catch (final Exception e) {
