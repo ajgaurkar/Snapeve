@@ -5,6 +5,7 @@ import android.app.Fragment;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -108,6 +109,7 @@ import static com.umbcapp.gaurk.snapeve.AzureConfiguration.getContainer;
 public class UserProfileFragment extends Fragment {
 
     private static final int PICK_GALLERY_IMAGE = 2;
+    private static final int REQUEST_TAKE_PHOTO = 1;
     private JsonObject jsonObjectUserProfileFragParameters;
     private ViewPager pager;
     private TabLayout tabLayout;
@@ -153,7 +155,7 @@ public class UserProfileFragment extends Fragment {
     private ImageView full_screen_imageview;
     private File mCameraImageFile;
     private Uri mCameraImageFileUri = null;
-    static final int REQUEST_TAKE_PHOTO = 1;
+
     private Map<String, Uri> mapForUploadingSelectedProfilePic;
     private CloudBlobContainer container;
     private user_table user_table;
@@ -1691,17 +1693,11 @@ public class UserProfileFragment extends Fragment {
     }
 
     private void selcectFromGallery() {
-        PhotoPicker.builder()
-                .setPhotoCount(1)
-                .setShowCamera(false)
-                .setShowGif(true)
-                .setPreviewEnabled(false)
-                .start(getActivity(), PICK_GALLERY_IMAGE);
+        System.out.println("Gallery image pick");
 
-//        Intent intent = new Intent();
-//        intent.setType("image/*");
-//        intent.setAction(Intent.ACTION_GET_CONTENT);
-//        startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_GALLERY_IMAGE);
+        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        startActivityForResult(intent, PICK_GALLERY_IMAGE);
+
     }
 
     private void takePicture() {
@@ -1847,11 +1843,34 @@ public class UserProfileFragment extends Fragment {
 
         }
 
-        if (requestCode == PICK_GALLERY_IMAGE && resultCode == RESULT_OK) {
 
-            System.out.println("Pick Gallery Image");
+        if (requestCode == PICK_GALLERY_IMAGE && resultCode == RESULT_OK && null != data) {
+            System.out.println("Gallery image check Succesfully");
+            Uri selectedImage = data.getData();
+            System.out.println("Check------  " + selectedImage);
+            String[] filePathColumn = {MediaStore.Images.Media.DATA};
+            Cursor cursor = getActivity().getContentResolver().query(selectedImage, filePathColumn, null, null, null);
+            cursor.moveToFirst();
+            int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+            String picturePath = cursor.getString(columnIndex);
+            System.out.println("picturePath--------- " + picturePath);
+            cursor.close();
+            profile_pic_image_view.setImageBitmap(BitmapFactory.decodeFile(picturePath));
 
+            mapForUploadingSelectedProfilePic = new HashMap<>();
+
+            int index = picturePath.lastIndexOf('/');
+            String selectedCameraImageName = picturePath.substring(index + 1);
+
+            String addFileString = "file://" + picturePath;
+            Uri getUriToSendAzure = Uri.parse(addFileString);
+            System.out.println("selectedImageName------- " + selectedCameraImageName);
+            System.out.println("getUriToSendAzure------- " + getUriToSendAzure);
+            mapForUploadingSelectedProfilePic.put(selectedCameraImageName, getUriToSendAzure);
+
+            uploadProfileImage();
         }
+
 
     }
 
