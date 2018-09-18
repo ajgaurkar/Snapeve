@@ -7,6 +7,12 @@
     android:layout_height="match_parent"
     android:background="@color/colorPrimary">
 
+    <View
+        android:id="@+id/scheduled_rewards_center_hori_view"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_centerHorizontal="true" />
+
     <nl.dionsegijn.konfetti.KonfettiView
         android:id="@+id/viewKonfetti"
         android:layout_width="match_parent"
@@ -38,10 +44,25 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/scheduled_rewards_user_fullname_name_textview"
-        android:gravity="center"
+        android:layout_toEndOf="@+id/scheduled_rewards_center_hori_view"
+        android:gravity="end"
         android:padding="2dp"
+        android:paddingEnd="36dp"
         android:textColor="#fff"
-        android:textSize="16sp"
+        android:textSize="14sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/scheduled_rewards_date_range_textview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/scheduled_rewards_user_fullname_name_textview"
+        android:layout_toStartOf="@+id/scheduled_rewards_center_hori_view"
+        android:padding="2dp"
+        android:paddingStart="36dp"
+        android:singleLine="true"
+        android:textColor="#fff"
+        android:textSize="14sp"
         android:textStyle="bold" />
 
     <TextView
@@ -52,6 +73,7 @@
         android:layout_alignStart="@+id/scheduled_rewards_scorer_list"
         android:layout_marginBottom="-25dp"
         android:layout_marginStart="12dp"
+        android:singleLine="true"
         android:text="Runner up"
         android:textColor="#fff" />
 

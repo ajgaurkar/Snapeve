@@ -55,6 +55,7 @@ public class ScheduledRewards extends AppCompatActivity {
     private TextView scheduled_rewards_runnerup_label;
     private long sessionCounter = 0;
     private int currentSelectedTab = 1;
+    private TextView scheduled_rewards_date_range_textview;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -72,6 +73,7 @@ public class ScheduledRewards extends AppCompatActivity {
         scheduled_rewards_main_layout = (RelativeLayout) findViewById(R.id.scheduled_rewards_main_layout);
         scheduled_rewards_user_fullname_name_textview = (TextView) findViewById(R.id.scheduled_rewards_user_fullname_name_textview);
         scheduled_rewards_user_name_textview = (TextView) findViewById(R.id.scheduled_rewards_user_name_textview);
+        scheduled_rewards_date_range_textview = (TextView) findViewById(R.id.scheduled_rewards_date_range_textview);
         scheduled_rewards_runnerup_label = (TextView) findViewById(R.id.scheduled_rewards_runnerup_label);
         konfettiView = findViewById(R.id.viewKonfetti);
 
@@ -83,7 +85,6 @@ public class ScheduledRewards extends AppCompatActivity {
                 || new SessionManager(getApplicationContext()).getSpecificUserDetail(SessionManager.KEY_GRP_ID).equals("xxxxx____xxxxx")) {
             navigation.getMenu().removeItem(R.id.rewards_navigation_team);
         }
-
 
         konfettiView.post(new Runnable() {
             @Override
@@ -168,6 +169,7 @@ public class ScheduledRewards extends AppCompatActivity {
     private void showWinners(int winnerType) {
         TopScorerAdapter topScorerAdapter = null;
         ArrayList<LeaderboardListItem> tempList = null;
+        scheduled_rewards_date_range_textview.setText("Sep 09 to Sep 16");
         switch (winnerType) {
             case 1:
                 System.out.println("IN 1");

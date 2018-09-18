@@ -55,7 +55,7 @@ public class SessionManager {
         editor = pref.edit();
     }
 
-    public Boolean createLoginSession(String user_id, String user_name, String user_pass, String first_name, String last_name, String email) {
+    public Boolean createLoginSession(String user_id, String user_name, String user_pass, String first_name, String last_name, String email, boolean pass_reset_flag) {
         Log.d("INTO shapref CREAT SESS", "INTO shapref CREAT SESS");
         // Storing login value as TRUE
         editor.putBoolean(IS_LOGIN, true);
@@ -76,6 +76,9 @@ public class SessionManager {
 
         editor.putString(KEY_LAST_NAME, last_name);
         System.out.println("last_name : " + last_name);
+
+        editor.putBoolean(KEY_RESET_PASSWORD_STATUS, pass_reset_flag);
+        System.out.println("pass_reset_flag : " + pass_reset_flag);
 
         // commit changes
         editor.commit();

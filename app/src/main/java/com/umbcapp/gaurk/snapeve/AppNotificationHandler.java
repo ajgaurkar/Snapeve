@@ -25,6 +25,8 @@ public class AppNotificationHandler extends NotificationsHandler {
     private String nhTitle;
     private String nhTag;
     private SnapeveDatabaseRepository snapeveDatabaseRepository;
+    private String poster_id = "";
+    private String user_grp_id = "";
 
     @Override
     public void onReceive(Context context, Bundle bundle) {
@@ -32,17 +34,64 @@ public class AppNotificationHandler extends NotificationsHandler {
         nhTitle = bundle.getString("notification_title");
         nhMessage = bundle.getString("notification_message");
         nhTag = bundle.getString("tag");
+
+        try {
+            poster_id = bundle.getString("poster_id");
+            user_grp_id = bundle.getString("user_grp_id");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         System.out.println("in Notoification on Recive ");
-//        sendNotification(nhMessage);
 
-//        new SessionManager(ctx).getSpecificUserDetail()
+        switch (nhTag) {
+            case "New Event":
+                if (!new SessionManager(ctx).getSpecificUserDetail(SessionManager.KEY_USER_ID).equals(poster_id)) {
+                    System.out.println("New Event 1");
+                    try {
+                        System.out.println("New Event 2");
+                        if (new SessionManager(ctx).getSpecificUserDetail(SessionManager.KEY_GRP_ID).equals(user_grp_id)) {
+                            System.out.println("New Event 3");
+                            nhTitle = "Group member posted an event";
+                            processNotification();
+                        } else {
+                            System.out.println("New Event 4");
+                            processNotification();
+                        }
+                    } catch (Exception e) {
+                        System.out.println("New Event 5");
+                        processNotification();
+                    }
+                }
+                System.out.println("New Event 6");
+                break;
+            case "Action verified":
+                System.out.println("Action verified 1");
+
+                System.out.println("poster_id 1 "+poster_id);
+                System.out.println("poster_id 2 "+new SessionManager(ctx).getSpecificUserDetail(SessionManager.KEY_USER_ID));
+
+                if (new SessionManager(ctx).getSpecificUserDetail(SessionManager.KEY_USER_ID).equals(poster_id)) {
+                    System.out.println("Action verified 2");
+                    processNotification();
+                }
+                System.out.println("Action verified 3");
+                break;
+            case "Action spammed":
+                if (!new SessionManager(ctx).getSpecificUserDetail(SessionManager.KEY_USER_ID).equals(poster_id)) {
+                    processNotification();
+                }
+                break;
+        }
+
+    }
+
+    private void processNotification() {
+
         setNotification();
-
         snapeveDatabaseRepository = new SnapeveDatabaseRepository(ctx);
-
         long curentTime = System.currentTimeMillis();
         System.out.println("System.currentTimeMillis() " + curentTime);
-
         snapeveDatabaseRepository.insertSnapeveNotification(nhTitle, nhMessage, nhTag, curentTime);
 
     }
@@ -64,31 +113,4 @@ public class AppNotificationHandler extends NotificationsHandler {
 
     }
 
-//    private void sendNotification(String msg) {
-//
-//        Intent intent = new Intent(ctx, MainActivity.class);
-//        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-//        System.out.println(1);
-//        mNotificationManager = (NotificationManager)
-//                ctx.getSystemService(Context.NOTIFICATION_SERVICE);
-//
-//        PendingIntent contentIntent = PendingIntent.getActivity(ctx, 0,
-//                intent, PendingIntent.FLAG_ONE_SHOT);
-//
-//        System.out.println(2);
-//        Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-//        NotificationCompat.Builder mBuilder =
-//                new NotificationCompat.Builder(ctx)
-//                        .setSmallIcon(R.mipmap.ic_launcher)
-//                        .setContentTitle("Snapeve Notification")
-//                        .setStyle(new NotificationCompat.BigTextStyle()
-//                                .bigText(msg))
-//                        .setSound(defaultSoundUri)
-//                        .setContentText(msg);
-//
-//        System.out.println(3);
-//        mBuilder.setContentIntent(contentIntent);
-//        mNotificationManager.notify(NOTIFICATION_ID, mBuilder.build());
-//        System.out.println(4);
-//    }
 }
