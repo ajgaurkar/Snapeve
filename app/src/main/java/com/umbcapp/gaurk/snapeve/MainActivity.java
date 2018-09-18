@@ -105,6 +105,7 @@ public class MainActivity extends AppCompatActivity implements Listview_communic
     private int onResumeCounter = 0;
     private int topListviewPosition = 0;
     private int listCurrentPosition = 0;
+    private JsonArray jsonArrayForSession;
 //    private Button refreshBtn;
 
     @Override
@@ -188,13 +189,14 @@ public class MainActivity extends AppCompatActivity implements Listview_communic
         snapeveDatabaseRepository.getSessiondata().observe(this, new Observer<List<SnapEveSession>>() {
             @Override
             public void onChanged(@Nullable List<SnapEveSession> snapEveSessions) {
-                System.out.println("snapEveSessions------------  " + snapEveSessions.size());
+                System.out.println("snapEveSessions sess------------  " + snapEveSessions.size());
+                shoeSessions(snapEveSessions);
             }
         });
         snapeveDatabaseRepository.getTasks().observe(MainActivity.this, new Observer<List<SnapeveNotification>>() {
             @Override
             public void onChanged(@Nullable List<SnapeveNotification> snapeveNotifications) {
-                System.out.println("snapEveSessions------------  " + snapeveNotifications.size());
+                System.out.println("snapEveSessions not------------  " + snapeveNotifications.size());
             }
         });
         System.out.println("snapeveDatabaseRepository.getTasks(); --------  " + snapeveDatabaseRepository.getTasks());
@@ -202,6 +204,59 @@ public class MainActivity extends AppCompatActivity implements Listview_communic
 
 
     }
+
+    private void shoeSessions(List<SnapEveSession> snapEveSessions) {
+
+        jsonArrayForSession = new JsonArray();
+
+
+        for (int i = 0; i < snapEveSessions.size(); i++) {
+//            System.out.print("sessiondata " + i);
+//            System.out.print(" " + snapEveSessions.get(i).getDuration());
+//            System.out.println(" " + snapEveSessions.get(i).getActivityCode());
+
+
+            sessionCounterParameters = new JsonObject();
+            sessionCounterParameters.addProperty("user_id", new SessionManager(getApplicationContext()).getSpecificUserDetail(SessionManager.KEY_USER_ID));
+            sessionCounterParameters.addProperty("activity_code", snapEveSessions.get(i).getActivityCode());
+            sessionCounterParameters.addProperty("start_time", snapEveSessions.get(i).getStartTime());
+            sessionCounterParameters.addProperty("end_time", snapEveSessions.get(i).getEndTime());
+            sessionCounterParameters.addProperty("duration", snapEveSessions.get(i).getDuration());
+            sessionCounterParameters.addProperty("user_name", new SessionManager(getApplicationContext()).getSpecificUserDetail(SessionManager.KEY_USER_NAME));
+
+            jsonArrayForSession.add(sessionCounterParameters);
+        }
+
+        System.out.println("jsonArrayForSession : " + jsonArrayForSession);
+        Toast.makeText(getApplicationContext(), jsonArrayForSession.toString(), Toast.LENGTH_SHORT).show();
+
+        final SettableFuture<JsonElement> resultFuture = SettableFuture.create();
+//        ListenableFuture<JsonElement> serviceFilterFuture = mClient.invokeApi("Login_api", jsonObjectLoginParameters);
+        ListenableFuture<JsonElement> serviceFilterFuture = mClient.invokeApi("session_counter_api", jsonArrayForSession);
+
+        Futures.addCallback(serviceFilterFuture, new FutureCallback<JsonElement>() {
+            @Override
+            public void onFailure(Throwable exception) {
+                resultFuture.setException(exception);
+                System.out.println(" session_counter_api exception    " + exception);
+            }
+
+            @Override
+            public void onSuccess(JsonElement response) {
+                resultFuture.set(response);
+
+                if (response.toString().contains("true")) {
+                    //delete local session data
+                    System.out.println("delete local session data");
+                    studentRepository.deleteSession(snapeveSessionList.get(0));
+                }
+
+                System.out.println(" session_counter_api success response    " + response);
+            }
+        });
+
+    }
+
 
     private void postSessionCounterdataApi() {
 
@@ -214,7 +269,6 @@ public class MainActivity extends AppCompatActivity implements Listview_communic
                 snapeveSessionList = snapEveSessionList;
             }
         });
-
 
         for (int i = 0; i < snapeveSessionList.size(); i++) {
 
@@ -1017,7 +1071,6 @@ public class MainActivity extends AppCompatActivity implements Listview_communic
 
     private void openEventDetails(int selcted_item_position) {
 
-
         Event_dash_list_obj selectedEvent_dash_list_obj = event_main_list.get(selcted_item_position);
         Intent eventDetailIntent = new Intent(getApplicationContext(), EventDetails.class);
         eventDetailIntent.putExtra("user_id", selectedEvent_dash_list_obj.getUser_id());
@@ -1048,12 +1101,19 @@ public class MainActivity extends AppCompatActivity implements Listview_communic
     public void onPause() {
         super.onPause();
 
+        long startTime = sessionCounter;
+        long endTime = System.currentTimeMillis();
+        long duration = System.currentTimeMillis() - sessionCounter;
+
         sessionCounter = System.currentTimeMillis() - sessionCounter;
         long minutes = TimeUnit.MILLISECONDS.toMinutes(sessionCounter);
         long seconds = TimeUnit.MILLISECONDS.toSeconds(sessionCounter);
 
         System.out.println("MAINACTIVITY onPause sessionCounter : " + minutes + "m " + seconds + "s");
 
+        snapeveDatabaseRepository = new SnapeveDatabaseRepository(MainActivity.this);
+
+        snapeveDatabaseRepository.insertSnapeveSession("HM", startTime, endTime, duration, 0);
     }
 
     @Override

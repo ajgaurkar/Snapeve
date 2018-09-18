@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 
 import com.google.gson.JsonObject;
 import com.umbcapp.gaurk.snapeve.AccountHandler;
+import com.umbcapp.gaurk.snapeve.DatabaseRepository.SnapeveDatabaseRepository;
 import com.umbcapp.gaurk.snapeve.R;
 import com.umbcapp.gaurk.snapeve.ResetPassword;
 import com.umbcapp.gaurk.snapeve.ScheduledRewards;
@@ -34,6 +35,7 @@ public class SettingsFragment extends PreferenceFragment {
     private JsonObject jsonObjectUserProfileFragParameters;
     private UserProfileFragment userProfileFragment;
     private long sessionCounter=0;
+    private SnapeveDatabaseRepository snapeveDatabaseRepository;
 
     public SettingsFragment() {
     }
@@ -129,12 +131,19 @@ public class SettingsFragment extends PreferenceFragment {
     public void onPause() {
         super.onPause();
 
+        long startTime = sessionCounter;
+        long endTime = System.currentTimeMillis();
+        long duration = System.currentTimeMillis() - sessionCounter;
+
         sessionCounter = System.currentTimeMillis() - sessionCounter;
         long minutes = TimeUnit.MILLISECONDS.toMinutes(sessionCounter);
         long seconds = TimeUnit.MILLISECONDS.toSeconds(sessionCounter);
 
         System.out.println("SETTINGS onPause sessionCounter : " + minutes + "m " + seconds + "s");
 
+        snapeveDatabaseRepository = new SnapeveDatabaseRepository(getActivity());
+
+        snapeveDatabaseRepository.insertSnapeveSession("STS", startTime, endTime, duration, 0);
     }
 
 }
