@@ -215,7 +215,7 @@ public class MainActivity extends AppCompatActivity implements Listview_communic
 //            System.out.print(" " + snapEveSessions.get(i).getDuration());
 //            System.out.println(" " + snapEveSessions.get(i).getActivityCode());
 
-
+            System.out.println("snapEveSessions.get(i).getActivityCode() " + snapEveSessions.get(i).getActivityCode());
             sessionCounterParameters = new JsonObject();
             sessionCounterParameters.addProperty("user_id", new SessionManager(getApplicationContext()).getSpecificUserDetail(SessionManager.KEY_USER_ID));
             sessionCounterParameters.addProperty("activity_code", snapEveSessions.get(i).getActivityCode());
@@ -230,28 +230,30 @@ public class MainActivity extends AppCompatActivity implements Listview_communic
         System.out.println("jsonArrayForSession : " + jsonArrayForSession);
         Toast.makeText(getApplicationContext(), jsonArrayForSession.toString(), Toast.LENGTH_SHORT).show();
 
+        final long timestampForSessionDeletion = System.currentTimeMillis();
         final SettableFuture<JsonElement> resultFuture = SettableFuture.create();
 //        ListenableFuture<JsonElement> serviceFilterFuture = mClient.invokeApi("Login_api", jsonObjectLoginParameters);
-        ListenableFuture<JsonElement> serviceFilterFuture = mClient.invokeApi("session_counter_api", jsonArrayForSession);
+        ListenableFuture<JsonElement> serviceFilterFuture = mClient.invokeApi("session_counting_api", jsonArrayForSession);
 
         Futures.addCallback(serviceFilterFuture, new FutureCallback<JsonElement>() {
             @Override
             public void onFailure(Throwable exception) {
                 resultFuture.setException(exception);
-                System.out.println(" session_counter_api exception    " + exception);
+                System.out.println(" session_counting_api exception    " + exception);
             }
 
             @Override
             public void onSuccess(JsonElement response) {
                 resultFuture.set(response);
+                System.out.println(" session_counting_api response    " + response);
 
                 if (response.toString().contains("true")) {
                     //delete local session data
                     System.out.println("delete local session data");
-                    studentRepository.deleteSession(snapeveSessionList.get(0));
+                    snapeveDatabaseRepository.deleteUploadedSession(timestampForSessionDeletion);
                 }
 
-                System.out.println(" session_counter_api success response    " + response);
+                System.out.println(" session_counting_api success response    " + response);
             }
         });
 

@@ -60,11 +60,22 @@ public class SnapeveDatabaseRepository {
             }
         }.execute();
     }
+
     public void deleteSession(final SnapEveSession session) {
         new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... voids) {
                 snapeveDatabase.snapeveSessionDao().deleteSession(session);
+                return null;
+            }
+        }.execute();
+    }
+
+    public void deleteUploadedSession(final long sessionTimestamp) {
+        new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected Void doInBackground(Void... voids) {
+                snapeveDatabase.snapeveSessionDao().deleteUploadedSession(sessionTimestamp);
                 return null;
             }
         }.execute();
@@ -78,7 +89,6 @@ public class SnapeveDatabaseRepository {
     public LiveData<List<SnapEveSession>> getSessiondata() {
         return snapeveDatabase.snapeveSessionDao().fetchSession();
     }
-
 
 
 }
