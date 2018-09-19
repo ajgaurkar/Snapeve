@@ -22,12 +22,15 @@ public interface SnapeveSessionDao {
     LiveData<List<SnapEveSession>> fetchSession();
 
 
-//    @Query("SELECT * FROM SnapeveNotification WHERE id =:taskId")
-//    LiveData<SnapeveNotification> fetchNotitifcationWithId(int taskId);
+    @Query("DELETE FROM SnapEveSession WHERE startTime <:sessionTimestamp")
+    void deleteUploadedSession(long sessionTimestamp);
+
 
     @Update
     void updateSession(SnapEveSession session);
 
     @Delete
     void deleteSession(SnapEveSession session);
+
+
 }

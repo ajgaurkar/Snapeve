@@ -50,6 +50,7 @@ import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
 import com.umbcapp.gaurk.snapeve.Adapters.Dash_Event_ListAdapter;
 import com.umbcapp.gaurk.snapeve.Add_event;
 import com.umbcapp.gaurk.snapeve.Controllers.Event_dash_list_obj;
+import com.umbcapp.gaurk.snapeve.DatabaseRepository.SnapeveDatabaseRepository;
 import com.umbcapp.gaurk.snapeve.MainActivity;
 import com.umbcapp.gaurk.snapeve.R;
 
@@ -89,21 +90,24 @@ public class MapsFragment extends Fragment {
     private JsonArray feedsJsonArray;
     private boolean liveEventFlag = false;
     private TextView liveFlagTextView;
+    private SnapeveDatabaseRepository snapeveDatabaseRepository;
+    private SnapeveDatabaseRepository studentRepository;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        studentRepository = new SnapeveDatabaseRepository(getActivity());
 
-        sessionCounter = System.currentTimeMillis();
-        DateFormat formatter = new SimpleDateFormat("HH:mm:ss", Locale.US);
-        formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
-        String text = formatter.format(new Date(sessionCounter));
-//        System.out.println("Start @ sessionCounter : " + sessionCounter);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.maps_fragment, container, false);
+
+        sessionCounter = System.currentTimeMillis();
+        DateFormat formatter = new SimpleDateFormat("HH:mm:ss", Locale.US);
+        formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
+        String text = formatter.format(new Date(sessionCounter));
 
         mMapView = (MapView) rootView.findViewById(R.id.mapView);
         maps_loading_events_cardview = (CardView) rootView.findViewById(R.id.maps_loading_events_cardview);
@@ -503,12 +507,19 @@ public class MapsFragment extends Fragment {
         super.onPause();
         mMapView.onPause();
 
+        long startTime = sessionCounter;
+        long endTime = System.currentTimeMillis();
+        long duration = System.currentTimeMillis() - sessionCounter;
+
         sessionCounter = System.currentTimeMillis() - sessionCounter;
         long minutes = TimeUnit.MILLISECONDS.toMinutes(sessionCounter);
         long seconds = TimeUnit.MILLISECONDS.toSeconds(sessionCounter);
 
         System.out.println("MAPS onPause sessionCounter : " + minutes + "m " + seconds + "s");
 
+        snapeveDatabaseRepository = new SnapeveDatabaseRepository(getActivity());
+
+        snapeveDatabaseRepository.insertSnapeveSession("MPS", startTime, endTime, duration, 0);
     }
 
     @Override

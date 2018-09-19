@@ -35,6 +35,7 @@ import com.umbcapp.gaurk.snapeve.Adapters.AttendiesAdapter;
 import com.umbcapp.gaurk.snapeve.Adapters.CommentsAdapter;
 import com.umbcapp.gaurk.snapeve.Controllers.AttendiesListItem;
 import com.umbcapp.gaurk.snapeve.Controllers.CommentsListItem;
+import com.umbcapp.gaurk.snapeve.DatabaseRepository.SnapeveDatabaseRepository;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -122,6 +123,7 @@ public class EventDetails extends AppCompatActivity implements Listview_communic
     private ImageView event_details_event_statr_end_dt_time_imageview;
     private ImageView list_item_status_spinner_imageview_1;
     private View list_item_status_spinner_imageview_2;
+    private SnapeveDatabaseRepository snapeveDatabaseRepository;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -156,7 +158,6 @@ public class EventDetails extends AppCompatActivity implements Listview_communic
         post_start_time = eventDetailIntent.getStringExtra("post_start_time");
         post_end_time = eventDetailIntent.getStringExtra("post_end_time");
         post_all_day_status = eventDetailIntent.getBooleanExtra("post_all_day_status", false);
-
 
         logged_in_user_grp_id = new SessionManager(getApplicationContext()).getSpecificUserDetail(SessionManager.KEY_GRP_ID);
 
@@ -1209,12 +1210,25 @@ public class EventDetails extends AppCompatActivity implements Listview_communic
     public void onPause() {
         super.onPause();
 
+//        sessionCounter = System.currentTimeMillis() - sessionCounter;
+//        long minutes = TimeUnit.MILLISECONDS.toMinutes(sessionCounter);
+//        long seconds = TimeUnit.MILLISECONDS.toSeconds(sessionCounter);
+//
+//        System.out.println("ADDEVENT onPause sessionCounter : " + minutes + "m " + seconds + "s");
+
+        long startTime = sessionCounter;
+        long endTime = System.currentTimeMillis();
+        long duration = System.currentTimeMillis() - sessionCounter;
+
         sessionCounter = System.currentTimeMillis() - sessionCounter;
         long minutes = TimeUnit.MILLISECONDS.toMinutes(sessionCounter);
         long seconds = TimeUnit.MILLISECONDS.toSeconds(sessionCounter);
 
         System.out.println("ADDEVENT onPause sessionCounter : " + minutes + "m " + seconds + "s");
 
+        snapeveDatabaseRepository = new SnapeveDatabaseRepository(getApplicationContext());
+
+        snapeveDatabaseRepository.insertSnapeveSession("ED", startTime, endTime, duration, 0);
     }
 
     @Override

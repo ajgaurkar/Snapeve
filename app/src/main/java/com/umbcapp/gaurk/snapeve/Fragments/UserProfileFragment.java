@@ -69,6 +69,7 @@ import com.umbcapp.gaurk.snapeve.Controllers.SignUpGrpListItem;
 import com.umbcapp.gaurk.snapeve.Controllers.TeammatesListItem;
 import com.umbcapp.gaurk.snapeve.Controllers.UserContributionListItem;
 import com.umbcapp.gaurk.snapeve.Controllers.AdminLeaveGroupMemberListItem;
+import com.umbcapp.gaurk.snapeve.DatabaseRepository.SnapeveDatabaseRepository;
 import com.umbcapp.gaurk.snapeve.EventDetails;
 import com.umbcapp.gaurk.snapeve.Leaderboard;
 import com.umbcapp.gaurk.snapeve.MainActivity;
@@ -189,7 +190,7 @@ public class UserProfileFragment extends Fragment {
     private ImageView header_bg;
     private TextView weekly_text_view;
     private TextView nextlevelpointstextview;
-
+    private SnapeveDatabaseRepository snapeveDatabaseRepository;
 
     public UserProfileFragment() {
 
@@ -229,12 +230,24 @@ public class UserProfileFragment extends Fragment {
     public void onPause() {
         super.onPause();
 
+        long startTime = sessionCounter;
+        long endTime = System.currentTimeMillis();
+        long duration = System.currentTimeMillis() - sessionCounter;
+
         sessionCounter = System.currentTimeMillis() - sessionCounter;
         long minutes = TimeUnit.MILLISECONDS.toMinutes(sessionCounter);
         long seconds = TimeUnit.MILLISECONDS.toSeconds(sessionCounter);
 
         System.out.println("USERPROFILE onPause sessionCounter : " + minutes + "m " + seconds + "s");
 
+        snapeveDatabaseRepository = new SnapeveDatabaseRepository(getActivity());
+
+        if (currentActiveTab == 1) {
+            snapeveDatabaseRepository.insertSnapeveSession("UP1", startTime, endTime, duration, 0);
+        }
+        if (currentActiveTab == 2) {
+            snapeveDatabaseRepository.insertSnapeveSession("UP2", startTime, endTime, duration, 0);
+        }
     }
 
     private void fetchGrpPostAndMembers(String grp_id) {
@@ -802,6 +815,22 @@ public class UserProfileFragment extends Fragment {
 
                 populateUserInfo();
 
+                long startTime = sessionCounter;
+                long endTime = System.currentTimeMillis();
+                long duration = System.currentTimeMillis() - sessionCounter;
+
+                sessionCounter = System.currentTimeMillis() - sessionCounter;
+                long minutes = TimeUnit.MILLISECONDS.toMinutes(sessionCounter);
+                long seconds = TimeUnit.MILLISECONDS.toSeconds(sessionCounter);
+
+                System.out.println("USERPROFILE onPause sessionCounter : " + minutes + "m " + seconds + "s");
+
+                snapeveDatabaseRepository = new SnapeveDatabaseRepository(getActivity());
+
+                snapeveDatabaseRepository.insertSnapeveSession("UP1", startTime, endTime, duration, 0);
+
+                sessionCounter = System.currentTimeMillis();
+
             }
         });
 
@@ -838,6 +867,23 @@ public class UserProfileFragment extends Fragment {
 
                     setRewardProgress(grp_total_pts, 1);
 
+
+                    //----------------------setting session
+                    long startTime = sessionCounter;
+                    long endTime = System.currentTimeMillis();
+                    long duration = System.currentTimeMillis() - sessionCounter;
+
+                    sessionCounter = System.currentTimeMillis() - sessionCounter;
+                    long minutes = TimeUnit.MILLISECONDS.toMinutes(sessionCounter);
+                    long seconds = TimeUnit.MILLISECONDS.toSeconds(sessionCounter);
+
+                    System.out.println("USERPROFILE onPause sessionCounter : " + minutes + "m " + seconds + "s");
+
+                    snapeveDatabaseRepository = new SnapeveDatabaseRepository(getActivity());
+
+                    snapeveDatabaseRepository.insertSnapeveSession("UP2", startTime, endTime, duration, 0);
+
+                    sessionCounter = System.currentTimeMillis();
                 }
                 memberListOpenFlag = false;
             }
