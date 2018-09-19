@@ -23,6 +23,7 @@ import com.squareup.picasso.Picasso;
 import com.umbcapp.gaurk.snapeve.Adapters.LeaderBoardAdapter;
 import com.umbcapp.gaurk.snapeve.Controllers.Event_dash_list_obj;
 import com.umbcapp.gaurk.snapeve.Controllers.LeaderboardListItem;
+import com.umbcapp.gaurk.snapeve.DatabaseRepository.SnapeveDatabaseRepository;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -61,15 +62,16 @@ public class Leaderboard extends AppCompatActivity implements Listview_communica
     private TextView leaderboard_list_item_nextlevel_textview;
     private CircleImageView leaderboard_you_list_item_dp_imageview;
     private TextView leaderboard_you_list_item_rank_textview;
+    private SnapeveDatabaseRepository snapeveDatabaseRepository;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         sessionCounter = System.currentTimeMillis();
-        DateFormat formatter = new SimpleDateFormat("HH:mm:ss", Locale.US);
-        formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
-        String text = formatter.format(new Date(sessionCounter));
+//        DateFormat formatter = new SimpleDateFormat("HH:mm:ss", Locale.US);
+//        formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
+//        String text = formatter.format(new Date(sessionCounter));
 
         setContentView(R.layout.leaderboard_activity);
 
@@ -97,7 +99,7 @@ public class Leaderboard extends AppCompatActivity implements Listview_communica
         leader_board_switch_you_textview.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                calculateSession(user_type_selection_status);
                 leader_board_switch_you_textview.setBackground(getResources().getDrawable(R.drawable.text_selection_left_seleted));
                 leader_board_switch_grp_textview.setBackground(getResources().getDrawable(R.drawable.text_selection_right_unseleted));
                 user_type_selection_status = 0;
@@ -108,7 +110,7 @@ public class Leaderboard extends AppCompatActivity implements Listview_communica
         leader_board_switch_grp_textview.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                calculateSession(user_type_selection_status);
                 leader_board_switch_you_textview.setBackground(getResources().getDrawable(R.drawable.text_selection_left_unseleted));
                 leader_board_switch_grp_textview.setBackground(getResources().getDrawable(R.drawable.text_selection_right_seleted));
                 user_type_selection_status = 1;
@@ -318,6 +320,32 @@ public class Leaderboard extends AppCompatActivity implements Listview_communica
         }
     }
 
+    private void calculateSession(int currentSelectedTab) {
+
+        snapeveDatabaseRepository = new SnapeveDatabaseRepository(getApplicationContext());
+
+        long startTime = sessionCounter;
+        long endTime = System.currentTimeMillis();
+        long duration = System.currentTimeMillis() - sessionCounter;
+
+        sessionCounter = System.currentTimeMillis() - sessionCounter;
+
+        //reset counter to current time
+        sessionCounter = System.currentTimeMillis();
+
+        switch (currentSelectedTab) {
+            case 0:
+                snapeveDatabaseRepository.insertSnapeveSession("LB1", startTime, endTime, duration, 0);
+                sessionCounter = System.currentTimeMillis();
+                break;
+
+            case 1:
+                snapeveDatabaseRepository.insertSnapeveSession("LB2", startTime, endTime, duration, 0);
+                sessionCounter = System.currentTimeMillis();
+                break;
+        }
+    }
+
     @Override
     public void main_event_listview_element_clicked(int position, int click_code) {
         System.out.println("position :" + position);
@@ -328,20 +356,21 @@ public class Leaderboard extends AppCompatActivity implements Listview_communica
     public void onPause() {
         super.onPause();
 
-        sessionCounter = System.currentTimeMillis() - sessionCounter;
-        long minutes = TimeUnit.MILLISECONDS.toMinutes(sessionCounter);
-        long seconds = TimeUnit.MILLISECONDS.toSeconds(sessionCounter);
+//        sessionCounter = System.currentTimeMillis() - sessionCounter;
+//        long minutes = TimeUnit.MILLISECONDS.toMinutes(sessionCounter);
+//        long seconds = TimeUnit.MILLISECONDS.toSeconds(sessionCounter);
+//
+//        System.out.println("LEADERBOARD onPause sessionCounter : " + minutes + "m " + seconds + "s");
 
-        System.out.println("LEADERBOARD onPause sessionCounter : " + minutes + "m " + seconds + "s");
-
+        calculateSession(user_type_selection_status);
     }
 
     @Override
     public void onResume() {
         sessionCounter = System.currentTimeMillis();
-        DateFormat formatter = new SimpleDateFormat("HH:mm:ss", Locale.US);
-        formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
-        String text = formatter.format(new Date(sessionCounter));
+//        DateFormat formatter = new SimpleDateFormat("HH:mm:ss", Locale.US);
+//        formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
+//        String text = formatter.format(new Date(sessionCounter));
 
         super.onResume();
     }

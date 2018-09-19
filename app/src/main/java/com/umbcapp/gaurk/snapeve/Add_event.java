@@ -71,6 +71,7 @@ import com.microsoft.windowsazure.mobileservices.MobileServiceClient;
 import com.umbcapp.gaurk.snapeve.Adapters.SimilarPostsAdapter;
 import com.umbcapp.gaurk.snapeve.Controllers.LocationCoordinatesList;
 import com.umbcapp.gaurk.snapeve.Controllers.SimilarPostsListItem;
+import com.umbcapp.gaurk.snapeve.DatabaseRepository.SnapeveDatabaseRepository;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -170,6 +171,7 @@ public class Add_event extends AppCompatActivity implements LocationListener {
     private View post_as_group_radio_divider_view;
     private ArrayList<LocationCoordinatesList> coordinatesLists = new ArrayList<>();
     private long sessionCounter = 0;
+    private SnapeveDatabaseRepository snapeveDatabaseRepository;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -179,13 +181,9 @@ public class Add_event extends AppCompatActivity implements LocationListener {
         sessionCounter = System.currentTimeMillis();
         DateFormat formatter = new SimpleDateFormat("HH:mm:ss", Locale.US);
         formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
-        String text = formatter.format(new Date(sessionCounter));
 
         initiate_permission_check();
 
-//        createNotificationChannel();
-//        setNotification();
-        // find_similar_posts
         mClient = Singleton.Instance().mClientMethod(this);
 
 
@@ -1465,12 +1463,25 @@ public class Add_event extends AppCompatActivity implements LocationListener {
     public void onPause() {
         super.onPause();
 
+//        sessionCounter = System.currentTimeMillis() - sessionCounter;
+//        long minutes = TimeUnit.MILLISECONDS.toMinutes(sessionCounter);
+//        long seconds = TimeUnit.MILLISECONDS.toSeconds(sessionCounter);
+//
+//        System.out.println("ADDEVENT onPause sessionCounter : " + minutes + "m " + seconds + "s");
+
+        long startTime = sessionCounter;
+        long endTime = System.currentTimeMillis();
+        long duration = System.currentTimeMillis() - sessionCounter;
+
         sessionCounter = System.currentTimeMillis() - sessionCounter;
         long minutes = TimeUnit.MILLISECONDS.toMinutes(sessionCounter);
         long seconds = TimeUnit.MILLISECONDS.toSeconds(sessionCounter);
 
         System.out.println("ADDEVENT onPause sessionCounter : " + minutes + "m " + seconds + "s");
 
+        snapeveDatabaseRepository = new SnapeveDatabaseRepository(getApplicationContext());
+
+        snapeveDatabaseRepository.insertSnapeveSession("PE", startTime, endTime, duration, 0);
     }
 
     @Override

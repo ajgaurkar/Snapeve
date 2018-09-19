@@ -184,28 +184,8 @@ public class NotificationFragment extends Fragment {
     }
 
     private void showConfirmationDialog() {
-//        new FancyAlertDialog.Builder(getActivity())
-//                .setTitle("Are you sure you want to disable app notifications?")
-//                .setBackgroundColor(Color.parseColor("#3F51B5"))  //Don't pass R.color.colorvalue
-//                .setNegativeBtnText("Keep it ON")
-//                .setAnimation(Animation.SLIDE)
-//                .setIcon(R.drawable.notification_round_blue_white_100, Icon.Visible)
-//                .isCancellable(false)
-//                .OnNegativeClicked(new FancyAlertDialogListener() {
-//                    @Override
-//                    public void OnClick() {
-//                        notification_switch.setChecked(true);
-//                    }
-//                })
-//                .setPositiveBtnText("Turn it OFF")
-//                .setPositiveBtnBackground(getResources().getColor(R.color.colorPrimary))//Don't pass R.color.colorvalue
-//                .OnPositiveClicked(new FancyAlertDialogListener() {
-//                    @Override
-//                    public void OnClick() {
-//                        new SessionManager(getActivity()).setSpecificUserBooleanDetail(SessionManager.KEY_NOTIFICATION_ONN_OFF_STATUS, false);
-//                    }
-//                })
-//                .build();
+
+        snapeveDatabaseRepository = new SnapeveDatabaseRepository(getActivity());
 
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -213,11 +193,14 @@ public class NotificationFragment extends Fragment {
                 .setCancelable(false)
                 .setPositiveButton("Keep it ON", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        new SessionManager(getActivity()).setSpecificUserBooleanDetail(SessionManager.KEY_NOTIFICATION_ONN_OFF_STATUS, false);
+                        notification_switch.setChecked(true);
+                        snapeveDatabaseRepository.insertSnapeveSession("NON", System.currentTimeMillis(), System.currentTimeMillis(), 0, 0);
+
                     }
                 }).setNegativeButton("Turn it OFF", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
-                notification_switch.setChecked(true);
+                new SessionManager(getActivity()).setSpecificUserBooleanDetail(SessionManager.KEY_NOTIFICATION_ONN_OFF_STATUS, false);
+                snapeveDatabaseRepository.insertSnapeveSession("NOF", System.currentTimeMillis(), System.currentTimeMillis(), 0, 0);
             }
         });
         AlertDialog alert = builder.create();
@@ -230,15 +213,6 @@ public class NotificationFragment extends Fragment {
 
         switch (type_code) {
             case 1:
-
-//                ArrayList<NotificationListItem> notificationsList = new ArrayList<>();
-//                notificationsList.add(new NotificationListItem("u1", "n1", 1, "Request approved", "Your request to join the group has been accepted", "Today 12:39 PM", true));
-//                notificationsList.add(new NotificationListItem("u1", "n1", 1, "Post liked", "Your post from last week has been liked", "Wed 04:12 PM", false));
-//                notificationsList.add(new NotificationListItem("u1", "n1", 1, "Invitation for event", "Your group member has invited to you attend an event", "Jul 03, 09:30 AM", false));
-//
-//                NotificationsAdapter notificationsAdapter = new NotificationsAdapter(getActivity(), notificationsList);
-//                notification_layout_listview.setAdapter(notificationsAdapter);
-
 
                 studentRepository.getTasks().observe((LifecycleOwner) getActivity(), new Observer<List<SnapeveNotification>>() {
                     @Override

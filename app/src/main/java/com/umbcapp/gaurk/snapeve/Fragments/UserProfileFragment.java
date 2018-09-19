@@ -195,12 +195,12 @@ public class UserProfileFragment extends Fragment {
     public UserProfileFragment() {
 
     }
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         userContributionList = new ArrayList<>();
         fetch_user_details();
-
 
         sessionCounter = System.currentTimeMillis();
         DateFormat formatter = new SimpleDateFormat("HH:mm:ss", Locale.US);
@@ -242,7 +242,12 @@ public class UserProfileFragment extends Fragment {
 
         snapeveDatabaseRepository = new SnapeveDatabaseRepository(getActivity());
 
-        snapeveDatabaseRepository.insertSnapeveSession("UP1", startTime, endTime, duration, 0);
+        if (currentActiveTab == 1) {
+            snapeveDatabaseRepository.insertSnapeveSession("UP1", startTime, endTime, duration, 0);
+        }
+        if (currentActiveTab == 2) {
+            snapeveDatabaseRepository.insertSnapeveSession("UP2", startTime, endTime, duration, 0);
+        }
     }
 
     private void fetchGrpPostAndMembers(String grp_id) {
@@ -810,6 +815,22 @@ public class UserProfileFragment extends Fragment {
 
                 populateUserInfo();
 
+                long startTime = sessionCounter;
+                long endTime = System.currentTimeMillis();
+                long duration = System.currentTimeMillis() - sessionCounter;
+
+                sessionCounter = System.currentTimeMillis() - sessionCounter;
+                long minutes = TimeUnit.MILLISECONDS.toMinutes(sessionCounter);
+                long seconds = TimeUnit.MILLISECONDS.toSeconds(sessionCounter);
+
+                System.out.println("USERPROFILE onPause sessionCounter : " + minutes + "m " + seconds + "s");
+
+                snapeveDatabaseRepository = new SnapeveDatabaseRepository(getActivity());
+
+                snapeveDatabaseRepository.insertSnapeveSession("UP1", startTime, endTime, duration, 0);
+
+                sessionCounter = System.currentTimeMillis();
+
             }
         });
 
@@ -846,6 +867,23 @@ public class UserProfileFragment extends Fragment {
 
                     setRewardProgress(grp_total_pts, 1);
 
+
+                    //----------------------setting session
+                    long startTime = sessionCounter;
+                    long endTime = System.currentTimeMillis();
+                    long duration = System.currentTimeMillis() - sessionCounter;
+
+                    sessionCounter = System.currentTimeMillis() - sessionCounter;
+                    long minutes = TimeUnit.MILLISECONDS.toMinutes(sessionCounter);
+                    long seconds = TimeUnit.MILLISECONDS.toSeconds(sessionCounter);
+
+                    System.out.println("USERPROFILE onPause sessionCounter : " + minutes + "m " + seconds + "s");
+
+                    snapeveDatabaseRepository = new SnapeveDatabaseRepository(getActivity());
+
+                    snapeveDatabaseRepository.insertSnapeveSession("UP2", startTime, endTime, duration, 0);
+
+                    sessionCounter = System.currentTimeMillis();
                 }
                 memberListOpenFlag = false;
             }

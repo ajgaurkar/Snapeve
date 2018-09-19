@@ -25,6 +25,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.umbcapp.gaurk.snapeve.Adapters.TopScorerAdapter;
 import com.umbcapp.gaurk.snapeve.Controllers.LeaderboardListItem;
+import com.umbcapp.gaurk.snapeve.DatabaseRepository.SnapeveDatabaseRepository;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -56,6 +57,7 @@ public class ScheduledRewards extends AppCompatActivity {
     private long sessionCounter = 0;
     private int currentSelectedTab = 1;
     private TextView scheduled_rewards_date_range_textview;
+    private SnapeveDatabaseRepository snapeveDatabaseRepository;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -142,6 +144,11 @@ public class ScheduledRewards extends AppCompatActivity {
 
     private void calculateSession(int currentSelectedTab) {
 
+        snapeveDatabaseRepository = new SnapeveDatabaseRepository(getApplicationContext());
+
+        long startTime = sessionCounter;
+        long endTime = System.currentTimeMillis();
+        long duration = System.currentTimeMillis() - sessionCounter;
 
         sessionCounter = System.currentTimeMillis() - sessionCounter;
         long minutes = TimeUnit.MILLISECONDS.toMinutes(sessionCounter);
@@ -154,14 +161,20 @@ public class ScheduledRewards extends AppCompatActivity {
         switch (currentSelectedTab) {
             case 1:
                 System.out.println("WR1 : " + minutes + "m " + seconds + "s");
+                snapeveDatabaseRepository.insertSnapeveSession("WR1", startTime, endTime, duration, 0);
+                sessionCounter = System.currentTimeMillis();
                 break;
 
             case 2:
                 System.out.println("SCHEDULEDREWARDS 2 onPause sessionCounter : " + minutes + "m " + seconds + "s");
+                snapeveDatabaseRepository.insertSnapeveSession("WR2", startTime, endTime, duration, 0);
+                sessionCounter = System.currentTimeMillis();
                 break;
 
             case 3:
                 System.out.println("SCHEDULEDREWARDS 3 onPause sessionCounter : " + minutes + "m " + seconds + "s");
+                snapeveDatabaseRepository.insertSnapeveSession("WR3", startTime, endTime, duration, 0);
+                sessionCounter = System.currentTimeMillis();
                 break;
         }
     }

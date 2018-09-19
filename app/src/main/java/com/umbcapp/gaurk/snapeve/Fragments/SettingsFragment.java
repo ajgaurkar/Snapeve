@@ -1,5 +1,7 @@
 package com.umbcapp.gaurk.snapeve.Fragments;
 
+import android.arch.lifecycle.Observer;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -7,15 +9,24 @@ import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceScreen;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.common.util.concurrent.FutureCallback;
+import com.google.common.util.concurrent.Futures;
+import com.google.common.util.concurrent.ListenableFuture;
+import com.google.common.util.concurrent.SettableFuture;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.umbcapp.gaurk.snapeve.AccountHandler;
+import com.umbcapp.gaurk.snapeve.Controllers.SnapEveSession;
 import com.umbcapp.gaurk.snapeve.DatabaseRepository.SnapeveDatabaseRepository;
+import com.umbcapp.gaurk.snapeve.MainActivity;
 import com.umbcapp.gaurk.snapeve.R;
 import com.umbcapp.gaurk.snapeve.ResetPassword;
 import com.umbcapp.gaurk.snapeve.ScheduledRewards;
@@ -25,6 +36,7 @@ import com.umbcapp.gaurk.snapeve.SnapeveFeedback;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
@@ -34,8 +46,10 @@ public class SettingsFragment extends PreferenceFragment {
 
     private JsonObject jsonObjectUserProfileFragParameters;
     private UserProfileFragment userProfileFragment;
-    private long sessionCounter=0;
+    private long sessionCounter = 0;
     private SnapeveDatabaseRepository snapeveDatabaseRepository;
+    private JsonArray jsonArrayForSession;
+    private JsonObject sessionCounterParameters;
 
     public SettingsFragment() {
     }
@@ -110,12 +124,94 @@ public class SettingsFragment extends PreferenceFragment {
 //                break;
 
             case "logoutPreferenceKey":
-                new SessionManager(getActivity()).logoutUser();
+                //post session data to AZURE
+
+
+//                snapeveDatabaseRepository.getSessiondata().observe(getActivity(), new Observer<List<SnapEveSession>>() {
+//                    @Override
+//                    public void onChanged(@Nullable List<SnapEveSession> snapEveSessions) {
+//                        System.out.println("snapEveSessions sess------------  " + snapEveSessions.size());
+//                        uploadSessions(snapEveSessions);
+//                    }
+//                });
+
+
+                showLogoutDialog();
                 break;
 
         }
         return super.onPreferenceTreeClick(preferenceScreen, preference);
     }
+
+    private void showLogoutDialog() {
+        snapeveDatabaseRepository = new SnapeveDatabaseRepository(getActivity());
+
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle("Confirm Logout?").setMessage("This will delete all your data from the device")
+                .setCancelable(false)
+                .setPositiveButton("Logout", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        new SessionManager(getActivity()).logoutUser();
+                    }
+                }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+            }
+        });
+        AlertDialog alert = builder.create();
+        alert.show();
+    }
+
+    private void uploadSessions(List<SnapEveSession> snapEveSessions) {
+
+        if (snapEveSessions.size() > 0) {
+
+            jsonArrayForSession = new JsonArray();
+
+            for (int i = 0; i < snapEveSessions.size(); i++) {
+
+                System.out.println("snapEveSessions.get(i).getActivityCode() " + snapEveSessions.get(i).getActivityCode());
+                sessionCounterParameters = new JsonObject();
+                sessionCounterParameters.addProperty("user_id", new SessionManager(getActivity()).getSpecificUserDetail(SessionManager.KEY_USER_ID));
+                sessionCounterParameters.addProperty("activity_code", snapEveSessions.get(i).getActivityCode());
+                sessionCounterParameters.addProperty("start_time", snapEveSessions.get(i).getStartTime());
+                sessionCounterParameters.addProperty("end_time", snapEveSessions.get(i).getEndTime());
+                sessionCounterParameters.addProperty("duration", snapEveSessions.get(i).getDuration());
+                sessionCounterParameters.addProperty("user_name", new SessionManager(getActivity()).getSpecificUserDetail(SessionManager.KEY_USER_NAME));
+
+                jsonArrayForSession.add(sessionCounterParameters);
+            }
+
+            System.out.println("jsonArrayForSession : " + jsonArrayForSession);
+
+            final long timestampForSessionDeletion = System.currentTimeMillis();
+            final SettableFuture<JsonElement> resultFuture = SettableFuture.create();
+            ListenableFuture<JsonElement> serviceFilterFuture = MainActivity.mClient.invokeApi("session_counting_api", jsonArrayForSession);
+
+            Futures.addCallback(serviceFilterFuture, new FutureCallback<JsonElement>() {
+                @Override
+                public void onFailure(Throwable exception) {
+                    resultFuture.setException(exception);
+                    System.out.println(" session_counting_api exception    " + exception);
+                }
+
+                @Override
+                public void onSuccess(JsonElement response) {
+                    resultFuture.set(response);
+                    System.out.println(" session_counting_api response    " + response);
+
+                    if (response.toString().contains("true")) {
+                        //delete local session data
+                        System.out.println("delete local session data");
+                        snapeveDatabaseRepository.deleteUploadedSession(timestampForSessionDeletion);
+                    }
+
+                    System.out.println(" session_counting_api success response    " + response);
+                }
+            });
+        }
+    }
+
     @Override
     public void onResume() {
         super.onResume();
@@ -136,10 +232,6 @@ public class SettingsFragment extends PreferenceFragment {
         long duration = System.currentTimeMillis() - sessionCounter;
 
         sessionCounter = System.currentTimeMillis() - sessionCounter;
-        long minutes = TimeUnit.MILLISECONDS.toMinutes(sessionCounter);
-        long seconds = TimeUnit.MILLISECONDS.toSeconds(sessionCounter);
-
-        System.out.println("SETTINGS onPause sessionCounter : " + minutes + "m " + seconds + "s");
 
         snapeveDatabaseRepository = new SnapeveDatabaseRepository(getActivity());
 
