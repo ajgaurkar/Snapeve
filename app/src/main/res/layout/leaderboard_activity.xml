@@ -42,7 +42,7 @@
             android:background="@drawable/text_selection_left_seleted"
             android:gravity="center"
             android:padding="5dp"
-            android:text="You"
+            android:text="All"
             android:textColor="#fff"
             android:textSize="14sp"
             android:textStyle="bold" />
@@ -55,7 +55,7 @@
             android:background="@drawable/text_selection_right_unseleted"
             android:gravity="center"
             android:padding="5dp"
-            android:text="Group"
+            android:text="Groups"
             android:textColor="#fff"
             android:textSize="14sp"
             android:textStyle="bold" />

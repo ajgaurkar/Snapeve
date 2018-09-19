@@ -62,7 +62,7 @@
         android:layout_alignParentEnd="true"
         android:layout_margin="16dp"
         android:src="@drawable/add_img_white_48"
-        app:backgroundTint="@color/colorPrimaryDark" />
+        app:backgroundTint="@color/colorPrimary" />
 
     <!--<Button-->
     <!--android:id="@+id/button2"-->

@@ -12,12 +12,14 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.view.MotionEventCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -117,11 +119,16 @@ public class MainActivity extends AppCompatActivity implements Listview_communic
 
         new SessionManager(getApplicationContext()).checkLogin();
 
-        if ((!new SessionManager(getApplicationContext()).getSpecificUserBooleanDetail(SessionManager.KEY_RESET_PASSWORD_STATUS)) && new SessionManager(getApplicationContext()).getSpecificUserDetail(SessionManager.KEY_USER_ID) == null) {
-            System.out.println("Session mangaer resetpassword false OR no user logged in");
-            startActivity(new Intent(MainActivity.this, ResetPassword.class));
+        if (new SessionManager(getApplicationContext()).getSpecificUserDetail(SessionManager.KEY_USER_ID) != null) {
+            if (!new SessionManager(getApplicationContext()).getSpecificUserBooleanDetail(SessionManager.KEY_RESET_PASSWORD_STATUS)) {
+                Intent resetIntent = new Intent(MainActivity.this, ResetPassword.class);
+                resetIntent.putExtra("intentType", 0);
+                startActivity(resetIntent);
+            } else {
+                System.out.println("Session manager resetpassword true no need to change");
+            }
         } else {
-            System.out.println("Session mangaer resetpassword true no need to change");
+            System.out.println("Session manager resetpassword true no need to change");
         }
 
         snapeveDatabaseRepository = new SnapeveDatabaseRepository(MainActivity.this);
@@ -491,6 +498,7 @@ public class MainActivity extends AppCompatActivity implements Listview_communic
         userName = userDetailsObj.get("user_name").getAsString();
         first_name = userDetailsObj.get("first_name").getAsString();
         last_name = userDetailsObj.get("last_name").getAsString();
+//        boolean reset_pass_flag = userDetailsObj.get("reset_pass_flag").getAsBoolean();
         user_total_pts = Integer.parseInt(userDetailsObj.get("user_points").toString());
 
         try {
@@ -539,6 +547,7 @@ public class MainActivity extends AppCompatActivity implements Listview_communic
         new SessionManager(getApplicationContext()).setSpecificUserDetail(SessionManager.KEY_GRP_DP_URL, grp_dp_url);
         new SessionManager(getApplicationContext()).setSpecificUserDetail(SessionManager.KEY_GRP_NAME, grp_name);
         new SessionManager(getApplicationContext()).setSpecificUserDetail(SessionManager.KEY_GRP_ID, grp_id);
+//        new SessionManager(getApplicationContext()).setSpecificUserBooleanDetail(SessionManager.KEY_RESET_PASSWORD_STATUS, reset_pass_flag);
         System.out.println("SESSION MANAGER 2");
 
 
@@ -1117,4 +1126,37 @@ public class MainActivity extends AppCompatActivity implements Listview_communic
         View v = main_event_list_view.getChildAt(0);
         topListviewPosition = (v == null) ? 0 : (v.getTop() - main_event_list_view.getPaddingTop());
     }
+
+//    @Override
+//    public boolean onTouchEvent(MotionEvent event) {
+//
+//        int action = MotionEventCompat.getActionMasked(event);
+//
+//        switch (action) {
+//            case (MotionEvent.ACTION_DOWN):
+//                Log.d("DEBUG_TAG", "Action was DOWN");
+//                Toast.makeText(this, "D", Toast.LENGTH_SHORT).show();
+//                return true;
+//            case (MotionEvent.ACTION_MOVE):
+//                Log.d("DEBUG_TAG", "Action was MOVE");
+//                Toast.makeText(this, "M", Toast.LENGTH_SHORT).show();
+//                return true;
+//            case (MotionEvent.ACTION_UP):
+//                Log.d("DEBUG_TAG", "Action was UP");
+//                Toast.makeText(this, "U", Toast.LENGTH_SHORT).show();
+//                return true;
+//            case (MotionEvent.ACTION_CANCEL):
+//                Log.d("DEBUG_TAG", "Action was CANCEL");
+//                Toast.makeText(this, "C", Toast.LENGTH_SHORT).show();
+//                return true;
+//            case (MotionEvent.ACTION_OUTSIDE):
+//                Log.d("DEBUG_TAG", "Movement occurred outside bounds " +
+//                        "of current screen element");
+//                Toast.makeText(this, "O", Toast.LENGTH_SHORT).show();
+//                return true;
+//            default:
+//                return super.onTouchEvent(event);
+//        }
+//
+//    }
 }

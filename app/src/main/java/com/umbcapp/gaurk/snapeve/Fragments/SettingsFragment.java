@@ -88,7 +88,9 @@ public class SettingsFragment extends PreferenceFragment {
         switch (preference.getKey()) {
             case "userAccountPreferenceKey":
 //                startActivity(new Intent(getActivity(), AccountHandler.class));
-                startActivity(new Intent(getActivity(), ResetPassword.class));
+                Intent resetIntent = new Intent(getActivity(), ResetPassword.class);
+                resetIntent.putExtra("intentType", 1);
+                startActivity(resetIntent);
                 break;
 
             case "snapeveFeedbackPreferenceKey":

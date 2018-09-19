@@ -98,7 +98,6 @@ public class AppNotificationHandler extends NotificationsHandler {
 
     }
 
-
     private void setNotification() {
         //channel ID is hardcoded. it works as there is not other channel ID
         Intent intent = new Intent(ctx, MainActivity.class);
