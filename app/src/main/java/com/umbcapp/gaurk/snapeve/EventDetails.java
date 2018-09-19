@@ -979,8 +979,8 @@ public class EventDetails extends AppCompatActivity implements Listview_communic
 
             String user_id = attendies_list_object.get("user_id").getAsString();
             String user_name = attendies_list_object.get("user_name").getAsString();
-            String first_name = attendies_list_object.get("first_name").getAsString();
-            String last_name = attendies_list_object.get("last_name").getAsString();
+//            String first_name = attendies_list_object.get("first_name").getAsString();
+//            String last_name = attendies_list_object.get("last_name").getAsString();
 
 
             // -1 is null
@@ -991,10 +991,28 @@ public class EventDetails extends AppCompatActivity implements Listview_communic
             } catch (Exception e) {
                 e.printStackTrace();
             }
+            int req_status = -1;
+            try {
+                req_status = attendies_list_object.get("req_status").getAsInt();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
 
             String grp_id = null;
             try {
                 grp_id = attendies_list_object.get("grp_id").getAsString();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            String req_sender_id = null;
+            try {
+                req_sender_id = attendies_list_object.get("req_sender_id").getAsString();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            String requester_id = null;
+            try {
+                requester_id = attendies_list_object.get("requester_id").getAsString();
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -1013,23 +1031,56 @@ public class EventDetails extends AppCompatActivity implements Listview_communic
 
             }
 
-            if (attend_status == -1) {
-                if (logged_in_user_grp_id.equals(grp_id)) {
-                    attendiesGrpMemberArrayList.add(0, new AttendiesListItem(user_id, user_name, 0, attend_status, img_dp_url));
-                }
-            } else {
 
-                if (grp_id == null) {
-                    attendiesOutGrpMemberArrayList.add(0, new AttendiesListItem(user_id, user_name, 0, attend_status, img_dp_url));
-                } else {
-                    if (logged_in_user_grp_id.equals(grp_id)) {
-                        attendiesGrpMemberArrayList.add(0, new AttendiesListItem(user_id, user_name, 0, attend_status, img_dp_url));
+            System.out.println("shash grp id " + logged_in_user_grp_id);
+
+            if (logged_in_user_grp_id.equals("xxxxx____xxxxx")) {
+                //user not in any group -  add all entries to out group
+                attendiesOutGrpMemberArrayList.add(0, new AttendiesListItem(user_id, user_name, attend_status, img_dp_url, req_status, req_sender_id, requester_id));
+
+
+            } else {
+                //user in some group - now filter based on grp id
+
+                //condition to check if requester id is same as loggedin user id or not - if not ..simply dont add record to avoid duplicates
+                if (requester_id == null || requester_id.equals(new SessionManager(getApplicationContext()).getSpecificUserDetail(SessionManager.KEY_USER_ID))) {
+
+                    if (grp_id == null) {
+                        //other user not in any grp - add in others list
+
+                        attendiesOutGrpMemberArrayList.add(0, new AttendiesListItem(user_id, user_name, attend_status, img_dp_url, req_status, req_sender_id, requester_id));
                     } else {
-                        attendiesOutGrpMemberArrayList.add(0, new AttendiesListItem(user_id, user_name, 0, attend_status, img_dp_url));
+                        //other user in grp - chek same grp or diff
+                        if (logged_in_user_grp_id.equals(grp_id)) {
+                            attendiesGrpMemberArrayList.add(0, new AttendiesListItem(user_id, user_name, attend_status, img_dp_url, req_status, req_sender_id, requester_id));
+                        } else {
+                            attendiesOutGrpMemberArrayList.add(0, new AttendiesListItem(user_id, user_name, attend_status, img_dp_url, req_status, req_sender_id, requester_id));
+                        }
                     }
+                } else {
+                    System.out.println("Requester ID diff - OMIT RECORD");
                 }
 
             }
+
+
+//            if (attend_status == -1) {
+//                if (logged_in_user_grp_id.equals(grp_id)) {
+//                    attendiesGrpMemberArrayList.add(0, new AttendiesListItem(user_id, user_name, 0, attend_status, img_dp_url));
+//                }
+//            } else {
+//
+//                if (grp_id == null) {
+//                    attendiesOutGrpMemberArrayList.add(0, new AttendiesListItem(user_id, user_name, 0, attend_status, img_dp_url));
+//                } else {
+//                    if (logged_in_user_grp_id.equals(grp_id)) {
+//                        attendiesGrpMemberArrayList.add(0, new AttendiesListItem(user_id, user_name, 0, attend_status, img_dp_url));
+//                    } else {
+//                        attendiesOutGrpMemberArrayList.add(0, new AttendiesListItem(user_id, user_name, 0, attend_status, img_dp_url));
+//                    }
+//                }
+//
+//            }
 
 
             //MISSING GRP ID IN SESSION MANAGER. NEED TO ADD IT. NEED IT HERE
@@ -1043,6 +1094,7 @@ public class EventDetails extends AppCompatActivity implements Listview_communic
         }
 
         populateAttendiesList(0);
+
     }
 
     private void fillAttendingSpinner() {
@@ -1189,14 +1241,14 @@ public class EventDetails extends AppCompatActivity implements Listview_communic
 
         AttendiesListItem selectedAttendiesListItem = attendiesGrpMemberArrayList.get(position);
 
-        int tempStatus = selectedAttendiesListItem.getRequest_status();
+        int tempStatus = selectedAttendiesListItem.getReq_status();
         Log.d("tempStatus before", tempStatus + "position " + position);
 
         if (tempStatus == 0) {
-            selectedAttendiesListItem.setRequest_status(1);
+            selectedAttendiesListItem.setReq_status(1);
         }
         if (tempStatus == 1) {
-            selectedAttendiesListItem.setRequest_status(0);
+            selectedAttendiesListItem.setReq_status(0);
         }
         attendiesGrpMemberArrayList.set(position, selectedAttendiesListItem);
 

@@ -15,6 +15,7 @@ import com.umbcapp.gaurk.snapeve.Controllers.AttendiesListItem;
 import com.umbcapp.gaurk.snapeve.Controllers.CommentsListItem;
 import com.umbcapp.gaurk.snapeve.Listview_communicator;
 import com.umbcapp.gaurk.snapeve.R;
+import com.umbcapp.gaurk.snapeve.SessionManager;
 
 import java.util.List;
 
@@ -91,41 +92,67 @@ public class AttendiesAdapter extends BaseAdapter {
 
         viewHolder.attendies_list_item_user_name_text_view.setText(selectedAttendiesListItem.getUser_name());
 
-        if (attendies_type == 1) {
-//                    viewHolder.attendies_list_item_request_status_img_view.setVisibility(View.VISIBLE);
-//            viewHolder.attendies_list_item_request_status_text_view.setText(selectedAttendiesListItem.getRequest_status());
-            viewHolder.attendies_list_item_request_status_text_view.setVisibility(View.INVISIBLE);
-        }
-        if (attendies_type == 0) {
-            if (selectedAttendiesListItem.getAttend_status() == -1) {
-                viewHolder.attendies_list_item_user_attending_status_text_view.setText("Not responded");
-                viewHolder.attendies_list_item_request_status_text_view.setVisibility(View.VISIBLE);
-                if (selectedAttendiesListItem.getRequest_status() == 0) {
-                    viewHolder.attendies_list_item_request_status_text_view.setText("Request to attend");
-                    viewHolder.attendies_list_item_request_status_text_view.setTextColor(Color.parseColor("#469ac3"));
-                    viewHolder.attendies_list_item_request_status_text_view.setBackground(context.getResources().getDrawable(R.drawable.blue_bg_five_corner_round));
+//        if (attendies_type == 1) {
+//            viewHolder.attendies_list_item_request_status_text_view.setVisibility(View.INVISIBLE);
+//        }
+//        if (attendies_type == 0) {
+        if (selectedAttendiesListItem.getAttend_status() == -1) {
+            viewHolder.attendies_list_item_user_attending_status_text_view.setText("Not responded");
+            viewHolder.attendies_list_item_request_status_text_view.setVisibility(View.VISIBLE);
 
-                }
-                if (selectedAttendiesListItem.getRequest_status() == 1) {
+
+            if (selectedAttendiesListItem.getReq_status() == 1) {
+                if (selectedAttendiesListItem.getRequester_id().equals(new SessionManager(context).getSpecificUserDetail(SessionManager.KEY_USER_ID))) {
                     viewHolder.attendies_list_item_request_status_text_view.setText("Request sent");
                     viewHolder.attendies_list_item_request_status_text_view.setTextColor(Color.parseColor("#bbbbbb"));
                     viewHolder.attendies_list_item_request_status_text_view.setBackground(context.getResources().getDrawable(R.drawable.grey_bg_five_corner_round));
+                } else {
+                    viewHolder.attendies_list_item_request_status_text_view.setText("Request to attend");
+                    viewHolder.attendies_list_item_request_status_text_view.setTextColor(Color.parseColor("#469ac3"));
+                    viewHolder.attendies_list_item_request_status_text_view.setBackground(context.getResources().getDrawable(R.drawable.blue_bg_five_corner_round));
                 }
-            }
-            if (selectedAttendiesListItem.getAttend_status() == 1) {
-                viewHolder.attendies_list_item_user_attending_status_text_view.setText("Interested");
-                viewHolder.attendies_list_item_request_status_text_view.setVisibility(View.INVISIBLE);
-            }
-            if (selectedAttendiesListItem.getAttend_status() == 2) {
-                viewHolder.attendies_list_item_user_attending_status_text_view.setText("Attending");
-                viewHolder.attendies_list_item_request_status_text_view.setVisibility(View.INVISIBLE);
-            }
-            if (selectedAttendiesListItem.getAttend_status() == 3) {
-                viewHolder.attendies_list_item_user_attending_status_text_view.setText("Not Interested");
-                viewHolder.attendies_list_item_request_status_text_view.setVisibility(View.INVISIBLE);
+
+            } else {
+                viewHolder.attendies_list_item_request_status_text_view.setText("Request to attend");
+                viewHolder.attendies_list_item_request_status_text_view.setTextColor(Color.parseColor("#469ac3"));
+                viewHolder.attendies_list_item_request_status_text_view.setBackground(context.getResources().getDrawable(R.drawable.blue_bg_five_corner_round));
             }
 
+
+//            if (selectedAttendiesListItem.getRequester_id().equals(new SessionManager(context).getSpecificUserDetail(SessionManager.KEY_USER_ID))) {
+//                if (selectedAttendiesListItem.getReq_status() == 0) {
+//                    viewHolder.attendies_list_item_request_status_text_view.setText("Request to attend");
+//                    viewHolder.attendies_list_item_request_status_text_view.setTextColor(Color.parseColor("#469ac3"));
+//                    viewHolder.attendies_list_item_request_status_text_view.setBackground(context.getResources().getDrawable(R.drawable.blue_bg_five_corner_round));
+//
+//                }
+//                if (selectedAttendiesListItem.getReq_status() == 1) {
+//                    viewHolder.attendies_list_item_request_status_text_view.setText("Request sent");
+//                    viewHolder.attendies_list_item_request_status_text_view.setTextColor(Color.parseColor("#bbbbbb"));
+//                    viewHolder.attendies_list_item_request_status_text_view.setBackground(context.getResources().getDrawable(R.drawable.grey_bg_five_corner_round));
+//                }
+//            } else {
+//                viewHolder.attendies_list_item_request_status_text_view.setText("Request to attend");
+//                viewHolder.attendies_list_item_request_status_text_view.setTextColor(Color.parseColor("#469ac3"));
+//                viewHolder.attendies_list_item_request_status_text_view.setBackground(context.getResources().getDrawable(R.drawable.blue_bg_five_corner_round));
+//
+//            }
+
         }
+        if (selectedAttendiesListItem.getAttend_status() == 1) {
+            viewHolder.attendies_list_item_user_attending_status_text_view.setText("Interested");
+            viewHolder.attendies_list_item_request_status_text_view.setVisibility(View.INVISIBLE);
+        }
+        if (selectedAttendiesListItem.getAttend_status() == 2) {
+            viewHolder.attendies_list_item_user_attending_status_text_view.setText("Attending");
+            viewHolder.attendies_list_item_request_status_text_view.setVisibility(View.INVISIBLE);
+        }
+        if (selectedAttendiesListItem.getAttend_status() == 3) {
+            viewHolder.attendies_list_item_user_attending_status_text_view.setText("Not Interested");
+            viewHolder.attendies_list_item_request_status_text_view.setVisibility(View.INVISIBLE);
+        }
+
+//        }
 
         viewHolder.attendies_list_item_request_status_text_view.setOnClickListener(new View.OnClickListener() {
             @Override

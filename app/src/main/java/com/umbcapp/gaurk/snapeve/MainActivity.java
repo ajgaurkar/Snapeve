@@ -117,7 +117,8 @@ public class MainActivity extends AppCompatActivity implements Listview_communic
 
         new SessionManager(getApplicationContext()).checkLogin();
 
-        if ((!new SessionManager(getApplicationContext()).getSpecificUserBooleanDetail(SessionManager.KEY_RESET_PASSWORD_STATUS)) && new SessionManager(getApplicationContext()).getSpecificUserDetail(SessionManager.KEY_USER_ID) == null) {
+//        if ((!new SessionManager(getApplicationContext()).getSpecificUserBooleanDetail(SessionManager.KEY_RESET_PASSWORD_STATUS)) && new SessionManager(getApplicationContext()).getSpecificUserDetail(SessionManager.KEY_USER_ID) == null) {
+        if (!new SessionManager(getApplicationContext()).getSpecificUserBooleanDetail(SessionManager.KEY_RESET_PASSWORD_STATUS)) {
             System.out.println("Session mangaer resetpassword false OR no user logged in");
             startActivity(new Intent(MainActivity.this, ResetPassword.class));
         } else {
