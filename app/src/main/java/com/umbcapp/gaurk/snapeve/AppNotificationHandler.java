@@ -1,7 +1,9 @@
 package com.umbcapp.gaurk.snapeve;
 
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
@@ -68,8 +70,8 @@ public class AppNotificationHandler extends NotificationsHandler {
             case "Action verified":
                 System.out.println("Action verified 1");
 
-                System.out.println("poster_id 1 "+poster_id);
-                System.out.println("poster_id 2 "+new SessionManager(ctx).getSpecificUserDetail(SessionManager.KEY_USER_ID));
+                System.out.println("poster_id 1 " + poster_id);
+                System.out.println("poster_id 2 " + new SessionManager(ctx).getSpecificUserDetail(SessionManager.KEY_USER_ID));
 
                 if (new SessionManager(ctx).getSpecificUserDetail(SessionManager.KEY_USER_ID).equals(poster_id)) {
                     System.out.println("Action verified 2");
@@ -99,6 +101,10 @@ public class AppNotificationHandler extends NotificationsHandler {
 
     private void setNotification() {
         //channel ID is hardcoded. it works as there is not other channel ID
+        Intent intent = new Intent(ctx, MainActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        PendingIntent contentIntent = PendingIntent.getActivity(ctx, 0,
+                intent, PendingIntent.FLAG_ONE_SHOT);
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(ctx, "channel_id_x")
                 .setSmallIcon(R.drawable.locations_24)
                 .setContentTitle(nhTitle)
@@ -106,9 +112,9 @@ public class AppNotificationHandler extends NotificationsHandler {
                 .setStyle(new NotificationCompat.BigTextStyle()
                         .bigText("-> " + nhMessage))
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT);
+        mBuilder.setContentIntent(contentIntent);
 
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(ctx);
-        // notificationId is a unique int for each notification that you must define
         notificationManager.notify((int) System.currentTimeMillis(), mBuilder.build());
 
     }
