@@ -20,6 +20,7 @@ import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import com.google.gson.JsonObject;
 //import com.shashank.sony.fancydialoglib.Animation;
@@ -32,6 +33,7 @@ import com.umbcapp.gaurk.snapeve.Controllers.MessagesPersonalListItem;
 import com.umbcapp.gaurk.snapeve.Controllers.SnapEveSession;
 import com.umbcapp.gaurk.snapeve.Controllers.SnapeveNotification;
 import com.umbcapp.gaurk.snapeve.DatabaseRepository.SnapeveDatabaseRepository;
+import com.umbcapp.gaurk.snapeve.Leaderboard;
 import com.umbcapp.gaurk.snapeve.MessageThread;
 import com.umbcapp.gaurk.snapeve.R;
 import com.umbcapp.gaurk.snapeve.SessionManager;
@@ -50,8 +52,10 @@ public class NotificationFragment extends Fragment {
 
 
     private JsonObject jsonObjectUserProfileFragParameters;
-    //    private TextView notification_switch_notification_textview;
-//    private TextView notification_switch_messages_textview;
+
+    //private TextView notification_switch_notification_textview;
+    //private TextView notification_switch_messages_textview;
+
     private ListView notification_layout_listview;
     int page_type_code = 1;
     private ImageView notification_settings_imageview;
@@ -144,7 +148,8 @@ public class NotificationFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-//                startActivity(new Intent(getActivity(), MessageThread.class));
+                    startActivity(new Intent(getActivity(), MessageThread.class));
+                Toast.makeText(getActivity(), "Check Psotion --- " + position, Toast.LENGTH_LONG).show();
 
             }
         });
@@ -184,29 +189,6 @@ public class NotificationFragment extends Fragment {
     }
 
     private void showConfirmationDialog() {
-//        new FancyAlertDialog.Builder(getActivity())
-//                .setTitle("Are you sure you want to disable app notifications?")
-//                .setBackgroundColor(Color.parseColor("#3F51B5"))  //Don't pass R.color.colorvalue
-//                .setNegativeBtnText("Keep it ON")
-//                .setAnimation(Animation.SLIDE)
-//                .setIcon(R.drawable.notification_round_blue_white_100, Icon.Visible)
-//                .isCancellable(false)
-//                .OnNegativeClicked(new FancyAlertDialogListener() {
-//                    @Override
-//                    public void OnClick() {
-//                        notification_switch.setChecked(true);
-//                    }
-//                })
-//                .setPositiveBtnText("Turn it OFF")
-//                .setPositiveBtnBackground(getResources().getColor(R.color.colorPrimary))//Don't pass R.color.colorvalue
-//                .OnPositiveClicked(new FancyAlertDialogListener() {
-//                    @Override
-//                    public void OnClick() {
-//                        new SessionManager(getActivity()).setSpecificUserBooleanDetail(SessionManager.KEY_NOTIFICATION_ONN_OFF_STATUS, false);
-//                    }
-//                })
-//                .build();
-
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle("Are you sure you want to disable app notifications?")
@@ -230,15 +212,6 @@ public class NotificationFragment extends Fragment {
 
         switch (type_code) {
             case 1:
-
-//                ArrayList<NotificationListItem> notificationsList = new ArrayList<>();
-//                notificationsList.add(new NotificationListItem("u1", "n1", 1, "Request approved", "Your request to join the group has been accepted", "Today 12:39 PM", true));
-//                notificationsList.add(new NotificationListItem("u1", "n1", 1, "Post liked", "Your post from last week has been liked", "Wed 04:12 PM", false));
-//                notificationsList.add(new NotificationListItem("u1", "n1", 1, "Invitation for event", "Your group member has invited to you attend an event", "Jul 03, 09:30 AM", false));
-//
-//                NotificationsAdapter notificationsAdapter = new NotificationsAdapter(getActivity(), notificationsList);
-//                notification_layout_listview.setAdapter(notificationsAdapter);
-
 
                 studentRepository.getTasks().observe((LifecycleOwner) getActivity(), new Observer<List<SnapeveNotification>>() {
                     @Override
@@ -283,7 +256,6 @@ public class NotificationFragment extends Fragment {
         DateFormat formatter = new SimpleDateFormat("HH:mm:ss", Locale.US);
         formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
         String text = formatter.format(new Date(sessionCounter));
-//        System.out.println("Start @ sessionCounter : " + sessionCounter);
     }
 
     @Override

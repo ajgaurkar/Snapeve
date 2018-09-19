@@ -112,20 +112,6 @@ public class SnapeveNotificationAdapter extends BaseAdapter {
         }
 
 
-//                iv_logo.setImageResource(getResources().getIdentifier(logo_id, "drawable", "com.yourpackage"));
-
-
-//        Picasso.get().load(selectedNotificationListItem.get())
-//                .fit().centerCrop().into(viewHolder.attendies_list_item_user_pic_img_view);
-
-
-//        viewHolder.attendies_list_item_request_status_text_view.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                System.out.print("position 2 " + position);
-//                ((Listview_communicator) context).main_event_listview_element_clicked(position, 0);
-//            }
-//        });
 
         return view;
     }

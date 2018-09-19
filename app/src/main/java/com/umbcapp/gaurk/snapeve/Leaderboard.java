@@ -10,6 +10,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.akexorcist.roundcornerprogressbar.RoundCornerProgressBar;
 import com.google.common.util.concurrent.FutureCallback;
@@ -34,7 +35,7 @@ import java.util.concurrent.TimeUnit;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class Leaderboard extends AppCompatActivity implements Listview_communicator {
+public class Leaderboard extends AppCompatActivity implements ItemClickListener {
 
     int user_type = -1;
     private RecyclerView leader_board_recyclerview;
@@ -246,6 +247,7 @@ public class Leaderboard extends AppCompatActivity implements Listview_communica
         System.out.println(" leaderBoardIndList " + leaderBoardIndList.size());
         //set top N by default
         leaderBoardAdapter = new LeaderBoardAdapter(Leaderboard.this, leaderBoardIndTop10List, maxIndividualRank, user_type_selection_status);
+        leaderBoardAdapter.setClickListener(Leaderboard.this);
         leader_board_recyclerview.setLayoutManager(mLayoutManager);
         leader_board_recyclerview.setItemAnimator(new DefaultItemAnimator());
         leader_board_recyclerview.setAdapter(leaderBoardAdapter);
@@ -318,11 +320,11 @@ public class Leaderboard extends AppCompatActivity implements Listview_communica
         }
     }
 
-    @Override
-    public void main_event_listview_element_clicked(int position, int click_code) {
-        System.out.println("position :" + position);
-
-    }
+//    @Override
+//    public void main_event_listview_element_clicked(int position, int click_code) {
+//        System.out.println("position :" + position);
+//
+//    }
 
     @Override
     public void onPause() {
@@ -342,7 +344,13 @@ public class Leaderboard extends AppCompatActivity implements Listview_communica
         DateFormat formatter = new SimpleDateFormat("HH:mm:ss", Locale.US);
         formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
         String text = formatter.format(new Date(sessionCounter));
-
         super.onResume();
+    }
+
+
+    @Override
+    public void onClick(View view, int position) {
+        System.out.println("position :" + position);
+        Toast.makeText(Leaderboard.this, "Check Psotion --- " + position, Toast.LENGTH_LONG).show();
     }
 }
