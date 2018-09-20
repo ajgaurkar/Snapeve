@@ -8,6 +8,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ListView;
 
 import com.squareup.picasso.Picasso;
@@ -188,78 +189,117 @@ public class ScheduledRewards extends AppCompatActivity {
                 System.out.println("IN 1");
 
                 tempList = new ArrayList<>(individualScorerList);
-                //setting top person values
-                if (tempList.get(0).getUserPicUrl() == null) {
-                    scheduled_rewards_profile_pic_image_view.setImageResource(R.drawable.avatar_100_3);
-
-                } else {
-                    Picasso.with(getApplicationContext()).load(tempList.get(0).getUserPicUrl()).fit().centerCrop().into(scheduled_rewards_profile_pic_image_view);
-                }
-                scheduled_rewards_user_fullname_name_textview.setText(tempList.get(0).getUserName());
-                scheduled_rewards_user_name_textview.setText("Score this week : " + tempList.get(0).getUserRank());
-
-                //removing top person from list
-                tempList.remove(0);
-
                 if (tempList.size() > 0) {
-                    topScorerAdapter = new TopScorerAdapter(getApplicationContext(), tempList);
-                    scheduled_rewards_runnerup_label.setText("Runner Ups");
+                    //setting top person values
+                    if (tempList.get(0).getUserPicUrl() == null) {
+                        scheduled_rewards_profile_pic_image_view.setImageResource(R.drawable.avatar_100_3);
 
+                    } else {
+                        Picasso.with(getApplicationContext()).load(tempList.get(0).getUserPicUrl()).fit().centerCrop().into(scheduled_rewards_profile_pic_image_view);
+                    }
+                    scheduled_rewards_user_fullname_name_textview.setText(tempList.get(0).getUserName());
+                    scheduled_rewards_user_name_textview.setText("Score this week : " + tempList.get(0).getUserRank());
+
+                    //removing top person from list
+                    tempList.remove(0);
+
+                    if (tempList.size() > 0) {
+                        topScorerAdapter = new TopScorerAdapter(getApplicationContext(), tempList);
+                        topScorerlistView.setAdapter(topScorerAdapter);
+                        scheduled_rewards_runnerup_label.setText("Runner Ups");
+
+                    } else {
+                        scheduled_rewards_runnerup_label.setText("No Runner Ups");
+                        System.out.println("NO USER RUNNER UP TO SHOW");
+
+                        topScorerAdapter = new TopScorerAdapter(getApplicationContext(), new ArrayList<LeaderboardListItem>());
+                        topScorerlistView.setAdapter(topScorerAdapter);
+                    }
+                    scheduled_rewards_runnerup_label.setVisibility(View.VISIBLE);
                 } else {
-                    scheduled_rewards_runnerup_label.setText("No Runner Ups");
-                    System.out.println("NO USER RUNNER UP TO SHOW");
-                }
+                    System.out.println("NO WINNERS TO SHOW");
+                    scheduled_rewards_user_fullname_name_textview.setText("NO WINNERS TO SHOW");
+                    scheduled_rewards_runnerup_label.setVisibility(View.INVISIBLE);
 
+                    topScorerAdapter = new TopScorerAdapter(getApplicationContext(), new ArrayList<LeaderboardListItem>());
+                    topScorerlistView.setAdapter(topScorerAdapter);
+                }
                 break;
             case 2:
                 System.out.println("IN 2");
                 tempList = new ArrayList<>(grpScorerList);
-                //setting top person values
-                if (tempList.get(0).getUserPicUrl() == null) {
-                    scheduled_rewards_profile_pic_image_view.setImageResource(R.drawable.avatar_100_3);
-                } else {
-                    Picasso.with(getApplicationContext()).load(tempList.get(0).getUserPicUrl()).fit().centerCrop().into(scheduled_rewards_profile_pic_image_view);
-                }
-                scheduled_rewards_user_fullname_name_textview.setText(tempList.get(0).getUserName());
-                scheduled_rewards_user_name_textview.setText("Score this week : " + tempList.get(0).getUserRank());
-
-                //removing top person from list
-                tempList.remove(0);
-
                 if (tempList.size() > 0) {
-                    topScorerAdapter = new TopScorerAdapter(getApplicationContext(), tempList);
-                    scheduled_rewards_runnerup_label.setText("Runner Ups");
+                    //setting top person values
+                    if (tempList.get(0).getUserPicUrl() == null) {
+                        scheduled_rewards_profile_pic_image_view.setImageResource(R.drawable.avatar_100_3);
+                    } else {
+                        Picasso.with(getApplicationContext()).load(tempList.get(0).getUserPicUrl()).fit().centerCrop().into(scheduled_rewards_profile_pic_image_view);
+                    }
+                    scheduled_rewards_user_fullname_name_textview.setText(tempList.get(0).getUserName());
+                    scheduled_rewards_user_name_textview.setText("Score this week : " + tempList.get(0).getUserRank());
+
+                    //removing top person from list
+                    tempList.remove(0);
+
+                    if (tempList.size() > 0) {
+                        topScorerAdapter = new TopScorerAdapter(getApplicationContext(), tempList);
+                        topScorerlistView.setAdapter(topScorerAdapter);
+                        scheduled_rewards_runnerup_label.setText("Runner Ups");
+                    } else {
+                        scheduled_rewards_runnerup_label.setText("No Runner Ups");
+                        System.out.println("NO GRP RUNNER UP TO SHOW");
+
+                        topScorerAdapter = new TopScorerAdapter(getApplicationContext(), new ArrayList<LeaderboardListItem>());
+                        topScorerlistView.setAdapter(topScorerAdapter);
+                    }
+                    scheduled_rewards_runnerup_label.setVisibility(View.VISIBLE);
                 } else {
-                    scheduled_rewards_runnerup_label.setText("No Runner Ups");
-                    System.out.println("NO GRP RUNNER UP TO SHOW");
+                    System.out.println("NO GROUPS TO SHOW");
+                    scheduled_rewards_user_fullname_name_textview.setText("NO GROUPS TO SHOW");
+                    scheduled_rewards_runnerup_label.setVisibility(View.INVISIBLE);
+
+                    topScorerAdapter = new TopScorerAdapter(getApplicationContext(), new ArrayList<LeaderboardListItem>());
+                    topScorerlistView.setAdapter(topScorerAdapter);
                 }
                 break;
             case 3:
                 System.out.println("IN 3");
                 tempList = new ArrayList<>(teamMembersList);
-                //setting top person values
-                if (tempList.get(0).getUserPicUrl() == null) {
-                    scheduled_rewards_profile_pic_image_view.setImageResource(R.drawable.avatar_100_3);
-                } else {
-                    Picasso.with(getApplicationContext()).load(tempList.get(0).getUserPicUrl()).fit().centerCrop().into(scheduled_rewards_profile_pic_image_view);
-                }
-                scheduled_rewards_user_fullname_name_textview.setText(tempList.get(0).getUserName());
-                scheduled_rewards_user_name_textview.setText("Score this week : " + tempList.get(0).getUserRank());
-
-                //removing top person from list
-                tempList.remove(0);
-
                 if (tempList.size() > 0) {
-                    topScorerAdapter = new TopScorerAdapter(getApplicationContext(), tempList);
-                    scheduled_rewards_runnerup_label.setText("Runner Ups");
+                    //setting top person values
+                    if (tempList.get(0).getUserPicUrl() == null) {
+                        scheduled_rewards_profile_pic_image_view.setImageResource(R.drawable.avatar_100_3);
+                    } else {
+                        Picasso.with(getApplicationContext()).load(tempList.get(0).getUserPicUrl()).fit().centerCrop().into(scheduled_rewards_profile_pic_image_view);
+                    }
+                    scheduled_rewards_user_fullname_name_textview.setText(tempList.get(0).getUserName());
+                    scheduled_rewards_user_name_textview.setText("Score this week : " + tempList.get(0).getUserRank());
+
+                    //removing top person from list
+                    tempList.remove(0);
+
+                    if (tempList.size() > 0) {
+                        topScorerAdapter = new TopScorerAdapter(getApplicationContext(), tempList);
+                        topScorerlistView.setAdapter(topScorerAdapter);
+                        scheduled_rewards_runnerup_label.setText("Runner Ups");
+                    } else {
+                        scheduled_rewards_runnerup_label.setText("No Runner Ups");
+                        System.out.println("NO TEAM MEMBER RUNNER UP TO SHOW");
+
+                        topScorerAdapter = new TopScorerAdapter(getApplicationContext(), new ArrayList<LeaderboardListItem>());
+                        topScorerlistView.setAdapter(topScorerAdapter);
+                    }
+                    scheduled_rewards_runnerup_label.setVisibility(View.VISIBLE);
                 } else {
-                    scheduled_rewards_runnerup_label.setText("No Runner Ups");
-                    System.out.println("NO TEAM MEMBER RUNNER UP TO SHOW");
+                    System.out.println("NO TEAM MEMBERS TO SHOW");
+                    scheduled_rewards_user_fullname_name_textview.setText("NO TEAM MEMBERS TO SHOW");
+                    scheduled_rewards_runnerup_label.setVisibility(View.INVISIBLE);
+
+                    topScorerAdapter = new TopScorerAdapter(getApplicationContext(), new ArrayList<LeaderboardListItem>());
+                    topScorerlistView.setAdapter(topScorerAdapter);
                 }
                 break;
         }
-
-        topScorerlistView.setAdapter(topScorerAdapter);
 
     }
 

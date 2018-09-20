@@ -52,10 +52,10 @@
             app:civ_border_width="3dp" />
 
         <TextView
-            android:id="@+id/browse_profile_user_name"
+            android:id="@+id/browse_profile_user_points"
             android:layout_width="wrap_content"
-            android:layout_below="@+id/user_full_name"
             android:layout_height="wrap_content"
+            android:layout_below="@+id/user__name"
             android:layout_toEndOf="@+id/profile_pic_image_view"
             android:padding="5dp"
             android:text="Hora_pag"
@@ -64,7 +64,7 @@
             android:textStyle="bold" />
 
         <TextView
-            android:id="@+id/user_full_name"
+            android:id="@+id/user__name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignTop="@+id/profile_pic_image_view"
@@ -72,30 +72,18 @@
             android:padding="5dp"
             android:text="Horacio Pagani"
             android:textColor="#fff"
+            android:textSize="22sp"
             android:textStyle="bold" />
 
         <TextView
-            android:id="@+id/user_status"
+            android:id="@+id/user_next_level_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/browse_profile_user_name"
+            android:layout_below="@+id/browse_profile_user_points"
             android:layout_toEndOf="@+id/profile_pic_image_view"
             android:padding="5dp"
             android:text="Contributor : Level 5"
             android:textColor="#fff"
-            android:textStyle="bold" />
-
-        <TextView
-            android:id="@+id/user_points"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignEnd="@+id/profile_progress_bar"
-            android:maxLength="4"
-            android:padding="5dp"
-            android:layout_above="@+id/profile_progress_bar"
-            android:text="15"
-            android:textColor="#fff"
-            android:textSize="18sp"
             android:textStyle="bold" />
 
         <TextView
@@ -116,14 +104,17 @@
             android:textStyle="bold" />
 
         <TextView
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignBottom="@+id/grp_name_text_view"
-            android:layout_alignStart="@+id/profile_pic_image_view"
             android:layout_alignTop="@+id/grp_name_text_view"
-            android:layout_toStartOf="@+id/vertical_divider_user_profile"
+            android:layout_marginStart="-1dp"
+            android:background="@drawable/user_profile_tabs_left_selected"
             android:gravity="center_vertical"
             android:padding="5dp"
+            android:paddingBottom="5dp"
+            android:paddingEnd="15dp"
+            android:paddingStart="10dp"
+            android:paddingTop="5dp"
             android:singleLine="true"
             android:text="17 Events posted"
             android:textColor="#fff"
@@ -133,12 +124,13 @@
             android:id="@+id/profile_progress_bar"
             android:layout_width="match_parent"
             android:layout_height="30dp"
-            android:layout_below="@+id/user_status"
+            android:layout_below="@+id/user_next_level_tv"
             android:layout_marginEnd="30dp"
             android:layout_marginRight="30dp"
             android:layout_marginStart="-5dp"
             android:layout_marginTop="5dp"
             android:layout_toEndOf="@+id/profile_pic_image_view"
+            android:visibility="gone"
             app:rcBackgroundColor="#00ffffff"
             app:rcBackgroundPadding="10dp"
             app:rcMax="10"

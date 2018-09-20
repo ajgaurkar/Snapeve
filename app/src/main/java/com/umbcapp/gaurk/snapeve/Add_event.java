@@ -534,8 +534,11 @@ public class Add_event extends AppCompatActivity implements LocationListener {
 
     private void setStartEndDateTime(Calendar eventStartDateTime, Calendar eventEndDateTime) {
 
+        Toast.makeText(this, eventStartDateTime.getTime() + " " + eventStartDateTime.getTime(), Toast.LENGTH_SHORT).show();
+        System.out.println("Check time range " + eventStartDateTime.getTime() + " " + eventStartDateTime.getTime());
+
         SimpleDateFormat dateFormatter = new SimpleDateFormat("MMM dd");
-        SimpleDateFormat timeFormatter = new SimpleDateFormat("HH:MM");
+        SimpleDateFormat timeFormatter = new SimpleDateFormat("HH:mm");
 
         post_event_date_text_view.setText(dateFormatter.format(eventStartDateTime.getTime()));
         post_event_time_text_view.setText(timeFormatter.format(eventStartDateTime.getTime()) + " TO " + timeFormatter.format(eventEndDateTime.getTime()));
@@ -564,7 +567,7 @@ public class Add_event extends AppCompatActivity implements LocationListener {
                             eventStartDateTime.set(Calendar.MINUTE, minute);
                             setStartEndDateTime(eventStartDateTime, eventEndDateTime);
 
-                            post_event_time_text_view.setText(hourOfDay + ":" + minute);
+//                            post_event_time_text_view.setText(hourOfDay + ":" + minute);
                             System.out.println("TT_1" + hourOfDay + ":" + minute);
                             selectTime(1);
 //                        computeEventStartEndDateTime();
@@ -591,7 +594,7 @@ public class Add_event extends AppCompatActivity implements LocationListener {
                             System.out.println("TT_2" + hourOfDay + ":" + minute);
                             setStartEndDateTime(eventStartDateTime, eventEndDateTime);
 
-                            post_event_time_text_view.setText(eventStartDateTime.get(Calendar.HOUR_OF_DAY) + " : " + eventStartDateTime.get(Calendar.MINUTE) + " TO " + eventEndDateTime.get(Calendar.HOUR_OF_DAY) + " : " + eventEndDateTime.get(Calendar.MINUTE));
+//                            post_event_time_text_view.setText(eventStartDateTime.get(Calendar.HOUR_OF_DAY) + " : " + eventStartDateTime.get(Calendar.MINUTE) + " TO " + eventEndDateTime.get(Calendar.HOUR_OF_DAY) + " : " + eventEndDateTime.get(Calendar.MINUTE));
 //                        computeEventStartEndDateTime();
                             System.out.println("eventStartDateTime : " + eventStartDateTime);
                             System.out.println("eventEndDateTime : " + eventEndDateTime);

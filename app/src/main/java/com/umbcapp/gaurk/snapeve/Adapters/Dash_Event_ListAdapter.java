@@ -111,7 +111,7 @@ public class Dash_Event_ListAdapter extends BaseAdapter {
             viewHolder.list_item_event_statr_end_dt_time_textview.setText(displayAlldayDtFormat.format(startDateTime) + ", All day event");
 
         } else {
-            DateFormat displayStartDtFormat = new SimpleDateFormat("MMM dd, HH:MM - ");
+            DateFormat displayStartDtFormat = new SimpleDateFormat("MMM dd, HH:mm - ");
             DateFormat displayEndTimeFormat = new SimpleDateFormat("HH:mm");
 
             Date startDateTime = null;

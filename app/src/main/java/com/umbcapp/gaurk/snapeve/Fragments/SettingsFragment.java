@@ -1,6 +1,8 @@
 package com.umbcapp.gaurk.snapeve.Fragments;
 
+import android.arch.lifecycle.LifecycleOwner;
 import android.arch.lifecycle.Observer;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
@@ -51,7 +53,10 @@ public class SettingsFragment extends PreferenceFragment {
     private JsonArray jsonArrayForSession;
     private JsonObject sessionCounterParameters;
 
+    Context context;
+
     public SettingsFragment() {
+
     }
 
     @Override
@@ -129,14 +134,13 @@ public class SettingsFragment extends PreferenceFragment {
                 //post session data to AZURE
 
 
-//                snapeveDatabaseRepository.getSessiondata().observe(getActivity(), new Observer<List<SnapEveSession>>() {
+//                snapeveDatabaseRepository.getSessiondata().observe((LifecycleOwner) getActivity(), new Observer<List<SnapEveSession>>() {
 //                    @Override
 //                    public void onChanged(@Nullable List<SnapEveSession> snapEveSessions) {
 //                        System.out.println("snapEveSessions sess------------  " + snapEveSessions.size());
 //                        uploadSessions(snapEveSessions);
 //                    }
 //                });
-
 
                 showLogoutDialog();
                 break;

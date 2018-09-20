@@ -90,11 +90,14 @@ public class AppNotificationHandler extends NotificationsHandler {
 
     private void processNotification() {
 
-        setNotification();
         snapeveDatabaseRepository = new SnapeveDatabaseRepository(ctx);
         long curentTime = System.currentTimeMillis();
         System.out.println("System.currentTimeMillis() " + curentTime);
         snapeveDatabaseRepository.insertSnapeveNotification(nhTitle, nhMessage, nhTag, curentTime);
+
+        if (new SessionManager(ctx).getSpecificUserBooleanDetail(SessionManager.KEY_NOTIFICATION_ONN_OFF_STATUS)) {
+            setNotification();
+        }
 
     }
 
