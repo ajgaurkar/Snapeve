@@ -1,9 +1,12 @@
 package com.umbcapp.gaurk.snapeve;
 
+import android.Manifest;
+import android.annotation.TargetApi;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -48,15 +51,21 @@ public class Login_snapeve_activity extends AppCompatActivity {
     private EditText login_page_email_edittext;
     private CardView login_btn_card;
     private ArrayList<String> notificationTagList = new ArrayList<>();
+    final static int PERMISSION_ALL = 1;
+    final static int PERMISSION_ALL_Check = 2;
+    final static String[] PERMISSIONS = {Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE,
+            Manifest.permission.CAMERA, Manifest.permission.READ_CONTACTS, Manifest.permission.WRITE_CONTACTS,
+            Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.RECORD_AUDIO};
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        startActivity(new Intent(getApplicationContext(), UserAgreementActivity.class));
+        startActivityForResult(new Intent(getApplicationContext(), UserAgreementActivity.class), PERMISSION_ALL_Check);
 
         setContentView(R.layout.login_snapeve);
 
-
+        // initiate_permission_check();
         createNotificationChannel();
 
         System.out.println("1 LOGIN USER ID " + new SessionManager(getApplicationContext()).getSpecificUserDetail(SessionManager.KEY_USER_ID));
@@ -249,5 +258,39 @@ public class Login_snapeve_activity extends AppCompatActivity {
         a.addCategory(Intent.CATEGORY_HOME);
         a.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(a);
+    }
+
+
+    private void initiate_permission_check() {
+        //Permission check to set switch status
+        if (Build.VERSION.SDK_INT >= 23 && !isPermissionGranted()) {
+            requestPermissions(PERMISSIONS, PERMISSION_ALL);
+        }
+    }
+
+    @TargetApi(Build.VERSION_CODES.M)
+    private boolean isPermissionGranted() {
+        if (this.checkSelfPermission(Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        System.out.println("Check Value----1 ");
+        System.out.println("PERMISSION_ALL_Check-------  " + PERMISSION_ALL_Check);
+        System.out.println("RESULT_OK-------  " + RESULT_OK);
+        System.out.println("requestCode-------  " + requestCode);
+        System.out.println("resultCode-------  " + resultCode);
+
+        if (requestCode == PERMISSION_ALL_Check && resultCode == RESULT_OK) {
+            System.out.println("Check Value---- ");
+            initiate_permission_check();
+        } else {
+            System.out.println("Check Value---- 2 ");
+        }
     }
 }

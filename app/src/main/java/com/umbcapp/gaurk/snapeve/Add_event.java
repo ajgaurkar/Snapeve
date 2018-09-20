@@ -1052,7 +1052,7 @@ public class Add_event extends AppCompatActivity implements LocationListener {
     }
 
     private void initiate_permission_check() {
-//Permission check to set switch status
+        //Permission check to set switch status
         if (Build.VERSION.SDK_INT >= 23 && !isPermissionGranted()) {
             requestPermissions(PERMISSIONS, PERMISSION_ALL);
         }

@@ -1,5 +1,6 @@
 package com.umbcapp.gaurk.snapeve;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -38,6 +39,8 @@ public class UserAgreementActivity extends AppCompatActivity {
         useragreementconfirmbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Intent replyIntent = new Intent();
+                setResult(RESULT_OK, replyIntent);
                 finish();
             }
         });
