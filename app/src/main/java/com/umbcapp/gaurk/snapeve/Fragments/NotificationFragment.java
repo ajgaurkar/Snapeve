@@ -148,8 +148,8 @@ public class NotificationFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                    startActivity(new Intent(getActivity(), MessageThread.class));
-                Toast.makeText(getActivity(), "Check Psotion --- " + position, Toast.LENGTH_LONG).show();
+//                    startActivity(new Intent(getActivity(), MessageThread.class));
+//                Toast.makeText(getActivity(), "Check Psotion --- " + position, Toast.LENGTH_LONG).show();
 
             }
         });
@@ -178,6 +178,10 @@ public class NotificationFragment extends Fragment {
 
                 if (isChecked) {
                     new SessionManager(getActivity()).setSpecificUserBooleanDetail(SessionManager.KEY_NOTIFICATION_ONN_OFF_STATUS, true);
+
+                    snapeveDatabaseRepository = new SnapeveDatabaseRepository(getActivity());
+                    snapeveDatabaseRepository.insertSnapeveSession("NON", System.currentTimeMillis(), System.currentTimeMillis(), 0, 0);
+
                 } else {
                     showConfirmationDialog();
                 }
@@ -195,11 +199,14 @@ public class NotificationFragment extends Fragment {
                 .setCancelable(false)
                 .setPositiveButton("Keep it ON", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        new SessionManager(getActivity()).setSpecificUserBooleanDetail(SessionManager.KEY_NOTIFICATION_ONN_OFF_STATUS, false);
+                        notification_switch.setChecked(true);
                     }
                 }).setNegativeButton("Turn it OFF", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
-                notification_switch.setChecked(true);
+                new SessionManager(getActivity()).setSpecificUserBooleanDetail(SessionManager.KEY_NOTIFICATION_ONN_OFF_STATUS, false);
+                snapeveDatabaseRepository = new SnapeveDatabaseRepository(getActivity());
+                snapeveDatabaseRepository.insertSnapeveSession("NOF", System.currentTimeMillis(), System.currentTimeMillis(), 0, 0);
+
             }
         });
         AlertDialog alert = builder.create();

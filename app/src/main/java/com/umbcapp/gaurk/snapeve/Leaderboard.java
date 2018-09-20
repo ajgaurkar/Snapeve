@@ -351,6 +351,30 @@ public class Leaderboard extends AppCompatActivity implements ItemClickListener 
     @Override
     public void onClick(View view, int position) {
         System.out.println("position :" + position);
-        Toast.makeText(Leaderboard.this, "Check Psotion --- " + position, Toast.LENGTH_LONG).show();
+
+        if (user_type_selection_status == 0) {
+
+            Intent userProfileIntent = new Intent(getApplicationContext(), BrowseUserProfile.class);
+            if (top_10_selection_status) {
+                userProfileIntent.putExtra("user_id", leaderBoardIndTop10List.get(position).getUserId());
+            } else {
+                userProfileIntent.putExtra("user_id", leaderBoardIndList.get(position).getUserId());
+            }
+            startActivity(userProfileIntent);
+
+
+        }
+        if (user_type_selection_status == 1) {
+            Intent profileIntent = new Intent(getApplicationContext(), BrowseGroupProfile.class);
+            if (top_10_selection_status) {
+                profileIntent.putExtra("grp_id", leaderBoardGrpTop10List.get(position).getUserId());
+            } else {
+                profileIntent.putExtra("grp_id", leaderBoardGrpList.get(position).getUserId());
+            }
+            startActivity(profileIntent);
+
+        }
+
+
     }
 }

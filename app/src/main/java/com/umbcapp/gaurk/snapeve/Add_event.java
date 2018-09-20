@@ -254,7 +254,7 @@ public class Add_event extends AppCompatActivity implements LocationListener {
         pick_location_card_3_spinner.setVisibility(View.INVISIBLE);
         add_event_card_3_textview.setVisibility(View.VISIBLE);
         curretLocation();
-        getCurrentLocation();
+//        getCurrentLocation();
 
         similar_posts_list_cardview.setVisibility(View.GONE);
         fillLocationSpinner();
@@ -403,9 +403,11 @@ public class Add_event extends AppCompatActivity implements LocationListener {
                         location_type_radio_value = 0;
                         pick_location_card_3_spinner.setVisibility(View.INVISIBLE);
                         add_event_card_3_textview.setVisibility(View.VISIBLE);
-                        getCurrentLocation();
+//                        getCurrentLocation();
+                        curretLocation();
                         selectedLat = currentLat;
                         selectedLng = currentLng;
+                        System.out.println("location " + selectedLat + " " + selectedLng);
                         break;
                     case R.id.post_location_picklist_radio:
                         System.out.println("Picklist");
@@ -1521,6 +1523,10 @@ public class Add_event extends AppCompatActivity implements LocationListener {
                 double latitude = location.getLatitude();
                 System.out.println("longitude--------  " + longitude);
                 System.out.println("latitude--------  " + latitude);
+                currentLat = latitude;
+                currentLng = longitude;
+                add_event_card_3_textview.setText("Current Location: " + currentLat + ", " + currentLng);
+
             }
         }
     }
