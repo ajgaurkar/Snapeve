@@ -20,6 +20,7 @@ import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import com.google.gson.JsonObject;
 //import com.shashank.sony.fancydialoglib.Animation;
@@ -32,6 +33,7 @@ import com.umbcapp.gaurk.snapeve.Controllers.MessagesPersonalListItem;
 import com.umbcapp.gaurk.snapeve.Controllers.SnapEveSession;
 import com.umbcapp.gaurk.snapeve.Controllers.SnapeveNotification;
 import com.umbcapp.gaurk.snapeve.DatabaseRepository.SnapeveDatabaseRepository;
+import com.umbcapp.gaurk.snapeve.Leaderboard;
 import com.umbcapp.gaurk.snapeve.MessageThread;
 import com.umbcapp.gaurk.snapeve.R;
 import com.umbcapp.gaurk.snapeve.SessionManager;
@@ -50,8 +52,10 @@ public class NotificationFragment extends Fragment {
 
 
     private JsonObject jsonObjectUserProfileFragParameters;
-    //    private TextView notification_switch_notification_textview;
-//    private TextView notification_switch_messages_textview;
+
+    //private TextView notification_switch_notification_textview;
+    //private TextView notification_switch_messages_textview;
+
     private ListView notification_layout_listview;
     int page_type_code = 1;
     private ImageView notification_settings_imageview;
@@ -144,7 +148,8 @@ public class NotificationFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-//                startActivity(new Intent(getActivity(), MessageThread.class));
+                    startActivity(new Intent(getActivity(), MessageThread.class));
+                Toast.makeText(getActivity(), "Check Psotion --- " + position, Toast.LENGTH_LONG).show();
 
             }
         });
@@ -185,22 +190,16 @@ public class NotificationFragment extends Fragment {
 
     private void showConfirmationDialog() {
 
-        snapeveDatabaseRepository = new SnapeveDatabaseRepository(getActivity());
-
-
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle("Are you sure you want to disable app notifications?")
                 .setCancelable(false)
                 .setPositiveButton("Keep it ON", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        notification_switch.setChecked(true);
-                        snapeveDatabaseRepository.insertSnapeveSession("NON", System.currentTimeMillis(), System.currentTimeMillis(), 0, 0);
-
+                        new SessionManager(getActivity()).setSpecificUserBooleanDetail(SessionManager.KEY_NOTIFICATION_ONN_OFF_STATUS, false);
                     }
                 }).setNegativeButton("Turn it OFF", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
-                new SessionManager(getActivity()).setSpecificUserBooleanDetail(SessionManager.KEY_NOTIFICATION_ONN_OFF_STATUS, false);
-                snapeveDatabaseRepository.insertSnapeveSession("NOF", System.currentTimeMillis(), System.currentTimeMillis(), 0, 0);
+                notification_switch.setChecked(true);
             }
         });
         AlertDialog alert = builder.create();
@@ -257,7 +256,6 @@ public class NotificationFragment extends Fragment {
         DateFormat formatter = new SimpleDateFormat("HH:mm:ss", Locale.US);
         formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
         String text = formatter.format(new Date(sessionCounter));
-//        System.out.println("Start @ sessionCounter : " + sessionCounter);
     }
 
     @Override

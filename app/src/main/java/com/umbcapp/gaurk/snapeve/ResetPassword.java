@@ -39,11 +39,14 @@ public class ResetPassword extends AppCompatActivity {
     private MobileServiceTable<user_table> mUserTable;
     private MobileServiceClient mClient;
     private user_table user_table;
+    private int intentType = 0;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.reset_password_activity);
+
+        intentType = getIntent().getIntExtra("intentType", 0);
 
         resetpassword_old_password_edittext = (EditText) findViewById(R.id.resetpassword_old_password_edittext);
         resetpassword_new_password_edittext = (EditText) findViewById(R.id.resetpassword_new_password_edittext);
@@ -111,7 +114,6 @@ public class ResetPassword extends AppCompatActivity {
         }
 
     }
-
 
     private void resetPassword() {
 
@@ -184,6 +186,21 @@ public class ResetPassword extends AppCompatActivity {
         });
         passwordResetDialog.create().show();
 
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (intentType == 0) {
+
+            //logic to exit the app
+            Intent a = new Intent(Intent.ACTION_MAIN);
+            a.addCategory(Intent.CATEGORY_HOME);
+            a.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(a);
+        }
+        if (intentType == 1) {
+            super.onBackPressed();
+        }
     }
 
 }

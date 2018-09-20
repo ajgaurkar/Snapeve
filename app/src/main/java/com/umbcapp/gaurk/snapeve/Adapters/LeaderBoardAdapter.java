@@ -11,6 +11,7 @@ import android.widget.TextView;
 import com.akexorcist.roundcornerprogressbar.RoundCornerProgressBar;
 import com.squareup.picasso.Picasso;
 import com.umbcapp.gaurk.snapeve.Controllers.LeaderboardListItem;
+import com.umbcapp.gaurk.snapeve.ItemClickListener;
 import com.umbcapp.gaurk.snapeve.Leaderboard;
 import com.umbcapp.gaurk.snapeve.Listview_communicator;
 import com.umbcapp.gaurk.snapeve.R;
@@ -27,6 +28,7 @@ public class LeaderBoardAdapter extends RecyclerView.Adapter<LeaderBoardAdapter.
     int user_type_selection_status = 0;
     Context context;
     Listview_communicator communicator;
+    private static ItemClickListener clickListener;
 
     public LeaderBoardAdapter(Leaderboard context, ArrayList<LeaderboardListItem> leaderboardList, int maxRank, int user_type_selection_status) {
         this.leaderboardList = leaderboardList;
@@ -35,7 +37,7 @@ public class LeaderBoardAdapter extends RecyclerView.Adapter<LeaderBoardAdapter.
         this.user_type_selection_status = user_type_selection_status;
     }
 
-    public class MyViewHolder extends RecyclerView.ViewHolder {
+    public class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         public TextView userName;
         public TextView userRank;
         public TextView sequence;
@@ -52,14 +54,20 @@ public class LeaderBoardAdapter extends RecyclerView.Adapter<LeaderBoardAdapter.
             youTextView = (TextView) view.findViewById(R.id.leaderboard_list_item_you_textview);
             userPic = (CircleImageView) view.findViewById(R.id.leaderboard_list_item_dp_imageview);
             userRankBar = (RoundCornerProgressBar) view.findViewById(R.id.leaderboard_list_item_rank_progress_bar);
-//            year = (TextView) view.findViewById(R.id.year);
+            view.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View v) {
+            if (clickListener != null) {
+                clickListener.onClick(v, getAdapterPosition());
+            }
         }
     }
 
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.leaderboard_list_row, parent, false);
-
         return new MyViewHolder(itemView);
     }
 
@@ -103,14 +111,7 @@ public class LeaderBoardAdapter extends RecyclerView.Adapter<LeaderBoardAdapter.
             Picasso.with(context).load(selectedLeaderboardListItem.getUserPicUrl()).fit().centerCrop().into(holder.userPic);
         }
 
-        holder.recycler_parent.setOnClickListener(new View.OnClickListener() {
 
-            @Override
-            public void onClick(View v) {
-                ((Listview_communicator) context).main_event_listview_element_clicked(position, 0);
-
-            }
-        });
 
     }
 
@@ -121,5 +122,9 @@ public class LeaderBoardAdapter extends RecyclerView.Adapter<LeaderBoardAdapter.
 
     }
 
+    public void setClickListener(ItemClickListener itemClickListener) {
+        this.clickListener = itemClickListener;
+        System.out.println("setClickListener setClickListener");
+    }
 
 }
