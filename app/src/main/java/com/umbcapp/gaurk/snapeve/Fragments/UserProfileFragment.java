@@ -1043,6 +1043,7 @@ public class UserProfileFragment extends Fragment {
                         dissmissAlertDialog.dismiss();
                         Toast.makeText(getActivity(), "DELETE DP API CALL", Toast.LENGTH_LONG).show();
                         //Remove profile pic
+                        removeProfilePicApi(currentActiveTab);
                         break;
 
 
@@ -1051,6 +1052,54 @@ public class UserProfileFragment extends Fragment {
         });
         //alertDialog.show();
 
+    }
+
+    private void removeProfilePicApi(final int currentActiveTab) {
+
+        final ProgressDialog progressDialog = new ProgressDialog(getActivity());
+        progressDialog.setMessage("Deleting profile pic, Please wait...");
+        progressDialog.setCancelable(false);
+        progressDialog.setCanceledOnTouchOutside(false);
+        progressDialog.create();
+        progressDialog.show();
+
+        JsonObject jsonObjectParameters = new JsonObject();
+        if (currentActiveTab == 1) {
+            jsonObjectParameters.addProperty("user_or_grp_id", new SessionManager(getActivity()).getSpecificUserDetail(SessionManager.KEY_USER_ID));
+        }
+        if (currentActiveTab == 2) {
+            jsonObjectParameters.addProperty("user_or_grp_id", new SessionManager(getActivity()).getSpecificUserDetail(SessionManager.KEY_GRP_ID));
+        }
+        jsonObjectParameters.addProperty("user_type", currentActiveTab);
+
+        final SettableFuture<JsonElement> resultFuture = SettableFuture.create();
+        ListenableFuture<JsonElement> serviceFilterFuture = MainActivity.mClient.invokeApi("delete_dp_api", jsonObjectParameters);
+
+        Futures.addCallback(serviceFilterFuture, new FutureCallback<JsonElement>() {
+            @Override
+            public void onFailure(Throwable exception) {
+                resultFuture.setException(exception);
+                progressDialog.dismiss();
+                System.out.println(" delete_dp_api exception    " + exception);
+            }
+
+            @Override
+            public void onSuccess(JsonElement response) {
+                resultFuture.set(response);
+                progressDialog.dismiss();
+                System.out.println(" delete_dp_api success response    " + response);
+//                Toast.makeText(getActivity(), response + "", Toast.LENGTH_SHORT).show();
+
+                if (response.toString().contains("true")) {
+                    if (currentActiveTab == 1) {
+                        new SessionManager(getActivity()).setSpecificUserDetail(SessionManager.KEY_DP_URL, null);
+                    } else {
+                        new SessionManager(getActivity()).setSpecificUserDetail(SessionManager.KEY_GRP_DP_URL, null);
+                    }
+                    fetch_user_details();
+                }
+            }
+        });
     }
 
     private void checkForGroupRequest() {
