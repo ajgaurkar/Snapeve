@@ -534,7 +534,7 @@ public class Add_event extends AppCompatActivity implements LocationListener {
 
     private void setStartEndDateTime(Calendar eventStartDateTime, Calendar eventEndDateTime) {
 
-        Toast.makeText(this, eventStartDateTime.getTime() + " " + eventStartDateTime.getTime(), Toast.LENGTH_SHORT).show();
+//        Toast.makeText(this, eventStartDateTime.getTime() + " " + eventStartDateTime.getTime(), Toast.LENGTH_SHORT).show();
         System.out.println("Check time range " + eventStartDateTime.getTime() + " " + eventStartDateTime.getTime());
 
         SimpleDateFormat dateFormatter = new SimpleDateFormat("MMM dd");

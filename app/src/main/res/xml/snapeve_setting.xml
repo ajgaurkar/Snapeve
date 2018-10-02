@@ -1,11 +1,9 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
-
     <Preference
         android:icon="@drawable/ic_feedback_grey_600_24dp"
         android:key="snapeveFeedbackPreferenceKey"
         android:title="Feedback">
-
     </Preference>
 
     <!--<SwitchPreference-->
@@ -15,17 +13,16 @@
     <!--android:summary="@string/notiofcation_summary"-->
     <!--android:title="@string/notification_setting" />-->
 
-    <!--<Preference-->
-    <!--android:icon="@drawable/ic_help_grey_600_24dp"-->
-    <!--android:key="helpPreferenceKey"-->
-    <!--android:title="Help">-->
-    <!--</Preference>-->
+    <Preference
+    android:icon="@drawable/ic_help_grey_600_24dp"
+    android:key="takeSurveyPreferenceKey"
+    android:title="Take the survey">
+    </Preference>
 
     <Preference
         android:icon="@drawable/ic_assistant_grey_600_24dp"
         android:key="rateusPreferenceKey"
         android:title="Rate us">
-
     </Preference>
 
     <!--<Preference-->
@@ -66,14 +63,12 @@
         android:icon="@drawable/ic_account_circle_grey_600_24dp"
         android:key="userAccountPreferenceKey"
         android:title="Reset Password">
-
     </Preference>
 
     <Preference
         android:icon="@drawable/ic_exit_to_app_grey_600_24dp"
         android:key="logoutPreferenceKey"
         android:title="Logout">
-
     </Preference>
 
 </PreferenceScreen>

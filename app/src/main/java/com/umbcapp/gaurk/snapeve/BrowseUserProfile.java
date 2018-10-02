@@ -21,6 +21,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.squareup.picasso.Picasso;
 import com.umbcapp.gaurk.snapeve.Adapters.LeaderBoardAdapter;
+import com.umbcapp.gaurk.snapeve.Adapters.UserContributionAdapter;
 import com.umbcapp.gaurk.snapeve.Controllers.LeaderboardListItem;
 import com.umbcapp.gaurk.snapeve.Controllers.UserContributionListItem;
 
@@ -40,6 +41,9 @@ public class BrowseUserProfile extends AppCompatActivity {
     private ImageView profile_pic_image_view;
     private TextView user_full_name_textview;
     private TextView user_next_level_tv;
+    private TextView user_total_posts_textview;
+    private ArrayList<UserContributionListItem> userContributionList;
+    private UserContributionAdapter userContributionAdapter;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -51,10 +55,10 @@ public class BrowseUserProfile extends AppCompatActivity {
         String user_id = userId.getStringExtra("user_id");
         System.out.println("BrowseUserProfile user_id : " + user_id);
 
-
         user_name_textview = (TextView) findViewById(R.id.user__name);
         user_next_level_tv = (TextView) findViewById(R.id.user_next_level_tv);
         user_points_textview = (TextView) findViewById(R.id.browse_profile_user_points);
+        user_total_posts_textview = (TextView) findViewById(R.id.user_total_posts_textview);
         profile_relative_layout = (RelativeLayout) findViewById(R.id.profile_relative_layout);
         user_profile_contribution_list_view = (ListView) findViewById(R.id.user_profile_contribution_list_view);
         user_grp_name_text_view = (TextView) findViewById(R.id.grp_name_text_view);
@@ -117,75 +121,89 @@ public class BrowseUserProfile extends AppCompatActivity {
 
     private void parseUserPostdata(JsonArray userActivity) {
 
-//        System.out.println("parseUserPostdata " + userActivity);
-//        userContributionList = new ArrayList<>();
-//
-//        for (int i = 0; i < userActivity.size(); i++) {
-//            JsonObject user_activity_list_object = userActivity.get(i).getAsJsonObject();
-//
-//            System.out.println(" user_activity_list_object  " + user_activity_list_object);
-//
-//            String user_name = user_activity_list_object.get("user_name").getAsString();
-//            String first_name = user_activity_list_object.get("first_name").getAsString();
-//            String last_name = user_activity_list_object.get("last_name").getAsString();
-//            String description = user_activity_list_object.get("description").getAsString();
-//            String post_id = user_activity_list_object.get("post_id").getAsString();
-//            String user_id = user_activity_list_object.get("user_id").getAsString();
-//            String img_url = user_activity_list_object.get("img_url").getAsString();
-//            int post_as = user_activity_list_object.get("post_as").getAsInt();
-//
-//
-//            //getting likes and spam data/count. replace null with 0
-//            //3 attributes
-//            int total_likes = 0;
-//            try {
-//                total_likes = user_activity_list_object.get("total_likes").getAsInt();
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//            }
-//            int total_spam = 0;
-//            try {
-//                total_spam = user_activity_list_object.get("total_spam").getAsInt();
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//            }
-//            int total_comments = 0;
-//            try {
-//                total_comments = user_activity_list_object.get("total_comments").getAsInt();
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//            }
-//
-//            String dp_url = null;
-//            try {
-//                dp_url = user_activity_list_object.get("dp_url").getAsString();
-//                System.out.println("userprofilefragment user dp_url : " + dp_url);
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//                dp_url = null;
-//                System.out.println(" dp_url is null, set local image");
-//            }
-//
-////            DateFormat srcDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSX");
-//            DateFormat srcDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
-//            DateFormat displayDtFormat = new SimpleDateFormat("MMM dd HH:mm");
-//
-//            Date postDate = null;
-//            try {
-//                postDate = srcDateFormat.parse(user_activity_list_object.get("createdAt").getAsString());
-//            } catch (ParseException e) {
-//                e.printStackTrace();
-//            }
-//
-//            //skip adding tem to list if post_as = 2 (anonymous post)
-//            if (post_as != 2) {
-//                userContributionList.add(0, new UserContributionListItem(post_id, user_id, user_name, first_name, last_name, displayDtFormat.format(postDate), img_url, dp_url, description, total_likes, total_spam, total_comments, post_as));
-//            }
-//
-//            loadContributionList(0);
-//
-//        }
+        System.out.println("parseUserPostdata " + userActivity);
+        userContributionList = new ArrayList<>();
 
+        for (int i = 0; i < userActivity.size(); i++) {
+            JsonObject user_activity_list_object = userActivity.get(i).getAsJsonObject();
+
+            System.out.println(" user_activity_list_object  " + user_activity_list_object);
+
+            String user_name = user_activity_list_object.get("user_name").getAsString();
+            String first_name = user_activity_list_object.get("first_name").getAsString();
+            String last_name = user_activity_list_object.get("last_name").getAsString();
+            String description = user_activity_list_object.get("description").getAsString();
+            String post_id = user_activity_list_object.get("post_id").getAsString();
+            String user_id = user_activity_list_object.get("user_id").getAsString();
+            String img_url = user_activity_list_object.get("img_url").getAsString();
+            int post_as = user_activity_list_object.get("post_as").getAsInt();
+
+
+            //getting likes and spam data/count. replace null with 0
+            //3 attributes
+            int total_likes = 0;
+            try {
+                total_likes = user_activity_list_object.get("total_likes").getAsInt();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            int total_spam = 0;
+            try {
+                total_spam = user_activity_list_object.get("total_spam").getAsInt();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            int total_comments = 0;
+            try {
+                total_comments = user_activity_list_object.get("total_comments").getAsInt();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            String dp_url = null;
+            try {
+                dp_url = user_activity_list_object.get("dp_url").getAsString();
+                System.out.println("userprofilefragment user dp_url : " + dp_url);
+            } catch (Exception e) {
+                e.printStackTrace();
+                dp_url = null;
+                System.out.println(" dp_url is null, set local image");
+            }
+
+//            DateFormat srcDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSX");
+            DateFormat srcDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+            DateFormat displayDtFormat = new SimpleDateFormat("MMM dd HH:mm");
+
+            Date postDate = null;
+            try {
+                postDate = srcDateFormat.parse(user_activity_list_object.get("createdAt").getAsString());
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+
+            //skip adding tem to list if post_as = 2 (anonymous post)
+            if (post_as != 2) {
+                userContributionList.add(0, new UserContributionListItem(post_id, user_id, user_name, first_name, last_name, displayDtFormat.format(postDate), img_url, dp_url, description, total_likes, total_spam, total_comments, post_as));
+            }
+
+            loadContributionList();
+
+        }
+
+    }
+
+    private void loadContributionList() {
+        userContributionAdapter = new UserContributionAdapter(getApplicationContext(), userContributionList);
+        user_profile_contribution_list_view.setAdapter(userContributionAdapter);
+
+        user_total_posts_textview.setVisibility(View.VISIBLE);
+        if (userContributionList.size() == 0) {
+            user_total_posts_textview.setText("No Posts Found");
+        } else if (userContributionList.size() == 1) {
+            user_total_posts_textview.setText("1 Post");
+        } else {
+            user_total_posts_textview.setText(userContributionList.size() + " Posts");
+        }
     }
 
     private void parseUserDetails(JsonArray userDataJSONArray) {
@@ -197,11 +215,10 @@ public class BrowseUserProfile extends AppCompatActivity {
 
         System.out.println(" userData_list_object  " + userData_list_object);
 
-        String grp_id = userData_list_object.get("grp_id").getAsString();
+//        String grp_id = userData_list_object.get("grp_id").getAsString();
         String user_name = userData_list_object.get("user_name").getAsString();
-        String grp_name = userData_list_object.get("grp_name").getAsString();
-        String first_name = userData_list_object.get("first_name").getAsString();
-        String last_name = userData_list_object.get("last_name").getAsString();
+//        String first_name = userData_list_object.get("first_name").getAsString();
+//        String last_name = userData_list_object.get("last_name").getAsString();
         int user_points = Integer.parseInt(userData_list_object.get("user_points").toString());
 
         //exception handling for image url null for user
@@ -216,17 +233,21 @@ public class BrowseUserProfile extends AppCompatActivity {
             System.out.println(" dp_url is null, set local image");
             profile_pic_image_view.setImageResource(R.drawable.avatar_100_3);
         }
-//        String grp_dp_url = userData_list_object.get("grp_dp_url").getAsString();
 
+        String grp_name = null;
+        try {
+            grp_name = userData_list_object.get("grp_name").getAsString();
+            user_grp_name_text_view.setText("Group : " + grp_name);
+        } catch (Exception e) {
+            e.printStackTrace();
+            user_grp_name_text_view.setText("");
+        }
         setRewardProgress(user_points);
 
         System.out.println(" user_name " + user_name);
         System.out.println(" user_points " + user_points);
 
         user_name_textview.setText(user_name);
-        user_full_name_textview.setText(first_name + " " + last_name);
-        user_points_textview.setText(String.valueOf(user_points));
-        user_grp_name_text_view.setText("Group : " + grp_name);
 
     }
 
@@ -243,17 +264,9 @@ public class BrowseUserProfile extends AppCompatActivity {
 
         int pointsToNextLevel = (int) (calculatedReward.getMax_range() - calculatedReward.getCurrent_points());
         pointsToNextLevel++;
+        user_points_textview.setText("Level  " + calculatedReward.getLevel() + "  •  " + reward_points + "  Points");
         user_next_level_tv.setText(pointsToNextLevel + "  Points to next level");
 
-//        if (reward_points == 0) {
-//            profile_progress_bar.setSecondaryProgress(0f);
-//        } else {
-//            profile_progress_bar.setSecondaryProgress(calculatedReward.getRelativerewardsValue());
-//        }
-//        profile_progress_bar.setMax(100f);
-//        profile_progress_bar.setProgress(100f);
-
-        user_points_textview.setText("Level  " + calculatedReward.getLevel() + "  •  " + reward_points + "  Points");
 
     }
 

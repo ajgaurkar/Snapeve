@@ -669,7 +669,9 @@ public class UserProfileFragment extends Fragment {
         }
 
         if (privilege_type == 3 || privilege_type == 2 || privilege_type == 1) {
-            user_profile_settings_imageview.setVisibility(View.VISIBLE);
+//temporary hide...later depends
+                        user_profile_settings_imageview.setVisibility(View.VISIBLE);
+//            user_profile_settings_imageview.setVisibility(View.INVISIBLE);
         } else {
             user_profile_settings_imageview.setVisibility(View.INVISIBLE);
         }

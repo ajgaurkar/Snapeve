@@ -91,11 +91,10 @@
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_alignBottom="@+id/profile_layout_user_switch_lin_layout"
-            android:layout_alignParentEnd="true"
             android:layout_alignTop="@+id/profile_layout_user_switch_lin_layout"
-            android:layout_marginEnd="16dp"
+            android:layout_marginStart="16dp"
             android:src="@drawable/settings_white_48"
-            android:visibility="gone" />
+            android:visibility="visible" />
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/profile_pic_image_view"

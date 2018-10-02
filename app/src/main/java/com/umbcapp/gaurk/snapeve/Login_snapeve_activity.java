@@ -57,7 +57,6 @@ public class Login_snapeve_activity extends AppCompatActivity {
             Manifest.permission.CAMERA, Manifest.permission.READ_CONTACTS, Manifest.permission.WRITE_CONTACTS,
             Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.RECORD_AUDIO};
 
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -80,7 +79,6 @@ public class Login_snapeve_activity extends AppCompatActivity {
         login_page_signup_btn_textview = (TextView) findViewById(R.id.login_page_signup_btn_textview);
         forgot_pass_textview = (TextView) findViewById(R.id.forgot_pass_textview);
         login_page_login_google_textview = (TextView) findViewById(R.id.login_page_login_google_textview);
-
 
         login_page_login_btn_textview.setOnClickListener(new View.OnClickListener() {
             @Override

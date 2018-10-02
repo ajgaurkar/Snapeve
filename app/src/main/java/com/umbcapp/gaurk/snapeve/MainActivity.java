@@ -119,7 +119,7 @@ public class MainActivity extends AppCompatActivity implements Listview_communic
 
         new SessionManager(getApplicationContext()).checkLogin();
 
-        Toast.makeText(this, new SessionManager(getApplicationContext()).getSpecificUserDetail(SessionManager.KEY_USER_ID) + new SessionManager(getApplicationContext()).getSpecificUserBooleanDetail(SessionManager.KEY_RESET_PASSWORD_STATUS), Toast.LENGTH_SHORT).show();
+//        Toast.makeText(this, new SessionManager(getApplicationContext()).getSpecificUserDetail(SessionManager.KEY_USER_ID) + new SessionManager(getApplicationContext()).getSpecificUserBooleanDetail(SessionManager.KEY_RESET_PASSWORD_STATUS), Toast.LENGTH_SHORT).show();
 
         if (!new SessionManager(getApplicationContext()).getSpecificUserDetail(SessionManager.KEY_USER_ID).equals("default_str_value")) {
             if (!new SessionManager(getApplicationContext()).getSpecificUserBooleanDetail(SessionManager.KEY_RESET_PASSWORD_STATUS)) {

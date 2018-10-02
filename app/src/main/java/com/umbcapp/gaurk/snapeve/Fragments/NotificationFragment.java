@@ -148,7 +148,7 @@ public class NotificationFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-//                    startActivity(new Intent(getActivity(), MessageThread.class));
+//                startActivity(new Intent(getActivity(), MessageThread.class));
 //                Toast.makeText(getActivity(), "Check Psotion --- " + position, Toast.LENGTH_LONG).show();
 
             }

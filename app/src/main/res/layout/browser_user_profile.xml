@@ -7,150 +7,137 @@
     android:layout_height="match_parent"
     android:background="@color/colorMainBg">
 
-    <RelativeLayout
-        android:id="@+id/home_layout"
+    <View
+        android:id="@+id/vertical_divider_user_profile"
+        android:layout_width="1dp"
+        android:layout_height="match_parent"
+        android:layout_centerHorizontal="true" />
+
+    <View
+        android:id="@+id/view"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:layout_alignParentStart="true"
+        android:layout_centerVertical="true" />
+
+    <View
+        android:id="@+id/header_bg"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/view"
+        android:layout_alignBottom="@+id/user_total_posts_textview"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:background="@color/colorPrimary"
+        android:paddingBottom="10dp" />
+
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/profile_pic_image_view"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_below="@+id/profile_layout_user_switch_lin_layout"
+        android:layout_margin="16dp"
+        android:src="@drawable/avatar_100_3"
+        app:civ_border_color="#fff"
+        app:civ_border_width="3dp" />
+
+    <TextView
+        android:id="@+id/browse_profile_user_points"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/user__name"
+        android:layout_toEndOf="@+id/profile_pic_image_view"
+        android:padding="5dp"
+        android:text="Hora_pag"
+        android:textColor="#fff"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/user__name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/profile_pic_image_view"
+        android:layout_toEndOf="@+id/profile_pic_image_view"
+        android:padding="5dp"
+        android:text="Horacio Pagani"
+        android:textColor="#fff"
+        android:textSize="22sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/user_next_level_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/browse_profile_user_points"
+        android:layout_toEndOf="@+id/profile_pic_image_view"
+        android:padding="5dp"
+        android:text="Contributor : Level 5"
+        android:textColor="#fff"
+        android:textSize="12sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/grp_name_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/user_total_posts_textview"
+        android:layout_alignStart="@+id/vertical_divider_user_profile"
+        android:layout_marginBottom="5dp"
+        android:gravity="end"
+        android:padding="5dp"
+        android:singleLine="true"
+        android:text="Group : STRBX employees"
+        android:textColor="#fff"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/user_total_posts_textview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/profile_pic_image_view"
+        android:layout_marginStart="-1dp"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/user_profile_tabs_left_selected"
+        android:gravity="center_vertical"
+        android:padding="5dp"
+        android:paddingBottom="5dp"
+        android:paddingEnd="15dp"
+        android:paddingStart="10dp"
+        android:paddingTop="5dp"
+        android:singleLine="true"
+        android:text="17 Events posted"
+        android:textColor="#fff"
+        android:textStyle="bold" />
+
+    <!--<com.akexorcist.roundcornerprogressbar.RoundCornerProgressBar-->
+    <!--android:id="@+id/profile_progress_bar"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="30dp"-->
+    <!--android:layout_below="@+id/user_next_level_tv"-->
+    <!--android:layout_marginEnd="30dp"-->
+    <!--android:layout_marginRight="30dp"-->
+    <!--android:layout_marginStart="-5dp"-->
+    <!--android:layout_marginTop="5dp"-->
+    <!--android:layout_toEndOf="@+id/profile_pic_image_view"-->
+    <!--android:visibility="gone"-->
+    <!--app:rcBackgroundColor="#00ffffff"-->
+    <!--app:rcBackgroundPadding="10dp"-->
+    <!--app:rcMax="10"-->
+    <!--app:rcProgress="10"-->
+    <!--app:rcProgressColor="#7cffffff"-->
+    <!--app:rcRadius="10dp"-->
+    <!--app:rcReverse="false"-->
+    <!--app:rcSecondaryProgress="5"-->
+    <!--app:rcSecondaryProgressColor="#ebf7ff" />-->
+
+    <ListView
+        android:id="@+id/user_profile_contribution_list_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginBottom="2dp">
-
-        <View
-            android:id="@+id/vertical_divider_user_profile"
-            android:layout_width="1dp"
-            android:layout_height="match_parent"
-            android:layout_centerHorizontal="true" />
-
-        <View
-            android:id="@+id/view"
-            android:layout_width="match_parent"
-            android:layout_height="80dp"
-            android:layout_alignParentStart="true"
-            android:layout_centerVertical="true" />
-
-        <ImageView
-            android:id="@+id/header_bg"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_above="@id/view"
-            android:layout_alignBottom="@+id/grp_name_text_view"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:layout_marginBottom="-10dp"
-            android:background="@color/colorPrimary"
-            android:paddingBottom="10dp" />
-
-
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/profile_pic_image_view"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:layout_below="@+id/profile_layout_user_switch_lin_layout"
-            android:layout_margin="16dp"
-            android:src="@drawable/avatar_100_1"
-            app:civ_border_color="#fff"
-            app:civ_border_width="3dp" />
-
-        <TextView
-            android:id="@+id/browse_profile_user_points"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/user__name"
-            android:layout_toEndOf="@+id/profile_pic_image_view"
-            android:padding="5dp"
-            android:text="Hora_pag"
-            android:textColor="#fff"
-            android:textSize="18sp"
-            android:textStyle="bold" />
-
-        <TextView
-            android:id="@+id/user__name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignTop="@+id/profile_pic_image_view"
-            android:layout_toEndOf="@+id/profile_pic_image_view"
-            android:padding="5dp"
-            android:text="Horacio Pagani"
-            android:textColor="#fff"
-            android:textSize="22sp"
-            android:textStyle="bold" />
-
-        <TextView
-            android:id="@+id/user_next_level_tv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/browse_profile_user_points"
-            android:layout_toEndOf="@+id/profile_pic_image_view"
-            android:padding="5dp"
-            android:text="Contributor : Level 5"
-            android:textColor="#fff"
-            android:textStyle="bold" />
-
-        <TextView
-            android:id="@+id/grp_name_text_view"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_below="@+id/profile_progress_bar"
-            android:layout_marginBottom="20dp"
-            android:layout_marginEnd="16dp"
-            android:layout_toEndOf="@+id/vertical_divider_user_profile"
-            android:gravity="end"
-            android:padding="5dp"
-            android:singleLine="true"
-            android:text="Group : STRBX employees"
-            android:textColor="#fff"
-            android:textSize="15sp"
-            android:textStyle="bold" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignTop="@+id/grp_name_text_view"
-            android:layout_marginStart="-1dp"
-            android:background="@drawable/user_profile_tabs_left_selected"
-            android:gravity="center_vertical"
-            android:padding="5dp"
-            android:paddingBottom="5dp"
-            android:paddingEnd="15dp"
-            android:paddingStart="10dp"
-            android:paddingTop="5dp"
-            android:singleLine="true"
-            android:text="17 Events posted"
-            android:textColor="#fff"
-            android:textStyle="bold" />
-
-        <com.akexorcist.roundcornerprogressbar.RoundCornerProgressBar
-            android:id="@+id/profile_progress_bar"
-            android:layout_width="match_parent"
-            android:layout_height="30dp"
-            android:layout_below="@+id/user_next_level_tv"
-            android:layout_marginEnd="30dp"
-            android:layout_marginRight="30dp"
-            android:layout_marginStart="-5dp"
-            android:layout_marginTop="5dp"
-            android:layout_toEndOf="@+id/profile_pic_image_view"
-            android:visibility="gone"
-            app:rcBackgroundColor="#00ffffff"
-            app:rcBackgroundPadding="10dp"
-            app:rcMax="10"
-            app:rcProgress="10"
-            app:rcProgressColor="#7cffffff"
-            app:rcRadius="10dp"
-            app:rcReverse="false"
-            app:rcSecondaryProgress="5"
-            app:rcSecondaryProgressColor="#ebf7ff" />
-
-        <ListView
-            android:id="@+id/user_profile_contribution_list_view"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@+id/header_bg"
-            android:layout_marginTop="10dp"
-            android:divider="#00ffffff"
-            android:dividerHeight="0dp" />
-
-    </RelativeLayout>
-
+        android:layout_below="@+id/header_bg"
+        android:divider="#00ffffff"
+        android:dividerHeight="0dp" />
 
 </RelativeLayout>

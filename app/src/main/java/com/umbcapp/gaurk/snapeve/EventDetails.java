@@ -124,6 +124,7 @@ public class EventDetails extends AppCompatActivity implements Listview_communic
     private ImageView list_item_status_spinner_imageview_1;
     private View list_item_status_spinner_imageview_2;
     private SnapeveDatabaseRepository snapeveDatabaseRepository;
+    private Intent browseProfileIntent;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -225,6 +226,8 @@ public class EventDetails extends AppCompatActivity implements Listview_communic
         event_detail_user_comment_text_view.setText(user_comment);
         Picasso.with(getApplicationContext()).load(img_url).fit().centerCrop().into(event_detail_event_image_image_view);
 
+        browseProfileIntent = null;
+
         switch (post_as) {
             case 0://User
                 System.out.println("CASE 1 ");
@@ -237,6 +240,9 @@ public class EventDetails extends AppCompatActivity implements Listview_communic
                     System.out.println("CASE 1 ELSE");
                     Picasso.with(getApplicationContext()).load(user_dp_url).fit().centerCrop().into(event_detail_profile_pic_image_view);
                 }
+                browseProfileIntent = new Intent(getApplicationContext(), BrowseUserProfile.class);
+                browseProfileIntent.putExtra("user_id", user_id);
+
                 break;
             case 1://Group
                 event_detail_user_name_text_view.setText(grp_name);
@@ -249,6 +255,9 @@ public class EventDetails extends AppCompatActivity implements Listview_communic
                     System.out.println("CASE 2 ELSE");
                     Picasso.with(getApplicationContext()).load(grp_dp_url).fit().centerCrop().into(event_detail_profile_pic_image_view);
                 }
+                browseProfileIntent = new Intent(getApplicationContext(), BrowseGroupProfile.class);
+                browseProfileIntent.putExtra("grp_id", grp_id);
+
                 break;
             case 2://Anonymous
                 event_detail_user_name_text_view.setText("Anonymous");
@@ -257,6 +266,28 @@ public class EventDetails extends AppCompatActivity implements Listview_communic
                 break;
         }
 
+
+        event_detail_user_name_text_view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (post_as != 2) {
+                    startActivity(browseProfileIntent);
+                } else {
+                    Toast.makeText(EventDetails.this, "Anonymous User!", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+        event_detail_profile_pic_image_view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (post_as != 2) {
+                    startActivity(browseProfileIntent);
+                } else {
+                    Toast.makeText(EventDetails.this, "Anonymous User!", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
 
         event_details_comments_tap_to_load_textview.setOnClickListener(new View.OnClickListener() {
             @Override

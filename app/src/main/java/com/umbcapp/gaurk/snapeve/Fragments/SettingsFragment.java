@@ -102,6 +102,10 @@ public class SettingsFragment extends PreferenceFragment {
                 startActivity(new Intent(getActivity(), SnapeveFeedback.class));
                 break;
 
+            case "takeSurveyPreferenceKey":
+                startActivity(new Intent(getActivity(), AccountHandler.class));
+                break;
+
             case "notificationPreferenceKey":
                 break;
 
