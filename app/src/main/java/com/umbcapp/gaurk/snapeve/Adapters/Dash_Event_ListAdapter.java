@@ -12,6 +12,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
+import com.umbcapp.gaurk.snapeve.AddFourHours;
 import com.umbcapp.gaurk.snapeve.Controllers.Event_dash_list_obj;
 import com.umbcapp.gaurk.snapeve.Listview_communicator;
 import com.umbcapp.gaurk.snapeve.R;
@@ -99,9 +100,13 @@ public class Dash_Event_ListAdapter extends BaseAdapter {
             try {
                 startDateTime = feedsDateFormat.parse(event_dash_list_obj.getPost_start_dt_time());
 
-                if(compareDate(startDateTime, new Date())==0){
+                AddFourHours addFourHours = new AddFourHours();
+                startDateTime = addFourHours.addHours(startDateTime).getCurrent_date();
+
+
+                if (compareDate(startDateTime, new Date()) == 0) {
                     viewHolder.feeds_item_live_tag_textview.setVisibility(View.VISIBLE);
-                }else {
+                } else {
                     viewHolder.feeds_item_live_tag_textview.setVisibility(View.GONE);
                 }
 
@@ -116,10 +121,14 @@ public class Dash_Event_ListAdapter extends BaseAdapter {
 
             Date startDateTime = null;
             Date endDateTime = null;
+
             try {
                 startDateTime = feedsDateFormat.parse(event_dash_list_obj.getPost_start_dt_time());
                 endDateTime = feedsDateFormat.parse(event_dash_list_obj.getPost_end_dt_time());
 
+                AddFourHours addFourHours = new AddFourHours();
+                startDateTime = addFourHours.addHours(startDateTime).getCurrent_date();
+                endDateTime = addFourHours.addHours(endDateTime).getCurrent_date();
 
                 if (startDateTime.compareTo(new Date()) < 0 && endDateTime.compareTo(new Date()) > 0) {
                     System.out.println("LIVE EVENT 1");
@@ -137,6 +146,7 @@ public class Dash_Event_ListAdapter extends BaseAdapter {
         // Picasso.get().load(event_dash_list_obj.getImage_url()).fit().centerCrop().into(viewHolder.main_card_imageview);
         Picasso.with(context).load(event_dash_list_obj.getImage_url()).fit().centerCrop().into(viewHolder.main_card_imageview);
         viewHolder.list_item_event_title.setText(event_dash_list_obj.getUser_comment());
+        viewHolder.list_item_post_dt_time.setText(event_dash_list_obj.getPost_dt());
         viewHolder.list_item_post_dt_time.setText(event_dash_list_obj.getPost_dt());
 
         System.out.println("event_dash_list_obj.getUser_likes() " + event_dash_list_obj.getUser_like());

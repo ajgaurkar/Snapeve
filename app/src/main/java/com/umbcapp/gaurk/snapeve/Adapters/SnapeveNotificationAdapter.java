@@ -77,7 +77,7 @@ public class SnapeveNotificationAdapter extends BaseAdapter {
         viewHolder.notification_list_item_header_text_view.setText(String.valueOf(selectedNotificationListItem.getNotificationTitle()));
         viewHolder.notification_list_item_description_text_view.setText(selectedNotificationListItem.getNotificationDescription());
 
-        SimpleDateFormat sdf = new SimpleDateFormat("MMM dd, HH:MM:SS");
+        SimpleDateFormat sdf = new SimpleDateFormat("MMM dd, HH:mm:ss");
         System.out.println("current millis" + selectedNotificationListItem.getNotificationTimeStamp());
 
         Timestamp timestamp = new Timestamp(selectedNotificationListItem.getNotificationTimeStamp());

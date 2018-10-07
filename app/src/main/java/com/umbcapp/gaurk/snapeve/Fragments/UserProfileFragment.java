@@ -63,6 +63,7 @@ import com.squareup.picasso.Picasso;
 import com.umbcapp.gaurk.snapeve.Adapters.SignupGrpAdapter;
 import com.umbcapp.gaurk.snapeve.Adapters.TeamMatesAdapter;
 import com.umbcapp.gaurk.snapeve.Adapters.UserContributionAdapter;
+import com.umbcapp.gaurk.snapeve.AddFourHours;
 import com.umbcapp.gaurk.snapeve.AzureConfiguration;
 import com.umbcapp.gaurk.snapeve.Controllers.Event_dash_list_obj;
 import com.umbcapp.gaurk.snapeve.Controllers.SignUpGrpListItem;
@@ -364,6 +365,10 @@ public class UserProfileFragment extends Fragment {
             Date postDate = null;
             try {
                 postDate = srcDateFormat.parse(grpPost_Data_list_object.get("createdAt").getAsString());
+
+                AddFourHours addFourHours = new AddFourHours();
+                postDate = addFourHours.addHours(postDate).getCurrent_date();
+
             } catch (ParseException e) {
                 e.printStackTrace();
             }
@@ -590,6 +595,10 @@ public class UserProfileFragment extends Fragment {
             Date postDate = null;
             try {
                 postDate = srcDateFormat.parse(user_activity_list_object.get("createdAt").getAsString());
+
+                AddFourHours addFourHours = new AddFourHours();
+                postDate = addFourHours.addHours(postDate).getCurrent_date();
+
             } catch (ParseException e) {
                 e.printStackTrace();
             }

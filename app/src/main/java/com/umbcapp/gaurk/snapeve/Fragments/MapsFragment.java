@@ -48,6 +48,7 @@ import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
 import com.umbcapp.gaurk.snapeve.Adapters.Dash_Event_ListAdapter;
+import com.umbcapp.gaurk.snapeve.AddFourHours;
 import com.umbcapp.gaurk.snapeve.Add_event;
 import com.umbcapp.gaurk.snapeve.Controllers.Event_dash_list_obj;
 import com.umbcapp.gaurk.snapeve.DatabaseRepository.SnapeveDatabaseRepository;
@@ -411,6 +412,10 @@ public class MapsFragment extends Fragment {
                 Date endDateTime = null;
                 try {
                     startDateTime = feedsDateFormat.parse(event_start_dt_time);
+
+                    AddFourHours addFourHours = new AddFourHours();
+                    startDateTime = addFourHours.addHours(startDateTime).getCurrent_date();
+
                     //just 1 of the 2 dates needed for all_day
                     //endDateTime = feedsDateFormat.parse(event_dash_list_obj.getPost_end_dt_time());
                 } catch (ParseException e) {
@@ -442,6 +447,11 @@ public class MapsFragment extends Fragment {
                 try {
                     startDateTime = feedsDateFormat.parse(event_start_dt_time);
                     endDateTime = feedsDateFormat.parse(event_end_dt_time);
+
+                    AddFourHours addFourHours = new AddFourHours();
+                    startDateTime = addFourHours.addHours(startDateTime).getCurrent_date();
+                    endDateTime = addFourHours.addHours(endDateTime).getCurrent_date();
+
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }

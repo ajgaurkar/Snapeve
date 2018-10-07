@@ -663,7 +663,11 @@ public class MainActivity extends AppCompatActivity implements Listview_communic
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
+
                 System.out.println(date);
+                AddFourHours addFourHours = new AddFourHours();
+                date = addFourHours.addHours(date).getCurrent_date();
+
                 post_dt = displayDtFormat.format(date);
                 System.out.println("Report Date: " + post_dt);
 

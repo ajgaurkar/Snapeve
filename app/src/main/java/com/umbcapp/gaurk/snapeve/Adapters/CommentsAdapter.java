@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
+import com.umbcapp.gaurk.snapeve.AddFourHours;
 import com.umbcapp.gaurk.snapeve.Controllers.CommentsListItem;
 import com.umbcapp.gaurk.snapeve.R;
 
@@ -72,13 +73,15 @@ public class CommentsAdapter extends BaseAdapter {
         }
 //        DateFormat commentsDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSX");
         DateFormat commentsDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
-        DateFormat displayDtFormat = new SimpleDateFormat("MMM dd HH:MM");
+        DateFormat displayDtFormat = new SimpleDateFormat("MMM dd HH:mm");
 
         CommentsListItem commentsListItem = comments_list.get(position);
 
         Date commentDateTime = null;
         try {
             commentDateTime = commentsDateFormat.parse(commentsListItem.getComment_time());
+            AddFourHours addFourHours = new AddFourHours();
+            commentDateTime = addFourHours.addHours(commentDateTime).getCurrent_date();
         } catch (ParseException e) {
             e.printStackTrace();
         }

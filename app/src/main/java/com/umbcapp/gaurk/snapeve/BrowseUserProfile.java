@@ -177,6 +177,10 @@ public class BrowseUserProfile extends AppCompatActivity {
             Date postDate = null;
             try {
                 postDate = srcDateFormat.parse(user_activity_list_object.get("createdAt").getAsString());
+
+                AddFourHours addFourHours = new AddFourHours();
+                postDate = addFourHours.addHours(postDate).getCurrent_date();
+
             } catch (ParseException e) {
                 e.printStackTrace();
             }
@@ -187,9 +191,7 @@ public class BrowseUserProfile extends AppCompatActivity {
             }
 
             loadContributionList();
-
         }
-
     }
 
     private void loadContributionList() {

@@ -49,7 +49,7 @@
         android:layout_below="@+id/user__name"
         android:layout_toEndOf="@+id/profile_pic_image_view"
         android:padding="5dp"
-        android:text="Hora_pag"
+        android:text=""
         android:textColor="#fff"
         android:textStyle="bold" />
 
@@ -60,7 +60,7 @@
         android:layout_alignTop="@+id/profile_pic_image_view"
         android:layout_toEndOf="@+id/profile_pic_image_view"
         android:padding="5dp"
-        android:text="Horacio Pagani"
+        android:text=""
         android:textColor="#fff"
         android:textSize="22sp"
         android:textStyle="bold" />
@@ -72,7 +72,7 @@
         android:layout_below="@+id/browse_profile_user_points"
         android:layout_toEndOf="@+id/profile_pic_image_view"
         android:padding="5dp"
-        android:text="Contributor : Level 5"
+        android:text=""
         android:textColor="#fff"
         android:textSize="12sp"
         android:textStyle="bold" />
@@ -87,7 +87,7 @@
         android:gravity="end"
         android:padding="5dp"
         android:singleLine="true"
-        android:text="Group : STRBX employees"
+        android:text=""
         android:textColor="#fff"
         android:textSize="18sp"
         android:textStyle="bold" />
@@ -107,7 +107,7 @@
         android:paddingStart="10dp"
         android:paddingTop="5dp"
         android:singleLine="true"
-        android:text="17 Events posted"
+        android:text="No Events posted"
         android:textColor="#fff"
         android:textStyle="bold" />
 

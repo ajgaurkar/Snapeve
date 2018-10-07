@@ -55,6 +55,7 @@ public class BrowseGroupProfile extends AppCompatActivity implements Listview_co
     private TextView grp_user_name;
     private TextView grp_points;
     private CircleImageView profile_pic_image_view;
+    private TextView grp_status;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -65,6 +66,7 @@ public class BrowseGroupProfile extends AppCompatActivity implements Listview_co
         grp_member_count_text_view = (TextView) findViewById(R.id.grp_member_count_text_view);
         grp_user_name = (TextView) findViewById(R.id.grp_user_name);
         grp_points = (TextView) findViewById(R.id.grp_points);
+        grp_status = (TextView) findViewById(R.id.grp_status);
         browse_grp_profile_no_member_label_text_view = (TextView) findViewById(R.id.browse_grp_profile_no_member_label_text_view);
         grp_post_count_textview = (TextView) findViewById(R.id.grp_post_count_textview);
         grp_member_count_text_view_icon = (ImageView) findViewById(R.id.grp_member_count_text_view_icon);
@@ -123,6 +125,24 @@ public class BrowseGroupProfile extends AppCompatActivity implements Listview_co
         });
     }
 
+    private void setRewardProgress(int reward_points) {
+        RewardCalcuator rewardCalcuator = new RewardCalcuator();
+        RewardCalcuator calculatedReward = null;
+
+        calculatedReward = rewardCalcuator.calculate((float) reward_points);
+        System.out.println("calculatedReward " + calculatedReward.getCurrent_points());
+        System.out.println("calculatedReward " + calculatedReward.getMin_range());
+        System.out.println("calculatedReward " + calculatedReward.getMax_range());
+        System.out.println("calculatedReward " + calculatedReward.getRelativerewardsValue());
+        System.out.println("calculatedReward " + calculatedReward.getLevel());
+
+        int pointsToNextLevel = (int) (calculatedReward.getMax_range() - calculatedReward.getCurrent_points());
+        pointsToNextLevel++;
+        grp_points.setText("Level  " + calculatedReward.getLevel() + "  •  " + reward_points + "  Points");
+        grp_status.setText(pointsToNextLevel + "  Points to next level");
+
+
+    }
 
     private void fetchGrpdata(String grp_id) {
         final ProgressDialog progressDialog = new ProgressDialog(BrowseGroupProfile.this);
@@ -199,7 +219,10 @@ public class BrowseGroupProfile extends AppCompatActivity implements Listview_co
             e.printStackTrace();
         }
 
-        grp_points.setText(String.valueOf(this_grp_points));
+//        grp_points.setText(String.valueOf(this_grp_points));
+
+        setRewardProgress(this_grp_points);
+
 
         String this_grp_dp_url = null;
         try {
@@ -263,7 +286,6 @@ public class BrowseGroupProfile extends AppCompatActivity implements Listview_co
                 System.out.println(" dp_url is null, set local image");
             }
 
-
 //            DateFormat srcDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSX");
             DateFormat srcDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
             DateFormat displayDtFormat = new SimpleDateFormat("MMM dd HH:mm");
@@ -271,6 +293,10 @@ public class BrowseGroupProfile extends AppCompatActivity implements Listview_co
             Date postDate = null;
             try {
                 postDate = srcDateFormat.parse(grpPost_Data_list_object.get("createdAt").getAsString());
+
+                AddFourHours addFourHours = new AddFourHours();
+                postDate = addFourHours.addHours(postDate).getCurrent_date();
+
             } catch (ParseException e) {
                 e.printStackTrace();
             }

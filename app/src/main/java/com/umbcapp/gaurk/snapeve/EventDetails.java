@@ -448,6 +448,9 @@ public class EventDetails extends AppCompatActivity implements Listview_communic
             try {
                 startDateTime = feedsDateFormat.parse(post_start_time);
 
+                AddFourHours addFourHours = new AddFourHours();
+                startDateTime = addFourHours.addHours(startDateTime).getCurrent_date();
+
                 if (compareDate(startDateTime, new Date()) == 0) {
                     event_details_item_live_tag_textview.setVisibility(View.VISIBLE);
                 } else {
@@ -469,6 +472,9 @@ public class EventDetails extends AppCompatActivity implements Listview_communic
                 startDateTime = feedsDateFormat.parse(post_start_time);
                 endDateTime = feedsDateFormat.parse(post_end_time);
 
+                AddFourHours addFourHours = new AddFourHours();
+                startDateTime = addFourHours.addHours(startDateTime).getCurrent_date();
+                endDateTime = addFourHours.addHours(endDateTime).getCurrent_date();
 
                 if (startDateTime.compareTo(new Date()) < 0 && endDateTime.compareTo(new Date()) > 0) {
                     System.out.println("LIVE EVENT 1");
