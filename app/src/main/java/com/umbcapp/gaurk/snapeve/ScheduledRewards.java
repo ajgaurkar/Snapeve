@@ -29,6 +29,7 @@ import com.umbcapp.gaurk.snapeve.Controllers.LeaderboardListItem;
 import com.umbcapp.gaurk.snapeve.DatabaseRepository.SnapeveDatabaseRepository;
 
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -116,7 +117,6 @@ public class ScheduledRewards extends AppCompatActivity {
                     currentSelectedTab = 1;
                     showWinners(currentSelectedTab);
 
-
                     return true;
 
                 case R.id.rewards_navigation_group:
@@ -183,7 +183,7 @@ public class ScheduledRewards extends AppCompatActivity {
     private void showWinners(int winnerType) {
         TopScorerAdapter topScorerAdapter = null;
         ArrayList<LeaderboardListItem> tempList = null;
-        scheduled_rewards_date_range_textview.setText("Sep 09 to Sep 16");
+//        scheduled_rewards_date_range_textview.setText("Sep 09 to Sep 16");
         switch (winnerType) {
             case 1:
                 System.out.println("IN 1");
@@ -405,6 +405,34 @@ public class ScheduledRewards extends AppCompatActivity {
         }
 
         showWinners(1);
+
+        DateFormat winnersDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS");
+        DateFormat displayDtFormat = new SimpleDateFormat("MMM dd");
+
+        String date_start = rewardsResponse.get("date_start").getAsString();
+        String date_end = rewardsResponse.get("date_end").getAsString();
+
+
+
+        Date st_date = null;
+        Date end_date = null;
+        try {
+            st_date = winnersDateFormat.parse(date_start);
+            end_date = winnersDateFormat.parse(date_end);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        System.out.println(st_date);
+        System.out.println(end_date);
+//        AddFourHours addFourHours = new AddFourHours();
+//        st_date = addFourHours.addHours(st_date).getCurrent_date();
+//        end_date = addFourHours.addHours(end_date).getCurrent_date();
+
+        date_start = displayDtFormat.format(st_date);
+        date_end = displayDtFormat.format(end_date);
+
+        scheduled_rewards_date_range_textview.setText(date_start + "  to  " + date_end);
 
     }
 
