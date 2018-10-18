@@ -26,7 +26,9 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.umbcapp.gaurk.snapeve.AccountHandler;
+import com.umbcapp.gaurk.snapeve.Adapters.SnapeveNotificationAdapter;
 import com.umbcapp.gaurk.snapeve.Controllers.SnapEveSession;
+import com.umbcapp.gaurk.snapeve.Controllers.SnapeveNotification;
 import com.umbcapp.gaurk.snapeve.DatabaseRepository.SnapeveDatabaseRepository;
 import com.umbcapp.gaurk.snapeve.MainActivity;
 import com.umbcapp.gaurk.snapeve.R;
@@ -37,6 +39,7 @@ import com.umbcapp.gaurk.snapeve.SnapeveFeedback;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -157,19 +160,31 @@ public class SettingsFragment extends PreferenceFragment {
         snapeveDatabaseRepository = new SnapeveDatabaseRepository(getActivity());
 
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle("Confirm Logout?").setMessage("This will delete all your data from the device")
-                .setCancelable(false)
-                .setPositiveButton("Logout", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        new SessionManager(getActivity()).logoutUser();
-                    }
-                }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
+
+
+
+        snapeveDatabaseRepository.getSessiondata().observe((LifecycleOwner) getActivity(), new Observer<List<SnapEveSession>>() {
+            @Override
+            public void onChanged(@Nullable List<SnapEveSession> snapEveSessions) {
+                System.out.println("snapEveSessions---   " + snapEveSessions);
+                System.out.println("snapEveSessions---   " + snapEveSessions.size());
             }
         });
-        AlertDialog alert = builder.create();
-        alert.show();
+
+
+//        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+//        builder.setTitle("Confirm Logout?").setMessage("This will delete all your data from the device")
+//                .setCancelable(false)
+//                .setPositiveButton("Logout", new DialogInterface.OnClickListener() {
+//                    public void onClick(DialogInterface dialog, int id) {
+//                       // new SessionManager(getActivity()).logoutUser();
+//                    }
+//                }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+//            public void onClick(DialogInterface dialog, int id) {
+//            }
+//        });
+//        AlertDialog alert = builder.create();
+//        alert.show();
     }
 
     private void uploadSessions(List<SnapEveSession> snapEveSessions) {
