@@ -76,7 +76,7 @@ public class SnapeveNotificationAdapter extends BaseAdapter {
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
-        System.out.println("ddddd"+selectedNotificationListItem.getNotificationTag());
+        System.out.println("ddddd" + selectedNotificationListItem.getNotificationTag());
 
         try {
 
@@ -118,11 +118,15 @@ public class SnapeveNotificationAdapter extends BaseAdapter {
                     System.out.println("155555555");
                     holder.notification_list_item_circle_img_view.setImageResource(R.drawable.notification_icon_gift_card_round_96);
                     break;
+                case "Take survey":
+                    System.out.println("16666");
+                    holder.notification_list_item_circle_img_view.setImageResource(R.drawable.notification_icon_like_round_96);
+                    break;
                 default:
                     holder.notification_list_item_circle_img_view.setImageResource(R.drawable.notification_icon_gift_card_round_96);
                     break;
             }
-        }catch (Exception e){
+        } catch (Exception e) {
 
             System.out.println("null Pointer in Tag ");
 

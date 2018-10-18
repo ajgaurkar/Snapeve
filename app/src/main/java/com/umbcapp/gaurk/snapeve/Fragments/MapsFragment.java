@@ -482,6 +482,9 @@ public class MapsFragment extends Fragment {
 //            if (event_type.equals("1")) {
 //                googleMap.addMarker(new MarkerOptions().position(event_marker).title(img_comment + " - " + eventTimming).icon(BitmapDescriptorFactory.fromResource(R.drawable.flag_32_trai)));
 //            }
+
+
+
         }
 
 

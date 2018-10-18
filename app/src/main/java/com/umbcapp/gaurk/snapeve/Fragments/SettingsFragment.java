@@ -25,6 +25,7 @@ import com.google.common.util.concurrent.SettableFuture;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.surveymonkey.surveymonkeyandroidsdk.SurveyMonkey;
 import com.umbcapp.gaurk.snapeve.AccountHandler;
 import com.umbcapp.gaurk.snapeve.Adapters.SnapeveNotificationAdapter;
 import com.umbcapp.gaurk.snapeve.Controllers.SnapEveSession;
@@ -106,7 +107,23 @@ public class SettingsFragment extends PreferenceFragment {
                 break;
 
             case "takeSurveyPreferenceKey":
-                startActivity(new Intent(getActivity(), AccountHandler.class));
+//                startActivity(new Intent(getActivity(), AccountHandler.class));
+
+                //Survey start code
+                SurveyMonkey sdkInstance;
+                String SURVEY_HASH = "GQLRGCC";
+                if (new SessionManager(getActivity()).getSpecificUserDetail(SessionManager.KEY_GRP_ID).equals("xxxxx____xxxxx")) {
+                    //individual users survey code
+                    SURVEY_HASH = "GCGXXMM";
+                } else {
+                    //group survey code
+                    SURVEY_HASH = "GQLRGCC";
+                }
+                final int SM_REQUEST_CODE = 0;
+                final String SAMPLE_APP = "Sample App";
+                sdkInstance = new SurveyMonkey();
+                sdkInstance.startSMFeedbackActivityForResult(getActivity(), SM_REQUEST_CODE, SURVEY_HASH);
+
                 break;
 
             case "notificationPreferenceKey":
@@ -159,32 +176,29 @@ public class SettingsFragment extends PreferenceFragment {
     private void showLogoutDialog() {
         snapeveDatabaseRepository = new SnapeveDatabaseRepository(getActivity());
 
-
-
-
-
         snapeveDatabaseRepository.getSessiondata().observe((LifecycleOwner) getActivity(), new Observer<List<SnapEveSession>>() {
             @Override
             public void onChanged(@Nullable List<SnapEveSession> snapEveSessions) {
                 System.out.println("snapEveSessions---   " + snapEveSessions);
                 System.out.println("snapEveSessions---   " + snapEveSessions.size());
+                uploadSessions(snapEveSessions);
             }
         });
 
 
-//        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-//        builder.setTitle("Confirm Logout?").setMessage("This will delete all your data from the device")
-//                .setCancelable(false)
-//                .setPositiveButton("Logout", new DialogInterface.OnClickListener() {
-//                    public void onClick(DialogInterface dialog, int id) {
-//                       // new SessionManager(getActivity()).logoutUser();
-//                    }
-//                }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-//            public void onClick(DialogInterface dialog, int id) {
-//            }
-//        });
-//        AlertDialog alert = builder.create();
-//        alert.show();
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle("Confirm Logout?").setMessage("This will delete all your data from the device")
+                .setCancelable(false)
+                .setPositiveButton("Logout", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        // new SessionManager(getActivity()).logoutUser();
+                    }
+                }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+            }
+        });
+        AlertDialog alert = builder.create();
+        alert.show();
     }
 
     private void uploadSessions(List<SnapEveSession> snapEveSessions) {

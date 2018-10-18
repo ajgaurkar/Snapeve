@@ -27,6 +27,7 @@ import com.google.gson.JsonObject;
 //import com.shashank.sony.fancydialoglib.FancyAlertDialog;
 //import com.shashank.sony.fancydialoglib.FancyAlertDialogListener;
 //import com.shashank.sony.fancydialoglib.Icon;
+import com.surveymonkey.surveymonkeyandroidsdk.SurveyMonkey;
 import com.umbcapp.gaurk.snapeve.Adapters.MessagesPersonalAdapter;
 import com.umbcapp.gaurk.snapeve.Adapters.SnapeveNotificationAdapter;
 import com.umbcapp.gaurk.snapeve.Controllers.MessagesPersonalListItem;
@@ -36,6 +37,7 @@ import com.umbcapp.gaurk.snapeve.DatabaseRepository.SnapeveDatabaseRepository;
 import com.umbcapp.gaurk.snapeve.Leaderboard;
 import com.umbcapp.gaurk.snapeve.MessageThread;
 import com.umbcapp.gaurk.snapeve.R;
+import com.umbcapp.gaurk.snapeve.ScheduledRewards;
 import com.umbcapp.gaurk.snapeve.SessionManager;
 
 import java.text.DateFormat;
@@ -63,6 +65,7 @@ public class NotificationFragment extends Fragment {
     private SnapeveDatabaseRepository studentRepository;
     private long sessionCounter;
     private SnapeveDatabaseRepository snapeveDatabaseRepository;
+    private List<SnapeveNotification> notificationGlobalList;
 
 
     public NotificationFragment() {
@@ -148,9 +151,30 @@ public class NotificationFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-//                startActivity(new Intent(getActivity(), MessageThread.class));
-//                Toast.makeText(getActivity(), "Check Psotion --- " + position, Toast.LENGTH_LONG).show();
+                Toast.makeText(getActivity(), "position " + position + " " + notificationGlobalList.get(position).getNotificationTag(), Toast.LENGTH_LONG).show();
 
+                switch (notificationGlobalList.get(position).getNotificationTag()) {
+                    case "Take survey":
+                        //Survey start code
+                        SurveyMonkey sdkInstance;
+                        String SURVEY_HASH = "GQLRGCC";
+                        if (new SessionManager(getActivity()).getSpecificUserDetail(SessionManager.KEY_GRP_ID).equals("xxxxx____xxxxx")) {
+                            //individual users survey code
+                            SURVEY_HASH = "GCGXXMM";
+                        } else {
+                            //group survey code
+                            SURVEY_HASH = "GQLRGCC";
+                        }
+                        final int SM_REQUEST_CODE = 0;
+                        final String SAMPLE_APP = "Sample App";
+                        sdkInstance = new SurveyMonkey();
+                        sdkInstance.startSMFeedbackActivityForResult(getActivity(), SM_REQUEST_CODE, SURVEY_HASH);
+                        break;
+
+                    case "Weekly reward":
+                        startActivity(new Intent(getActivity(), ScheduledRewards.class));
+                        break;
+                }
             }
         });
         notification_settings_imageview.setOnClickListener(new View.OnClickListener() {
@@ -228,6 +252,8 @@ public class NotificationFragment extends Fragment {
 
                         //data from sqlite comes in reverseorder even in DESC is added to the query
                         Collections.reverse(notificationsList);
+
+                        notificationGlobalList = notificationsList;
 
                         SnapeveNotificationAdapter notificationsAdapter = new SnapeveNotificationAdapter(getActivity(), notificationsList);
                         notification_layout_listview.setAdapter(notificationsAdapter);
