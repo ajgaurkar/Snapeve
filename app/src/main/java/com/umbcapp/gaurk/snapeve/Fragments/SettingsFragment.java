@@ -191,7 +191,7 @@ public class SettingsFragment extends PreferenceFragment {
                 .setCancelable(false)
                 .setPositiveButton("Logout", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        // new SessionManager(getActivity()).logoutUser();
+                         new SessionManager(getActivity()).logoutUser();
                     }
                 }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
