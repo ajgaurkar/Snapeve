@@ -424,7 +424,7 @@ public class BrowseGroupProfile extends AppCompatActivity implements Listview_co
         if (grpContributionList.size() == 0) {
             grp_post_count_textview.setText("");
             browse_grp_profile_no_member_label_text_view.setVisibility(View.VISIBLE);
-            grp_member_count_text_view.setText("No Group Posts Found");
+            grp_post_count_textview.setText("No Group Posts Found");
         } else if (grpContributionList.size() == 1) {
             grp_post_count_textview.setText("1 Post");
             browse_grp_profile_no_member_label_text_view.setVisibility(View.INVISIBLE);

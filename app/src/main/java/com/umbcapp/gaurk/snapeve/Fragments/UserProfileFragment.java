@@ -1156,10 +1156,13 @@ public class UserProfileFragment extends Fragment {
 
         if (groupsJSONArray.size() == 0) {
 
-            System.out.println("No grp request present, show signup grp page");
-            Intent joinGrpIntent = new Intent(getActivity(), Signup_grp_join.class);
-            joinGrpIntent.putExtra("page_open_mode", 1);
-            startActivity(joinGrpIntent);
+//            System.out.println("No grp request present, show signup grp page");
+//            Intent joinGrpIntent = new Intent(getActivity(), Signup_grp_join.class);
+//            joinGrpIntent.putExtra("page_open_mode", 1);
+//            startActivity(joinGrpIntent);
+
+            Toast.makeText(getActivity(), "NO GROUP ASSOCIATED", Toast.LENGTH_SHORT).show();
+            showNoGrpDialog();
 
         } else {
             showPendingGrpRequestDialog();
@@ -1208,6 +1211,18 @@ public class UserProfileFragment extends Fragment {
 
             }
         }
+    }
+
+    private void showNoGrpDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setMessage("No group associated with your account")
+                .setCancelable(false)
+                .setPositiveButton("Okay!", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                    }
+                });
+        AlertDialog alert = builder.create();
+        alert.show();
     }
 
     private void populateUserInfo() {
